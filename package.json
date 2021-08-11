@@ -1,0 +1,9 @@
+{
+  "name": "reactrouter-dot-com",
+  "scripts": {
+      "deploy": "firebase deploy --project reactrouter-com --message \"https://travis-ci.com/$TRAVIS_REPO_SLUG/builds/$TRAVIS_BUILD_ID\" --non-interactive --force"
+  },
+  "devDependencies": {
+    "firebase-tools": "^9.16.0"
+  }
+}
