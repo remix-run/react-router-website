@@ -1,8 +1,5 @@
 {
   "name": "reactrouter-dot-com",
-  "scripts": {
-      "deploy": "firebase deploy --project reactrouter-com --non-interactive --force"
-  },
   "devDependencies": {
     "firebase-tools": "^9.16.0"
   }
