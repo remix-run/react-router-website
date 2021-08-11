@@ -18,4 +18,4 @@ jobs:
       - name: Install
         run: npm install
       - name: Deploy
-        run: npm run deploy --token ${{ secrets.FIREBASE_TOKEN }}
+        run: npm run deploy --message "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" --token ${{ secrets.FIREBASE_TOKEN }}
