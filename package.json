@@ -1,6 +1,32 @@
 {
+  "private": true,
   "name": "reactrouter-dot-com",
+  "description": "",
+  "license": "",
+  "scripts": {
+    "build": "remix build",
+    "dev": "pm2-dev pm2.config.js",
+    "deploy": "flyctl deploy --build-arg REMIX_TOKEN=${REMIX_TOKEN}",
+    "start": "node server"
+  },
+  "dependencies": {
+    "@remix-run/node": "^0.17.5",
+    "@remix-run/react": "^0.17.5",
+    "@remix-run/serve": "^0.17.5",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router-dom": "^6.0.0-beta.0",
+    "remix": "^0.17.5"
+  },
   "devDependencies": {
-    "firebase-tools": "^9.16.0"
-  }
+    "@remix-run/dev": "^0.17.5",
+    "@types/react": "^17.0.4",
+    "@types/react-dom": "^17.0.4",
+    "pm2": "5.1.0",
+    "typescript": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "sideEffects": false
 }
