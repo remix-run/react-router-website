@@ -1,3 +1,11 @@
+const dotenv = require("dotenv");
+
+let result = dotenv.config();
+
+if (result.error) {
+  throw result.error;
+}
+
 module.exports = {
   apps: [
     {
@@ -5,6 +13,7 @@ module.exports = {
       script: "remix dev",
       ignore_watch: ["."],
       env: {
+        ...result.parsed,
         NODE_ENV: "development",
       },
     },
@@ -13,6 +22,7 @@ module.exports = {
       script: "node server/index.js",
       ignore_watch: ["."],
       env: {
+        ...result.parsed,
         NODE_ENV: "development",
       },
     },
