@@ -22,7 +22,7 @@ app.listen(port, () => {
 function purgeAppRequireCache() {
   let cwd = process.cwd();
   for (let key in require.cache) {
-    if (key.startsWith(path.join(cwd, "build"))) {
+    if (key.startsWith(path.join(cwd, "server/build"))) {
       delete require.cache[key];
     }
   }
@@ -50,7 +50,7 @@ function getLoadContext() {
     docs: {
       owner: "remix-run",
       repo: "react-router",
-      remotePath: "tree/dev/docs",
+      remotePath: "docs",
       localPath: "../react-router/docs",
       versions: ">=0.15",
     },
