@@ -10,6 +10,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model HTMLFragment {
-  id String @id @default(cuid())
+model Version {
+  versionHeadOrBranch String @id // versionHeadOrBranch v0.17
+  fullVersionOrBranch String @unique // fullVersionOrBranch v0.17.0
+  docs                Doc[]
+}
+
+model Doc {
+  fileName              String  @id
+  versionHeadOrBranch   Version @relation(fields: [versionHeadOrBranchId], references: [versionHeadOrBranch])
+  versionHeadOrBranchId String
+  html                  String
 }

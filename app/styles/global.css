@@ -1,9 +1,56 @@
+:root {
+  --base00: #fcfcfc;
+  --base01: #e0e0e0;
+  --base02: #d6d6d6;
+  --base03: #8e908c;
+  --base04: #969896;
+  --base05: #4d4d4c;
+  --base06: #282a2e;
+  --base07: #1d1f21;
+  --base08: #f36671;
+  --base09: #f5871f;
+  --base0A: #bba233;
+  --base0B: #1fc46c;
+  --base0C: #30b9b5;
+  --base0D: #3c70b5;
+  --base0E: #8959a8;
+  --base0F: #a3685a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --base00: #212121;
+    --base01: #2d2d2d;
+    --base02: #424242;
+    --base03: #4b4b4b;
+    --base04: #555555;
+    --base05: #afafaf;
+    --base06: #c8c8c8;
+    --base07: #fafafa;
+    --base08: #fc4c51;
+    --base09: #f5871f;
+    --base0A: #ffeaaa;
+    --base0B: #bff3c6;
+    --base0C: #d5f3f1;
+    --base0D: #92b6e0;
+    --base0E: #f9aae0;
+    --base0F: #d19a66;
+  }
+
+  body {
+    background: #1c1c1c;
+  }
+}
+
 :focus:not(:focus-visible) {
   outline: none;
 }
 
 body {
-  font-family: sans-serif;
+  font-family: Inter, "Source Sans Pro", -apple-system, BlinkMacSystemFont,
+    Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+  color: var(--base06);
+  background: hsl(0, 0%, 100%);
 }
 
 footer {
