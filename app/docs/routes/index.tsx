@@ -1,16 +1,16 @@
-import { MetaFunction, LoaderFunction, json } from "remix";
+import { MetaFunction, LoaderFunction, json, RouteComponent } from "remix";
 import { useRouteData } from "remix";
 
 import { getDoc, getVersion, getVersions } from "../../utils.server";
 
-export let meta: MetaFunction = () => {
+let meta: MetaFunction = () => {
   return {
     title: "Remix Starter",
     description: "Welcome to remix!",
   };
 };
 
-export let loader: LoaderFunction = async ({ context, params }) => {
+let loader: LoaderFunction = async ({ context, params }) => {
   let versions = await getVersions(context.docs);
   let version = getVersion(params.version, versions) || {
     version: params.version.replace(/^v/, ""),
@@ -27,7 +27,7 @@ export let loader: LoaderFunction = async ({ context, params }) => {
   }
 };
 
-export default function IndexPage() {
+const IndexPage: RouteComponent = () => {
   let data = useRouteData();
 
   return (
@@ -36,4 +36,7 @@ export default function IndexPage() {
       <article dangerouslySetInnerHTML={{ __html: data.html }} />
     </div>
   );
-}
+};
+
+export default IndexPage;
+export { loader, meta };

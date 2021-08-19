@@ -1,4 +1,4 @@
-import { LoaderFunction, useRouteData } from "remix";
+import { LoaderFunction, RouteComponent, useRouteData } from "remix";
 import { json } from "remix";
 
 import {
@@ -9,7 +9,7 @@ import {
   getVersions,
 } from "../../utils.server";
 
-export let loader: LoaderFunction = async ({ params, context, request }) => {
+let loader: LoaderFunction = async ({ params, context, request }) => {
   let versions = await getVersions(context.docs);
   let version = getVersion(params.version, versions) || {
     version: params.version.replace(/^v/, ""),
@@ -32,7 +32,7 @@ export let loader: LoaderFunction = async ({ params, context, request }) => {
   }
 };
 
-export default function Splat() {
+const SplatPage: RouteComponent = () => {
   const doc = useRouteData<Doc>();
 
   if (!doc) {
@@ -53,4 +53,7 @@ export default function Splat() {
       />
     </div>
   );
-}
+};
+
+export default SplatPage;
+export { loader };
