@@ -40,6 +40,7 @@ const SplatPage: RouteComponent = () => {
   return (
     <div>
       <h1>{doc.title}</h1>
+      <h2>Version: {doc.attributes.version}</h2>
       <div
         className="content-container"
         dangerouslySetInnerHTML={{ __html: doc.html }}

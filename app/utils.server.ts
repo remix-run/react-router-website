@@ -182,7 +182,13 @@ async function getDocRemote(
     `using version ${doc.fullVersionOrBranch.fullVersionOrBranch} of ${filePath}`
   );
 
-  const returnDoc: Doc = { attributes: {}, html: doc.html, title: "lol" };
+  const returnDoc: Doc = {
+    attributes: {
+      version: doc.fullVersionOrBranch.fullVersionOrBranch,
+    },
+    html: doc.html,
+    title: doc.fileName,
+  };
   return returnDoc;
 }
 
