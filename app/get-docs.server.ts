@@ -128,6 +128,9 @@ export async function findMatchingEntries(
 
           entry.content = content.toString("utf-8");
 
+          let parsed = path.parse(entry.path);
+          const slug = path.join(parsed.dir, parsed.name);
+          entry.path = slug;
           entries[entry.path] = entry;
 
           next();
