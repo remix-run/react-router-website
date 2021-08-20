@@ -5,7 +5,7 @@ ARG REMIX_TOKEN
 RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache sqlite
 WORKDIR /remixapp
-COPY .npmrc package.json package-lock.json prisma ./
+COPY .npmrc package.json package-lock.json prisma patches ./
 RUN npm ci
 
 # Rebuild the source code only when needed
