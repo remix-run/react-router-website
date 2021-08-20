@@ -32,13 +32,7 @@ function bufferStream(stream: NodeJS.ReadWriteStream): Promise<Buffer> {
  * Returns a stream of the tarball'd contents of the given package.
  */
 export async function getPackage(packageName: string, version: string) {
-  if (process.env.NODE_ENV === "development") {
-    console.debug("USING LOCAL TARBALL");
-    const tar = path.join(process.cwd(), "public/react-router-dev.tar.gz");
-    return fs.createReadStream(tar).pipe(gunzip());
-  }
-
-  const tarballURL = `${githubUrl}/${packageName}/archive/${version}.tar.gz`;
+  const tarballURL = `${githubUrl}/${packageName}/archive${version}.tar.gz`;
 
   console.debug("Fetching package for %s from %s", packageName, tarballURL);
 
