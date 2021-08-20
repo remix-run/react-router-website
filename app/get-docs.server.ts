@@ -81,8 +81,6 @@ interface Entry {
   content?: string;
 }
 
-// http://localhost:3000/_refreshlocal
-
 export async function findMatchingEntries(
   stream: NodeJS.ReadWriteStream,
   filename: string
@@ -109,14 +107,17 @@ export async function findMatchingEntries(
         // some reason, so this is the "brute force" method.
         let dir = path.dirname(entry.path);
         while (dir !== "/") {
-          if (!entries[dir] && path.dirname(dir) === filename) {
+          if (!entries[dir] && path.dirname(dir).startsWith(filename)) {
             entries[dir] = { path: dir, type: "directory" };
           }
           dir = path.dirname(dir);
         }
 
         // Ignore non-files and files that aren't in this directory.
-        if (entry.type !== "file" || path.dirname(entry.path) !== filename) {
+        if (
+          entry.type !== "file" ||
+          !path.dirname(entry.path).startsWith(filename)
+        ) {
           stream.resume();
           stream.on("end", next);
           return;
@@ -125,11 +126,6 @@ export async function findMatchingEntries(
         try {
           const content = await bufferStream(stream);
 
-          if (entry.type === "file" && path.dirname(entry.path) === filename) {
-            console.log("ITS A MATCH", entry.path);
-          }
-
-          entry.type = "file";
           entry.content = content.toString("utf-8");
 
           entries[entry.path] = entry;
