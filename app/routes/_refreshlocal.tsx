@@ -8,6 +8,7 @@ import {
   useRouteData,
 } from "remix";
 import { redirect } from "remix";
+import { satisfies } from "semver";
 
 import { saveDocs } from "../utils/save-docs";
 
@@ -25,7 +26,7 @@ let action: ActionFunction = async ({ request, context }) => {
 
   let token = request.headers.get("Authorization");
   // verify post request and the token matches
-  if (request.method !== "POST") {
+  if (request.method !== "POST" || token !== process.env.AUTH_TOKEN) {
     return redirect("/");
   }
 
@@ -43,8 +44,18 @@ let action: ActionFunction = async ({ request, context }) => {
 
       const releases = await releasesPromise.json();
 
+      const releasesToUse = releases.filter((release: any) => {
+        console.log(context.docs.versions, release.tag_name);
+
+        return satisfies(release.tag_name, context.docs.versions, {
+          includePrerelease: true,
+        });
+      });
+
+      console.log({ releasesToUse });
+
       await Promise.all(
-        releases.map((release: any) =>
+        releasesToUse.map((release: any) =>
           saveDocs(`/refs/tags/${release.tag_name}`, context.docs)
         )
       );

@@ -3,8 +3,9 @@ import { redirect } from "remix";
 import { getInstanceURLs } from "../utils/get-fly-instance-urls.server";
 
 const action: ActionFunction = async ({ request }) => {
+  const token = request.headers.get("Authorization");
   // verify post request and the token matches
-  if (request.method !== "POST") {
+  if (request.method !== "POST" || token !== process.env.AUTH_TOKEN) {
     return redirect("/");
   }
 
