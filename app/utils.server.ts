@@ -371,14 +371,6 @@ function sortByAttributes(a: MenuItem, b: MenuItem) {
   return a.title.localeCompare(b.title);
 }
 
-export function getCacheControl(urlStr: string) {
-  let url = new URL(urlStr);
-  let forceLatest = url.searchParams.has("latest");
-  return forceLatest
-    ? "no-cache"
-    : "public, max-age=3600, s-maxage=86400, stale-while-revalidate=2592000";
-}
-
 /**
  * Adds trailing slashes so relative markdown links resolve correctly in the browser
  */

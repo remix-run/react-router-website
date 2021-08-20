@@ -75,11 +75,17 @@ export async function getPackage(packageName: string, version: string) {
   return null;
 }
 
-interface Entry {
-  path: string;
-  type: TarHeaders["type"];
-  content?: string;
-}
+export type Entry =
+  | {
+      path: string;
+      type: TarHeaders["type"];
+      content?: never;
+    }
+  | {
+      type: "file";
+      content: string;
+      path: string;
+    };
 
 export async function findMatchingEntries(
   stream: NodeJS.ReadWriteStream,
@@ -93,7 +99,7 @@ export async function findMatchingEntries(
       .pipe(tar.extract())
       .on("error", reject)
       .on("entry", async (header, stream, next) => {
-        const entry: Entry = {
+        let entry: Entry = {
           // Most packages have header names that look like `package/index.js`
           // so we shorten that to just `/index.js` here. A few packages use a
           // prefix other than `package/`. e.g. the firebase package uses the
@@ -126,7 +132,11 @@ export async function findMatchingEntries(
         try {
           const content = await bufferStream(stream);
 
-          entry.content = content.toString("utf-8");
+          entry = {
+            type: "file",
+            content: content.toString("utf-8"),
+            path: entry.path,
+          };
 
           let parsed = path.parse(entry.path);
           const slug = path.join(parsed.dir, parsed.name);

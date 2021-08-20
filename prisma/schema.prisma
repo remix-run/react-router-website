@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./db.sqlite?connection_limit=1&socket_timeout=30"
+  url      = "file:./db.sqlite"
 }
 
 generator client {
@@ -27,5 +27,6 @@ model Doc {
   fullVersionOrBranchId String
   html                  String
 
-  // @@unique([fileName, fullVersionOrBranchId])
+  // unique fileName per fullVersionOrBranch
+  @@unique([fileName, fullVersionOrBranchId])
 }

@@ -12,6 +12,7 @@ import { coerce } from "semver";
 
 import { prisma } from "../db.server";
 import { findMatchingEntries, getPackage } from "../utils/get-docs.server";
+import { processDocs } from "../utils/process-docs.server";
 
 let loader: LoaderFunction = async () => {
   // return json({ notFound: true }, { status: 404 });
@@ -46,21 +47,18 @@ let action: ActionFunction = async ({ request, context }) => {
       },
     });
 
-    if (release) {
-      return redirect("/sad");
-    }
-
     const stream = await getPackage(
       `${context.docs.owner}/${context.docs.repo}`,
       ref
     );
 
     const entries = await findMatchingEntries(stream, "/docs");
+    const entriesWithProcessedMD = await processDocs(entries);
 
     let tag = coerce(ref);
 
     if (!tag) {
-      throw new Error("tag provided wasnt valid semver");
+      throw new Error("tag provided wasn't valid semver");
     }
 
     let info =
@@ -70,31 +68,42 @@ let action: ActionFunction = async ({ request, context }) => {
         ? `v0.${tag.minor}`
         : `v0.0.${tag.patch}`;
 
-    const results = await Promise.allSettled(
-      entries.map((entry) =>
-        prisma.doc.create({
-          data: {
-            fileName: entry.path,
-            html: entry.content ?? "wtf",
-            fullVersionOrBranch: {
-              connectOrCreate: {
-                create: {
-                  fullVersionOrBranch: version,
-                  versionHeadOrBranch: info,
-                },
-                where: {
-                  fullVersionOrBranch: version,
-                },
+    // release exists already, so we need to update it
+    if (release) {
+      const result = await prisma.version.update({
+        where: {
+          fullVersionOrBranch: version,
+        },
+        data: {
+          docs: {
+            updateMany: entriesWithProcessedMD.map((entry) => ({
+              data: {
+                html: entry.html,
               },
-            },
+              where: {
+                fileName: entry.path,
+              },
+            })),
           },
-        })
-      )
-    );
+        },
+      });
 
-    for (const result of results) {
-      if (result.status === "fulfilled") console.log(result.status);
-      else console.log(result);
+      console.log(`Updated release for version: ${result.fullVersionOrBranch}`);
+    } else {
+      const result = await prisma.version.create({
+        data: {
+          fullVersionOrBranch: version,
+          versionHeadOrBranch: info,
+          docs: {
+            create: entriesWithProcessedMD.map((entry) => ({
+              fileName: entry.path,
+              html: entry.html,
+            })),
+          },
+        },
+      });
+
+      console.log(`Created release for version: ${result.fullVersionOrBranch}`);
     }
 
     return redirect(url.toString());

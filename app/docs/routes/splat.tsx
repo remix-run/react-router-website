@@ -1,13 +1,7 @@
 import { LoaderFunction, RouteComponent, useRouteData } from "remix";
 import { json } from "remix";
 
-import {
-  Doc,
-  getCacheControl,
-  getDoc,
-  getVersion,
-  getVersions,
-} from "../../utils.server";
+import { Doc, getDoc, getVersion, getVersions } from "../../utils.server";
 
 let loader: LoaderFunction = async ({ params, context, request }) => {
   let versions = await getVersions(context.docs);
@@ -23,9 +17,8 @@ let loader: LoaderFunction = async ({ params, context, request }) => {
 
   try {
     let doc = await getDoc(context.docs, slug, version);
-    return json(doc, {
-      headers: { "Cache-Control": getCacheControl(request.url) },
-    });
+    // so fresh!
+    return json(doc, { headers: { "Cache-Control": "max-age=0" } });
   } catch (error) {
     console.error(error);
     return json({ notFound: true }, { status: 404 });
