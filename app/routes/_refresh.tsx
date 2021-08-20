@@ -1,5 +1,6 @@
 import type { RouteComponent, ActionFunction } from "remix";
 import { redirect } from "remix";
+import { getInstanceURLs } from "../utils/get-fly-instance-urls.server";
 
 const action: ActionFunction = async ({ request }) => {
   // verify post request and the token matches
@@ -7,21 +8,25 @@ const action: ActionFunction = async ({ request }) => {
     return redirect("/");
   }
 
+  const url = new URL(request.url);
+
   try {
     // get all app instances and refresh them
-    const url = new URL(request.url);
+    const instances = await getInstanceURLs();
 
-    if (process.env.NODE_ENV === "development") {
-      url.port = "3000";
-    }
+    const results = await Promise.allSettled(
+      instances.map(async (instance) => {
+        return fetch(instance + "/_refreshlocal" + url.search, {
+          method: "POST",
+          headers: {
+            Authorization: process.env.AUTH_TOKEN!,
+          },
+        });
+      })
+    );
 
-    url.pathname = "/_refreshlocal";
-
-    await fetch(url.toString(), {
-      method: "POST",
-      headers: {
-        Authorization: "some-token",
-      },
+    results.forEach((result) => {
+      console.log(result);
     });
 
     return redirect("/success");
@@ -32,7 +37,7 @@ const action: ActionFunction = async ({ request }) => {
 };
 
 const RefreshAllInstancesDocsPage: RouteComponent = () => {
-  return null;
+  return <p>404</p>;
 };
 
 export default RefreshAllInstancesDocsPage;
