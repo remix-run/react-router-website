@@ -8,11 +8,8 @@ import {
   useRouteData,
 } from "remix";
 import { redirect } from "remix";
-import { coerce } from "semver";
 
-import { prisma } from "../db.server";
-import { findMatchingEntries, getPackage } from "../utils/get-docs.server";
-import { processDocs } from "../utils/process-docs.server";
+import { saveDocs } from "../utils/save-docs";
 
 let loader: LoaderFunction = async () => {
   // return json({ notFound: true }, { status: 404 });
@@ -33,77 +30,24 @@ let action: ActionFunction = async ({ request, context }) => {
   }
 
   const ref = url.searchParams.get("ref");
-  if (!ref) {
-    return redirect("/sad");
-  }
-
-  const version = ref.replace(/^\/refs\/tags\//, "");
 
   try {
-    // check if we have this release already
-    let release = await prisma.version.findUnique({
-      where: {
-        fullVersionOrBranch: version,
-      },
-    });
-
-    const stream = await getPackage(
-      `${context.docs.owner}/${context.docs.repo}`,
-      ref
-    );
-
-    const entries = await findMatchingEntries(stream, "/docs");
-    const entriesWithProcessedMD = await processDocs(entries);
-
-    let tag = coerce(ref);
-
-    if (!tag) {
-      throw new Error("tag provided wasn't valid semver");
-    }
-
-    let info =
-      tag.major > 0
-        ? `v${tag.major}`
-        : tag.minor > 0
-        ? `v0.${tag.minor}`
-        : `v0.0.${tag.patch}`;
-
-    // release exists already, so we need to update it
-    if (release) {
-      const result = await prisma.version.update({
-        where: {
-          fullVersionOrBranch: version,
-        },
-        data: {
-          docs: {
-            updateMany: entriesWithProcessedMD.map((entry) => ({
-              data: {
-                html: entry.html,
-              },
-              where: {
-                fileName: entry.path,
-              },
-            })),
-          },
-        },
-      });
-
-      console.log(`Updated release for version: ${result.fullVersionOrBranch}`);
+    // generate docs for specified ref
+    // otherwise generate docs for all releases
+    if (ref) {
+      await saveDocs(ref, context.docs);
     } else {
-      const result = await prisma.version.create({
-        data: {
-          fullVersionOrBranch: version,
-          versionHeadOrBranch: info,
-          docs: {
-            create: entriesWithProcessedMD.map((entry) => ({
-              fileName: entry.path,
-              html: entry.html,
-            })),
-          },
-        },
-      });
+      const releasesPromise = await fetch(
+        `https://api.github.com/repos/${context.docs.owner}/${context.docs.repo}/releases`
+      );
 
-      console.log(`Created release for version: ${result.fullVersionOrBranch}`);
+      const releases = await releasesPromise.json();
+
+      await Promise.all(
+        releases.map((release: any) =>
+          saveDocs(`/refs/tags/${release.tag_name}`, context.docs)
+        )
+      );
     }
 
     return redirect(url.toString());
