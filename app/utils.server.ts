@@ -7,8 +7,6 @@ import * as semver from "semver";
 import { prisma } from "./db.server";
 import { maxSatisfying } from "semver";
 
-let GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-
 let where = "remote"; //process.env.NODE_ENV === "production" ? "remote" : "local";
 
 let menuCache = new Map<string, MenuDir>();
