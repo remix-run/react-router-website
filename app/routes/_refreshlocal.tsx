@@ -36,11 +36,13 @@ let action: ActionFunction = async ({ request, context }) => {
     return redirect("/sad");
   }
 
+  const version = ref.replace(/^\/refs\/tags\//, "");
+
   try {
     // check if we have this release already
     let release = await prisma.version.findUnique({
       where: {
-        fullVersionOrBranch: ref,
+        fullVersionOrBranch: version,
       },
     });
 
@@ -77,11 +79,11 @@ let action: ActionFunction = async ({ request, context }) => {
             fullVersionOrBranch: {
               connectOrCreate: {
                 create: {
-                  fullVersionOrBranch: ref,
+                  fullVersionOrBranch: version,
                   versionHeadOrBranch: info,
                 },
                 where: {
-                  fullVersionOrBranch: ref,
+                  fullVersionOrBranch: version,
                 },
               },
             },
