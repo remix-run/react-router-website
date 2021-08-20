@@ -122,7 +122,7 @@ export async function getDoc(
 ): Promise<Doc | null> {
   let fileContents =
     where === "remote"
-      ? await getDocRemote(config, slug, version)
+      ? await getDocRemote(slug, version)
       : await getDocLocal(config, slug);
 
   if (!fileContents) return null;
@@ -131,7 +131,6 @@ export async function getDoc(
 }
 
 async function getDocRemote(
-  _config: Config,
   filePath: string,
   version: VersionHead
 ): Promise<Doc | null> {
@@ -178,6 +177,10 @@ async function getDocRemote(
     console.log("NO DOC FOUND", version, filePath);
     return null;
   }
+
+  console.log(
+    `using version ${doc.fullVersionOrBranch.fullVersionOrBranch} of ${filePath}`
+  );
 
   const returnDoc: Doc = { attributes: {}, html: doc.html, title: "lol" };
   return returnDoc;

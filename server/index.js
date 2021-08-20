@@ -52,7 +52,7 @@ function getLoadContext() {
       repo: "react-router",
       remotePath: "docs",
       localPath: "../react-router/docs",
-      versions: ">=4.0.0",
+      versions: ">=6.0.0-beta.0",
     },
   };
 }
