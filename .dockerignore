@@ -1,0 +1,9 @@
+*
+!.npmrc
+!app
+!public
+!server
+!package.json
+!package-lock.json
+!remix.config.js
+!prisma
