@@ -136,6 +136,8 @@ export async function findMatchingEntries(
           next(error);
         }
       })
-      .on("finish", () => accept(Object.values(entries)));
+      .on("finish", () =>
+        accept(Object.values(entries).filter((entry) => entry.type === "file"))
+      );
   });
 }
