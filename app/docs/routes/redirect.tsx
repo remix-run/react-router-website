@@ -2,8 +2,8 @@ import type { LoaderFunction, RouteComponent } from "remix";
 import { redirect } from "remix";
 import { getVersions } from "../../utils.server";
 
-let loader: LoaderFunction = async ({ context }) => {
-  let versions = await getVersions(context.docs);
+let loader: LoaderFunction = async () => {
+  let versions = await getVersions();
   return redirect(`/${versions[0].head}`);
 };
 

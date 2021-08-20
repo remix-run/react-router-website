@@ -3,8 +3,8 @@ import { json } from "remix";
 
 import { Doc, getDoc, getVersion, getVersions } from "../../utils.server";
 
-let loader: LoaderFunction = async ({ params, context, request }) => {
-  let versions = await getVersions(context.docs);
+let loader: LoaderFunction = async ({ params, context }) => {
+  let versions = await getVersions();
   let version = getVersion(params.version, versions) || {
     version: params.version,
     head: params.version,

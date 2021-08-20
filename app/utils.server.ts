@@ -229,18 +229,19 @@ async function getDocLocal(config: Config, filePath: string): Promise<Doc> {
   return doc;
 }
 
-// TODO: make this return a list of File[]
-async function getContentsRemote(
-  config: Config,
-  slug: string,
-  version: VersionHead
-) {
-  let href = `/repos/${config.owner}/${config.repo}/contents/${slug}`;
-  if (!version.isLatest) {
-    href += `?ref=v${version.version}`;
-  }
-
-  return fetchGithub<File[]>(href);
+async function getContentsRemote(slug: string, version: VersionHead) {
+  return prisma.doc.findFirst({
+    where: {
+      fileName: {
+        equals: slug,
+      },
+      fullVersionOrBranch: {
+        fullVersionOrBranch: {
+          equals: version.version,
+        },
+      },
+    },
+  });
 }
 
 async function getContentsLocal(config: Config, slug: string): Promise<File[]> {
@@ -269,31 +270,63 @@ async function getAttributes(
 ) {
   let contents =
     where === "remote"
-      ? await getFileRemote(config, diskPath, version)
+      ? await getFileRemote(diskPath, version)
       : await getFileLocal(config, diskPath);
-  let { data, content } = parseAttributes(contents);
-  return { attributes: data, content };
-}
 
-async function getFileLocal(config: Config, fileName: string) {
-  let docsRoot = path.resolve(process.cwd(), config.localPath);
-  let resolvedPath = path.join(docsRoot, fileName);
-  let file = await fs.readFile(resolvedPath);
-  return file;
+  return contents;
 }
 
 async function getFileRemote(
-  config: Config,
-  slug: string,
+  filename: string,
   version: VersionHead
-) {
-  let href = `/repos/${config.owner}/${config.repo}/contents/${slug}`;
-  if (!version.isLatest) {
-    href += `?ref=v${version.version}`;
+): Promise<{
+  attributes: {
+    [key: string]: any;
+  };
+  content: string;
+}> {
+  const doc = await prisma.doc.findFirst({
+    where: {
+      fileName: {
+        equals: filename,
+      },
+      fullVersionOrBranch: {
+        fullVersionOrBranch: {
+          equals: version.version,
+        },
+      },
+    },
+  });
+
+  if (!doc) {
+    return {
+      attributes: {},
+      content: "",
+    };
   }
 
-  let data = await fetchGithub<{ content: string }>(href);
-  return Buffer.from(data.content, "base64").toString("utf-8");
+  return {
+    attributes: {
+      title: doc.fileName,
+    },
+    content: doc.html,
+  };
+}
+
+async function getFileLocal(
+  config: Config,
+  fileName: string
+): Promise<{
+  attributes: {
+    [key: string]: any;
+  };
+  content: string;
+}> {
+  let docsRoot = path.resolve(process.cwd(), config.localPath);
+  let resolvedPath = path.join(docsRoot, fileName);
+  let file = await fs.readFile(resolvedPath);
+  let { data, content } = parseAttributes(file);
+  return { attributes: data, content };
 }
 
 // TODO: need to get the "root route path" into these links
@@ -306,7 +339,7 @@ async function getContentsRecursively(
 ): Promise<MenuDir> {
   let contents =
     where === "remote"
-      ? await getContentsRemote(config, dirPath, version)
+      ? await getContentsRemote(dirPath, version)
       : await getContentsLocal(config, dirPath);
 
   if (!Array.isArray(contents)) {
@@ -417,26 +450,17 @@ export function addTrailingSlash(request: Request) {
   };
 }
 
-export async function getVersions(
-  config: Config,
-  ignoreCache: boolean = false
-): Promise<VersionHead[]> {
-  // always return the cached version, update in the background
-  if (versionCache && !ignoreCache) {
-    getVersions(config, true);
-    return versionCache;
-  }
+export async function getVersions(): Promise<VersionHead[]> {
+  const originalVersions = await prisma.version.findMany({
+    select: {
+      fullVersionOrBranch: true,
+    },
+  });
 
-  let json = await fetchGithub<{ ref: string }[]>(
-    `/repos/${config.owner}/${config.repo}/git/refs/tags`
+  const versions = transformVersionsToLatest(
+    originalVersions.map((v) => v.fullVersionOrBranch)
   );
 
-  let tags: string[] = json
-    .map((tag: any) => tag.ref.replace(/^refs\/tags\//, ""))
-    .filter((tag: string) => semver.satisfies(tag, config.versions));
-
-  let versions = transformVersionsToLatest(tags);
-  versionCache = versions;
   return versions;
 }
 
@@ -473,24 +497,4 @@ export function transformVersionsToLatest(tags: string[]) {
 
 export function getVersion(head: string, versions: VersionHead[]) {
   return versions.find((v) => v.head === head);
-}
-
-async function fetchGithub<T>(href: string): Promise<T> {
-  let res = await fetch(`https://api.github.com${href}`, {
-    headers: {
-      Authorization: `token ${GITHUB_TOKEN}`,
-      accept: "application/json",
-    },
-  });
-
-  if (res.status !== 200) {
-    let error = await res.json();
-    throw new Error(
-      `Could not fetch from GitHub: ${href}: ${res.statusText}; ${
-        error && error.message
-      }`
-    );
-  }
-
-  return res.json();
 }

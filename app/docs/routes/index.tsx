@@ -11,7 +11,7 @@ let meta: MetaFunction = () => {
 };
 
 let loader: LoaderFunction = async ({ context, params }) => {
-  let versions = await getVersions(context.docs);
+  let versions = await getVersions();
   let version = getVersion(params.version, versions) || {
     version: params.version,
     head: params.version,
