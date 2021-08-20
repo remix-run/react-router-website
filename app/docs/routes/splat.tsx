@@ -6,8 +6,8 @@ import { Doc, getDoc, getVersion, getVersions } from "../../utils.server";
 let loader: LoaderFunction = async ({ params, context, request }) => {
   let versions = await getVersions(context.docs);
   let version = getVersion(params.version, versions) || {
-    version: params.version.replace(/^v/, ""),
-    head: params.version.replace(/^v/, ""),
+    version: params.version,
+    head: params.version,
     isLatest: false,
   };
 
@@ -16,7 +16,7 @@ let loader: LoaderFunction = async ({ params, context, request }) => {
   let slug = slugParam.replace(/^\//, "").replace(/\/$/, "");
 
   try {
-    let doc = await getDoc(context.docs, slug, version);
+    let doc = await getDoc(context.docs, `/docs/${slug}`, version);
     // so fresh!
     return json(doc, { headers: { "Cache-Control": "max-age=0" } });
   } catch (error) {

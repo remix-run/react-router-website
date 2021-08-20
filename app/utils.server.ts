@@ -4,10 +4,12 @@ import parseAttributes from "gray-matter";
 import { processMarkdown } from "@ryanflorence/md";
 import { LoaderFunction, redirect, Request } from "remix";
 import * as semver from "semver";
+import { prisma } from "./db.server";
+import { maxSatisfying } from "semver";
 
 let GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
-let where = process.env.NODE_ENV === "production" ? "remote" : "local";
+let where = "remote"; //process.env.NODE_ENV === "production" ? "remote" : "local";
 
 let menuCache = new Map<string, MenuDir>();
 let versionCache: VersionHead[];
@@ -127,44 +129,63 @@ export async function getDoc(
 
   if (!fileContents) return null;
 
-  let { data, content } = parseAttributes(fileContents);
-  let title = data.title || slug;
-  // console.time(`process markdown ${slug}`);
-  let html = await processMarkdown(`## toc\n\n${content}`);
-  // console.timeEnd(`process markdown ${slug}`);
-  let doc: Doc = { attributes: data, html: html.toString(), title };
-  return doc;
+  return fileContents;
 }
 
 async function getDocRemote(
-  config: Config,
+  _config: Config,
   filePath: string,
   version: VersionHead
-): Promise<string> {
-  let dirName = path.join(config.remotePath, filePath);
-  let ext = `.md`;
+): Promise<Doc | null> {
+  const docs = await prisma.doc.findMany({
+    where: {
+      OR: [
+        {
+          fileName: filePath,
+          fullVersionOrBranch: {
+            versionHeadOrBranch: {
+              equals: version.head,
+            },
+          },
+        },
+        {
+          fileName: filePath,
+          fullVersionOrBranch: {
+            fullVersionOrBranch: {
+              equals: version.head,
+            },
+          },
+        },
+      ],
+    },
+    include: {
+      fullVersionOrBranch: true,
+    },
+  });
 
-  let fileName = dirName + ext;
-  let indexName = path.join(dirName, "index") + ext;
-  let notFoundFileName = path.join(config.remotePath, "404") + ext;
-
-  try {
-    return await getFileRemote(config, fileName, version);
-  } catch (error) {
-    try {
-      return await getFileRemote(config, indexName, version);
-    } catch (error) {
-      try {
-        return await getFileRemote(config, notFoundFileName, version);
-      } catch (error) {
-        // seriously, come on...
-        throw new Error("Doc not found, also, the 404 doc was not found.");
-      }
-    }
+  if (!docs) {
+    console.log("NO DOCS FOUND", version, filePath);
+    return null;
   }
+
+  const versions = docs.map((d) => d.fullVersionOrBranch.fullVersionOrBranch);
+
+  const headVersion = maxSatisfying(versions, "*", { includePrerelease: true });
+
+  const doc = docs.find((doc) => {
+    return doc.fullVersionOrBranch.fullVersionOrBranch === headVersion;
+  });
+
+  if (!doc) {
+    console.log("NO DOC FOUND", version, filePath);
+    return null;
+  }
+
+  const returnDoc: Doc = { attributes: {}, html: doc.html, title: "lol" };
+  return returnDoc;
 }
 
-async function getDocLocal(config: Config, filePath: string): Promise<string> {
+async function getDocLocal(config: Config, filePath: string): Promise<Doc> {
   let root = path.resolve(process.cwd(), config.localPath);
   let dirName = path.join(root, filePath);
   let ext = `.md`;
@@ -198,7 +219,14 @@ async function getDocLocal(config: Config, filePath: string): Promise<string> {
   }
 
   let file = await fs.readFile(actualFileWeWant);
-  return file.toString();
+
+  let { data, content } = parseAttributes(file);
+  let title = data.title || filePath;
+  // console.time(`process markdown ${slug}`);
+  let html = await processMarkdown(`## toc\n\n${content}`);
+  // console.timeEnd(`process markdown ${slug}`);
+  let doc: Doc = { attributes: data, html: html.toString(), title };
+  return doc;
 }
 
 // TODO: make this return a list of File[]

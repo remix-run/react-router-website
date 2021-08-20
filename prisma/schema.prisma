@@ -17,15 +17,19 @@ model Version {
   fullVersionOrBranch String @unique
   // versionHeadOrBranch v0.17
   versionHeadOrBranch String
-  docs                Doc[]
+
+  // relations
+  docs Doc[]
 }
 
 model Doc {
-  id                    String  @id @default(cuid())
-  fileName              String
+  id       String @id @default(cuid())
+  fileName String
+  html     String
+
+  // relations
   fullVersionOrBranch   Version @relation(fields: [fullVersionOrBranchId], references: [id], onDelete: Cascade)
   fullVersionOrBranchId String
-  html                  String
 
   // unique fileName per fullVersionOrBranch
   @@unique([fileName, fullVersionOrBranchId])

@@ -13,13 +13,13 @@ let meta: MetaFunction = () => {
 let loader: LoaderFunction = async ({ context, params }) => {
   let versions = await getVersions(context.docs);
   let version = getVersion(params.version, versions) || {
-    version: params.version.replace(/^v/, ""),
-    head: params.version.replace(/^v/, ""),
+    version: params.version,
+    head: params.version,
     isLatest: false,
   };
 
   try {
-    let doc = await getDoc(context.docs, "index", version);
+    let doc = await getDoc(context.docs, "docs/index", version);
     return json(doc, {});
   } catch (error: unknown) {
     console.error(error);
