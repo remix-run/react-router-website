@@ -7,7 +7,8 @@
     "build": "remix build",
     "dev": "pm2-dev pm2.config.js",
     "deploy": "flyctl deploy --build-arg REMIX_TOKEN=${REMIX_TOKEN}",
-    "start": "node server"
+    "start": "node server",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@prisma/client": "2.29.1",
@@ -34,6 +35,7 @@
     "@types/semver": "7.3.8",
     "@types/tar-stream": "2.2.1",
     "dotenv": "10.0.0",
+    "patch-package": "6.4.7",
     "pm2": "5.1.0",
     "prisma": "2.29.1",
     "typescript": "^4.1.2"
