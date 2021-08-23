@@ -12,6 +12,7 @@ async function processDoc(entry: Entry) {
     html: html.toString(),
     title,
     path: entry.path,
+    md: content,
   };
 }
 

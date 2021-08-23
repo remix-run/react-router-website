@@ -1,4 +1,5 @@
 import { coerce } from "semver";
+
 import { prisma } from "../db.server";
 import { Config } from "../utils.server";
 import { findMatchingEntries, getPackage } from "./get-docs.server";
@@ -46,9 +47,10 @@ async function saveDocs(ref: string, config: Config) {
           updateMany: entriesWithProcessedMD.map((entry) => ({
             data: {
               html: entry.html,
+              md: entry.md,
             },
             where: {
-              fileName: entry.path,
+              filePath: entry.path,
             },
           })),
         },
@@ -64,8 +66,9 @@ async function saveDocs(ref: string, config: Config) {
         versionHeadOrBranch: info,
         docs: {
           create: entriesWithProcessedMD.map((entry) => ({
-            fileName: entry.path,
+            filePath: entry.path,
             html: entry.html,
+            md: entry.md,
           })),
         },
       },

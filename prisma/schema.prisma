@@ -24,13 +24,14 @@ model Version {
 
 model Doc {
   id       String @id @default(cuid())
-  fileName String
+  filePath String
+  md       String
   html     String
 
   // relations
   fullVersionOrBranch   Version @relation(fields: [fullVersionOrBranchId], references: [id], onDelete: Cascade)
   fullVersionOrBranchId String
 
-  // unique fileName per fullVersionOrBranch
-  @@unique([fileName, fullVersionOrBranchId])
+  // unique filePath per fullVersionOrBranch
+  @@unique([filePath, fullVersionOrBranchId])
 }
