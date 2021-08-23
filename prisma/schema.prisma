@@ -13,9 +13,9 @@ generator client {
 
 model Version {
   id                  String @id @default(cuid())
-  // fullVersionOrBranch v0.17.0
+  // fullVersionOrBranch v0.17.0, v6.0.1
   fullVersionOrBranch String @unique
-  // versionHeadOrBranch v0.17
+  // versionHeadOrBranch v0.17, v6
   versionHeadOrBranch String
 
   // relations

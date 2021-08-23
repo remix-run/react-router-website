@@ -8,7 +8,7 @@
     "dev": "pm2-dev pm2.config.js",
     "deploy": "flyctl deploy --build-arg REMIX_TOKEN=${REMIX_TOKEN}",
     "start": "node server",
-    "postinstall": "patch-package && prisma migrate deploy"
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@prisma/client": "2.29.1",
@@ -19,8 +19,8 @@
     "follow-redirects": "1.14.2",
     "gray-matter": "4.0.3",
     "gunzip-maybe": "1.4.2",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-router-dom": "^6.0.0-beta.0",
     "remix": "^0.17.5",
     "semver": "7.3.5",
@@ -30,15 +30,15 @@
     "@remix-run/dev": "^0.17.5",
     "@types/follow-redirects": "1.13.1",
     "@types/gunzip-maybe": "1.4.0",
-    "@types/react": "^17.0.4",
-    "@types/react-dom": "^17.0.4",
+    "@types/react": "^17.0.19",
+    "@types/react-dom": "^17.0.9",
     "@types/semver": "7.3.8",
     "@types/tar-stream": "2.2.1",
     "dotenv": "10.0.0",
     "patch-package": "6.4.7",
-    "pm2": "5.1.0",
+    "pm2": "5.1.1",
     "prisma": "2.29.1",
-    "typescript": "^4.1.2"
+    "typescript": "^4.3.5"
   },
   "engines": {
     "node": ">=14"

@@ -10,7 +10,6 @@ import { maxSatisfying } from "semver";
 let where = "remote"; //process.env.NODE_ENV === "production" ? "remote" : "local";
 
 let menuCache = new Map<string, MenuDir>();
-let versionCache: VersionHead[];
 
 export interface MenuDir {
   type: "dir";
@@ -229,17 +228,14 @@ async function getDocLocal(config: Config, filePath: string): Promise<Doc> {
 
   let { data, content } = parseAttributes(file);
   let title = data.title || filePath;
-  // console.time(`process markdown ${slug}`);
   let html = await processMarkdown(`## toc\n\n${content}`);
-  // console.timeEnd(`process markdown ${slug}`);
   let doc: Doc = { attributes: data, html: html.toString(), title };
   return doc;
 }
 
-async function getContentsRemote(slug: string, version: VersionHead) {
-  return prisma.doc.findFirst({
+async function getContentsRemote(version: VersionHead): Promise<File[]> {
+  const docs = await prisma.doc.findMany({
     where: {
-      filePath: { equals: slug },
       fullVersionOrBranch: {
         fullVersionOrBranch: {
           equals: version.version,
@@ -247,6 +243,12 @@ async function getContentsRemote(slug: string, version: VersionHead) {
       },
     },
   });
+
+  return docs.map((doc) => ({
+    type: "file",
+    name: doc.filePath,
+    path: doc.filePath,
+  }));
 }
 
 async function getContentsLocal(config: Config, slug: string): Promise<File[]> {
@@ -342,7 +344,7 @@ async function getContentsRecursively(
 ): Promise<MenuDir> {
   let contents =
     where === "remote"
-      ? await getContentsRemote(dirPath, version)
+      ? await getContentsRemote(version)
       : await getContentsLocal(config, dirPath);
 
   if (!Array.isArray(contents)) {
@@ -438,19 +440,20 @@ function sortByAttributes(a: MenuItem, b: MenuItem) {
 /**
  * Adds trailing slashes so relative markdown links resolve correctly in the browser
  */
-export function addTrailingSlash(request: Request) {
-  return (fn: () => ReturnType<LoaderFunction>) => {
-    let url = new URL(request.url);
-    if (
-      // not a fetch request
-      !url.searchParams.has("_data") &&
-      // doesn't have a trailing slash
-      !url.pathname.endsWith("/")
-    ) {
-      return redirect(request.url + "/", { status: 308 });
-    }
-    return fn();
-  };
+export function addTrailingSlash(
+  request: Request,
+  fn: () => ReturnType<LoaderFunction>
+) {
+  let url = new URL(request.url);
+  if (
+    // not a fetch request
+    !url.searchParams.has("_data") &&
+    // doesn't have a trailing slash
+    !url.pathname.endsWith("/")
+  ) {
+    return redirect(request.url + "/", { status: 308 });
+  }
+  return fn();
 }
 
 export async function getVersions(): Promise<VersionHead[]> {
