@@ -16,6 +16,13 @@ async function saveDocs(ref: string, config: Config) {
     where: {
       fullVersionOrBranch: version,
     },
+    include: {
+      docs: {
+        select: {
+          filePath: true,
+        },
+      },
+    },
   });
 
   const stream = await getPackage(`${config.owner}/${config.repo}`, ref);
@@ -38,13 +45,27 @@ async function saveDocs(ref: string, config: Config) {
 
   // release exists already, so we need to update it
   if (release) {
+    const releaseDocs = release.docs.map((doc) => doc.filePath);
+    const existingEntries = entriesWithProcessedMD.filter((entry) => {
+      return releaseDocs.includes(entry.path);
+    });
+
+    const newEntries = entriesWithProcessedMD.filter((entry) => {
+      return !releaseDocs.includes(entry.path);
+    });
+
     const result = await prisma.version.update({
       where: {
         fullVersionOrBranch: version,
       },
       data: {
         docs: {
-          updateMany: entriesWithProcessedMD.map((entry) => ({
+          create: newEntries.map((entry) => ({
+            filePath: entry.path,
+            html: entry.html,
+            md: entry.md,
+          })),
+          updateMany: existingEntries.map((entry) => ({
             data: {
               html: entry.html,
               md: entry.md,
