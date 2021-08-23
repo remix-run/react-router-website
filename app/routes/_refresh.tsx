@@ -12,15 +12,21 @@ const action: ActionFunction = async ({ request }) => {
     return redirect("/");
   }
 
-  const url = new URL(request.url);
+  const { search } = new URL(request.url);
 
   try {
     // get all app instances and refresh them
     const instances = await getInstanceURLs();
 
+    console.log(instances);
+
     const results = await Promise.allSettled(
       instances.map(async (instance) => {
-        return fetch(instance + "/_refreshlocal" + url.search, {
+        const url = new URL(instance);
+        url.pathname = "/_refreshlocal";
+        url.search = search;
+
+        return fetch(url.toString(), {
           method: "POST",
           headers: {
             Authorization: process.env.AUTH_TOKEN!,
@@ -33,15 +39,19 @@ const action: ActionFunction = async ({ request }) => {
       console.log(result);
     });
 
-    return redirect("/success");
+    return redirect("/_refresh");
   } catch (error) {
     console.error(error);
-    return redirect("/sad");
+    return redirect("/_refresh");
   }
 };
 
 const RefreshAllInstancesDocsPage: RouteComponent = () => {
-  return <p>404</p>;
+  return (
+    <form method="post">
+      <button type="submit">Refresh All Instances!</button>
+    </form>
+  );
 };
 
 export default RefreshAllInstancesDocsPage;
