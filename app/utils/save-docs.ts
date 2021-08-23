@@ -7,9 +7,31 @@ import { processDocs } from "./process-docs.server";
 
 /**
  * ref: /refs/tags/v6.0.0-beta.1
+ * ref: /refs/heads/dev
  */
 async function saveDocs(ref: string, config: Config) {
-  const version = ref.replace(/^\/refs\/tags\//, "");
+  let version = ref.replace(/^\/refs\/tags\//, "");
+
+  let tag = coerce(ref);
+
+  let info: string;
+
+  if (!tag) {
+    let branch = ref.replace(/^\/refs\/heads\//, "");
+    version = branch;
+    info = branch;
+  } else {
+    info =
+      tag.major > 0
+        ? `v${tag.major}`
+        : tag.minor > 0
+        ? `v0.${tag.minor}`
+        : `v0.0.${tag.patch}`;
+  }
+
+  const stream = await getPackage(`${config.owner}/${config.repo}`, ref);
+  const entries = await findMatchingEntries(stream, "/docs");
+  const entriesWithProcessedMD = await processDocs(entries);
 
   // check if we have this release already
   let release = await prisma.version.findUnique({
@@ -24,24 +46,6 @@ async function saveDocs(ref: string, config: Config) {
       },
     },
   });
-
-  const stream = await getPackage(`${config.owner}/${config.repo}`, ref);
-
-  const entries = await findMatchingEntries(stream, "/docs");
-  const entriesWithProcessedMD = await processDocs(entries);
-
-  let tag = coerce(ref);
-
-  if (!tag) {
-    throw new Error("tag provided wasn't valid semver");
-  }
-
-  let info =
-    tag.major > 0
-      ? `v${tag.major}`
-      : tag.minor > 0
-      ? `v0.${tag.minor}`
-      : `v0.0.${tag.patch}`;
 
   // release exists already, so we need to update it
   if (release) {
