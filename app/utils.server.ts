@@ -138,7 +138,7 @@ async function getDocRemote(
     where: {
       OR: [
         {
-          fileName: filePath,
+          filePath,
           fullVersionOrBranch: {
             versionHeadOrBranch: {
               equals: version.head,
@@ -146,7 +146,7 @@ async function getDocRemote(
           },
         },
         {
-          fileName: filePath,
+          filePath,
           fullVersionOrBranch: {
             fullVersionOrBranch: {
               equals: version.head,
@@ -187,7 +187,7 @@ async function getDocRemote(
       version: doc.fullVersionOrBranch.fullVersionOrBranch,
     },
     html: doc.html,
-    title: doc.fileName,
+    title: doc.filePath,
   };
   return returnDoc;
 }
@@ -239,9 +239,7 @@ async function getDocLocal(config: Config, filePath: string): Promise<Doc> {
 async function getContentsRemote(slug: string, version: VersionHead) {
   return prisma.doc.findFirst({
     where: {
-      fileName: {
-        equals: slug,
-      },
+      filePath: { equals: slug },
       fullVersionOrBranch: {
         fullVersionOrBranch: {
           equals: version.version,
@@ -294,9 +292,7 @@ async function getFileRemote(
 }> {
   const doc = await prisma.doc.findFirst({
     where: {
-      fileName: {
-        equals: filename,
-      },
+      filePath: { equals: filename },
       fullVersionOrBranch: {
         fullVersionOrBranch: {
           equals: version.version,
@@ -314,7 +310,7 @@ async function getFileRemote(
 
   return {
     attributes: {
-      title: doc.fileName,
+      title: doc.filePath,
     },
     content: doc.html,
   };
@@ -459,9 +455,7 @@ export function addTrailingSlash(request: Request) {
 
 export async function getVersions(): Promise<VersionHead[]> {
   const originalVersions = await prisma.version.findMany({
-    select: {
-      fullVersionOrBranch: true,
-    },
+    select: { fullVersionOrBranch: true },
   });
 
   const versions = transformVersionsToLatest(
