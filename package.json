@@ -8,7 +8,7 @@
     "dev": "pm2-dev pm2.config.js",
     "deploy": "flyctl deploy --build-arg REMIX_TOKEN=${REMIX_TOKEN}",
     "start": "node server",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package && prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "2.29.1",
