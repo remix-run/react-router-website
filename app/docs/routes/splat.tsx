@@ -13,7 +13,7 @@ let loader: LoaderFunction = async ({ params, context }) => {
   };
 
   let slugParam = params["*"];
-  // get rid of leading (and trailing) `/`
+  // get rid of the trailing `/`
   let slug = slugParam.replace(/\/$/, "");
 
   try {
