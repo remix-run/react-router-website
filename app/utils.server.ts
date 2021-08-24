@@ -438,42 +438,19 @@ function sortByAttributes(a: MenuItem, b: MenuItem) {
 }
 
 export async function getVersions(): Promise<VersionHead[]> {
-  const originalVersions = await prisma.version.findMany({
-    select: { fullVersionOrBranch: true },
+  let originalVersions = await prisma.version.findMany({
+    select: { fullVersionOrBranch: true, versionHeadOrBranch: true },
   });
 
-  const versions = transformVersionsToLatest(
-    originalVersions.map((v) => v.fullVersionOrBranch)
+  let sorted = originalVersions.sort((a, b) =>
+    semver.compare(a.fullVersionOrBranch, b.fullVersionOrBranch)
   );
 
-  return versions;
-}
-
-// Takes a list of semver tags and returns just the top of each major(ish)
-// version in reverse order (latest first)
-export function transformVersionsToLatest(tags: string[]) {
-  let sorted = semver.sort(tags);
-  let heads = new Map<string, string>();
-
-  for (let tag of sorted) {
-    let info = semver.coerce(tag)!;
-    if (info.major > 0) {
-      // 1.x.x
-      heads.set(`v${info.major}`, info.version);
-    } else if (info.minor > 0) {
-      // 0.1.x
-      heads.set(`v0.${info.minor}`, info.version);
-    } else {
-      // 0.0.1
-      heads.set(`v0.0.${info.patch}`, info.version);
-    }
-  }
-
-  let versions: VersionHead[] = [];
-
-  for (let [head, version] of heads) {
-    versions.unshift({ head: head, version: version, isLatest: false });
-  }
+  let versions = sorted.map((v) => ({
+    head: v.versionHeadOrBranch,
+    version: v.fullVersionOrBranch,
+    isLatest: false,
+  }));
 
   versions[0].isLatest = true;
 
