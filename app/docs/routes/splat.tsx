@@ -29,8 +29,6 @@ let loader: LoaderFunction = async ({ params, context }) => {
 const SplatPage: RouteComponent = () => {
   const doc = useRouteData<Doc>();
 
-  console.log(doc);
-
   if (!doc) {
     return (
       <div>

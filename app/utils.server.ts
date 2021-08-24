@@ -2,7 +2,6 @@ import { promises as fs } from "fs";
 import path from "path";
 import parseAttributes from "gray-matter";
 import { processMarkdown } from "@ryanflorence/md";
-import { LoaderFunction, redirect, Request } from "remix";
 import * as semver from "semver";
 import { prisma } from "./db.server";
 import { maxSatisfying } from "semver";
@@ -183,10 +182,10 @@ async function getDocRemote(
 
   const returnDoc: Doc = {
     attributes: {
-      version: doc.fullVersionOrBranch.fullVersionOrBranch,
+      title: doc.title,
     },
     html: doc.html,
-    title: doc.filePath,
+    title: doc.title ?? doc.filePath,
   };
   return returnDoc;
 }
@@ -312,7 +311,8 @@ async function getFileRemote(
 
   return {
     attributes: {
-      title: doc.filePath,
+      title: doc.title,
+      order: doc.order,
     },
     content: doc.html,
   };
