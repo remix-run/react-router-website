@@ -48,9 +48,7 @@ let action: ActionFunction = async ({ request, context }) => {
       const releases = await releasesPromise.json();
 
       const releasesToUse = releases.filter((release: any) => {
-        return satisfies(release.tag_name, context.docs.versions, {
-          includePrerelease: true,
-        });
+        return satisfies(release.tag_name, context.docs.versions);
       });
 
       await Promise.all(
