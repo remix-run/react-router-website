@@ -5,7 +5,7 @@ import { Entry } from "./get-docs.server";
 async function processDoc(entry: Entry) {
   let { data, content } = parseAttributes(entry.content!);
 
-  let path = entry.path.replace(/^\/docs\//, "");
+  let path = entry.path.replace(/^\/docs/, "");
   let title = data.title || path;
   let html = await processMarkdown(`## toc\n\n${content}`);
 

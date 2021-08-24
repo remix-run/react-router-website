@@ -437,25 +437,6 @@ function sortByAttributes(a: MenuItem, b: MenuItem) {
   return a.title.localeCompare(b.title);
 }
 
-/**
- * Adds trailing slashes so relative markdown links resolve correctly in the browser
- */
-export function addTrailingSlash(
-  request: Request,
-  fn: () => ReturnType<LoaderFunction>
-) {
-  let url = new URL(request.url);
-  if (
-    // not a fetch request
-    !url.searchParams.has("_data") &&
-    // doesn't have a trailing slash
-    !url.pathname.endsWith("/")
-  ) {
-    return redirect(request.url + "/", { status: 308 });
-  }
-  return fn();
-}
-
 export async function getVersions(): Promise<VersionHead[]> {
   const originalVersions = await prisma.version.findMany({
     select: { fullVersionOrBranch: true },

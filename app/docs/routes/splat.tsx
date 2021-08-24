@@ -14,7 +14,7 @@ let loader: LoaderFunction = async ({ params, context }) => {
 
   let slugParam = params["*"];
   // get rid of leading (and trailing) `/`
-  let slug = slugParam.replace(/^\//, "").replace(/\/$/, "");
+  let slug = slugParam.replace(/\/$/, "");
 
   try {
     let doc = await getDoc(context.docs, slug, version);
@@ -29,6 +29,8 @@ let loader: LoaderFunction = async ({ params, context }) => {
 const SplatPage: RouteComponent = () => {
   const doc = useRouteData<Doc>();
 
+  console.log(doc);
+
   if (!doc) {
     return (
       <div>
@@ -41,7 +43,6 @@ const SplatPage: RouteComponent = () => {
   return (
     <div>
       <h1>{doc.title}</h1>
-      <h2>Version: {doc.attributes.version}</h2>
       <div
         className="content-container"
         dangerouslySetInnerHTML={{ __html: doc.html }}
