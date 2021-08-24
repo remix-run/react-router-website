@@ -68,6 +68,7 @@ async function saveDocs(ref: string, config: Config) {
             filePath: entry.path,
             html: entry.html,
             md: entry.md,
+            title: entry.path,
           })),
           updateMany: existingEntries.map((entry) => ({
             data: {
@@ -94,6 +95,7 @@ async function saveDocs(ref: string, config: Config) {
             filePath: entry.path,
             html: entry.html,
             md: entry.md,
+            title: entry.path,
           })),
         },
       },

@@ -27,6 +27,8 @@ model Doc {
   filePath String
   md       String
   html     String
+  title    String
+  order    Int?
 
   // relations
   fullVersionOrBranch   Version @relation(fields: [fullVersionOrBranchId], references: [id], onDelete: Cascade)
