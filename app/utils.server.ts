@@ -440,10 +440,11 @@ function sortByAttributes(a: MenuItem, b: MenuItem) {
 export async function getVersions(): Promise<VersionHead[]> {
   let originalVersions = await prisma.version.findMany({
     select: { fullVersionOrBranch: true, versionHeadOrBranch: true },
+    distinct: "versionHeadOrBranch",
   });
 
   let sorted = originalVersions.sort((a, b) =>
-    semver.compare(a.fullVersionOrBranch, b.fullVersionOrBranch)
+    semver.compare(b.fullVersionOrBranch, a.fullVersionOrBranch)
   );
 
   let versions = sorted.map((v) => ({
