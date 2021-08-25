@@ -6,7 +6,7 @@ import * as semver from "semver";
 import { prisma } from "./db.server";
 import { maxSatisfying } from "semver";
 
-let where = "remote"; //process.env.NODE_ENV === "production" ? "remote" : "local";
+let where: "remote" | "local" = "remote"; //process.env.NODE_ENV === "production" ? "remote" : "local";
 
 let menuCache = new Map<string, MenuDir>();
 
@@ -101,7 +101,7 @@ export async function getMenu(
     return menuCache.get(version.version)!;
   }
 
-  let dirName = where === "remote" ? config.remotePath : ".";
+  let dirName = where === "remote" ? "/" : ".";
   let menu = await getContentsRecursively(
     config,
     dirName,
@@ -232,22 +232,56 @@ async function getDocLocal(config: Config, filePath: string): Promise<Doc> {
   return doc;
 }
 
-async function getContentsRemote(version: VersionHead): Promise<File[]> {
+// TODO: this is a mess, could be optimized and not even need to be recursive, but here we are
+async function getContentsRemote(
+  version: VersionHead,
+  slug: string
+): Promise<File[]> {
+  let slugWithLeadingSlash = slug.startsWith("/") ? slug : `/${slug}`;
+
   const docs = await prisma.doc.findMany({
     where: {
-      fullVersionOrBranch: {
-        fullVersionOrBranch: {
-          equals: version.version,
+      AND: [
+        {
+          filePath: {
+            startsWith: slugWithLeadingSlash,
+          },
         },
-      },
+        {
+          fullVersionOrBranch: {
+            fullVersionOrBranch: {
+              equals: version.version,
+            },
+          },
+        },
+      ],
     },
   });
 
-  return docs.map((doc) => ({
-    type: "file",
-    name: doc.filePath,
-    path: doc.filePath,
-  }));
+  let files: File[] = docs
+    .map((doc) => {
+      let dirs = doc.filePath.split("/").filter(Boolean).slice(0, -1);
+      let joined = "/" + dirs.join("/");
+
+      if (joined === slugWithLeadingSlash) {
+        return {
+          name: doc.filePath,
+          path: doc.filePath,
+          type: "file",
+        };
+      }
+
+      return {
+        type: "dir",
+        name: joined,
+        path: joined,
+      };
+    })
+    .filter((f, i, arr) => {
+      return arr.findIndex((a) => a.path === f.path) === i;
+    });
+
+  return files;
 }
 
 async function getContentsLocal(config: Config, slug: string): Promise<File[]> {
@@ -344,7 +378,7 @@ async function getContentsRecursively(
 ): Promise<MenuDir> {
   let contents =
     where === "remote"
-      ? await getContentsRemote(version)
+      ? await getContentsRemote(version, dirPath)
       : await getContentsLocal(config, dirPath);
 
   if (!Array.isArray(contents)) {

@@ -37,7 +37,6 @@ let loader: LoaderFunction = async ({ context, params }) => {
       isLatest: false,
     };
     const menu = await getMenu(context.docs, version);
-    console.log({ menu });
 
     const data: RouteData = {
       menu,

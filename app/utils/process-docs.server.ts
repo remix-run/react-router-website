@@ -1,6 +1,6 @@
 import parseAttributes from "gray-matter";
 import { processMarkdown } from "@ryanflorence/md";
-import { Entry } from "./get-docs.server";
+import type { Entry } from "./get-docs.server";
 
 async function processDoc(entry: Entry) {
   let { data, content } = parseAttributes(entry.content!);
