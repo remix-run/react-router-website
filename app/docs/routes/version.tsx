@@ -1,7 +1,7 @@
 import * as React from "react";
 import {
+  Link,
   NavLink,
-  Outlet,
   useLocation,
   useNavigate,
   useParams,
@@ -13,6 +13,7 @@ import {
   useMatches,
   useRouteData,
 } from "remix";
+import { DataOutlet } from "../../components/data-outlet";
 import {
   getMenu,
   getVersion,
@@ -27,28 +28,60 @@ interface RouteData {
   version: VersionHead;
 }
 
-let loader: LoaderFunction = async ({ request, context, params }) => {
-  let versions = await getVersions();
-  let version = getVersion(params.version, versions) || {
-    version: params.version,
-    head: params.version,
-    isLatest: false,
-  };
-  const menu = await getMenu(context.docs, version);
-  console.log({ menu });
+let loader: LoaderFunction = async ({ context, params }) => {
+  try {
+    let versions = await getVersions();
+    let version = getVersion(params.version, versions) || {
+      version: params.version,
+      head: params.version,
+      isLatest: false,
+    };
+    const menu = await getMenu(context.docs, version);
+    console.log({ menu });
 
-  const data: RouteData = {
-    menu,
-    version,
-    versions,
-  };
+    const data: RouteData = {
+      menu,
+      version,
+      versions,
+    };
 
-  return json(data);
+    // so fresh!
+    return json(data, { headers: { "Cache-Control": "max-age=0" } });
+  } catch (error: unknown) {
+    console.error(error);
+    return json({ notFound: true }, { status: 404 });
+  }
 };
+
+let handle = {
+  crumb: (
+    { data: { version } }: { data: { version: VersionHead } },
+    ref: any
+  ) => (
+    <Link ref={ref} to={"/docs/" + version.head}>
+      {version.head}
+    </Link>
+  ),
+};
+
+export type MenuMap = Map<string, MenuDir>;
+
+function createMenuMap(dir: MenuDir, map: MenuMap = new Map()) {
+  for (let file of dir.files) {
+    map.set(file.path, dir);
+  }
+  if (dir.dirs) {
+    for (let childDir of dir.dirs) {
+      createMenuMap(childDir, map);
+    }
+  }
+  return map;
+}
 
 let VersionPage: RouteComponent = () => {
   let data = useRouteData<RouteData>();
   let matches = useMatches();
+  let menuMap = React.useMemo(() => createMenuMap(data.menu), [data.menu]);
   let [navIsOpen, setNavIsOpen] = React.useState(false);
   let location = useLocation();
 
@@ -81,13 +114,13 @@ let VersionPage: RouteComponent = () => {
             <Menu data={data} />
           </nav>
         </div>
-        <Outlet />
+        <DataOutlet context={menuMap} />
       </div>
     </>
   );
 };
 
-export function Menu({ data }: { data: RouteData }) {
+function Menu({ data }: { data: RouteData }) {
   let navigate = useNavigate();
   let params = useParams();
   let isOtherTag = !data.versions.find((v) => v.head === params.version);
@@ -99,7 +132,7 @@ export function Menu({ data }: { data: RouteData }) {
           data-docs-version-select
           defaultValue={data.version.head}
           onChange={(event) => {
-            navigate(`/${event.target.value}/`);
+            navigate(`/docs/${params.lang}/${event.target.value}`);
           }}
         >
           {isOtherTag && (
@@ -117,14 +150,16 @@ export function Menu({ data }: { data: RouteData }) {
   );
 }
 
-export function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
+function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
+  const { lang, version } = useParams();
+  const linkPrefix = `/docs/${lang}/${version}`;
   return (
     <ul data-docs-menu data-level={level}>
       {dir.dirs &&
         dir.dirs.map((dir, index) => (
           <li data-docs-dir data-level={level} key={index}>
             {dir.hasIndex ? (
-              <NavLink data-docs-link to={dir.path + "/"}>
+              <NavLink data-docs-link to={`${linkPrefix}${dir.path}`}>
                 {dir.title}
               </NavLink>
             ) : (
@@ -140,7 +175,7 @@ export function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
               {file.title} 🚧
             </span>
           ) : (
-            <NavLink data-docs-link to={file.path + "/"}>
+            <NavLink data-docs-link to={`${linkPrefix}${file.path}`}>
               {file.title}
             </NavLink>
           )}
@@ -197,4 +232,4 @@ function Close() {
 }
 
 export default VersionPage;
-export { loader };
+export { createMenuMap, handle, loader };

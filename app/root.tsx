@@ -1,15 +1,19 @@
-import type { LinksFunction, LoaderFunction } from "remix";
+import type {
+  ErrorBoundaryComponent,
+  LinksFunction,
+  RouteComponent,
+} from "remix";
 import { Meta, Links, Scripts, useRouteData, LiveReload } from "remix";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 
 import stylesUrl from "./styles/global.css";
 
-export let links: LinksFunction = () => {
+let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
 };
 
-export let loader: LoaderFunction = async () => {
-  return { date: new Date() };
+let handle = {
+  crumb: () => <Link to="/">React Router</Link>,
 };
 
 function Document({ children }: { children: React.ReactNode }) {
@@ -31,19 +35,16 @@ function Document({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
+const App: RouteComponent = () => {
   let data = useRouteData();
   return (
     <Document>
       <Outlet />
-      <footer>
-        <p>This page was rendered at {data.date.toLocaleString()}</p>
-      </footer>
     </Document>
   );
-}
+};
 
-export function ErrorBoundary({ error }: { error: Error }) {
+const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   return (
     <Document>
       <h1>App Error</h1>
@@ -54,4 +55,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
       </p>
     </Document>
   );
-}
+};
+
+export default App;
+export { ErrorBoundary, links, handle };

@@ -1,15 +1,10 @@
-import { MetaFunction, LoaderFunction, json, RouteComponent } from "remix";
-import { useRouteData } from "remix";
-
+import type { LoaderFunction, RouteComponent } from "remix";
+import { json } from "remix";
 import { getDoc, getVersion, getVersions } from "../../utils.server";
+import { Page } from "../../components/page";
 
-let meta: MetaFunction = () => {
-  return {
-    title: "Remix Starter",
-    description: "Welcome to remix!",
-  };
-};
-
+// this and splat.tsx loader are identical except the "index" vs. params["*"]
+// part
 let loader: LoaderFunction = async ({ context, params }) => {
   let versions = await getVersions();
   let version = getVersion(params.version, versions) || {
@@ -19,8 +14,15 @@ let loader: LoaderFunction = async ({ context, params }) => {
   };
 
   try {
-    let doc = await getDoc(context.docs, "docs/index", version);
-    return json(doc, {});
+    let doc = await getDoc(context.docs, "index", version);
+
+    // we could also throw an error in getDoc if the doc doesn't exist
+    if (!doc) {
+      return json({ notFound: true }, { status: 404 });
+    }
+
+    // so fresh!
+    return json(doc, { headers: { "Cache-Control": "max-age=0" } });
   } catch (error: unknown) {
     console.error(error);
     return json({ notFound: true }, { status: 404 });
@@ -28,15 +30,9 @@ let loader: LoaderFunction = async ({ context, params }) => {
 };
 
 const IndexPage: RouteComponent = () => {
-  let data = useRouteData();
-
-  return (
-    <div style={{ textAlign: "center", padding: 20 }}>
-      <h2>{data.title}</h2>
-      <article dangerouslySetInnerHTML={{ __html: data.html }} />
-    </div>
-  );
+  return <Page />;
 };
 
 export default IndexPage;
-export { loader, meta };
+export { loader };
+export { meta } from "../../components/page";
