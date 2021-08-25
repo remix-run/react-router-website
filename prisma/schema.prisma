@@ -12,9 +12,8 @@ generator client {
 }
 
 model Version {
-  id                  String @id @default(cuid())
   // fullVersionOrBranch v0.17.0, v6.0.1
-  fullVersionOrBranch String @unique
+  fullVersionOrBranch String @id
   // versionHeadOrBranch v0.17, v6
   versionHeadOrBranch String
 
@@ -23,15 +22,19 @@ model Version {
 }
 
 model Doc {
-  id       String @id @default(cuid())
-  filePath String
-  md       String
-  html     String
-  title    String
-  order    Int?
+  id           String  @id @default(cuid())
+  filePath     String
+  md           String
+  html         String
+  title        String
+  order        Int?
+  disabled     Boolean @default(false)
+  siblingLinks Boolean @default(false)
+  published    String?
+  description  String?
 
   // relations
-  fullVersionOrBranch   Version @relation(fields: [fullVersionOrBranchId], references: [id], onDelete: Cascade)
+  fullVersionOrBranch   Version @relation(fields: [fullVersionOrBranchId], references: [fullVersionOrBranch], onDelete: Cascade)
   fullVersionOrBranchId String
 
   // unique filePath per fullVersionOrBranch
