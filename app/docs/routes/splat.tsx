@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { LoaderFunction, RouteComponent } from "remix";
+import { LoaderFunction, redirect, RouteComponent } from "remix";
 import { Link } from "react-router-dom";
 import { json } from "remix";
 
@@ -7,6 +7,7 @@ import { getDoc, getVersion, getVersions } from "../../utils.server";
 import { Page } from "../../components/page";
 
 let loader: LoaderFunction = async ({ params, context }) => {
+  let path = await import("path");
   try {
     let versions = await getVersions();
 
@@ -16,11 +17,20 @@ let loader: LoaderFunction = async ({ params, context }) => {
       isLatest: false,
     };
 
+    let lang = params.lang;
     let slugParam = params["*"];
     // get rid of the trailing `/`
     let slug = slugParam.replace(/\/$/, "");
+    let ext = path.extname(slug);
 
-    let doc = await getDoc(context.docs, slug, version);
+    if (ext) {
+      let basename = path.basename(slug, ext);
+      console.log(basename);
+
+      return redirect(`/docs/${lang}/${version.head}/${basename}`);
+    }
+
+    let doc = await getDoc(context.docs, slug + ".md", version);
 
     // we could also throw an error in getDoc if the doc doesn't exist
     if (!doc) {
