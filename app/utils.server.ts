@@ -107,12 +107,7 @@ export async function getMenu(
     return menuCache.get(version.version)!;
   }
 
-  let dirName =
-    where === "remote"
-      ? "/"
-      : lang === "en"
-      ? "/"
-      : `/${config.localLangDir}/${lang}`;
+  let dirName = "/";
 
   let menu = await getContentsRecursively(
     config,
