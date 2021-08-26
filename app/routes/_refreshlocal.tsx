@@ -65,7 +65,7 @@ let action: ActionFunction = async ({ request, context }) => {
   }
 };
 
-const RefreshAllInstancesDocsPage: RouteComponent = () => {
+const RefreshInstance: RouteComponent = () => {
   let data = useRouteData();
 
   if (data.notFound) {
@@ -79,5 +79,5 @@ const RefreshAllInstancesDocsPage: RouteComponent = () => {
   );
 };
 
-export default RefreshAllInstancesDocsPage;
+export default RefreshInstance;
 export { action, loader };
