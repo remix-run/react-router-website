@@ -70,6 +70,7 @@ async function saveDocs(ref: string, config: Config) {
             html: entry.html,
             md: entry.md,
             title: entry.path,
+            lang: entry.lang,
           })),
           updateMany: existingEntries.map((entry) => ({
             data: {
@@ -99,6 +100,7 @@ async function saveDocs(ref: string, config: Config) {
             html: entry.html,
             md: entry.md,
             title: entry.path,
+            lang: entry.lang,
           })),
         },
       },

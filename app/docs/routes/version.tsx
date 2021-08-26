@@ -30,13 +30,14 @@ interface RouteData {
 
 let loader: LoaderFunction = async ({ context, params }) => {
   try {
+    let lang = params.lang;
     let versions = await getVersions();
     let version = getVersion(params.version, versions) || {
       version: params.version,
       head: params.version,
       isLatest: false,
     };
-    const menu = await getMenu(context.docs, version);
+    const menu = await getMenu(context.docs, version, lang);
 
     const data: RouteData = {
       menu,

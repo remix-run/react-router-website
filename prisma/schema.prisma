@@ -32,6 +32,7 @@ model Doc {
   siblingLinks Boolean @default(false)
   published    String?
   description  String?
+  lang         String
 
   // relations
   fullVersionOrBranch   Version @relation(fields: [fullVersionOrBranchId], references: [fullVersionOrBranch], onDelete: Cascade)

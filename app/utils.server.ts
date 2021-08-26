@@ -71,6 +71,11 @@ export type Config = {
   localPath: string;
 
   /**
+   * Directory name of where to find localized docs during development
+   */
+  localLangDir: string;
+
+  /**
    * Semver range of versions you want to show up in the versions dropdown
    */
   versions: string;
@@ -95,19 +100,27 @@ export interface VersionHead {
 
 export async function getMenu(
   config: Config,
-  version: VersionHead
+  version: VersionHead,
+  lang: string
 ): Promise<MenuDir> {
   if (menuCache.has(version.version)) {
     return menuCache.get(version.version)!;
   }
 
-  let dirName = where === "remote" ? "/" : ".";
+  let dirName =
+    where === "remote"
+      ? "/"
+      : lang === "en"
+      ? "/"
+      : `/${config.localLangDir}/${lang}`;
+
   let menu = await getContentsRecursively(
     config,
     dirName,
     "root",
     dirName,
-    version
+    version,
+    lang
   );
   menuCache.set(version.version, menu);
   return menu;
@@ -116,12 +129,13 @@ export async function getMenu(
 export async function getDoc(
   config: Config,
   slug: string,
-  version: VersionHead
+  version: VersionHead,
+  lang: string
 ): Promise<Doc | null> {
   let fileContents =
     where === "remote"
-      ? await getDocRemote(slug, version)
-      : await getDocLocal(config, slug);
+      ? await getDocRemote(slug, version, lang)
+      : await getDocLocal(config, slug, lang);
 
   if (!fileContents) return null;
 
@@ -130,26 +144,37 @@ export async function getDoc(
 
 async function getDocRemote(
   filePath: string,
-  version: VersionHead
+  version: VersionHead,
+  lang: string
 ): Promise<Doc | null> {
   const docs = await prisma.doc.findMany({
     where: {
       OR: [
         {
-          filePath,
-          fullVersionOrBranch: {
-            versionHeadOrBranch: {
-              equals: version.head,
+          AND: [
+            {
+              lang,
+              filePath: filePath + ".md",
+              fullVersionOrBranch: {
+                versionHeadOrBranch: {
+                  equals: version.head,
+                },
+              },
             },
-          },
+          ],
         },
         {
-          filePath,
-          fullVersionOrBranch: {
-            fullVersionOrBranch: {
-              equals: version.head,
+          AND: [
+            {
+              lang,
+              filePath: filePath + ".md",
+              fullVersionOrBranch: {
+                fullVersionOrBranch: {
+                  equals: version.head,
+                },
+              },
             },
-          },
+          ],
         },
       ],
     },
@@ -159,7 +184,7 @@ async function getDocRemote(
   });
 
   if (!docs) {
-    console.log("NO DOCS FOUND", version, filePath);
+    console.log("NO DOCS FOUND", version, filePath, lang);
     return null;
   }
 
@@ -172,12 +197,12 @@ async function getDocRemote(
   });
 
   if (!doc) {
-    console.log("NO DOC FOUND", version, filePath);
+    console.log("NO DOC FOUND", version, filePath, lang);
     return null;
   }
 
   console.log(
-    `using version ${doc.fullVersionOrBranch.fullVersionOrBranch} of ${filePath}`
+    `using version ${doc.fullVersionOrBranch.fullVersionOrBranch} of ${filePath} in ${lang}`
   );
 
   const returnDoc: Doc = {
@@ -190,8 +215,20 @@ async function getDocRemote(
   return returnDoc;
 }
 
-async function getDocLocal(config: Config, filePath: string): Promise<Doc> {
-  let root = path.resolve(process.cwd(), config.localPath);
+async function getDocLocal(
+  config: Config,
+  filePath: string,
+  lang: string
+): Promise<Doc> {
+  let root =
+    lang === "en"
+      ? path.resolve(process.cwd(), config.localPath)
+      : path.resolve(
+          process.cwd(),
+          config.localPath,
+          config.localLangDir,
+          lang
+        );
   let dirName = path.join(root, filePath);
   let ext = `.md`;
 
@@ -235,7 +272,8 @@ async function getDocLocal(config: Config, filePath: string): Promise<Doc> {
 // TODO: this is a mess, could be optimized and not even need to be recursive, but here we are
 async function getContentsRemote(
   version: VersionHead,
-  slug: string
+  slug: string,
+  lang: string
 ): Promise<File[]> {
   let slugWithLeadingSlash = slug.startsWith("/") ? slug : `/${slug}`;
 
@@ -254,6 +292,7 @@ async function getContentsRemote(
             },
           },
         },
+        { lang },
       ],
     },
   });
@@ -277,6 +316,7 @@ async function getContentsRemote(
         path: joined,
       };
     })
+    // remove duplicates
     .filter((f, i, arr) => {
       return arr.findIndex((a) => a.path === f.path) === i;
     });
@@ -374,11 +414,12 @@ async function getContentsRecursively(
   dirPath: string,
   dirName: string,
   rootName: string,
-  version: VersionHead
+  version: VersionHead,
+  lang: string
 ): Promise<MenuDir> {
   let contents =
     where === "remote"
-      ? await getContentsRemote(version, dirPath)
+      ? await getContentsRemote(version, dirPath, lang)
       : await getContentsLocal(config, dirPath);
 
   if (!Array.isArray(contents)) {
@@ -441,7 +482,14 @@ async function getContentsRecursively(
     dir.dirs = (
       await Promise.all(
         dirs.map((dir) =>
-          getContentsRecursively(config, dir.path, dir.name, rootName, version)
+          getContentsRecursively(
+            config,
+            dir.path,
+            dir.name,
+            rootName,
+            version,
+            lang
+          )
         )
       )
     )

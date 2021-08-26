@@ -30,7 +30,7 @@ let loader: LoaderFunction = async ({ params, context }) => {
       return redirect(`/docs/${lang}/${version.head}/${basename}`);
     }
 
-    let doc = await getDoc(context.docs, slug + ".md", version);
+    let doc = await getDoc(context.docs, slug, version, lang);
 
     // we could also throw an error in getDoc if the doc doesn't exist
     if (!doc) {
