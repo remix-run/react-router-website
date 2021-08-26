@@ -38,6 +38,8 @@ model Doc {
   fullVersionOrBranch   Version @relation(fields: [fullVersionOrBranchId], references: [fullVersionOrBranch], onDelete: Cascade)
   fullVersionOrBranchId String
 
-  // unique filePath per fullVersionOrBranch
-  @@unique([filePath, fullVersionOrBranchId])
+  // unique filePath per fullVersionOrBranch and lang
+  // /installation/add-to-a-website.md in EN ✅
+  // /installation/add-to-a-website.md in FR ✅
+  @@unique([filePath, fullVersionOrBranchId, lang])
 }
