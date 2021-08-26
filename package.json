@@ -8,26 +8,27 @@
     "dev": "pm2-dev pm2.config.js",
     "deploy": "flyctl deploy --build-arg REMIX_TOKEN=${REMIX_TOKEN}",
     "start": "node server",
-    "postinstall": "patch-package"
+    "postinstall": "remix setup && patch-package"
   },
   "dependencies": {
-    "@prisma/client": "2.29.1",
-    "@remix-run/node": "^0.17.5",
-    "@remix-run/react": "^0.17.5",
-    "@remix-run/serve": "^0.17.5",
+    "@prisma/client": "2.30.0",
+    "@remix-run/node": "0.18.0-pre.1",
+    "@remix-run/react": "0.18.0-pre.1",
+    "@remix-run/serve": "0.18.0-pre.1",
     "@ryanflorence/md": "3.0.5",
     "follow-redirects": "1.14.2",
     "gray-matter": "4.0.3",
     "gunzip-maybe": "1.4.2",
+    "node-fetch": "2.6.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.0.0-beta.0",
-    "remix": "^0.17.5",
+    "remix": "0.18.0-pre.1",
     "semver": "7.3.5",
     "tar-stream": "2.2.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^0.17.5",
+    "@remix-run/dev": "0.18.0-pre.1",
     "@types/follow-redirects": "1.13.1",
     "@types/gunzip-maybe": "1.4.0",
     "@types/react": "^17.0.19",
@@ -37,7 +38,7 @@
     "dotenv": "10.0.0",
     "patch-package": "6.4.7",
     "pm2": "5.1.1",
-    "prisma": "2.29.1",
+    "prisma": "2.30.0",
     "typescript": "^4.3.5"
   },
   "engines": {
