@@ -421,12 +421,12 @@ async function getContentsRecursively(
               file.path,
               version
             );
-            let linkPath = file.path
-              .replace(rootName, "")
-              .slice(0, -ext.length);
+
+            let linkPath = file.path.slice(0, -ext.length);
+
             return {
               name: file.name,
-              path: `/${version.head}${linkPath}`,
+              path: linkPath,
               type: "file",
               attributes,
               title: attributes.title || path.basename(linkPath),
