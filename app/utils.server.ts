@@ -295,6 +295,10 @@ async function getContentsRemote(
         { lang },
       ],
     },
+    select: {
+      filePath: true,
+      title: true,
+    },
   });
 
   let files: File[] = docs
@@ -304,7 +308,7 @@ async function getContentsRemote(
 
       if (joined === slugWithLeadingSlash) {
         return {
-          name: doc.filePath,
+          name: doc.title,
           path: doc.filePath,
           type: "file",
         };
@@ -312,7 +316,7 @@ async function getContentsRemote(
 
       return {
         type: "dir",
-        name: joined,
+        name: doc.title,
         path: joined,
       };
     })
