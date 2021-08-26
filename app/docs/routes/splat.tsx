@@ -24,10 +24,9 @@ let loader: LoaderFunction = async ({ params, context }) => {
     let ext = path.extname(slug);
 
     if (ext) {
-      let basename = path.basename(slug, ext);
-      console.log(basename);
-
-      return redirect(`/docs/${lang}/${version.head}/${basename}`);
+      let parsed = path.parse(slug);
+      let noExtension = parsed.dir + "/" + parsed.name;
+      return redirect(`/docs/${lang}/${version.head}${noExtension}`);
     }
 
     let doc = await getDoc(context.docs, slug, version, lang);
