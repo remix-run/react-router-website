@@ -132,7 +132,17 @@ export async function getDoc(
       ? await getDocRemote(slug, version, lang)
       : await getDocLocal(config, slug, lang);
 
-  if (!fileContents) return null;
+  console.log({ fileContents });
+
+  // retry with english
+  if (!fileContents) {
+    let englishFileContents =
+      where === "remote"
+        ? await getDocRemote(slug, version, "en")
+        : await getDocLocal(config, slug, "en");
+
+    return englishFileContents;
+  }
 
   return fileContents;
 }
