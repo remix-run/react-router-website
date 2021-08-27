@@ -114,8 +114,7 @@ export async function getMenu(
     dirName,
     "root",
     dirName,
-    version,
-    lang
+    version
   );
   menuCache.set(version.version, menu);
   return menu;
@@ -277,14 +276,14 @@ async function getDocLocal(
 // TODO: this is a mess, could be optimized and not even need to be recursive, but here we are
 async function getContentsRemote(
   version: VersionHead,
-  slug: string,
-  lang: string
+  slug: string
 ): Promise<File[]> {
   let slugWithLeadingSlash = slug.startsWith("/") ? slug : `/${slug}`;
 
   const docs = await prisma.doc.findMany({
     where: {
       AND: [
+        { lang: "en" },
         {
           filePath: {
             startsWith: slugWithLeadingSlash,
@@ -297,7 +296,6 @@ async function getContentsRemote(
             },
           },
         },
-        { lang },
       ],
     },
     select: {
@@ -423,12 +421,11 @@ async function getContentsRecursively(
   dirPath: string,
   dirName: string,
   rootName: string,
-  version: VersionHead,
-  lang: string
+  version: VersionHead
 ): Promise<MenuDir> {
   let contents =
     where === "remote"
-      ? await getContentsRemote(version, dirPath, lang)
+      ? await getContentsRemote(version, dirPath)
       : await getContentsLocal(config, dirPath);
 
   if (!Array.isArray(contents)) {
@@ -491,14 +488,7 @@ async function getContentsRecursively(
     dir.dirs = (
       await Promise.all(
         dirs.map((dir) =>
-          getContentsRecursively(
-            config,
-            dir.path,
-            dir.name,
-            rootName,
-            version,
-            lang
-          )
+          getContentsRecursively(config, dir.path, dir.name, rootName, version)
         )
       )
     )
