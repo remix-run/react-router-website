@@ -149,7 +149,7 @@ async function getDocRemote(
   version: VersionHead,
   lang: string
 ): Promise<Doc | null> {
-  const docs = await prisma.doc.findMany({
+  let doc = await prisma.doc.findFirst({
     where: {
       OR: [
         {
@@ -176,41 +176,20 @@ async function getDocRemote(
         },
       ],
     },
-    include: {
-      fullVersionOrBranch: true,
-    },
-  });
-
-  if (!docs) {
-    console.log("NO DOCS FOUND", version, filePath, lang);
-    return null;
-  }
-
-  const versions = docs.map((d) => d.fullVersionOrBranch.fullVersionOrBranch);
-
-  const headVersion = maxSatisfying(versions, "*", { includePrerelease: true });
-
-  const doc = docs.find((doc) => {
-    return doc.fullVersionOrBranch.fullVersionOrBranch === headVersion;
   });
 
   if (!doc) {
-    console.log("NO DOC FOUND", version, filePath, lang);
+    console.log(`NO DOC FOUND`, { lang, version, filePath });
     return null;
   }
 
-  console.log(
-    `using version ${doc.fullVersionOrBranch.fullVersionOrBranch} of ${filePath} in ${lang}`
-  );
-
-  const returnDoc: Doc = {
+  return {
     attributes: {
       title: doc.title,
     },
     html: doc.html,
     title: doc.title ?? doc.filePath,
   };
-  return returnDoc;
 }
 
 async function getDocLocal(
