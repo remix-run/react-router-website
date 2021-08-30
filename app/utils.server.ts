@@ -4,7 +4,6 @@ import parseAttributes from "gray-matter";
 import { processMarkdown } from "@ryanflorence/md";
 import * as semver from "semver";
 import { prisma } from "./db.server";
-import { maxSatisfying } from "semver";
 
 let where: "remote" | "local" = "remote"; //process.env.NODE_ENV === "production" ? "remote" : "local";
 
