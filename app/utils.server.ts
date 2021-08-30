@@ -519,12 +519,14 @@ function sortByAttributes(a: MenuItem, b: MenuItem) {
 export async function getVersions(): Promise<VersionHead[]> {
   let originalVersions = await prisma.version.findMany({
     select: { fullVersionOrBranch: true, versionHeadOrBranch: true },
-    distinct: "versionHeadOrBranch",
   });
 
-  let sorted = originalVersions.sort((a, b) =>
-    semver.compare(b.fullVersionOrBranch, a.fullVersionOrBranch)
-  );
+  let sorted = originalVersions
+    // we allow saving branches as versions, but we shouldn't show them
+    .filter((v) => semver.valid(v.fullVersionOrBranch))
+    .sort((a, b) =>
+      semver.compare(b.fullVersionOrBranch, a.fullVersionOrBranch)
+    );
 
   let versions = sorted.map((v) => ({
     head: v.versionHeadOrBranch,
