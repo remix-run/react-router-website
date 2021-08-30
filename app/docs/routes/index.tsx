@@ -14,7 +14,7 @@ let loader: LoaderFunction = async ({ context, params }) => {
   };
 
   try {
-    let doc = await getDoc(context.docs, "index", version);
+    let doc = await getDoc(context.docs, "index", version, params.lang);
 
     // we could also throw an error in getDoc if the doc doesn't exist
     if (!doc) {
