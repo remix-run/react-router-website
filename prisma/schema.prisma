@@ -35,11 +35,11 @@ model Doc {
   lang         String
 
   // relations
-  fullVersionOrBranch   Version @relation(fields: [fullVersionOrBranchId], references: [fullVersionOrBranch], onDelete: Cascade)
-  fullVersionOrBranchId String
+  version   Version @relation(fields: [versionId], references: [fullVersionOrBranch], onDelete: Cascade)
+  versionId String
 
   // unique filePath per fullVersionOrBranch and lang
-  // /installation/add-to-a-website.md in EN ✅
-  // /installation/add-to-a-website.md in FR ✅
-  @@unique([filePath, fullVersionOrBranchId, lang])
+  // /installation/add-to-a-website.md in EN v6.0.0 ✅
+  // /installation/add-to-a-website.md in FR v6.0.0 ✅
+  @@unique([filePath, versionId, lang])
 }

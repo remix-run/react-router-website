@@ -157,10 +157,8 @@ async function getDocRemote(
             {
               lang,
               filePath: filePath + ".md",
-              fullVersionOrBranch: {
-                versionHeadOrBranch: {
-                  equals: version.head,
-                },
+              version: {
+                fullVersionOrBranch: version.head,
               },
             },
           ],
@@ -170,10 +168,8 @@ async function getDocRemote(
             {
               lang,
               filePath: filePath + ".md",
-              fullVersionOrBranch: {
-                fullVersionOrBranch: {
-                  equals: version.head,
-                },
+              version: {
+                versionHeadOrBranch: version.head,
               },
             },
           ],
@@ -288,7 +284,7 @@ async function getContentsRemote(
           },
         },
         {
-          fullVersionOrBranch: {
+          version: {
             fullVersionOrBranch: {
               equals: version.version,
             },
@@ -373,7 +369,7 @@ async function getFileRemote(
   const doc = await prisma.doc.findFirst({
     where: {
       filePath: { equals: filename },
-      fullVersionOrBranch: {
+      version: {
         fullVersionOrBranch: {
           equals: version.version,
         },
