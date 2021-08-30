@@ -99,8 +99,7 @@ export interface VersionHead {
 
 export async function getMenu(
   config: Config,
-  version: VersionHead,
-  lang: string
+  version: VersionHead
 ): Promise<MenuDir> {
   if (menuCache.has(version.version)) {
     return menuCache.get(version.version)!;
@@ -276,31 +275,34 @@ async function getContentsRemote(
     },
   });
 
-  let files: File[] = docs
-    .map((doc) => {
-      let dirs = doc.filePath.split("/").filter(Boolean).slice(0, -1);
-      let joined = "/" + dirs.join("/");
+  let files = new Map<string, File>();
 
-      if (joined === slugWithLeadingSlash) {
-        return {
-          name: doc.title,
-          path: doc.filePath,
-          type: "file",
-        };
-      }
+  for (let doc of docs) {
+    let dirname = path.dirname(doc.filePath);
 
-      return {
-        type: "dir",
+    if (dirname === slugWithLeadingSlash) {
+      files.set(doc.filePath, {
         name: doc.title,
-        path: joined,
-      };
-    })
-    // remove duplicates
-    .filter((f, i, arr) => {
-      return arr.findIndex((a) => a.path === f.path) === i;
-    });
+        path: doc.filePath,
+        type: "file",
+      });
+    } else {
+      dirname = dirname.replace(slugWithLeadingSlash, "");
+      files.set(dirname, {
+        name: doc.title,
+        path: dirname,
+        type: "dir",
+      });
+    }
+  }
 
-  return files;
+  let returnValue: File[] = [];
+
+  for (let [, value] of files) {
+    returnValue.push(value);
+  }
+
+  return returnValue;
 }
 
 async function getContentsLocal(config: Config, slug: string): Promise<File[]> {
@@ -410,12 +412,12 @@ async function getContentsRecursively(
     (file) =>
       file.type === "file" &&
       // is markdown
-      file.name.match(/\.md$/) &&
+      file.path.match(/\.md$/) &&
       // not 404
-      !file.name.match(/^404\.md$/)
+      !file.path.match(/^404\.md$/)
   );
 
-  let hasIndexFile = !!contents.find((file) => file.name === `index.md`);
+  let hasIndexFile = !!contents.find((file) => file.path === `index.md`);
   let { attributes, content } = hasIndexFile
     ? await getAttributes(config, path.join(dirPath, `index.md`), version)
     : { attributes: {}, content: "" };
@@ -433,7 +435,7 @@ async function getContentsRecursively(
     files: (
       await Promise.all(
         files
-          .filter((file) => file.name !== `index${ext}`)
+          .filter((file) => file.path !== `index${ext}`)
           .map(async (file): Promise<MenuFile> => {
             let { attributes } = await getAttributes(
               config,
@@ -444,7 +446,7 @@ async function getContentsRecursively(
             let linkPath = file.path.slice(0, -ext.length);
 
             return {
-              name: file.name,
+              name: file.path,
               path: linkPath,
               type: "file",
               attributes,
@@ -460,7 +462,7 @@ async function getContentsRecursively(
     dir.dirs = (
       await Promise.all(
         dirs.map((dir) =>
-          getContentsRecursively(config, dir.path, dir.name, rootName, version)
+          getContentsRecursively(config, dir.path, dir.path, rootName, version)
         )
       )
     )
