@@ -8,7 +8,6 @@ WORKDIR /remixapp
 COPY .npmrc package.json package-lock.json ./
 COPY ./prisma/ ./prisma/
 COPY ./patches/ ./patches/
-RUN ls /remixapp
 RUN npm ci
 
 # Rebuild the source code only when needed

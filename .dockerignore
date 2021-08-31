@@ -8,3 +8,6 @@
 !remix.config.js
 !prisma
 !patches
+!styles
+!postcss.config.js
+!tailwind.config.js

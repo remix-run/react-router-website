@@ -18,6 +18,12 @@ module.exports = {
       },
     },
     {
+      name: "Tailwind",
+      script:
+        "tailwindcss --input ./styles/global.css --output ./app/styles/global.css --watch --postcss",
+      ignore_watch: ["."],
+    },
+    {
       name: "Express",
       script: "node server/index.js",
       ignore_watch: ["."],
