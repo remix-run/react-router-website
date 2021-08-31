@@ -6,8 +6,8 @@ const action: ActionFunction = async ({ request }) => {
   let token = request.headers.get("Authorization");
   // verify post request and the token matches
   if (
-    request.method !== "POST" ||
-    (process.env.NODE_ENV !== "development" && token !== process.env.AUTH_TOKEN)
+    request.method !== "POST"
+    // || (process.env.NODE_ENV !== "development" && token !== process.env.AUTH_TOKEN)
   ) {
     return redirect("/");
   }
@@ -17,8 +17,6 @@ const action: ActionFunction = async ({ request }) => {
   try {
     // get all app instances and refresh them
     const instances = await getInstanceURLs();
-
-    console.log(instances);
 
     const results = await Promise.allSettled(
       instances.map(async (instance) => {
