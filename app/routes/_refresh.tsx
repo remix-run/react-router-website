@@ -46,8 +46,16 @@ const action: ActionFunction = async ({ request }) => {
 
 const RefreshAllInstancesDocsPage: RouteComponent = () => {
   return (
-    <form method="post">
-      <button type="submit">Refresh All Instances!</button>
+    <form
+      method="post"
+      className="h-screen flex flex-col justify-center items-center"
+    >
+      <button
+        className="text-3xl bg-purple-500 rounded-xl px-4 py-1 text-white hover:bg-purple-600 transition-colors duration-150 ease-in-out"
+        type="submit"
+      >
+        Refresh All Instances!
+      </button>
     </form>
   );
 };
