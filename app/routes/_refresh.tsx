@@ -1,6 +1,6 @@
 import type { RouteComponent, ActionFunction } from "remix";
 import { redirect } from "remix";
-import { getInstanceURLs } from "../utils/get-fly-instance-urls.server";
+import { getInstanceURLs } from "~/utils/get-fly-instance-urls.server";
 
 const action: ActionFunction = async ({ request }) => {
   let token = request.headers.get("Authorization");
@@ -48,10 +48,10 @@ const RefreshAllInstancesDocsPage: RouteComponent = () => {
   return (
     <form
       method="post"
-      className="h-screen flex flex-col justify-center items-center"
+      className="flex flex-col items-center justify-center h-screen"
     >
       <button
-        className="text-3xl bg-purple-500 rounded-xl px-4 py-1 text-white hover:bg-purple-600 transition-colors duration-150 ease-in-out"
+        className="px-4 py-1 text-3xl text-white transition-colors duration-150 ease-in-out bg-purple-500 rounded-xl hover:bg-purple-600"
         type="submit"
       >
         Refresh All Instances!

@@ -2,8 +2,8 @@ import type { LoaderFunction, RouteComponent } from "remix";
 import { redirect } from "remix";
 import acceptLanguage from "accept-language";
 
-import { getVersions } from "../../utils.server";
-import { prisma } from "../../db.server";
+import { getVersions } from "~/utils.server";
+import { prisma } from "~/db.server";
 
 let loader: LoaderFunction = async ({ request, params }) => {
   let lang = params.lang;

@@ -10,7 +10,7 @@ import {
 import { redirect } from "remix";
 import { satisfies } from "semver";
 
-import { saveDocs } from "../utils/save-docs";
+import { saveDocs } from "~/utils/save-docs";
 
 let loader: LoaderFunction = async () => {
   // return json({ notFound: true }, { status: 404 });

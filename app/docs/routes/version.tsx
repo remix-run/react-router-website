@@ -13,14 +13,14 @@ import {
   useMatches,
   useRouteData,
 } from "remix";
-import { DataOutlet } from "../../components/data-outlet";
+import { DataOutlet } from "~/components/data-outlet";
 import {
   getMenu,
   getVersion,
   getVersions,
   MenuDir,
   VersionHead,
-} from "../../utils.server";
+} from "~/utils.server";
 
 interface RouteData {
   menu: MenuDir;
@@ -37,7 +37,7 @@ let loader: LoaderFunction = async ({ context, params }) => {
       isLatest: false,
     };
 
-    let menu = await getMenu(context.docs, version, params.lang);
+    let menu = await getMenu(context.docs, version);
 
     let data: RouteData = { menu, version, versions };
 

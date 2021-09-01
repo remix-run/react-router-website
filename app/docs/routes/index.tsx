@@ -1,7 +1,7 @@
 import type { LoaderFunction, RouteComponent } from "remix";
 import { json } from "remix";
-import { getDoc, getVersion, getVersions } from "../../utils.server";
-import { Page } from "../../components/page";
+import { getDoc, getVersion, getVersions } from "~/utils.server";
+import { Page } from "~/components/page";
 
 // this and splat.tsx loader are identical except the "index" vs. params["*"]
 // part
@@ -35,4 +35,4 @@ const IndexPage: RouteComponent = () => {
 
 export default IndexPage;
 export { loader };
-export { meta } from "../../components/page";
+export { meta } from "~/components/page";

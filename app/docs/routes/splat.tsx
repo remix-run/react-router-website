@@ -3,8 +3,8 @@ import { LoaderFunction, redirect, RouteComponent } from "remix";
 import { Link } from "react-router-dom";
 import { json } from "remix";
 
-import { getDoc, getVersion, getVersions } from "../../utils.server";
-import { Page } from "../../components/page";
+import { getDoc, getVersion, getVersions } from "~/utils.server";
+import { Page } from "~/components/page";
 
 let loader: LoaderFunction = async ({ params, context }) => {
   let path = await import("path");
@@ -58,4 +58,4 @@ let handle = {
 
 export default SplatPage;
 export { handle, loader };
-export { meta } from "../../components/page";
+export { meta } from "~/components/page";

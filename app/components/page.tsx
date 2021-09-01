@@ -1,12 +1,11 @@
-import * as React from "react";
 import { MetaFunction, useRouteData } from "remix";
 import { useLocation, Link } from "react-router-dom";
 
 import Breadcrumbs from "./breadcrumbs";
 import { useOutletContext } from "./data-outlet";
 
-import type { MenuMap } from "../docs/routes/version";
-import type { Doc, MenuDir } from "../utils.server";
+import type { MenuMap } from "~/docs/routes/version";
+import type { Doc, MenuDir } from "~/utils.server";
 
 export let meta: MetaFunction = ({ data }: { data: any }) => {
   let title = data.notFound ? "Not Found" : data.title;

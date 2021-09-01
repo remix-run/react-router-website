@@ -1,7 +1,7 @@
 import acceptLanguage from "accept-language";
 import { LoaderFunction, redirect } from "remix";
-import { prisma } from "../db.server";
-import { getVersions } from "../utils.server";
+import { prisma } from "~/db.server";
+import { getVersions } from "~/utils.server";
 
 export let loader: LoaderFunction = async ({ params, request }) => {
   let lang = params.lang;
