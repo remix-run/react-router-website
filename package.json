@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@remix-run/dev": "0.18.0-pre.3",
+    "@tailwindcss/typography": "0.4.1",
     "@types/follow-redirects": "1.13.1",
     "@types/gunzip-maybe": "1.4.0",
     "@types/react": "^17.0.19",
