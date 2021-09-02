@@ -3,7 +3,7 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = {
   mode: "jit",
   purge: ["./app/**/*.{ts,tsx}"],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: "media", // or 'media' or 'class'
   theme: {
     fontFamily: {
       display: ['"Test Founders Grotesk"', ...defaultTheme.fontFamily.sans],
@@ -19,6 +19,20 @@ module.exports = {
             "h1, h2, h3, h4, h5, h6": {
               fontFamily: theme("fontFamily.display").join(),
               color: theme("colors.black"),
+            },
+          },
+        },
+        dark: {
+          css: {
+            color: "rgba(255, 255, 255, 0.8)",
+            a: {
+              color: "inherit",
+            },
+            "h1, h2, h3, h4, h5, h6": {
+              color: theme("colors.white"),
+            },
+            "a code, code, strong": {
+              color: "inherit",
             },
           },
         },
