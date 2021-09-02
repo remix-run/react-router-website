@@ -95,9 +95,48 @@ let VersionPage: RouteComponent = () => {
           </svg>
           <span className="text-3xl font-bold font-display">React Router</span>
         </Link>
-        <button id="nav-toggle" onClick={() => setNavIsOpen((old) => !old)}>
+        <button
+          id="nav-toggle"
+          className="block md:hidden"
+          onClick={() => setNavIsOpen((old) => !old)}
+        >
           {navIsOpen ? <Close /> : <Hamburger />}
         </button>
+        <ul className="hidden space-x-8 md:flex">
+          <li>
+            <NavLink
+              activeClassName="text-[#3992FF] opacity-100 text-opacity-100 font-medium"
+              className="text-[#121212] text-opacity-80 opacity-70 font-semibold"
+              to="/docs"
+            >
+              Documentation
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              className="text-[#121212] text-opacity-80 opacity-70 font-semibold"
+              to="/resources"
+            >
+              Resources
+            </NavLink>
+          </li>
+          <li>
+            <a
+              className="text-[#121212] text-opacity-80 opacity-70 font-semibold"
+              href="https://github.com/remix-run/react-router"
+            >
+              GitHub
+            </a>
+          </li>
+          <li>
+            <a
+              className="text-[#121212] text-opacity-80 opacity-70 font-semibold"
+              href="https://npm.im/react-router"
+            >
+              NPM
+            </a>
+          </li>
+        </ul>
       </header>
       <div className="" data-open={navIsOpen ? "" : null}>
         <nav className="hidden">
