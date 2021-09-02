@@ -104,7 +104,7 @@ const Page: React.VFC = () => {
     <div className="">
       <div className="border-b border-solid border-[#dbdbdb] dark:border-[#313131] py-5 px-2 flex items-center justify-between">
         <PreviousLink />
-        <h1 className="text-[#121212] dark:text-white text-center">
+        <h1 className="text-[#121212] dark:text-white text-center truncate max-w-full">
           {doc.title}
         </h1>
         <NextLink />
