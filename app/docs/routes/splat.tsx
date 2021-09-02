@@ -1,6 +1,6 @@
 import * as React from "react";
 import { LoaderFunction, redirect, RouteComponent } from "remix";
-import { Link } from "react-router-dom";
+
 import { json } from "remix";
 
 import { getDoc, getVersion, getVersions } from "~/utils.server";
@@ -48,14 +48,6 @@ const SplatPage: RouteComponent = () => {
   return <Page />;
 };
 
-let handle = {
-  crumb: (match: any, ref: any) => (
-    <Link to={match.pathname + match.params["*"]} ref={ref}>
-      {match.data.title}
-    </Link>
-  ),
-};
-
 export default SplatPage;
-export { handle, loader };
+export { loader };
 export { meta } from "~/components/page";

@@ -42,12 +42,6 @@
   }
 
   body {
-    background: #1c1c1c;
-  }
-}
-
-@layer base {
-  html {
-    font-size: 20px;
+    background: #121212;
   }
 }

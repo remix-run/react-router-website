@@ -3,7 +3,7 @@ import type {
   LinksFunction,
   RouteComponent,
 } from "remix";
-import { Meta, Links, Scripts, useRouteData, LiveReload } from "remix";
+import { Meta, Links, Scripts, LiveReload } from "remix";
 import { Outlet, Link } from "react-router-dom";
 
 import stylesUrl from "./styles/global.css";
@@ -12,15 +12,12 @@ let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
 };
 
-let handle = {
-  crumb: () => <Link to="/">React Router</Link>,
-};
-
 function Document({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
@@ -35,7 +32,6 @@ function Document({ children }: { children: React.ReactNode }) {
 }
 
 const App: RouteComponent = () => {
-  let data = useRouteData();
   return (
     <Document>
       <Outlet />
@@ -57,4 +53,4 @@ const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 };
 
 export default App;
-export { ErrorBoundary, links, handle };
+export { ErrorBoundary, links };

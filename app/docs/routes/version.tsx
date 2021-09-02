@@ -21,6 +21,7 @@ import {
   MenuDir,
   VersionHead,
 } from "~/utils.server";
+import logoCirlceUrl from "~/icons/logo-circle.svg";
 
 interface RouteData {
   menu: MenuDir;
@@ -37,7 +38,7 @@ let loader: LoaderFunction = async ({ context, params }) => {
       isLatest: false,
     };
 
-    let menu = await getMenu(context.docs, version);
+    let menu = await getMenu(context.docs, version, params.lang);
 
     let data: RouteData = { menu, version, versions };
 
@@ -47,17 +48,6 @@ let loader: LoaderFunction = async ({ context, params }) => {
     console.error(error);
     return json({ notFound: true }, { status: 404 });
   }
-};
-
-let handle = {
-  crumb: (
-    { data: { version } }: { data: { version: VersionHead } },
-    ref: any
-  ) => (
-    <Link ref={ref} to={"/docs/" + version.head}>
-      {version.head}
-    </Link>
-  ),
 };
 
 export type MenuMap = Map<string, MenuDir>;
@@ -98,20 +88,23 @@ let VersionPage: RouteComponent = () => {
 
   return (
     <>
-      <button id="nav-toggle" onClick={() => setNavIsOpen((old) => !old)}>
-        {navIsOpen ? <Close /> : <Hamburger />}
-      </button>
-      <h2>Version: {data.version.version}</h2>
-      <div className="root" data-open={navIsOpen ? "" : null}>
-        <div className="primary-nav-container">
-          <nav className="primary-nav">
-            <div style={{ marginTop: "2rem" }} />
-
-            <Menu data={data} />
-          </nav>
-        </div>
-        <DataOutlet context={menuMap} />
+      <header className="border-b border-solid border-[#dbdbdb] flex items-center justify-between px-6 py-[25px] dark:border-[#313131]">
+        <Link to="/" className="flex items-center space-x-4 dark:text-white">
+          <svg className="w-9 h-9">
+            <use href={`${logoCirlceUrl}#logo-circle`} />
+          </svg>
+          <span className="text-3xl font-bold font-display">React Router</span>
+        </Link>
+        <button id="nav-toggle" onClick={() => setNavIsOpen((old) => !old)}>
+          {navIsOpen ? <Close /> : <Hamburger />}
+        </button>
+      </header>
+      <div className="" data-open={navIsOpen ? "" : null}>
+        <nav className="hidden">
+          <Menu data={data} />
+        </nav>
       </div>
+      <DataOutlet context={menuMap} />
     </>
   );
 };
@@ -193,10 +186,11 @@ function Hamburger() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      style={{ height: "2rem", width: "2rem" }}
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
+      className="block w-8 h-8"
+      aria-hidden="true"
     >
       <path
         strokeLinecap="round"
@@ -212,10 +206,11 @@ function Close() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      style={{ height: "2rem", width: "2rem" }}
+      className="block w-8 h-8"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
+      aria-hidden="true"
     >
       <path
         strokeLinecap="round"
@@ -228,4 +223,4 @@ function Close() {
 }
 
 export default VersionPage;
-export { createMenuMap, handle, loader };
+export { createMenuMap, loader };
