@@ -14,7 +14,7 @@ async function processDoc(entry: Entry): Promise<{
 
   let path = entry.path.replace(/^\/docs/, "");
   let title = data.title || path;
-  let html = await processMarkdown(`## toc\n\n${content}`);
+  let html = await processMarkdown(content);
   let langMatch = path.match(/^\/_i18n\/(?<lang>[a-z]{2})\//);
 
   let lang = langMatch?.groups?.lang ?? "en";
