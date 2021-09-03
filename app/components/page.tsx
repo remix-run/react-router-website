@@ -1,5 +1,4 @@
 import * as React from "react";
-
 import { Link, useLocation } from "react-router-dom";
 import { MetaFunction, useRouteData } from "remix";
 import invariant from "tiny-invariant";
@@ -129,7 +128,7 @@ const Page: React.VFC = () => {
     <div>
       <SiblingLinks doc={doc} />
       <div
-        className="container prose dark:prose-dark"
+        className="container py-8 prose dark:prose-dark"
         dangerouslySetInnerHTML={{ __html: doc.html }}
       />
     </div>
