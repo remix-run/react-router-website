@@ -109,8 +109,11 @@ let VersionPage: RouteComponent = () => {
         <ul className="hidden space-x-8 md:flex">
           <li>
             <NavLink
-              activeClassName="text-[#3992FF] opacity-100 text-opacity-100 font-medium"
-              className="text-[#121212] text-opacity-80 opacity-70 font-semibold"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-[#3992FF] font-medium"
+                  : "text-[#121212] text-opacity-80 opacity-70 font-semibold"
+              }
               to="/docs"
             >
               Documentation
@@ -118,8 +121,11 @@ let VersionPage: RouteComponent = () => {
           </li>
           <li>
             <NavLink
-              activeClassName="text-[#3992FF] opacity-100 text-opacity-100 font-medium"
-              className="text-[#121212] text-opacity-80 opacity-70 font-semibold"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-[#3992FF] font-medium"
+                  : "text-[#121212] text-opacity-80 opacity-70 font-semibold"
+              }
               to="/resources"
             >
               Resources
