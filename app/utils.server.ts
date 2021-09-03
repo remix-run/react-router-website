@@ -263,7 +263,7 @@ async function getDocLocal(
 
   let { data, content } = parseAttributes(file);
   let title = data.title || filePath;
-  let html = await processMarkdown(`## toc\n\n${content}`);
+  let html = await processMarkdown(content);
   let doc: Doc = { attributes: data, html: html.toString(), title };
   return doc;
 }
