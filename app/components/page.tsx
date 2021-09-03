@@ -94,7 +94,7 @@ const Page: React.VFC = () => {
 
   if (!doc) {
     return (
-      <div className="prose">
+      <div className="container prose">
         <h1>Not Found</h1>
         <p>Sorry, there is no document here.</p>
       </div>
@@ -102,7 +102,7 @@ const Page: React.VFC = () => {
   }
 
   return (
-    <div className="">
+    <div>
       <div className="border-b border-solid border-[#dbdbdb] dark:border-[#313131] py-5 px-2 flex items-center justify-between">
         <PreviousLink />
         <h1 className="text-[#121212] dark:text-white text-center truncate max-w-full">
@@ -111,7 +111,7 @@ const Page: React.VFC = () => {
         <NextLink />
       </div>
       <div
-        className="px-6 prose dark:prose-dark"
+        className="container prose dark:prose-dark"
         dangerouslySetInnerHTML={{ __html: doc.html }}
       />
     </div>

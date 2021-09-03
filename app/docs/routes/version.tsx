@@ -220,7 +220,7 @@ function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
 
 function NotFound() {
   return (
-    <div data-docs-not-found>
+    <div data-docs-not-found className="container">
       <h1>Not Found</h1>
     </div>
   );
