@@ -14,7 +14,7 @@ let loader: LoaderFunction = async ({ context, params }) => {
   };
 
   try {
-    let doc = await getDoc(context.docs, "index", version, params.lang);
+    let doc = await getDoc(context.docs, "/index", version, params.lang);
 
     // we could also throw an error in getDoc if the doc doesn't exist
     if (!doc) {
@@ -29,10 +29,10 @@ let loader: LoaderFunction = async ({ context, params }) => {
   }
 };
 
-const IndexPage: RouteComponent = () => {
+const VersionIndexPage: RouteComponent = () => {
   return <Page />;
 };
 
-export default IndexPage;
+export default VersionIndexPage;
 export { loader };
 export { meta } from "~/components/page";
