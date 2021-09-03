@@ -21,7 +21,8 @@ import {
   MenuDir,
   VersionHead,
 } from "~/utils.server";
-import logoCirlceUrl from "~/icons/logo-circle.svg";
+import logoCircleUrl from "~/icons/logo-circle.svg";
+import { Footer } from "~/components/footer";
 
 interface RouteData {
   menu: MenuDir;
@@ -89,9 +90,12 @@ let VersionPage: RouteComponent = () => {
   return (
     <>
       <header className="border-b border-solid border-[#dbdbdb] flex items-center justify-between px-6 py-[25px] dark:border-[#313131]">
-        <Link to="/" className="flex items-center space-x-4 dark:text-white">
+        <Link
+          to="/"
+          className="flex items-center space-x-4 text-[#121212] dark:text-white"
+        >
           <svg className="w-9 h-9">
-            <use href={`${logoCirlceUrl}#logo-circle`} />
+            <use href={`${logoCircleUrl}#logo-circle`} />
           </svg>
           <span className="text-3xl font-bold font-display">React Router</span>
         </Link>
@@ -144,6 +148,7 @@ let VersionPage: RouteComponent = () => {
         </nav>
       </div>
       <DataOutlet context={menuMap} />
+      <Footer />
     </>
   );
 };

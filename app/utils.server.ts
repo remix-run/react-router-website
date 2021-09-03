@@ -456,8 +456,6 @@ async function getContentsRecursively(
               -ext.length
             )}`;
 
-            console.log(linkPath);
-
             return {
               name: file.path,
               path: linkPath,
