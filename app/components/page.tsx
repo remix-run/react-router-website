@@ -5,6 +5,7 @@ import { useOutletContext } from "./data-outlet";
 
 import type { MenuMap } from "~/docs/routes/version";
 import type { Doc, MenuDir } from "~/utils.server";
+import invariant from "tiny-invariant";
 
 export let meta: MetaFunction = ({ data }: { data: any }) => {
   let title = data.notFound ? "Not Found" : data.title;
@@ -20,72 +21,72 @@ const PreviousLink: React.VFC = () => {
   let location = useLocation();
   let myPath = location.pathname;
   let menuMap = useOutletContext<MenuMap>();
-  // TODO: add an invariant module
   let parent = menuMap.get(myPath);
+  invariant(parent);
 
-  if (parent?.attributes.siblingLinks && !isFirstDoc(parent, myPath)) {
-    let prevDoc = getPrevDoc(parent, myPath);
-
-    return (
-      <div className="w-12 h-12">
-        <Link to={prevDoc.path}>
-          <span className="sr-only">Next up! {prevDoc.title}</span>
-          <svg
-            viewBox="0 0 48 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="text-[#222222] dark:text-white"
-          >
-            <path
-              d="M26 19L20.75 24L26 29"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </Link>
-      </div>
-    );
+  if (!parent.attributes.siblingLinks || isFirstDoc(parent, myPath)) {
+    return <div className="w-12 h-12" />;
   }
 
-  return <div className="w-12 h-12" />;
+  let prevDoc = getPrevDoc(parent, myPath);
+
+  return (
+    <div className="w-12 h-12">
+      <Link to={prevDoc.path}>
+        <span className="sr-only">Next up! {prevDoc.title}</span>
+        <svg
+          viewBox="0 0 48 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="text-[#222222] dark:text-white"
+        >
+          <path
+            d="M26 19L20.75 24L26 29"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </Link>
+    </div>
+  );
 };
 
 const NextLink: React.VFC = () => {
   let location = useLocation();
   let myPath = location.pathname;
   let menuMap = useOutletContext<MenuMap>();
-  // TODO: add an invariant module
   let parent = menuMap.get(myPath);
+  invariant(parent);
 
-  if (parent?.attributes.siblingLinks && !isLastDoc(parent, myPath)) {
-    let nextDoc = getNextDoc(parent, myPath);
-
-    return (
-      <div className="w-12 h-12">
-        <Link to={nextDoc.path}>
-          <span className="sr-only">Next up! {nextDoc.title}</span>
-          <svg
-            viewBox="0 0 48 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="text-[#222222] dark:text-white"
-          >
-            <path
-              d="M26 19L31.25 24L26 29"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </Link>
-      </div>
-    );
+  if (!parent.attributes.siblingLinks || isLastDoc(parent, myPath)) {
+    return <div className="w-12 h-12" />;
   }
 
-  return <div className="w-12 h-12" />;
+  let nextDoc = getNextDoc(parent, myPath);
+
+  return (
+    <div className="w-12 h-12">
+      <Link to={nextDoc.path}>
+        <span className="sr-only">Next up! {nextDoc.title}</span>
+        <svg
+          viewBox="0 0 48 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="text-[#222222] dark:text-white"
+        >
+          <path
+            d="M26 19L31.25 24L26 29"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </Link>
+    </div>
+  );
 };
 
 const Page: React.VFC = () => {
