@@ -1,11 +1,13 @@
-import { MetaFunction, useRouteData } from "remix";
-import { useLocation, Link } from "react-router-dom";
+import * as React from "react";
 
-import { useOutletContext } from "./data-outlet";
+import { Link, useLocation } from "react-router-dom";
+import { MetaFunction, useRouteData } from "remix";
+import invariant from "tiny-invariant";
 
 import type { MenuMap } from "~/docs/routes/version";
 import type { Doc, MenuDir } from "~/utils.server";
-import invariant from "tiny-invariant";
+
+import { useOutletContext } from "./data-outlet";
 
 export let meta: MetaFunction = ({ data }: { data: any }) => {
   let title = data.notFound ? "Not Found" : data.title;
@@ -24,7 +26,7 @@ const PreviousLink: React.VFC = () => {
   let parent = menuMap.get(myPath);
   invariant(parent);
 
-  if (!parent.attributes.siblingLinks || isFirstDoc(parent, myPath)) {
+  if (isFirstDoc(parent, myPath)) {
     return <div className="w-12 h-12" />;
   }
 
@@ -60,8 +62,8 @@ const NextLink: React.VFC = () => {
   let parent = menuMap.get(myPath);
   invariant(parent);
 
-  if (!parent.attributes.siblingLinks || isLastDoc(parent, myPath)) {
-    return <div className="w-12 h-12" />;
+  if (isLastDoc(parent, myPath)) {
+    return null;
   }
 
   let nextDoc = getNextDoc(parent, myPath);
@@ -89,6 +91,28 @@ const NextLink: React.VFC = () => {
   );
 };
 
+const SiblingLinks: React.VFC<{ doc: Doc }> = ({ doc }) => {
+  let location = useLocation();
+  let myPath = location.pathname;
+  let menuMap = useOutletContext<MenuMap>();
+  let parent = menuMap.get(myPath);
+  invariant(parent);
+
+  if (!parent.attributes.siblingLinks) {
+    return null;
+  }
+
+  return (
+    <div className="border-b border-solid border-[#dbdbdb] dark:border-[#313131] py-5 px-2 flex items-center justify-between">
+      <PreviousLink />
+      <h1 className="text-[#121212] dark:text-white text-center truncate max-w-full">
+        {doc.title}
+      </h1>
+      <NextLink />
+    </div>
+  );
+};
+
 const Page: React.VFC = () => {
   let doc = useRouteData<Doc>();
 
@@ -103,13 +127,7 @@ const Page: React.VFC = () => {
 
   return (
     <div>
-      <div className="border-b border-solid border-[#dbdbdb] dark:border-[#313131] py-5 px-2 flex items-center justify-between">
-        <PreviousLink />
-        <h1 className="text-[#121212] dark:text-white text-center truncate max-w-full">
-          {doc.title}
-        </h1>
-        <NextLink />
-      </div>
+      <SiblingLinks doc={doc} />
       <div
         className="container prose dark:prose-dark"
         dangerouslySetInnerHTML={{ __html: doc.html }}
