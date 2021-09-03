@@ -39,9 +39,9 @@ const PreviousLink: React.VFC = () => {
             <path
               d="M26 19L20.75 24L26 29"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </Link>
@@ -75,9 +75,9 @@ const NextLink: React.VFC = () => {
             <path
               d="M26 19L31.25 24L26 29"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </Link>
