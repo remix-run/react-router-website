@@ -118,6 +118,7 @@ let VersionPage: RouteComponent = () => {
           </li>
           <li>
             <NavLink
+              activeClassName="text-[#3992FF] opacity-100 text-opacity-100 font-medium"
               className="text-[#121212] text-opacity-80 opacity-70 font-semibold"
               to="/resources"
             >
