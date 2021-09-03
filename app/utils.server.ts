@@ -174,6 +174,28 @@ async function getDocRemote(
             },
           ],
         },
+        {
+          AND: [
+            {
+              lang,
+              filePath: path.join(filePath, "index.md"),
+              version: {
+                fullVersionOrBranch: version.head,
+              },
+            },
+          ],
+        },
+        {
+          AND: [
+            {
+              lang,
+              filePath: path.join(filePath, "index.md"),
+              version: {
+                versionHeadOrBranch: version.head,
+              },
+            },
+          ],
+        },
       ],
     },
   });
@@ -425,7 +447,10 @@ async function getContentsRecursively(
       !file.path.match(/^404\.md$/)
   );
 
-  let hasIndexFile = !!contents.find((file) => file.path.endsWith(`index.md`));
+  let hasIndexFile = !!contents.find((file) => {
+    let parsed = path.parse(file.path);
+    return parsed.base === "index.md";
+  });
   let { attributes, content } = hasIndexFile
     ? await getAttributes(config, path.join(dirPath, `index.md`), version)
     : { attributes: {}, content: "" };
@@ -451,10 +476,18 @@ async function getContentsRecursively(
               version
             );
 
-            let linkPath = `/docs/${lang}/${version.head}${file.path.slice(
-              0,
-              -ext.length
-            )}`;
+            let parsed = path.parse(file.path);
+
+            let filePath = path.format({
+              ...parsed,
+              name: parsed.name === "index" ? undefined : parsed.name,
+              base: parsed.name === "index" ? undefined : parsed.name,
+              ext: undefined,
+            });
+
+            let linkPath = `/docs/${lang}/${version.head}${
+              filePath.endsWith("/") ? filePath.slice(0, -1) : filePath
+            }`;
 
             return {
               name: file.path,
