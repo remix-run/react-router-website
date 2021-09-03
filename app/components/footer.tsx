@@ -7,7 +7,7 @@ import twitterLogoUrl from "~/icons/twitter.svg";
 
 const Footer: React.VFC = () => {
   return (
-    <footer className="py-6 lg:border-t lg:border-solid lg:border-black/10 lg:pt-10 lg:pb-16">
+    <footer className="py-6 border-t border-solid border-black/10 lg:pt-10 lg:pb-16">
       <div className="container lg:flex lg:items-center lg:justify-between">
         <div>
           <Link
