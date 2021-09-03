@@ -231,17 +231,12 @@ function Hamburger() {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
-      viewBox="0 0 24 24"
+      viewBox="0 0 20 16"
       stroke="currentColor"
-      className="block w-8 h-8"
+      className="block w-5 h-4"
       aria-hidden="true"
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M4 6h16M4 12h16M4 18h16"
-      />
+      <path fill="#121212" d="M0 0h20v2H0zM0 6h20v2H0zM0 12h20v2H0z" />
     </svg>
   );
 }
@@ -250,18 +245,14 @@ function Close() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className="block w-8 h-8"
+      className="block w-6 h-6"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
       aria-hidden="true"
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M6 18L18 6M6 6l12 12"
-      />
+      <path fill="#121212" d="M4 18L18.142 3.858l1.414 1.414L5.414 19.414z" />
+      <path fill="#121212" d="M5 4l14.142 14.142-1.414 1.414L3.586 5.414z" />
     </svg>
   );
 }
