@@ -8,8 +8,8 @@ const meta: MetaFunction = () => ({
 const IndexPage: RouteComponent = () => {
   return (
     <div className="container py-8">
-      <div className="text-center">
-        <h1 className="text-[40px] leading-[1.2] font-bold text-white lg:text-7xl lg:leading-[0.89] lg:max-w-[600px]">
+      <div className="text-center lg:max-w-[600px] lg:mx-auto">
+        <h1 className="text-[40px] leading-[1.2] font-bold text-white lg:text-7xl lg:leading-[0.89]">
           Learn Once Route Anywhere
         </h1>
         <p className="mt-2">
