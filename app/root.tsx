@@ -1,3 +1,5 @@
+import * as React from "react";
+import { useLocation } from "react-router";
 import {
   ErrorBoundaryComponent,
   json,
@@ -22,23 +24,19 @@ interface RouteData {
   menu: MenuDir;
   versions: VersionHead[];
   version: VersionHead;
-  forceDarkMode: boolean;
 }
 
-let loader: LoaderFunction = async ({ context, params, request }) => {
+let loader: LoaderFunction = async ({ context, params }) => {
   try {
     let versions = await getVersions();
     let [latest] = versions;
 
     let menu = await getMenu(context.docs, latest, params.lang);
 
-    let url = new URL(request.url);
-
     let data: RouteData = {
       menu,
       version: latest,
       versions,
-      forceDarkMode: !url.pathname.startsWith("/docs/"),
     };
 
     // so fresh!
@@ -80,17 +78,23 @@ const Document: React.FC<{ forceDarkMode: boolean }> = ({
 
 const App: RouteComponent = () => {
   let data = useRouteData<RouteData>();
+  let location = useLocation();
+
+  let forceDarkMode = React.useMemo(
+    () => !location.pathname.startsWith("/docs/"),
+    [location]
+  );
 
   return (
-    <Document forceDarkMode={data.forceDarkMode}>
+    <Document forceDarkMode={forceDarkMode}>
       <Nav
-        forceDarkMode={data.forceDarkMode}
+        forceDarkMode={forceDarkMode}
         menu={data.menu}
         version={data.version}
         versions={data.versions}
       />
       <DataOutlet context={data} />
-      <Footer forceDarkMode={data.forceDarkMode} />
+      <Footer forceDarkMode={forceDarkMode} />
     </Document>
   );
 };
