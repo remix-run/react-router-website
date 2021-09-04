@@ -25,8 +25,6 @@ const Nav: React.VFC<NavProps> = ({
   let [navIsOpen, setNavIsOpen] = React.useState(false);
   let location = useLocation();
 
-  console.log(useOutletContext());
-
   React.useEffect(() => {
     if (navIsOpen) {
       document.body.setAttribute("data-nav-open", "");
@@ -74,7 +72,12 @@ const Nav: React.VFC<NavProps> = ({
               className={({ isActive }) =>
                 isActive
                   ? "text-[#3992FF] font-medium"
-                  : "text-[#121212] text-opacity-80 opacity-70 font-semibold"
+                  : clsx(
+                      "text-[#121212] text-opacity-80 opacity-70 font-semibold",
+                      forceDarkMode
+                        ? "text-white/80 opacity-70"
+                        : "text-[#121212] dark:text-white dark:text-white/80 dark:opacity-70"
+                    )
               }
               to="/docs"
             >
@@ -86,7 +89,12 @@ const Nav: React.VFC<NavProps> = ({
               className={({ isActive }) =>
                 isActive
                   ? "text-[#3992FF] font-medium"
-                  : "text-[#121212] text-opacity-80 opacity-70 font-semibold"
+                  : clsx(
+                      "text-opacity-80 opacity-70 font-semibold",
+                      forceDarkMode
+                        ? "text-white"
+                        : "text-[#121212] dark:text-white"
+                    )
               }
               to="/resources"
             >
@@ -95,7 +103,10 @@ const Nav: React.VFC<NavProps> = ({
           </li>
           <li>
             <a
-              className="text-[#121212] text-opacity-80 opacity-70 font-semibold"
+              className={clsx(
+                "text-opacity-80 opacity-70 font-semibold",
+                forceDarkMode ? "text-white" : "text-[#121212] dark:text-white"
+              )}
               href="https://github.com/remix-run/react-router"
             >
               GitHub
@@ -103,7 +114,10 @@ const Nav: React.VFC<NavProps> = ({
           </li>
           <li>
             <a
-              className="text-[#121212] text-opacity-80 opacity-70 font-semibold"
+              className={clsx(
+                "text-opacity-80 opacity-70 font-semibold",
+                forceDarkMode ? "text-white" : "text-[#121212] dark:text-white"
+              )}
               href="https://npm.im/react-router"
             >
               NPM
@@ -113,12 +127,7 @@ const Nav: React.VFC<NavProps> = ({
       </header>
       <div className="" data-open={navIsOpen ? "" : null}>
         <nav className="hidden">
-          <Menu
-            menu={menu}
-            version={version}
-            versions={versions}
-            forceDarkMode={false}
-          />
+          <Menu menu={menu} version={version} versions={versions} />
         </nav>
       </div>
     </>
