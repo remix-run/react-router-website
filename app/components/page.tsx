@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { MetaFunction, useRouteData } from "remix";
 import invariant from "tiny-invariant";
 
-import { createMenuMap, MenuMap } from "~/components/nav";
+import type { MenuMap } from "~/components/nav";
 import type { Doc, MenuDir } from "~/utils.server";
 
 import { useOutletContext } from "./data-outlet";
