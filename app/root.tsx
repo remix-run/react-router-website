@@ -87,14 +87,18 @@ const App: RouteComponent = () => {
 
   return (
     <Document forceDarkMode={forceDarkMode}>
-      <Nav
-        forceDarkMode={forceDarkMode}
-        menu={data.menu}
-        version={data.version}
-        versions={data.versions}
-      />
-      <DataOutlet context={data} />
-      <Footer forceDarkMode={forceDarkMode} />
+      <div className="flex flex-col min-h-screen">
+        <Nav
+          forceDarkMode={forceDarkMode}
+          menu={data.menu}
+          version={data.version}
+          versions={data.versions}
+        />
+        <div className="flex-auto">
+          <DataOutlet context={data} />
+        </div>
+        <Footer forceDarkMode={forceDarkMode} />
+      </div>
     </Document>
   );
 };
