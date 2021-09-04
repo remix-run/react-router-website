@@ -42,16 +42,4 @@
       --base0F: #d19a66;
     }
   }
-
-  body {
-    background: #fff;
-    color: rgba(18, 18, 18, 0.8);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    color: #fff;
-    body {
-      background: #121212;
-    }
-  }
 }

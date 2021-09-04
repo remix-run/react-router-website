@@ -3,14 +3,16 @@ import { Outlet } from "react-router-dom";
 
 let OutletContext = createContext<any>(null);
 
-export function DataOutlet({ context }: { context: any }) {
+const DataOutlet: React.VFC<{ context: any }> = ({ context }) => {
   return (
     <OutletContext.Provider value={context}>
       <Outlet />
     </OutletContext.Provider>
   );
-}
+};
 
-export function useOutletContext<T>(): T {
+function useOutletContext<T>(): T {
   return useContext(OutletContext);
 }
+
+export { useOutletContext, DataOutlet };
