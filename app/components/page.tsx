@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { MetaFunction, useRouteData } from "remix";
 import invariant from "tiny-invariant";
 
-import type { MenuMap } from "~/docs/routes/version";
+import { createMenuMap, MenuMap } from "~/components/nav";
 import type { Doc, MenuDir } from "~/utils.server";
 
 import { useOutletContext } from "./data-outlet";
@@ -95,9 +95,8 @@ const SiblingLinks: React.VFC<{ doc: Doc }> = ({ doc }) => {
   let myPath = location.pathname;
   let menuMap = useOutletContext<MenuMap>();
   let parent = menuMap.get(myPath);
-  invariant(parent);
 
-  if (!parent.attributes.siblingLinks) {
+  if (!parent || !parent.attributes.siblingLinks) {
     return null;
   }
 

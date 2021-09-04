@@ -1,18 +1,22 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
+import clsx from "clsx";
 
 import logoCircleUrl from "~/icons/logo-circle.svg";
 import githubLogoUrl from "~/icons/github.svg";
 import twitterLogoUrl from "~/icons/twitter.svg";
 
-const Footer: React.VFC = () => {
+const Footer: React.VFC<{ forceDarkMode: boolean }> = ({ forceDarkMode }) => {
   return (
     <footer className="py-6 border-t border-solid border-black/10 lg:pt-10 lg:pb-16">
       <div className="container lg:flex lg:items-center lg:justify-between">
         <div>
           <Link
             to="/"
-            className="flex items-center space-x-4 text-[#121212] dark:text-white"
+            className={clsx(
+              "flex items-center space-x-4",
+              forceDarkMode ? "text-white" : "text-[#121212] dark:text-white"
+            )}
           >
             <svg className="w-9 h-9">
               <use href={`${logoCircleUrl}#logo-circle`} />
@@ -40,7 +44,14 @@ const Footer: React.VFC = () => {
             <p>Code Examples and documentation CC 4.0</p>
           </div>
 
-          <ul className="my-12 text-xl leading-8 divide-y divide-[#d7d7d7] text-[#121212] lg:flex lg:divide-none lg:space-x-6 lg:text-[rgba(18, 18, 18, 0.8)] lg:text-base lg:tracking-wider lg:font-medium">
+          <ul
+            className={clsx(
+              "my-12 text-xl leading-8 divide-y lg:flex lg:divide-none lg:space-x-6 lg:text-base lg:tracking-wider lg:font-medium divide-[#d7d7d7]",
+              forceDarkMode
+                ? "text-white lg:text-white/80 lg:text-opacity-70"
+                : "text-[#121212] lg:text-[rgba(18, 18, 18, 0.8)]"
+            )}
+          >
             <li>
               <Link to="/docs" className="block py-4 lg:py-0">
                 Documentation
