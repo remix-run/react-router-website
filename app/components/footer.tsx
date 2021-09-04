@@ -49,7 +49,7 @@ const Footer: React.VFC<{ forceDarkMode: boolean }> = ({ forceDarkMode }) => {
               "my-12 text-xl leading-8 divide-y lg:flex lg:divide-none lg:space-x-6 lg:text-base lg:tracking-wider lg:font-medium divide-[#d7d7d7]",
               forceDarkMode
                 ? "text-white lg:text-white/80 lg:text-opacity-70"
-                : "text-[#121212] lg:text-[rgba(18, 18, 18, 0.8)]"
+                : "text-[#121212] lg:text-[rgba(18, 18, 18, 0.8)] dark:text-white lg:dark:text-white/80 lg:dark:text-opacity-70"
             )}
           >
             <li>
