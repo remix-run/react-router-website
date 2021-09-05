@@ -3,10 +3,8 @@ import { useLocation, useNavigate, useParams, NavLink } from "react-router-dom";
 import { Link } from "remix";
 import clsx from "clsx";
 
-// should we preload?
 import logoCircleUrl from "~/icons/logo-circle.svg";
 import type { MenuDir, VersionHead } from "~/utils.server";
-import { useOutletContext } from "./data-outlet";
 
 interface NavProps {
   menu: MenuDir;
