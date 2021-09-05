@@ -8,7 +8,14 @@ import twitterLogoUrl from "~/icons/twitter.svg";
 
 const Footer: React.VFC<{ forceDarkMode: boolean }> = ({ forceDarkMode }) => {
   return (
-    <footer className="py-6 border-t border-solid border-black/10 lg:pt-10 lg:pb-16">
+    <footer
+      className={clsx(
+        "py-6 border-t border-solid lg:pt-10 lg:pb-16",
+        forceDarkMode
+          ? "border-white/10"
+          : "border-black/10 dark:border-white/10"
+      )}
+    >
       <div className="container lg:flex lg:items-center lg:justify-between">
         <div>
           <Link
