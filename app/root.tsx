@@ -47,6 +47,13 @@ let loader: LoaderFunction = async ({ context, params }) => {
   }
 };
 
+const DocsLiveReload: React.VFC = () => {
+  if (process.env.NODE_ENV !== "development") return null;
+  return (
+    <script src="http://192.168.0.33:35729/livereload.js?snipver=1"></script>
+  );
+};
+
 const Document: React.FC<{ forceDarkMode: boolean }> = ({
   children,
   forceDarkMode,
@@ -70,7 +77,8 @@ const Document: React.FC<{ forceDarkMode: boolean }> = ({
         {children}
 
         <Scripts />
-        {process.env.NODE_ENV === "development" && <LiveReload />}
+        <LiveReload />
+        <DocsLiveReload />
       </body>
     </html>
   );
