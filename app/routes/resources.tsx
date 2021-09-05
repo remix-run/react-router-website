@@ -6,7 +6,21 @@ const meta: MetaFunction = () => ({
 });
 
 const ResourcesPage: RouteComponent = () => {
-  return <h1>TODO</h1>;
+  return (
+    <div className="container py-8">
+      <div className="text-center max-w-[600px] mx-auto">
+        <h1 className="font-display text-[40px] leading-[1.2] font-bold text-white lg:text-7xl lg:leading-[0.89]">
+          Resources for
+          <br /> Developers
+        </h1>
+        <p className="mt-4 text-lg leading-8 lg:mt-2 lg:text-xl">
+          React Router is built and maintained by our community of like-minded
+          developers. We have over 2.4 million contributors and active
+          moderators to help you implement your code.
+        </p>
+      </div>
+    </div>
+  );
 };
 
 export default ResourcesPage;
