@@ -79,6 +79,22 @@ const Document: React.FC<{ forceDarkMode: boolean }> = ({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {forceDarkMode ? (
+          <meta name="theme-color" content="#121212" />
+        ) : (
+          <>
+            <meta
+              name="theme-color"
+              media="(prefers-color-scheme: light)"
+              content="#fff"
+            />
+            <meta
+              name="theme-color"
+              media="(prefers-color-scheme: dark)"
+              content="#121212"
+            />
+          </>
+        )}
         <Meta />
         <Links />
       </head>
