@@ -10,13 +10,13 @@ const Footer: React.VFC<{ forceDarkMode: boolean }> = ({ forceDarkMode }) => {
   return (
     <footer
       className={clsx(
-        "py-6 border-t border-solid lg:pt-10 lg:pb-16",
+        "py-6 border-t border-solid md:pt-10 md:pb-16",
         forceDarkMode
           ? "border-white/10"
           : "border-black/10 dark:border-white/10"
       )}
     >
-      <div className="container lg:flex lg:items-center lg:justify-between">
+      <div className="container md:flex md:items-center md:justify-between">
         <div>
           <Link
             to="/"
@@ -32,7 +32,7 @@ const Footer: React.VFC<{ forceDarkMode: boolean }> = ({ forceDarkMode }) => {
               React Router
             </span>
           </Link>
-          <div className="mt-10 space-y-10 lg:space-y-0 lg:mt-6">
+          <div className="mt-10 space-y-10 md:space-y-0 md:mt-6">
             <p>
               React Router is built and maintained by{" "}
               <a className="font-semibold" href="https://remix.run">
@@ -53,26 +53,26 @@ const Footer: React.VFC<{ forceDarkMode: boolean }> = ({ forceDarkMode }) => {
 
           <ul
             className={clsx(
-              "my-12 text-xl leading-8 divide-y lg:flex lg:divide-none lg:space-x-6 lg:text-base lg:tracking-wider lg:font-medium divide-[#d7d7d7]",
+              "my-12 text-xl leading-8 divide-y md:flex md:divide-none md:space-x-6 md:text-base md:tracking-wider md:font-medium divide-[#d7d7d7]",
               forceDarkMode
-                ? "text-white lg:text-white/80 lg:text-opacity-70"
-                : "text-[#121212] lg:text-[rgba(18, 18, 18, 0.8)] dark:text-white lg:dark:text-white/80 lg:dark:text-opacity-70"
+                ? "text-white md:text-white/80 md:text-opacity-70"
+                : "text-[#121212] md:text-[rgba(18, 18, 18, 0.8)] dark:text-white md:dark:text-white/80 md:dark:text-opacity-70"
             )}
           >
             <li>
-              <Link to="/docs" className="block py-4 lg:py-0">
+              <Link to="/docs" className="block py-4 md:py-0">
                 Documentation
               </Link>
             </li>
             <li>
-              <Link to="/examples" className="block py-4 lg:py-0">
+              <Link to="/examples" className="block py-4 md:py-0">
                 Examples
               </Link>
             </li>
             <li>
               <a
                 href="https://github.com/remix-run/react-router"
-                className="block py-4 lg:py-0"
+                className="block py-4 md:py-0"
               >
                 GitHub
               </a>
@@ -80,7 +80,7 @@ const Footer: React.VFC<{ forceDarkMode: boolean }> = ({ forceDarkMode }) => {
             <li>
               <a
                 href="https://npm.im/react-router"
-                className="block py-4 lg:py-0"
+                className="block py-4 md:py-0"
               >
                 NPM
               </a>

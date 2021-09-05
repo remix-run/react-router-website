@@ -9,11 +9,11 @@ const IndexPage: RouteComponent = () => {
   return (
     <div className="container py-8">
       <div className="text-center max-w-[600px] mx-auto">
-        <h1 className="font-display text-[40px] leading-[1.2] font-bold text-white lg:text-7xl lg:leading-[0.89]">
+        <h1 className="font-display text-[40px] leading-[1.2] font-bold text-white md:text-7xl md:leading-[0.89]">
           Learn Once
           <br /> Route Anywhere
         </h1>
-        <p className="mt-4 text-lg leading-8 lg:mt-2 lg:text-xl">
+        <p className="mt-4 text-lg leading-8 md:mt-2 md:text-xl">
           Components are the heart of React's powerful programming model. React
           Router is a collection of navigational components that compose
           declaratively with your application.
