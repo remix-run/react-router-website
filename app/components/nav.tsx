@@ -1,6 +1,5 @@
 import * as React from "react";
-import { useLocation, useNavigate, useParams } from "react-router";
-import { NavLink } from "react-router-dom";
+import { useLocation, useNavigate, useParams, NavLink } from "react-router-dom";
 import { Link } from "remix";
 import clsx from "clsx";
 
