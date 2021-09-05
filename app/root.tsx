@@ -17,6 +17,7 @@ import { Nav } from "./components/nav";
 import stylesUrl from "./styles/global.css";
 import { getMenu, getVersions, MenuDir, VersionHead } from "./utils.server";
 import { time } from "./utils/time";
+import { addTrailingSlash } from "./utils/with-trailing-slash";
 
 let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
@@ -28,35 +29,35 @@ interface RouteData {
   version: VersionHead;
 }
 
-let loader: LoaderFunction = async ({ context, params }) => {
-  try {
-    let [versionsMS, versions] = await time(() => getVersions());
-    let [latest] = versions;
+let loader: LoaderFunction = ({ context, params, request }) => {
+  return addTrailingSlash(request)(async () => {
+    try {
+      let [versionsMS, versions] = await time(() => getVersions());
+      let [latest] = versions;
 
-    let [menuMS, menu] = await time(() =>
-      getMenu(context.docs, latest, params.lang)
-    );
+      let [menuMS, menu] = await time(() =>
+        getMenu(context.docs, latest, params.lang)
+      );
 
-    let data: RouteData = {
-      menu,
-      version: latest,
-      versions,
-    };
+      let data: RouteData = {
+        menu,
+        version: latest,
+        versions,
+      };
 
-    return json(data, {
-      headers: {
-        "Server-Timing": `versions;dur=${versionsMS}, menu;dur=${menuMS}`,
-      },
-    });
-  } catch (error: unknown) {
-    console.error(error);
-    return json({ notFound: true }, { status: 404 });
-  }
+      return json(data, {
+        headers: {
+          "Server-Timing": `versions;dur=${versionsMS}, menu;dur=${menuMS}`,
+        },
+      });
+    } catch (error: unknown) {
+      console.error(error);
+      return json({ notFound: true }, { status: 404 });
+    }
+  });
 };
 
 const headers: HeadersFunction = ({ loaderHeaders }) => {
-  console.log("ROOT", loaderHeaders.get("Server-Timing"));
-
   return {
     // so fresh!
     "Cache-Control": "max-age=0",

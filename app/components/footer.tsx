@@ -60,13 +60,13 @@ const Footer: React.VFC<{ forceDarkMode: boolean }> = ({ forceDarkMode }) => {
             )}
           >
             <li>
-              <Link to="/docs" className="block py-4 md:py-0">
+              <Link to="/docs/" className="block py-4 md:py-0">
                 Documentation
               </Link>
             </li>
             <li>
-              <Link to="/examples" className="block py-4 md:py-0">
-                Examples
+              <Link to="/resources/" className="block py-4 md:py-0">
+                Resources
               </Link>
             </li>
             <li>

@@ -30,9 +30,11 @@ let loader: LoaderFunction = async ({ params, context }) => {
     let ext = path.extname(slug);
 
     if (ext) {
-      let parsed = path.parse(slug);
-      let noExtension = parsed.dir + "/" + parsed.name;
-      return redirect(`/docs/${lang}/${version.head}${noExtension}`);
+      let { dir, name } = path.parse(slug);
+
+      let noExtension = dir.endsWith("/") ? dir : dir + "/" + name;
+
+      return redirect(`/docs/${lang}/${version.head}${noExtension}/`);
     }
 
     let [ms, doc] = await time(() => getDoc(context.docs, slug, version, lang));

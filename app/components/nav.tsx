@@ -76,7 +76,7 @@ const Nav: React.VFC<NavProps> = ({
                         : "text-[#121212] dark:text-white dark:text-white/80 dark:opacity-70"
                     )
               }
-              to="/docs"
+              to="/docs/"
             >
               Documentation
             </NavLink>
@@ -93,7 +93,7 @@ const Nav: React.VFC<NavProps> = ({
                         : "text-[#121212] dark:text-white"
                     )
               }
-              to="/resources"
+              to="/resources/"
             >
               Resources
             </NavLink>
