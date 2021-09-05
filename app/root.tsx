@@ -2,6 +2,7 @@ import * as React from "react";
 import { useLocation } from "react-router-dom";
 import {
   ErrorBoundaryComponent,
+  HeadersFunction,
   json,
   LinksFunction,
   LoaderFunction,
@@ -15,6 +16,7 @@ import { Footer } from "./components/footer";
 import { Nav } from "./components/nav";
 import stylesUrl from "./styles/global.css";
 import { getMenu, getVersions, MenuDir, VersionHead } from "./utils.server";
+import { time } from "./utils/time";
 
 let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
@@ -28,10 +30,12 @@ interface RouteData {
 
 let loader: LoaderFunction = async ({ context, params }) => {
   try {
-    let versions = await getVersions();
+    let [versionsMS, versions] = await time(() => getVersions());
     let [latest] = versions;
 
-    let menu = await getMenu(context.docs, latest, params.lang);
+    let [menuMS, menu] = await time(() =>
+      getMenu(context.docs, latest, params.lang)
+    );
 
     let data: RouteData = {
       menu,
@@ -39,12 +43,25 @@ let loader: LoaderFunction = async ({ context, params }) => {
       versions,
     };
 
-    // so fresh!
-    return json(data, { headers: { "Cache-Control": "max-age=0" } });
+    return json(data, {
+      headers: {
+        "Server-Timing": `versions;dur=${versionsMS}, menu;dur=${menuMS}`,
+      },
+    });
   } catch (error: unknown) {
     console.error(error);
     return json({ notFound: true }, { status: 404 });
   }
+};
+
+const headers: HeadersFunction = ({ loaderHeaders }) => {
+  console.log("ROOT", loaderHeaders.get("Server-Timing"));
+
+  return {
+    // so fresh!
+    "Cache-Control": "max-age=0",
+    "Server-Timing": loaderHeaders.get("Server-Timing") ?? "",
+  };
 };
 
 const DocsLiveReload: React.VFC = () => {
@@ -125,4 +142,4 @@ const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 };
 
 export default App;
-export { ErrorBoundary, links, loader };
+export { ErrorBoundary, headers, links, loader };

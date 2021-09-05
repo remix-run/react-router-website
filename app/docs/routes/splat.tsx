@@ -1,10 +1,16 @@
 import * as React from "react";
-import { LoaderFunction, redirect, RouteComponent } from "remix";
+import {
+  HeadersFunction,
+  LoaderFunction,
+  redirect,
+  RouteComponent,
+} from "remix";
 
 import { json } from "remix";
 
 import { getDoc, getVersion, getVersions } from "~/utils.server";
 import { Page } from "~/components/page";
+import { time } from "~/utils/time";
 
 let loader: LoaderFunction = async ({ params, context }) => {
   let path = await import("path");
@@ -29,19 +35,26 @@ let loader: LoaderFunction = async ({ params, context }) => {
       return redirect(`/docs/${lang}/${version.head}${noExtension}`);
     }
 
-    let doc = await getDoc(context.docs, slug, version, lang);
+    let [ms, doc] = await time(() => getDoc(context.docs, slug, version, lang));
 
     // we could also throw an error in getDoc if the doc doesn't exist
     if (!doc) {
       return json({ notFound: true }, { status: 404 });
     }
 
-    // so fresh!
-    return json(doc, { headers: { "Cache-Control": "max-age=0" } });
+    return json(doc, { headers: { "Server-Timing": `db;dur=${ms}` } });
   } catch (error) {
     console.error(error);
     return json({ notFound: true }, { status: 404 });
   }
+};
+
+const headers: HeadersFunction = ({ loaderHeaders }) => {
+  return {
+    // so fresh!
+    "Cache-Control": "max-age=0",
+    "Server-Timing": loaderHeaders.get("Server-Timing") ?? "",
+  };
 };
 
 const SplatPage: RouteComponent = () => {
@@ -49,5 +62,5 @@ const SplatPage: RouteComponent = () => {
 };
 
 export default SplatPage;
-export { loader };
+export { headers, loader };
 export { meta } from "~/components/page";
