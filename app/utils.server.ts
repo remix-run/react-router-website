@@ -99,8 +99,7 @@ export interface VersionHead {
 
 export async function getMenu(
   config: Config,
-  version: VersionHead,
-  lang: string
+  version: VersionHead
 ): Promise<MenuDir> {
   if (menuCache.has(version.version)) {
     return menuCache.get(version.version)!;
@@ -113,8 +112,7 @@ export async function getMenu(
     dirName,
     "root",
     dirName,
-    version,
-    lang
+    version
   );
   menuCache.set(version.version, menu);
   return menu;
@@ -424,8 +422,7 @@ async function getContentsRecursively(
   dirPath: string,
   dirName: string,
   rootName: string,
-  version: VersionHead,
-  lang: string
+  version: VersionHead
 ): Promise<MenuDir> {
   let contents =
     where === "remote"
@@ -461,7 +458,7 @@ async function getContentsRecursively(
   let dir: MenuDir = {
     type: "dir",
     name: dirName,
-    path: `/docs/${lang}/${version.head}/${dirPath.replace(rootName, "")}`,
+    path: `/${dirPath.replace(rootName, "")}`,
     hasIndex,
     attributes,
     title: attributes.title || dirName,
@@ -485,9 +482,7 @@ async function getContentsRecursively(
               ext: undefined,
             });
 
-            let linkPath = `/docs/${lang}/${version.head}${
-              filePath.endsWith("/") ? filePath.slice(0, -1) : filePath
-            }`;
+            let linkPath = filePath.endsWith("/") ? filePath : filePath + "/";
 
             return {
               name: file.path,
@@ -506,14 +501,7 @@ async function getContentsRecursively(
     dir.dirs = (
       await Promise.all(
         dirs.map((dir) =>
-          getContentsRecursively(
-            config,
-            dir.path,
-            dir.path,
-            rootName,
-            version,
-            lang
-          )
+          getContentsRecursively(config, dir.path, dir.path, rootName, version)
         )
       )
     )

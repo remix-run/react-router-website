@@ -35,9 +35,7 @@ let loader: LoaderFunction = ({ context, params, request }) => {
       let [versionsMS, versions] = await time(() => getVersions());
       let [latest] = versions;
 
-      let [menuMS, menu] = await time(() =>
-        getMenu(context.docs, latest, params.lang)
-      );
+      let [menuMS, menu] = await time(() => getMenu(context.docs, latest));
 
       let data: RouteData = {
         menu,
