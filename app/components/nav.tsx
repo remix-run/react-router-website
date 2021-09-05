@@ -141,7 +141,7 @@ function Hamburger() {
       className="block w-5 h-4"
       aria-hidden="true"
     >
-      <path fill="#121212" d="M0 0h20v2H0zM0 6h20v2H0zM0 12h20v2H0z" />
+      <path fill="currentColor" d="M0 0h20v2H0zM0 6h20v2H0zM0 12h20v2H0z" />
     </svg>
   );
 }
@@ -156,8 +156,14 @@ function Close() {
       stroke="currentColor"
       aria-hidden="true"
     >
-      <path fill="#121212" d="M4 18L18.142 3.858l1.414 1.414L5.414 19.414z" />
-      <path fill="#121212" d="M5 4l14.142 14.142-1.414 1.414L3.586 5.414z" />
+      <path
+        fill="currentColor"
+        d="M4 18L18.142 3.858l1.414 1.414L5.414 19.414z"
+      />
+      <path
+        fill="currentColor"
+        d="M5 4l14.142 14.142-1.414 1.414L3.586 5.414z"
+      />
     </svg>
   );
 }
