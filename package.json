@@ -5,11 +5,11 @@
   "license": "",
   "scripts": {
     "build:css": "tailwindcss --input ./styles/global.css --output ./app/styles/global.css --minify --postcss",
-    "build:remix": "remix build",
+    "build:remix": "NODE_ENV=production remix build",
     "build": "run-s build:*",
     "dev": "pm2-dev pm2.config.js",
     "deploy": "flyctl deploy --build-arg REMIX_TOKEN=${REMIX_TOKEN}",
-    "start": "node server",
+    "start": "NODE_ENV=production node server",
     "postinstall": "remix setup && patch-package",
     "clean": "del app/styles .cache public/build server/build"
   },
