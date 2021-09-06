@@ -5,6 +5,7 @@
 ```sh
 npm ci
 npx prisma generate
+cp .env.example .env
 ```
 
 ## Development
