@@ -5,6 +5,7 @@ import { Link, useRouteData } from "remix";
 import invariant from "tiny-invariant";
 
 import type { MenuMap } from "~/components/nav";
+import { useDelegatedReactRouterLinks } from "~/hooks/delegate-links";
 import type { Doc, MenuDir } from "~/utils.server";
 
 import { useOutletContext } from "./data-outlet";
@@ -114,6 +115,7 @@ const SiblingLinks: React.VFC<{ doc: Doc }> = ({ doc }) => {
 
 const Page: React.VFC = () => {
   let doc = useRouteData<Doc>();
+  useDelegatedReactRouterLinks();
 
   if (!doc) {
     return (
@@ -130,6 +132,7 @@ const Page: React.VFC = () => {
       <div
         className="container py-8 prose dark:prose-dark"
         dangerouslySetInnerHTML={{ __html: doc.html }}
+        data-docs-page-wrapper
       />
     </div>
   );

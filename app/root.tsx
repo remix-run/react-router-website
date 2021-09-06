@@ -29,7 +29,7 @@ interface RouteData {
   version: VersionHead;
 }
 
-let loader: LoaderFunction = ({ context, params, request }) => {
+let loader: LoaderFunction = ({ context, request }) => {
   return addTrailingSlash(request)(async () => {
     try {
       let [versionsMS, versions] = await time(() => getVersions());
