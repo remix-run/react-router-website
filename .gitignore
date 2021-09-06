@@ -4,7 +4,6 @@ node_modules
 /server/build
 .env
 .ds_store
-prisma/*.db
 
 /logan.md
 
