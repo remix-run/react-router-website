@@ -7,18 +7,10 @@ import logoCircleUrl from "~/icons/logo-circle.svg";
 import type { MenuDir, VersionHead } from "~/utils.server";
 
 interface NavProps {
-  menu: MenuDir;
-  versions: VersionHead[];
-  version: VersionHead;
   forceDarkMode: boolean;
 }
 
-const Nav: React.VFC<NavProps> = ({
-  menu,
-  version,
-  versions,
-  forceDarkMode,
-}) => {
+const Nav: React.VFC<NavProps> = ({ forceDarkMode }) => {
   let [navIsOpen, setNavIsOpen] = React.useState(false);
   let location = useLocation();
 
@@ -122,11 +114,6 @@ const Nav: React.VFC<NavProps> = ({
           </li>
         </ul>
       </header>
-      <div className="" data-open={navIsOpen ? "" : null}>
-        <nav className="hidden">
-          <Menu menu={menu} version={version} versions={versions} />
-        </nav>
-      </div>
     </>
   );
 };
@@ -168,92 +155,4 @@ function Close() {
   );
 }
 
-const Menu: React.VFC<Omit<NavProps, "forceDarkMode">> = ({
-  menu,
-  version,
-  versions,
-}) => {
-  let navigate = useNavigate();
-  let params = useParams();
-  let isOtherTag = !versions.find((v) => v.head === params.version);
-
-  return (
-    <nav aria-label="Site">
-      <div data-docs-version-wrapper>
-        <select
-          data-docs-version-select
-          defaultValue={version.head}
-          onChange={(event) => {
-            navigate(`/docs/${params.lang}/${event.target.value}`);
-          }}
-        >
-          {isOtherTag && (
-            <option value={params.version}>{params.version}</option>
-          )}
-          {versions.map((v) => (
-            <option key={v.head} value={v.head}>
-              {v.head}
-            </option>
-          ))}
-        </select>
-      </div>
-      <MenuList level={1} dir={menu} />
-    </nav>
-  );
-};
-
-interface MenuListProps {
-  dir: MenuDir;
-  level?: number;
-}
-
-const MenuList: React.VFC<MenuListProps> = ({ dir, level = 1 }) => {
-  const { lang, version } = useParams();
-  const linkPrefix = `/docs/${lang}/${version}`;
-  return (
-    <ul data-docs-menu data-level={level}>
-      {dir.dirs &&
-        dir.dirs.map((dir, index) => (
-          <li data-docs-dir data-level={level} key={index}>
-            {dir.hasIndex ? (
-              <NavLink data-docs-link to={`${linkPrefix}${dir.path}`}>
-                {dir.title}
-              </NavLink>
-            ) : (
-              <span data-docs-label>{dir.title}</span>
-            )}
-            <MenuList level={level + 1} dir={dir} />
-          </li>
-        ))}
-      {dir.files.map((file, index) => (
-        <li data-docs-file key={index}>
-          {file.attributes.disabled ? (
-            <span data-docs-label data-docs-disabled-file>
-              {file.title} 🚧
-            </span>
-          ) : (
-            <NavLink data-docs-link to={`${linkPrefix}${file.path}`}>
-              {file.title}
-            </NavLink>
-          )}
-        </li>
-      ))}
-    </ul>
-  );
-};
-
-export type MenuMap = Map<string, MenuDir>;
-
-function createMenuMap(dir: MenuDir, map: MenuMap = new Map()) {
-  for (let file of dir.files) {
-    map.set(file.path, dir);
-  }
-  if (dir.dirs) {
-    for (let childDir of dir.dirs) {
-      createMenuMap(childDir, map);
-    }
-  }
-  return map;
-}
-
-export { Nav, createMenuMap };
+export { Nav };

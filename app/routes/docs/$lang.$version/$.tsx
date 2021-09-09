@@ -9,7 +9,7 @@ import {
 import { json } from "remix";
 
 import { getDoc, getVersion, getVersions } from "~/utils.server";
-import { Page } from "~/components/page";
+import { Page } from "~/components/doc";
 import { time } from "~/utils/time";
 
 let loader: LoaderFunction = async ({ params, context }) => {
@@ -65,4 +65,4 @@ const SplatPage: RouteComponent = () => {
 
 export default SplatPage;
 export { headers, loader };
-export { meta } from "~/components/page";
+export { meta } from "~/components/doc";

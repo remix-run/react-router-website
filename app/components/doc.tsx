@@ -1,14 +1,24 @@
-import * as React from "react";
+import type * as React from "react";
 import { useLocation } from "react-router-dom";
 import type { MetaFunction } from "remix";
 import { Link, useRouteData } from "remix";
 import invariant from "tiny-invariant";
 
-import type { MenuMap } from "~/components/nav";
 import { useDelegatedReactRouterLinks } from "~/hooks/delegate-links";
-import type { Doc, MenuDir } from "~/utils.server";
+import type { Doc, MenuDir, VersionHead } from "~/utils.server";
 
 import { useOutletContext } from "./data-outlet";
+
+import type { HeadersFunction } from "remix";
+import type { MenuMap } from "./docs-menu";
+
+export let headers: HeadersFunction = ({ loaderHeaders }) => {
+  return {
+    // so fresh!
+    "Cache-Control": "max-age=0",
+    "Server-Timing": loaderHeaders.get("Server-Timing") ?? "",
+  };
+};
 
 export let meta: MetaFunction = ({ data }: { data: any }) => {
   let title = data.notFound ? "Not Found" : data.title;
@@ -129,6 +139,7 @@ const Page: React.VFC = () => {
   return (
     <div>
       <SiblingLinks doc={doc} />
+      <h1 className="text-4xl font-display">{doc.title}</h1>
       <div
         className="container py-8 prose dark:prose-dark"
         dangerouslySetInnerHTML={{ __html: doc.html }}

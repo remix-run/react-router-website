@@ -1,0 +1,13 @@
+{
+  "folders": [
+	{
+		"path": "."
+	},
+	{
+		"path": "../react-router"
+	}
+],
+  "settings": {
+    "typescript.tsdk": "node_modules/typescript/lib"
+  }
+}
