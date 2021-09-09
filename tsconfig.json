@@ -9,7 +9,6 @@
     "strict": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "importsNotUsedAsValues": "error",
     "module": "ES2020",
     "paths": { "~/*": ["./app/*"] }
   }
