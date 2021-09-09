@@ -8,8 +8,15 @@ const meta: MetaFunction = () => ({
 const IndexPage: RouteComponent = () => {
   return (
     <div className="container py-8">
-      <div className="text-center max-w-[600px] mx-auto">
-        <h1 className="font-display text-[40px] leading-[1.2] font-bold text-white md:text-7xl md:leading-[0.89]">
+      <div className="text-center mx-auto">
+        <h1
+          className={`
+          font-display leading-[1.2] font-bold text-white
+          text-4xl
+          md:text-7xl md:leading-3
+          lg:text-4xl
+        `}
+        >
           Learn Once
           <br /> Route Anywhere
         </h1>
@@ -18,6 +25,14 @@ const IndexPage: RouteComponent = () => {
           Router is a collection of navigational components that compose
           declaratively with your application.
         </p>
+      </div>
+      <div className="flex items-center justify-around">
+        <div>
+          Howdy
+          <br />
+          fart
+        </div>
+        <div>Hello</div>
       </div>
     </div>
   );

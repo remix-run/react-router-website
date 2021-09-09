@@ -1,4 +1,5 @@
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { NavLink } from "remix";
 import type { MenuDir, VersionHead } from "~/utils.server";
 
 /**
@@ -35,7 +36,7 @@ export function Menu({
           )}
           {versions.map((v) => (
             <option key={v.version} value={v.head}>
-              {v.version}
+              {v.head} ({v.version})
             </option>
           ))}
         </select>
@@ -48,25 +49,42 @@ export function Menu({
 function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
   let { lang, version } = useParams();
   let linkPrefix = `/docs/${lang}/${version}`;
+  let sharedItemClassName = "px-4 py-1 block";
+  if (level === 1) sharedItemClassName += " font-bold";
+
   return (
-    <ul className="pl-4">
+    <ul className={level === 2 ? "mb-4" : ""}>
       {dir.dirs &&
         dir.dirs.map((dir, index) => (
-          <li key={index}>
+          <li className="pl-4" key={index}>
             {dir.hasIndex ? (
-              <NavLink to={`${linkPrefix}${dir.path}`}>{dir.title}</NavLink>
+              <NavLink
+                to={`${linkPrefix}${dir.path}`}
+                className={sharedItemClassName}
+              >
+                {dir.title}
+              </NavLink>
             ) : (
-              <span>{dir.title}</span>
+              <span
+                className={`text-[color:var(--base05)] ${sharedItemClassName}`}
+              >
+                {dir.title}
+              </span>
             )}
             <MenuList level={level + 1} dir={dir} />
           </li>
         ))}
       {dir.files.map((file, index) => (
-        <li key={index}>
+        <li key={index} className="pl-4">
           {file.attributes.disabled ? (
-            <span>{file.title} 🚧</span>
+            <span className={sharedItemClassName}>{file.title} 🚧</span>
           ) : (
-            <NavLink to={`${linkPrefix}${file.path}`}>{file.title}</NavLink>
+            <NavLink
+              to={`${linkPrefix}${file.path}`}
+              className={sharedItemClassName}
+            >
+              {file.title}
+            </NavLink>
           )}
         </li>
       ))}

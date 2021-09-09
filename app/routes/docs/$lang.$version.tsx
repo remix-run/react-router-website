@@ -17,15 +17,16 @@ interface DocsRouteData {
 export let loader: LoaderFunction = ({ context, request }) => {
   return addTrailingSlash(request)(async () => {
     try {
-      let [versionsMS, versions] = await time(() => getVersions());
-      let [latest] = versions;
+      let [versionsMS, allVersions] = await time(() => getVersions());
+      let heads = allVersions.filter((v) => v.isLatest);
+      let [latest] = heads;
 
       let [menuMS, menu] = await time(() => getMenu(context.docs, latest));
 
       let data: DocsRouteData = {
         menu,
         version: latest,
-        versions,
+        versions: heads,
       };
 
       return json(data, {

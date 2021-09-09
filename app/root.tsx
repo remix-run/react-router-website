@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useLocation, Outlet } from "react-router-dom";
 import type {
   ErrorBoundaryComponent,
@@ -9,10 +10,14 @@ import { Links, LiveReload, Meta, Scripts } from "remix";
 import { Footer } from "./components/footer";
 import { Nav } from "./components/nav";
 import { useScrollRestoration } from "./hooks/scroll-restoration";
-import stylesUrl from "./styles/global.css";
+import tailwind from "./styles/tailwind.css";
+import global from "./styles/global.css";
 
 export let links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: stylesUrl }];
+  return [
+    { rel: "stylesheet", href: global },
+    { rel: "stylesheet", href: tailwind },
+  ];
 };
 
 function DocsLiveReload() {
@@ -71,11 +76,11 @@ const Document: React.FC<{ forceDarkMode: boolean }> = ({
 export let App: RouteComponent = () => {
   let location = useLocation();
 
-  // let forceDarkMode = React.useMemo(
-  //   () => !location.pathname.startsWith("/docs/"),
-  //   [location]
-  // );
-  let forceDarkMode = false;
+  let forceDarkMode = React.useMemo(
+    () => !location.pathname.startsWith("/docs/"),
+    [location]
+  );
+
   useScrollRestoration();
 
   return (

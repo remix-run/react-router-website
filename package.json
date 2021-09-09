@@ -4,7 +4,7 @@
   "description": "",
   "license": "",
   "scripts": {
-    "build:css": "tailwindcss --input ./styles/global.css --output ./app/styles/global.css --minify --postcss",
+    "build:css": "tailwindcss --input ./styles/tailwind.css --output ./app/styles/tailwind.css --minify --postcss",
     "build:remix": "NODE_ENV=production remix build",
     "build": "run-s build:*",
     "dev": "pm2-dev pm2.config.js",

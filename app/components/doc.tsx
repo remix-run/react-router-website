@@ -1,7 +1,7 @@
 import type * as React from "react";
 import { useLocation } from "react-router-dom";
 import type { MetaFunction } from "remix";
-import { Link, useRouteData } from "remix";
+import { Link, useLoaderData } from "remix";
 import invariant from "tiny-invariant";
 
 import { useDelegatedReactRouterLinks } from "~/hooks/delegate-links";
@@ -124,7 +124,7 @@ const SiblingLinks: React.VFC<{ doc: Doc }> = ({ doc }) => {
 };
 
 const Page: React.VFC = () => {
-  let doc = useRouteData<Doc>();
+  let doc = useLoaderData<Doc>();
   useDelegatedReactRouterLinks();
 
   if (!doc) {
@@ -137,11 +137,11 @@ const Page: React.VFC = () => {
   }
 
   return (
-    <div>
+    <div className="container">
       <SiblingLinks doc={doc} />
-      <h1 className="text-4xl font-display">{doc.title}</h1>
+      <h1 className="my-8 text-4xl font-display">{doc.title}</h1>
       <div
-        className="container py-8 prose dark:prose-dark"
+        className="py-8 prose dark:prose-dark"
         dangerouslySetInnerHTML={{ __html: doc.html }}
         data-docs-page-wrapper
       />

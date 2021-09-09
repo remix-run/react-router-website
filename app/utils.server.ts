@@ -449,6 +449,7 @@ async function getContentsRecursively(
     let parsed = path.parse(file.path);
     return parsed.base === "index.md";
   });
+
   let { attributes, content } = hasIndexFile
     ? await getAttributes(config, path.join(dirPath, `index.md`), version)
     : { attributes: {}, content: "" };
@@ -466,7 +467,7 @@ async function getContentsRecursively(
     files: (
       await Promise.all(
         files
-          .filter((file) => file.path !== `index${ext}`)
+          .filter((file) => !file.path.endsWith(`index${ext}`))
           .map(async (file): Promise<MenuFile> => {
             let { attributes } = await getAttributes(
               config,
@@ -517,9 +518,7 @@ async function getContentsRecursively(
 function sortByAttributes(a: MenuItem, b: MenuItem) {
   if (a.attributes.order && !b.attributes.order) return -1;
   if (a.attributes.order && b.attributes.order) {
-    return (
-      parseInt(a.attributes.order || "0") - parseInt(b.attributes.order || "0")
-    );
+    return parseInt(a.attributes.order) - parseInt(b.attributes.order);
   }
 
   if (a.attributes.published && b.attributes.published) {

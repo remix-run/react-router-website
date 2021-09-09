@@ -7,4 +7,4 @@ node_modules
 
 /logan.md
 
-app/styles/*
+app/styles/tailwind.css

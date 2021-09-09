@@ -20,7 +20,7 @@ module.exports = {
     {
       name: "Tailwind",
       script:
-        "tailwindcss --input ./styles/global.css --output ./app/styles/global.css --watch --postcss",
+        "tailwindcss --input ./styles/tailwind.css --output ./app/styles/tailwind.css --watch --postcss",
       ignore_watch: ["."],
     },
     {
