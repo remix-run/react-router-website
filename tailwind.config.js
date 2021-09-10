@@ -56,7 +56,12 @@ module.exports = {
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      ringWidth: ["focus-visible"],
+      ringColor: ["focus-visible"],
+      ringOffsetWidth: ["focus-visible"],
+      ringOffsetColor: ["focus-visible"],
+    },
   },
   plugins: [require("@tailwindcss/typography")],
 };

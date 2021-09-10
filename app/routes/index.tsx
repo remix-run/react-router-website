@@ -1,5 +1,7 @@
 import * as React from "react";
 import type { RouteComponent, MetaFunction } from "remix";
+import { Field, Radio, Checkbox, Select } from "../components/form";
+import { Button } from "../components/button";
 
 const meta: MetaFunction = () => ({
   title: "React Router",
@@ -26,13 +28,16 @@ const IndexPage: RouteComponent = () => {
           declaratively with your application.
         </p>
       </div>
-      <div className="flex items-center justify-around">
-        <div>
-          Howdy
-          <br />
-          fart
-        </div>
-        <div>Hello</div>
+      <div>
+        <Select>
+          <option>One</option>
+          <option>Two</option>
+          <option>Three</option>
+        </Select>
+        <Field />
+        <label>
+          <Checkbox /> Hello
+        </label>
       </div>
     </div>
   );

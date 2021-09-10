@@ -3,11 +3,13 @@ import { Link, NavLink } from "react-router-dom";
 import type { LinkProps, NavLinkProps } from "react-router-dom";
 import cx from "clsx";
 
+// TODO: Light mode for docs usage
+
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (props, ref) => {
     let { variant, ...domProps } = props;
     return (
-      <button ref={ref} className={getButtonClassNames(props)} {...domProps} />
+      <button ref={ref} {...domProps} className={getButtonClassNames(props)} />
     );
   }
 );
@@ -20,8 +22,8 @@ const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
         ref={ref}
         aria-disabled={disabled || undefined}
         tabIndex={disabled ? -1 : undefined}
-        className={getButtonClassNames(props)}
         {...domProps}
+        className={getButtonClassNames(props)}
       />
     );
   }
@@ -35,10 +37,10 @@ const ButtonNavLink = React.forwardRef<HTMLAnchorElement, ButtonNavLinkProps>(
         ref={ref}
         aria-disabled={disabled || undefined}
         tabIndex={disabled ? -1 : undefined}
+        {...domProps}
         className={({ isActive }) =>
           getButtonClassNames({ ...props, isActive })
         }
-        {...domProps}
       />
     );
   }
@@ -62,7 +64,7 @@ function getButtonClassNames({
   return cx(
     typeof className === "function" ? className({ isActive }) : className,
     `inline-flex items-center font-bold text-base no-underline border-2 rounded ` +
-      `focus:outline-none focus:ring focus:ring-2 ring-offset-2 ring-offset-transparent ` +
+      `focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent ` +
       `transition-colors duration-200`,
     {
       // primary variant
