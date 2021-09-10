@@ -9,8 +9,11 @@ function useScrollRestoration() {
   let location = useLocation();
   let pendingLocation = usePendingLocation();
 
+  // normal cases
   React.useEffect(() => {
-    if (pendingLocation) {
+    // more weird stuff because of hash changes in history/react-router
+    // we check the key so we don't save the location on in-document hash changes
+    if (pendingLocation && pendingLocation.key !== location.key) {
       positions.set(location.key, window.scrollY);
     }
   }, [pendingLocation, location]);
@@ -22,15 +25,26 @@ function useScrollRestoration() {
         firstRender = false;
         return;
       }
-      if (location.hash) {
-        // This surprisingly isn't browser behavior :\
-        document.querySelector(location.hash)?.scrollIntoView();
-      } else {
-        let y = positions.get(location.key);
-        window.scrollTo(0, y || 0);
-      }
+      let y = positions.get(location.key);
+      console.log("scroll", location);
+      window.scrollTo(0, y || 0);
     }, [location]);
   }
+
+  // in-document hash-links, see comments in delegate-links
+  React.useEffect(() => {
+    let handler = () => {
+      console.log("handler", window.location.hash);
+      if (window.location.hash) {
+        console.log("hash!");
+        document.querySelector(window.location.hash)?.scrollIntoView();
+      }
+    };
+    window.addEventListener("hashchange", handler);
+    return () => {
+      window.removeEventListener("hashchange", handler);
+    };
+  });
 }
 
 function useElementScrollRestoration(

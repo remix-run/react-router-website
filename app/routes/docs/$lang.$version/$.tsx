@@ -44,7 +44,12 @@ let loader: LoaderFunction = async ({ params, context }) => {
       return json({ notFound: true }, { status: 404 });
     }
 
-    return json(doc, { headers: { "Server-Timing": `db;dur=${ms}` } });
+    return json(doc, {
+      headers: {
+        "Cache-Control": "max-age=60",
+        "Server-Timing": `db;dur=${ms}`,
+      },
+    });
   } catch (error) {
     console.error(error);
     return json({ notFound: true }, { status: 404 });
