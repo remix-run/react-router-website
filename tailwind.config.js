@@ -6,11 +6,7 @@ module.exports = {
   darkMode: "media", // or 'media' or 'class'
   theme: {
     fontFamily: {
-      display: [
-        '"Test Founders Grotesk"',
-        '"Arial Black"',
-        ...defaultTheme.fontFamily.sans,
-      ],
+      display: ['"Founders Grotesk"', ...defaultTheme.fontFamily.sans],
     },
     container: {
       center: true,

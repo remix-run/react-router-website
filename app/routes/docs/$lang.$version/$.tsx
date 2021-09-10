@@ -53,8 +53,6 @@ let loader: LoaderFunction = async ({ params, context }) => {
 
 const headers: HeadersFunction = ({ loaderHeaders }) => {
   return {
-    // so fresh!
-    "Cache-Control": "max-age=0",
     "Server-Timing": loaderHeaders.get("Server-Timing") ?? "",
   };
 };

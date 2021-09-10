@@ -55,9 +55,7 @@ export default function DocsLayout() {
       <div className="sticky top-0 min-w-0 h-screen flex-shrink-0 overflow-auto">
         <Menu menu={menu} version={version} versions={versions} />
       </div>
-      <div>
-        <DataOutlet context={menuMap} />
-      </div>
+      <DataOutlet context={menuMap} />
     </div>
   );
 }
@@ -68,4 +66,8 @@ function NotFound() {
       <h1>Not Found</h1>
     </div>
   );
+}
+
+export function unstable_shouldReload() {
+  return false;
 }
