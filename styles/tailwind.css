@@ -22,25 +22,23 @@
     --base0F: #d19a66;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --base00: #121212;
-      --base01: #2d2d2d;
-      --base02: #424242;
-      --base03: #4b4b4b;
-      --base04: #555555;
-      --base05: #afafaf;
-      --base06: #c8c8c8;
-      --base07: #ffffff;
-      --base08: #f44250;
-      --base09: #f57b4e;
-      --base0A: #fecc1b;
-      --base0B: #68d968;
-      --base0C: #3defe9;
-      --base0D: #3992ff;
-      --base0E: #d83bd2;
-      --base0F: #d19a66;
-    }
+  :root.dark {
+    --base00: #121212;
+    --base01: #2d2d2d;
+    --base02: #424242;
+    --base03: #4b4b4b;
+    --base04: #555555;
+    --base05: #afafaf;
+    --base06: #c8c8c8;
+    --base07: #ffffff;
+    --base08: #f44250;
+    --base09: #f57b4e;
+    --base0A: #fecc1b;
+    --base0B: #68d968;
+    --base0C: #3defe9;
+    --base0D: #3992ff;
+    --base0E: #d83bd2;
+    --base0F: #d19a66;
   }
 }
 

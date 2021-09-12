@@ -12,6 +12,7 @@ import { SiteHeader } from "./components/site-header";
 import { useScrollRestoration } from "./hooks/scroll-restoration";
 import tailwind from "./styles/tailwind.css";
 import global from "./styles/global.css";
+import { useMatchMedia } from "./hooks/match-media";
 
 export let links: LinksFunction = () => {
   return [
@@ -25,46 +26,29 @@ function DocsLiveReload() {
   return <script src="http://localhost:35729/livereload.js?snipver=1"></script>;
 }
 
-const Document: React.FC<{ forceDarkMode: boolean }> = ({
-  children,
-  forceDarkMode,
-}) => {
+const Document: React.FC<{
+  forceDarkMode: boolean;
+  prefersDarkMode?: boolean;
+}> = ({ children, forceDarkMode, prefersDarkMode }) => {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={forceDarkMode || prefersDarkMode ? "dark" : undefined}
+    >
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {forceDarkMode ? (
-          <meta name="theme-color" content="#121212" />
-        ) : (
-          <>
-            <meta
-              name="theme-color"
-              media="(prefers-color-scheme: light)"
-              content="#fff"
-            />
-            <meta
-              name="theme-color"
-              media="(prefers-color-scheme: dark)"
-              content="#121212"
-            />
-          </>
-        )}
         <Meta />
         <Links />
+        <meta name="theme-color" content="var(--base00)" />
       </head>
 
-      <body
-        className={
-          forceDarkMode
-            ? "bg-[#121212] text-white"
-            : "text-[rgba(18, 18, 18, 0.8)] bg-white dark:bg-[#121212] dark:text-white/80"
-        }
-      >
+      <body className="bg-[color:var(--base00)] text-[color:var(--base07)]">
         <SiteHeader />
 
         {children}
 
+        <DarkModeScript />
         <Scripts />
         <LiveReload />
         <DocsLiveReload />
@@ -75,16 +59,16 @@ const Document: React.FC<{ forceDarkMode: boolean }> = ({
 
 export let App: RouteComponent = () => {
   let location = useLocation();
-
   let forceDarkMode = React.useMemo(
     () => !location.pathname.startsWith("/docs/"),
     [location]
   );
 
+  let prefersDarkMode = useMatchMedia("(prefers-color-scheme: dark)");
   useScrollRestoration();
 
   return (
-    <Document forceDarkMode={forceDarkMode}>
+    <Document forceDarkMode={forceDarkMode} prefersDarkMode={prefersDarkMode}>
       <div className="flex flex-col min-h-screen">
         <div className="flex-auto">
           <Outlet />
@@ -109,3 +93,51 @@ export let ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
     </Document>
   );
 };
+
+// Inline script to run on page load avoids FOUC
+function DarkModeScript() {
+  return (
+    <script
+      noModule
+      dangerouslySetInnerHTML={{
+        __html: `
+if (window.location.pathname.startsWith("/docs/")) {
+  setInitialDarkModePreference();
+}
+
+function setInitialDarkModePreference() {
+  if (!localStorage) {
+    return;
+  }
+
+  if (
+    getFromLocalStorage("theme") === "dark" ||
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  ) {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+}
+
+function getFromLocalStorage(key) {
+  let itemString = localStorage.getItem(key);
+  if (!itemString) {
+    return null;
+  }
+  let item = JSON.parse(itemString);
+  let now = new Date();
+
+  if (now.getTime() > item.expiry) {
+    localStorage.removeItem(key);
+    return null;
+  }
+  return item.value;
+}
+`
+          .replace(/\s+/g, " ")
+          .trim(),
+      }}
+    />
+  );
+}
