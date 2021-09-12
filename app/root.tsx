@@ -67,7 +67,7 @@ const Document: React.FC<{ forceDarkMode: boolean }> = ({
 
         <Scripts />
         <LiveReload />
-        <DocsLiveReload />
+        {/* <DocsLiveReload /> */}
       </body>
     </html>
   );
@@ -75,10 +75,6 @@ const Document: React.FC<{ forceDarkMode: boolean }> = ({
 
 export let App: RouteComponent = () => {
   let location = useLocation();
-
-  React.useEffect(() => {
-    console.log(location);
-  }, [location]);
 
   let forceDarkMode = React.useMemo(
     () => !location.pathname.startsWith("/docs/"),
@@ -114,10 +110,10 @@ export let ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   );
 };
 
-export function loader() {
-  return json(null, { headers: { "Cache-Control": "max-age=3600" } });
-}
+// export function loader() {
+//   return json(null, { headers: { "Cache-Control": "max-age=3600" } });
+// }
 
-export function unstable_shouldReload() {
-  return false;
-}
+// export function unstable_shouldReload() {
+//   return false;
+// }

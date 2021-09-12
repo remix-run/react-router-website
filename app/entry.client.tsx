@@ -1,8 +1,5 @@
 import ReactDOM from "react-dom";
 import { RemixBrowser } from "remix";
+import { createHistory } from "./mini-history";
 
-if (window.history.scrollRestoration !== "manual") {
-  window.history.scrollRestoration = "manual";
-}
-
-ReactDOM.hydrate(<RemixBrowser />, document);
+ReactDOM.hydrate(<RemixBrowser history={createHistory()} />, document);

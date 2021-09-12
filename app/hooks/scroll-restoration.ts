@@ -1,50 +1,52 @@
 import * as React from "react";
 import { useLocation } from "react-router-dom";
-import { usePendingLocation } from "remix";
+import { useTransition } from "remix";
 
 let firstRender = true;
+
+if (typeof window !== "undefined") {
+  window.history.scrollRestoration = "manual";
+}
 
 function useScrollRestoration() {
   let positions = React.useRef<Map<string, number>>(new Map()).current;
   let location = useLocation();
-  let pendingLocation = usePendingLocation();
+  let transition = useTransition();
 
-  // normal cases
   React.useEffect(() => {
-    // more weird stuff because of hash changes in history/react-router
-    // we check the key so we don't save the location on in-document hash changes
-    if (pendingLocation && pendingLocation.key !== location.key) {
+    if (transition.location) {
       positions.set(location.key, window.scrollY);
     }
-  }, [pendingLocation, location]);
+  }, [transition, location]);
 
   if (typeof window !== "undefined") {
     React.useLayoutEffect(() => {
-      // don't restore scroll on initial render
       if (firstRender) {
         firstRender = false;
         return;
       }
+
       let y = positions.get(location.key);
-      console.log("scroll", location);
-      window.scrollTo(0, y || 0);
+
+      // been here before, scroll up (maybe want history action?)
+      if (y) {
+        window.scrollTo(0, y);
+        return;
+      }
+
+      // try to scroll to the hash
+      if (location.hash) {
+        let el = document.querySelector(location.hash);
+        if (el) {
+          el.scrollIntoView();
+          return;
+        }
+      }
+
+      // otherwise go to the top!
+      window.scrollTo(0, 0);
     }, [location]);
   }
-
-  // in-document hash-links, see comments in delegate-links
-  React.useEffect(() => {
-    let handler = () => {
-      console.log("handler", window.location.hash);
-      if (window.location.hash) {
-        console.log("hash!");
-        document.querySelector(window.location.hash)?.scrollIntoView();
-      }
-    };
-    window.addEventListener("hashchange", handler);
-    return () => {
-      window.removeEventListener("hashchange", handler);
-    };
-  });
 }
 
 function useElementScrollRestoration(
@@ -52,7 +54,7 @@ function useElementScrollRestoration(
 ) {
   let positions = React.useRef<Map<string, number>>(new Map()).current;
   let location = useLocation();
-  let pendingLocation = usePendingLocation();
+  let pendingLocation = useTransition().location;
 
   React.useEffect(() => {
     if (!ref.current) return;

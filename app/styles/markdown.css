@@ -26,19 +26,24 @@ stylesheet targets.
   display: flex;
 }
 
+.md-prose {
+  flex: 1;
+}
+
 .md-toc-nav {
+  font-size: 85%;
   order: 2;
-  padding: 2em;
+  padding: 1rem;
   position: sticky;
   top: 0;
-  min-width: 0;
+  min-width: 30rem;
   height: 100vh;
   overflow: auto;
 }
 
 .toc a {
   display: block;
-  padding: 1rem 0;
+  padding: 0.5rem 0;
   margin-left: 1rem;
 }
 

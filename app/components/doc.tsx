@@ -138,14 +138,13 @@ const Page: React.VFC = () => {
   }
 
   return (
-    <div className="container">
+    <div>
       <SiblingLinks doc={doc} />
       <h1 className="my-8 text-4xl font-display">{doc.title}</h1>
       <div
         ref={ref}
         className="py-8 markdown"
         dangerouslySetInnerHTML={{ __html: doc.html }}
-        data-docs-page-wrapper
       />
     </div>
   );

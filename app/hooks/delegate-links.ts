@@ -32,24 +32,19 @@ function useDelegatedReactRouterLinks(nodeRef: React.RefObject<HTMLElement>) {
   React.useEffect(() => {
     let handler = (event: MouseEvent) => {
       if (!nodeRef.current) return;
-      if (!(event.target instanceof HTMLAnchorElement)) return;
-      if (!event.target.hasAttribute("href")) return;
-      let a = event.target as HTMLAnchorElement;
+
+      if (!(event.target instanceof HTMLElement)) return;
+
+      let a = event.target.closest("a");
 
       if (
+        a && // is anchor or has anchor parent
+        a.hasAttribute("href") && // has an href
         a.host === window.location.host && // is internal
-        // ignore hash clicks, see notes at the top of the file
-        a.pathname !== location.pathname &&
         event.button === 0 && // left click
         (!a.target || a.target === "_self") && // Let browser handle "target=_blank" etc.
         !(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey) // not modified
       ) {
-        let href = a.getAttribute("href");
-        // see comment at the top about this:
-        if (href?.startsWith("#")) {
-          document.querySelector(window.location.hash)?.scrollIntoView();
-          return;
-        }
         event.preventDefault();
         let { pathname, search, hash } = a;
         navigate({ pathname, search, hash });
