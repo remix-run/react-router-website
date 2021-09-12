@@ -7,7 +7,7 @@ const meta: MetaFunction = () => ({
 
 const ResourcesPage: RouteComponent = () => {
   return (
-    <div className="container py-8">
+    <div className="contain py-8">
       <div className="text-center max-w-[600px] mx-auto">
         <h1 className="font-display text-[40px] leading-[1.2] font-bold text-white md:text-7xl md:leading-[0.89]">
           Resources for

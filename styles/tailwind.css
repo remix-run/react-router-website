@@ -43,3 +43,25 @@
     }
   }
 }
+
+.contain {
+  max-width: theme(screens.xl);
+  width: calc(100% - (theme(spacing.4) * 2));
+  margin: 0 auto;
+}
+
+@media screen and (min-width: theme(screens.md)) {
+  .contain {
+    width: calc(100% - (theme(spacing.6) * 2));
+  }
+}
+
+@media screen and (min-width: theme(screens.2xl)) {
+  .contain {
+    max-width: theme(screens.2xl);
+  }
+}
+
+body[data-nav-open] {
+  @apply overflow-hidden;
+}

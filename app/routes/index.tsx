@@ -9,8 +9,8 @@ const meta: MetaFunction = () => ({
 
 const IndexPage: RouteComponent = () => {
   return (
-    <div className="container py-8">
-      <div className="text-center mx-auto">
+    <div className="contain py-8">
+      <div className="text-center mx-auto mb-6">
         <h1
           className={`
           font-display leading-[1.2] font-bold text-white

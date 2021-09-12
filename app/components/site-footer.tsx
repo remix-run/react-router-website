@@ -1,29 +1,22 @@
 import * as React from "react";
 import { Link } from "remix";
-import clsx from "clsx";
 
 import logoCircleUrl from "~/icons/logo-circle.svg";
 import githubLogoUrl from "~/icons/github.svg";
 import twitterLogoUrl from "~/icons/twitter.svg";
 
-const Footer: React.VFC<{ forceDarkMode: boolean }> = ({ forceDarkMode }) => {
+const SiteFooter: React.VFC = () => {
   return (
     <footer
-      className={clsx(
-        "py-6 border-t border-solid md:pt-10 md:pb-16",
-        forceDarkMode
-          ? "border-white/10"
-          : "border-black/10 dark:border-white/10"
-      )}
+      className={`
+      py-6 md:pt-10 md:pb-16
+      border-t border-solid border-gray-200 dark:border-gray-700`}
     >
-      <div className="container md:flex md:items-center md:justify-between">
+      <div className="contain md:flex md:items-center md:justify-between">
         <div>
           <Link
             to="/"
-            className={clsx(
-              "flex items-center space-x-4",
-              forceDarkMode ? "text-white" : "text-[#121212] dark:text-white"
-            )}
+            className="flex items-center space-x-4 text-[var(--base07)]"
           >
             <svg className="w-9 h-9">
               <use href={`${logoCircleUrl}#logo-circle`} />
@@ -52,12 +45,8 @@ const Footer: React.VFC<{ forceDarkMode: boolean }> = ({ forceDarkMode }) => {
           </div>
 
           <ul
-            className={clsx(
-              "my-12 text-xl leading-8 divide-y md:flex md:divide-none md:space-x-6 md:text-base md:tracking-wider md:font-medium divide-[#d7d7d7]",
-              forceDarkMode
-                ? "text-white md:text-white/80 md:text-opacity-70"
-                : "text-[#121212] md:text-[rgba(18, 18, 18, 0.8)] dark:text-white md:dark:text-white/80 md:dark:text-opacity-70"
-            )}
+            className={`
+            my-12 text-xl leading-8 divide-y md:flex md:divide-none md:space-x-6 md:text-base md:tracking-wider md:font-medium divide-[#d7d7d7] text-[var(--base07)] md:text-[var(--base07)]/80 md:text-opacity-70"`}
           >
             <li>
               <Link to="/docs/" className="block py-4 md:py-0">
@@ -113,4 +102,4 @@ const Footer: React.VFC<{ forceDarkMode: boolean }> = ({ forceDarkMode }) => {
   );
 };
 
-export { Footer };
+export { SiteFooter };

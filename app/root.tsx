@@ -7,8 +7,8 @@ import type {
 } from "remix";
 import { Links, LiveReload, Meta, Scripts } from "remix";
 
-import { Footer } from "./components/footer";
-import { Nav } from "./components/nav";
+import { SiteFooter } from "./components/site-footer";
+import { SiteHeader } from "./components/site-header";
 import { useScrollRestoration } from "./hooks/scroll-restoration";
 import tailwind from "./styles/tailwind.css";
 import global from "./styles/global.css";
@@ -61,7 +61,7 @@ const Document: React.FC<{ forceDarkMode: boolean }> = ({
             : "text-[rgba(18, 18, 18, 0.8)] bg-white dark:bg-[#121212] dark:text-white/80"
         }
       >
-        <Nav forceDarkMode={forceDarkMode} />
+        <SiteHeader />
 
         {children}
 
@@ -89,7 +89,7 @@ export let App: RouteComponent = () => {
         <div className="flex-auto">
           <Outlet />
         </div>
-        <Footer forceDarkMode={forceDarkMode} />
+        <SiteFooter />
       </div>
     </Document>
   );
