@@ -63,23 +63,25 @@ function getButtonClassNames({
 }) {
   return cx(
     typeof className === "function" ? className({ isActive }) : className,
-    `inline-flex items-center font-bold text-base no-underline border-2 rounded ` +
+    `inline-flex items-center justify-center font-bold text-base no-underline border-2 rounded ` +
       `focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent ` +
+      // TODO: Don't add transtion states until after hydration to avoid FOUC
       `transition-colors duration-200`,
     {
       // primary variant
       [`px-5 py-3 lg:px-6
         bg-blue-500 hover:bg-blue-700
         border-blue-500 hover:border-blue-700
-        focus:ring-white
+        focus:ring-[color:var(--base01)]
         text-white`]: variant === "primary",
 
       // secondary variant
       [`px-5 py-3 lg:px-6
-        bg-transparent hover:bg-white
-        border-white
+        bg-transparent hover:bg-[color:var(--base01)]
+        border-[color:var(--base01)]
         focus:ring-blue-700
-        text-white hover:text-black`]: variant === "secondary",
+        text-[color:var(--base01)] hover:text-[color:var(--base07)]`]:
+        variant === "secondary",
 
       // documentation variant
       [`px-2 py-1
@@ -88,7 +90,7 @@ function getButtonClassNames({
         ${
           isActive
             ? "text-blue-500 hover:text-blue-700"
-            : "text-gray-300 hover:text-white"
+            : "text-gray-300 hover:text-[color:var(--base01)]"
         }
         focus:ring-blue-500`]: variant === "documentation",
 
