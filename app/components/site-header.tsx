@@ -20,13 +20,13 @@ const SiteHeader: React.VFC = () => {
         py-[25px]
         w-full top-0
         sticky md:static
-        border-gray-200 dark:border-gray-700`
+        border-[color:var(--base02)]`
       )}
     >
       <Container className="flex items-center justify-between">
         <Link
           to="/"
-          className="flex items-center space-x-4 text-[var(--base07)]"
+          className="flex items-center space-x-4 text-[color:var(--base07)]"
         >
           <svg className="w-9 h-9" aria-hidden>
             <use href={`${logoCircleUrl}#logo-circle`} />
@@ -68,7 +68,7 @@ const SiteHeader: React.VFC = () => {
                 className={({ isActive }) =>
                   isActive
                     ? "text-blue-500 font-medium"
-                    : "text-[var(--base07)] text-opacity-80 font-semibold"
+                    : "text-[color:var(--base07)] text-opacity-80 font-semibold"
                 }
                 to="/docs/"
               >
@@ -80,7 +80,7 @@ const SiteHeader: React.VFC = () => {
                 className={({ isActive }) =>
                   isActive
                     ? "text-blue-500 font-medium"
-                    : "text-[var(--base07)] text-opacity-80 font-semibold"
+                    : "text-[color:var(--base07)] text-opacity-80 font-semibold"
                 }
                 to="/resources/"
               >
@@ -89,7 +89,7 @@ const SiteHeader: React.VFC = () => {
             </li>
             <li>
               <a
-                className="text-[var(--base07)] text-opacity-80 font-semibold"
+                className="text-[color:var(--base07)] text-opacity-80 font-semibold"
                 href="https://github.com/remix-run/react-router"
               >
                 GitHub
@@ -97,7 +97,7 @@ const SiteHeader: React.VFC = () => {
             </li>
             <li>
               <a
-                className="text-[var(--base07)] text-opacity-80 font-semibold"
+                className="text-[color:var(--base07)] text-opacity-80 font-semibold"
                 href="https://npm.im/react-router"
               >
                 NPM

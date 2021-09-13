@@ -13,14 +13,14 @@
     --base05: #464646;
     --base06: #2c2c2c;
     --base07: #121212;
-    --base08: var(--color-red-500); /* red */
-    --base09: var(--color-orange-500); /* orange */
-    --base0A: var(--color-yellow-500); /* yellow */
-    --base0B: var(--color-green-500); /* green */
-    --base0C: var(--color-cyan-500); /* cyan */
-    --base0D: var(--color-blue-500); /* blue */
-    --base0E: var(--color-violet-500); /* violet */
-    --base0F: var(--color-amber-500); /* amber */
+    --base08: var(--color-red-500);
+    --base09: var(--color-orange-500);
+    --base0A: var(--color-yellow-500);
+    --base0B: var(--color-green-500);
+    --base0C: var(--color-cyan-500);
+    --base0D: var(--color-blue-500);
+    --base0E: var(--color-violet-500);
+    --base0F: var(--color-amber-500);
   }
 
   :root[data-force-dark] {

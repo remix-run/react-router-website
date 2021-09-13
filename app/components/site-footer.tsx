@@ -10,13 +10,13 @@ const SiteFooter: React.VFC = () => {
     <footer
       className={`
       py-6 md:pt-10 md:pb-16
-      border-t border-solid border-gray-200 dark:border-gray-700`}
+      border-t border-solid border-[color:var(--base02)]`}
     >
       <div className="contain md:flex md:items-center md:justify-between">
         <div>
           <Link
             to="/"
-            className="flex items-center space-x-4 text-[var(--base07)]"
+            className="flex items-center space-x-4 text-[color:var(--base07)]"
           >
             <svg className="w-9 h-9">
               <use href={`${logoCircleUrl}#logo-circle`} />
@@ -46,7 +46,7 @@ const SiteFooter: React.VFC = () => {
 
           <ul
             className={`
-            my-12 text-xl leading-8 divide-y md:flex md:divide-none md:space-x-6 md:text-base md:tracking-wider md:font-medium divide-[#d7d7d7] text-[var(--base07)] md:text-[var(--base07)]/80 md:text-opacity-70"`}
+            my-12 text-xl leading-8 divide-y md:flex md:divide-none md:space-x-6 md:text-base md:tracking-wider md:font-medium divide-[#d7d7d7] text-[color:var(--base07)] md:text-[color:var(--base07)]/80 md:text-opacity-70"`}
           >
             <li>
               <Link to="/docs/" className="block py-4 md:py-0">

@@ -48,10 +48,9 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         {...domProps}
         className={cx(
           className,
-          `appearance-none rounded h-5 w-5 form-check text-transparent
-           bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-650
-           checked:text-blue-500 hover:checked:text-blue-300 dark:hover:checked:text-blue-700
-
+          `appearance-none rounded h-5 w-5 form-check
+           text-[color:var(--base02)] hover:text-[color:var(--base03)]
+           checked:text-blue-500 hover:checked:text-blue-600 bg-current
            border ${
              validationState === "invalid"
                ? "border-red-500 focus:border-red-500"
@@ -89,18 +88,19 @@ const Radio = React.forwardRef<HTMLInputElement, RadioProps>((props, ref) => {
       {...domProps}
       className={cx(
         className,
-        `appearance-none rounded-full h-5 w-5 form-dot text-transparent checked:text-blue-500 hover:checked:text-blue-300 dark:hover:checked:text-blue-700 checked:bg-current
-           bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-650
-           border ${
-             validationState === "invalid"
-               ? "border-red-500 focus:border-red-500"
-               : "border-transparent focus:border-blue-500"
-           }
-           focus:outline-none focus:ring-2 ${
-             validationState === "invalid"
-               ? "focus:ring-red-500"
-               : "focus:ring-blue-500"
-           }`,
+        `appearance-none rounded-full h-5 w-5 form-dot
+         text-[color:var(--base02)] hover:text-[color:var(--base03)]
+         checked:text-blue-500 hover:checked:text-blue-600 bg-current
+         border ${
+           validationState === "invalid"
+             ? "border-red-500 focus:border-red-500"
+             : "border-transparent focus:border-blue-500"
+         }
+         focus:outline-none focus:ring-2 ${
+           validationState === "invalid"
+             ? "focus:ring-red-500"
+             : "focus:ring-blue-500"
+         }`,
         // TODO: Don't add transtion states until after hydration to avoid FOUC
         "transition-colors duration-200",
         {
@@ -154,14 +154,16 @@ function getFieldClassNames({
     className,
     `flex-1 appearance-none w-full font-medium rounded
     py-2 px-3
-    bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-650
+    bg-[color:var(--base02)] hover:bg-[color:var(--base03)]
     border ${
       validationState === "invalid"
         ? "border-red-500 focus:border-red-500"
         : "border-transparent focus:border-blue-500"
     }
-    placeholder-gray-400 text-base ${
-      validationState === "invalid" ? "text-red-500" : "text-[var(--base07)]"
+    placeholder-[color:var(--base04)] text-base ${
+      validationState === "invalid"
+        ? "text-red-500"
+        : "text-[color:var(--base07)]"
     }
     focus:outline-none focus:ring-2 ${
       validationState === "invalid"

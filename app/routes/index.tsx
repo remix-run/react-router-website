@@ -34,7 +34,7 @@ const IndexPage: RouteComponent = () => {
           <option>Two</option>
           <option>Three</option>
         </Select>
-        <Field />
+        <Field placeholder="Hello..." />
         <label>
           <Checkbox /> Hello
         </label>
