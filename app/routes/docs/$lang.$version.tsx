@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import type { LoaderFunction } from "remix";
 import { useMatches, json, useLoaderData } from "remix";
 
@@ -8,7 +8,6 @@ import { addTrailingSlash } from "~/utils/with-trailing-slash";
 import { time } from "~/utils/time";
 import { createMenuMap, Menu } from "~/components/docs-menu";
 import markdownStyles from "~/styles/markdown.css";
-import { useElementScrollRestoration } from "~/hooks/scroll-restoration";
 
 interface DocsRouteData {
   menu: MenuDir;
@@ -51,8 +50,6 @@ export function links() {
 export default function DocsLayout() {
   let matches = useMatches();
   let { menu, version, versions } = useLoaderData();
-  let scrollRef = useRef<HTMLDivElement>(null);
-  useElementScrollRestoration(scrollRef);
 
   let menuMap = useMemo(() => createMenuMap(menu), [menu]);
 
@@ -61,10 +58,7 @@ export default function DocsLayout() {
 
   return (
     <div className="flex">
-      <div
-        ref={scrollRef}
-        className="sticky top-0 min-w-0 h-screen flex-shrink-0 overflow-auto"
-      >
+      <div className="sticky top-0 min-w-0 h-screen flex-shrink-0 overflow-auto">
         <Menu menu={menu} version={version} versions={versions} />
       </div>
       <DataOutlet context={menuMap} />

@@ -67,7 +67,7 @@ const Document: React.FC<{ forceDarkMode: boolean }> = ({
 
         <Scripts />
         <LiveReload />
-        {/* <DocsLiveReload /> */}
+        <DocsLiveReload />
       </body>
     </html>
   );
