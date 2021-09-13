@@ -1,34 +1,39 @@
 import * as React from "react";
 import { useLocation } from "react-router-dom";
-import { useTransition } from "remix";
+import { useTransition, useBeforeUnload } from "remix";
 
-let firstRender = true;
+let positions: { [key: string]: number } = {};
 
 if (typeof window !== "undefined") {
   window.history.scrollRestoration = "manual";
+  let sessionPositions = sessionStorage.getItem("positions");
+  if (sessionPositions) {
+    positions = JSON.parse(sessionPositions);
+  }
 }
 
 function useScrollRestoration() {
-  let positions = React.useRef<Map<string, number>>(new Map()).current;
   let location = useLocation();
   let transition = useTransition();
 
   React.useEffect(() => {
     if (transition.location) {
-      positions.set(location.key, window.scrollY);
+      positions[location.key] = window.scrollY;
     }
   }, [transition, location]);
 
+  useBeforeUnload(
+    React.useCallback(() => {
+      positions[location.key] = window.scrollY;
+      sessionStorage.setItem("positions", JSON.stringify(positions));
+    }, [])
+  );
+
   if (typeof window !== "undefined") {
     React.useLayoutEffect(() => {
-      if (firstRender) {
-        firstRender = false;
-        return;
-      }
+      let y = positions[location.key];
 
-      let y = positions.get(location.key);
-
-      // been here before, scroll up (maybe want history action?)
+      // been here before, scroll to it (maybe want history action?)
       if (y) {
         window.scrollTo(0, y);
         return;
@@ -49,28 +54,4 @@ function useScrollRestoration() {
   }
 }
 
-function useElementScrollRestoration(
-  ref: React.MutableRefObject<HTMLElement | null>
-) {
-  let positions = React.useRef<Map<string, number>>(new Map()).current;
-  let location = useLocation();
-  let pendingLocation = useTransition().location;
-
-  React.useEffect(() => {
-    if (!ref.current) return;
-    if (pendingLocation) {
-      positions.set(location.key, ref.current.scrollTop);
-    }
-  }, [pendingLocation, location]);
-
-  if (typeof window !== "undefined") {
-    // shutup React warnings, my gosh
-    React.useLayoutEffect(() => {
-      if (!ref.current) return;
-      let y = positions.get(location.key);
-      ref.current.scrollTo(0, y || 0);
-    }, [location]);
-  }
-}
-
-export { useElementScrollRestoration, useScrollRestoration };
+export { useScrollRestoration };

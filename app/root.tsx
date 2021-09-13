@@ -46,7 +46,7 @@ const Document: React.FC<{
 
         <Scripts />
         <LiveReload />
-        {/* <DocsLiveReload /> */}
+        <DocsLiveReload />
       </body>
     </html>
   );

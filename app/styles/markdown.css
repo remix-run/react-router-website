@@ -50,6 +50,12 @@ stylesheet targets.
 /*****************************************************************************/
 /* prose */
 
+.codeblock-line {
+  display: block;
+  position: relative;
+  padding-right: 1rem;
+}
+
 .md-prose .icon {
   display: inline-block;
   fill: currentColor;
@@ -468,6 +474,7 @@ stylesheet targets.
 
 .md-prose li {
   word-wrap: break-all;
+  list-style-type: initial;
 }
 
 .md-prose li > p {
