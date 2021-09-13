@@ -3,7 +3,7 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = {
   mode: "jit",
   purge: ["./app/**/*.{ts,tsx}"],
-  darkMode: "class", // or 'media' or 'class'
+  darkMode: "media", // or 'media' or 'class'
   theme: {
     colors: {
       transparent: "transparent",
@@ -22,7 +22,7 @@ module.exports = {
         650: "#464646",
         700: "#363636",
         800: "#222222",
-        900: "#0d0d0d",
+        900: "#121212",
       },
       get neutral() {
         return this.gray;
@@ -66,8 +66,18 @@ module.exports = {
         800: "#9e7b01",
         900: "#755c01",
       },
-      get amber() {
-        return this.yellow;
+      amber: {
+        DEFAULT: "#d19a66",
+        50: "#f1e0d0",
+        100: "#edd8c4",
+        200: "#e6c9ad",
+        300: "#dfb995",
+        400: "#d8aa7e",
+        500: "#d19a66",
+        600: "#c68343",
+        700: "#a96c33",
+        800: "#855528",
+        900: "#623f1d",
       },
       green: {
         DEFAULT: "#68d968",
@@ -204,5 +214,4 @@ module.exports = {
       ringOffsetColor: ["focus-visible"],
     },
   },
-  plugins: [require("@tailwindcss/typography")],
 };

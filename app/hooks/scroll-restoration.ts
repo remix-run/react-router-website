@@ -1,34 +1,50 @@
 import * as React from "react";
 import { useLocation } from "react-router-dom";
-import { usePendingLocation } from "remix";
+import { useTransition } from "remix";
 
 let firstRender = true;
+
+if (typeof window !== "undefined") {
+  window.history.scrollRestoration = "manual";
+}
 
 function useScrollRestoration() {
   let positions = React.useRef<Map<string, number>>(new Map()).current;
   let location = useLocation();
-  let pendingLocation = usePendingLocation();
+  let transition = useTransition();
 
   React.useEffect(() => {
-    if (pendingLocation) {
+    if (transition.location) {
       positions.set(location.key, window.scrollY);
     }
-  }, [pendingLocation, location]);
+  }, [transition, location]);
 
   if (typeof window !== "undefined") {
     React.useLayoutEffect(() => {
-      // don't restore scroll on initial render
       if (firstRender) {
         firstRender = false;
         return;
       }
-      if (location.hash) {
-        // This surprisingly isn't browser behavior :\
-        document.querySelector(location.hash)?.scrollIntoView();
-      } else {
-        let y = positions.get(location.key);
-        window.scrollTo(0, y || 0);
+
+      let y = positions.get(location.key);
+
+      // been here before, scroll up (maybe want history action?)
+      if (y) {
+        window.scrollTo(0, y);
+        return;
       }
+
+      // try to scroll to the hash
+      if (location.hash) {
+        let el = document.querySelector(location.hash);
+        if (el) {
+          el.scrollIntoView();
+          return;
+        }
+      }
+
+      // otherwise go to the top!
+      window.scrollTo(0, 0);
     }, [location]);
   }
 }
@@ -38,7 +54,7 @@ function useElementScrollRestoration(
 ) {
   let positions = React.useRef<Map<string, number>>(new Map()).current;
   let location = useLocation();
-  let pendingLocation = usePendingLocation();
+  let pendingLocation = useTransition().location;
 
   React.useEffect(() => {
     if (!ref.current) return;

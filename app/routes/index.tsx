@@ -28,7 +28,7 @@ const IndexPage: RouteComponent = () => {
           declaratively with your application.
         </p>
       </div>
-      <div>
+      <div className="h-">
         <Select>
           <option>One</option>
           <option>Two</option>

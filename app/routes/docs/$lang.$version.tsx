@@ -7,6 +7,7 @@ import { getMenu, getVersions, MenuDir, VersionHead } from "~/utils.server";
 import { addTrailingSlash } from "~/utils/with-trailing-slash";
 import { time } from "~/utils/time";
 import { createMenuMap, Menu } from "~/components/docs-menu";
+import markdownStyles from "~/styles/markdown.css";
 
 interface DocsRouteData {
   menu: MenuDir;
@@ -31,6 +32,7 @@ export let loader: LoaderFunction = ({ context, request }) => {
 
       return json(data, {
         headers: {
+          "Cache-Control": "max-age=60",
           "Server-Timing": `versions;dur=${versionsMS}, menu;dur=${menuMS}`,
         },
       });
@@ -40,6 +42,10 @@ export let loader: LoaderFunction = ({ context, request }) => {
     }
   });
 };
+
+export function links() {
+  return [{ rel: "stylesheet", href: markdownStyles }];
+}
 
 export default function DocsLayout() {
   let matches = useMatches();

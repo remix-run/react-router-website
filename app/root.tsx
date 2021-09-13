@@ -5,7 +5,7 @@ import type {
   LinksFunction,
   RouteComponent,
 } from "remix";
-import { Links, LiveReload, Meta, Scripts } from "remix";
+import { Links, LiveReload, Meta, Scripts, json } from "remix";
 
 import { SiteFooter } from "./components/site-footer";
 import { SiteHeader } from "./components/site-header";
@@ -28,13 +28,9 @@ function DocsLiveReload() {
 
 const Document: React.FC<{
   forceDarkMode: boolean;
-  prefersDarkMode?: boolean;
-}> = ({ children, forceDarkMode, prefersDarkMode }) => {
+}> = ({ children, forceDarkMode }) => {
   return (
-    <html
-      lang="en"
-      className={forceDarkMode || prefersDarkMode ? "dark" : undefined}
-    >
+    <html lang="en" data-force-dark={forceDarkMode ? "" : undefined}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -48,10 +44,9 @@ const Document: React.FC<{
 
         {children}
 
-        <DarkModeScript />
         <Scripts />
         <LiveReload />
-        <DocsLiveReload />
+        {/* <DocsLiveReload /> */}
       </body>
     </html>
   );
@@ -64,11 +59,10 @@ export let App: RouteComponent = () => {
     [location]
   );
 
-  let prefersDarkMode = useMatchMedia("(prefers-color-scheme: dark)");
   useScrollRestoration();
 
   return (
-    <Document forceDarkMode={forceDarkMode} prefersDarkMode={prefersDarkMode}>
+    <Document forceDarkMode={forceDarkMode}>
       <div className="flex flex-col min-h-screen">
         <div className="flex-auto">
           <Outlet />
@@ -94,50 +88,10 @@ export let ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   );
 };
 
-// Inline script to run on page load avoids FOUC
-function DarkModeScript() {
-  return (
-    <script
-      noModule
-      dangerouslySetInnerHTML={{
-        __html: `
-if (window.location.pathname.startsWith("/docs/")) {
-  setInitialDarkModePreference();
-}
+// export function loader() {
+//   return json(null, { headers: { "Cache-Control": "max-age=3600" } });
+// }
 
-function setInitialDarkModePreference() {
-  if (!localStorage) {
-    return;
-  }
-
-  if (
-    getFromLocalStorage("theme") === "dark" ||
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-  ) {
-    document.documentElement.classList.add("dark");
-  } else {
-    document.documentElement.classList.remove("dark");
-  }
-}
-
-function getFromLocalStorage(key) {
-  let itemString = localStorage.getItem(key);
-  if (!itemString) {
-    return null;
-  }
-  let item = JSON.parse(itemString);
-  let now = new Date();
-
-  if (now.getTime() > item.expiry) {
-    localStorage.removeItem(key);
-    return null;
-  }
-  return item.value;
-}
-`
-          .replace(/\s+/g, " ")
-          .trim(),
-      }}
-    />
-  );
-}
+// export function unstable_shouldReload() {
+//   return false;
+// }

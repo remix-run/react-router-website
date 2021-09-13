@@ -25,7 +25,7 @@ export function Menu({
     <nav className="p-4">
       <div className="m-4">
         <select
-          className="dark:bg-black dark:border-gray-700 border"
+          className="select dark:bg-black dark:border-gray-700 border"
           defaultValue={version.head}
           onChange={(event) => {
             navigate(`/docs/${params.lang}/${event.target.value}`);

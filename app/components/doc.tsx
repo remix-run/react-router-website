@@ -1,4 +1,4 @@
-import type * as React from "react";
+import * as React from "react";
 import { useLocation } from "react-router-dom";
 import type { MetaFunction } from "remix";
 import { Link, useLoaderData } from "remix";
@@ -125,11 +125,12 @@ const SiblingLinks: React.VFC<{ doc: Doc }> = ({ doc }) => {
 
 const Page: React.VFC = () => {
   let doc = useLoaderData<Doc>();
-  useDelegatedReactRouterLinks();
+  let ref = React.useRef<HTMLDivElement>(null);
+  useDelegatedReactRouterLinks(ref);
 
   if (!doc) {
     return (
-      <div className="container prose">
+      <div className="container">
         <h1>Not Found</h1>
         <p>Sorry, there is no document here.</p>
       </div>
@@ -137,13 +138,13 @@ const Page: React.VFC = () => {
   }
 
   return (
-    <div className="container">
+    <div>
       <SiblingLinks doc={doc} />
       <h1 className="my-8 text-4xl font-display">{doc.title}</h1>
       <div
-        className="py-8 prose dark:prose-dark"
+        ref={ref}
+        className="py-8 markdown"
         dangerouslySetInnerHTML={{ __html: doc.html }}
-        data-docs-page-wrapper
       />
     </div>
   );
