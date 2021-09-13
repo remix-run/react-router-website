@@ -20,7 +20,7 @@ function useScrollRestoration() {
   }, [transition, location]);
 
   // ignore react warnings
-  if (typeof window === "undefined") {
+  if (typeof window !== "undefined") {
     React.useLayoutEffect(() => {
       if (firstRender) {
         firstRender = false;

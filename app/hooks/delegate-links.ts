@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 function useDelegatedReactRouterLinks(nodeRef: React.RefObject<HTMLElement>) {
   let navigate = useNavigate();
-  let location = useLocation();
 
   React.useEffect(() => {
     let handler = (event: MouseEvent) => {
