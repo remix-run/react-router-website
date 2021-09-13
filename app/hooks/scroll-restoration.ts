@@ -19,7 +19,8 @@ function useScrollRestoration() {
     }
   }, [transition, location]);
 
-  if (typeof window !== "undefined") {
+  // ignore react warnings
+  if (typeof window === "undefined") {
     React.useLayoutEffect(() => {
       if (firstRender) {
         firstRender = false;
@@ -28,7 +29,7 @@ function useScrollRestoration() {
 
       let y = positions.get(location.key);
 
-      // been here before, scroll up (maybe want history action?)
+      // been here before, scroll to it (maybe want history action?)
       if (y) {
         window.scrollTo(0, y);
         return;
@@ -50,7 +51,8 @@ function useScrollRestoration() {
 }
 
 function useElementScrollRestoration(
-  ref: React.MutableRefObject<HTMLElement | null>
+  ref: React.MutableRefObject<HTMLElement | null>,
+  ignoreNew: boolean = false
 ) {
   let positions = React.useRef<Map<string, number>>(new Map()).current;
   let location = useLocation();
@@ -63,12 +65,14 @@ function useElementScrollRestoration(
     }
   }, [pendingLocation, location]);
 
+  // ignore React warnings
   if (typeof window !== "undefined") {
-    // shutup React warnings, my gosh
     React.useLayoutEffect(() => {
       if (!ref.current) return;
       let y = positions.get(location.key);
-      ref.current.scrollTo(0, y || 0);
+      if (y && !ignoreNew) {
+        ref.current.scrollTo(0, y || 0);
+      }
     }, [location]);
   }
 }
