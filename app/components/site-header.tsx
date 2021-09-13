@@ -5,7 +5,9 @@ import { useMatchScreen } from "~/hooks/match-media";
 import { Link } from "remix";
 import cx from "clsx";
 import logoCircleUrl from "~/icons/logo-circle.svg";
+import { isExternalUrl } from "~/utils/links";
 // import type { MenuDir, VersionHead } from "~/utils.server";
+import type { NavLinkProps } from "react-router-dom";
 
 const SiteHeader: React.VFC = () => {
   let isMediumScreen = useMatchScreen("md");
@@ -64,44 +66,20 @@ const SiteHeader: React.VFC = () => {
         >
           <ul className="md:flex md:space-x-8">
             <li>
-              <NavLink
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-blue-500 font-medium"
-                    : "text-[color:var(--base07)] text-opacity-80 font-semibold"
-                }
-                to="/docs/"
-              >
-                Documentation
-              </NavLink>
+              <HeaderNavLink to="/docs/">Documentation</HeaderNavLink>
             </li>
             <li>
-              <NavLink
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-blue-500 font-medium"
-                    : "text-[color:var(--base07)] text-opacity-80 font-semibold"
-                }
-                to="/resources/"
-              >
-                Resources
-              </NavLink>
+              <HeaderNavLink to="/resources/">Resources</HeaderNavLink>
             </li>
             <li>
-              <a
-                className="text-[color:var(--base07)] text-opacity-80 font-semibold"
-                href="https://github.com/remix-run/react-router"
-              >
+              <HeaderNavLink to="https://github.com/remix-run/react-router">
                 GitHub
-              </a>
+              </HeaderNavLink>
             </li>
             <li>
-              <a
-                className="text-[color:var(--base07)] text-opacity-80 font-semibold"
-                href="https://npm.im/react-router"
-              >
+              <HeaderNavLink to="https://npm.im/react-router">
                 NPM
-              </a>
+              </HeaderNavLink>
             </li>
           </ul>
         </nav>
@@ -212,4 +190,37 @@ function useNavState(isMediumScreen: boolean) {
   }, [navIsOpen]);
 
   return [navIsOpen, setNavIsOpen] as const;
+}
+
+function HeaderNavLink({ to, className, ...props }: NavLinkProps) {
+  if (typeof to === "string" && isExternalUrl(to)) {
+    let { caseSensitive, end, replace, state, style, ...domProps } = props;
+    return (
+      <a
+        {...domProps}
+        href={to}
+        className={cx(
+          "text-[color:var(--base06)] text-opacity-80",
+          typeof className === "function"
+            ? className({ isActive: false })
+            : className
+        )}
+        style={typeof style === "function" ? style({ isActive: false }) : style}
+      />
+    );
+  }
+  return (
+    <NavLink
+      to={to}
+      {...props}
+      className={(args) =>
+        cx(
+          args.isActive
+            ? "text-blue-500 font-medium"
+            : "text-[color:var(--base06)] text-opacity-80",
+          typeof className === "function" ? className(args) : className
+        )
+      }
+    />
+  );
 }

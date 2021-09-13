@@ -69,3 +69,108 @@
 body[data-nav-open] {
   @apply overflow-hidden;
 }
+
+.title,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  @apply leading-squeezed;
+  @apply font-display;
+  @apply font-bold;
+  color: var(--base07);
+}
+
+.title {
+  @apply leading-negative;
+  font-size: theme(fontSize.6xl);
+}
+h1,
+.h1 {
+  font-size: theme(fontSize.5xl);
+}
+h2,
+.h2 {
+  font-size: theme(fontSize.3xl);
+}
+h3,
+.h3 {
+  font-size: theme(fontSize.2xl);
+}
+h4,
+.h4 {
+  font-size: theme(fontSize.xl);
+}
+h5,
+.h5 {
+  font-size: theme(fontSize.lg);
+}
+h6,
+.h6 {
+  font-size: theme(fontSize.base);
+}
+
+.eyebrow {
+  @apply font-normal;
+  @apply leading-none;
+  @apply text-base;
+  @apply uppercase;
+}
+
+@media screen and (min-width: theme(screens.md)) {
+  .title {
+    font-size: theme(fontSize.8xl);
+  }
+  h1,
+  .h1 {
+    font-size: theme(fontSize.6xl);
+  }
+  h2,
+  .h2 {
+    font-size: theme(fontSize.5xl);
+  }
+  h3,
+  .h3 {
+    font-size: theme(fontSize.3xl);
+  }
+}
+
+@media screen and (min-width: theme(screens.lg)) {
+  .title {
+    font-size: theme(fontSize.9xl);
+  }
+  h1,
+  .h1 {
+    font-size: theme(fontSize.8xl);
+  }
+  h2,
+  .h2 {
+    font-size: theme(fontSize.7xl);
+  }
+  h3,
+  .h3 {
+    font-size: theme(fontSize.4xl);
+  }
+  h4,
+  .h4 {
+    font-size: theme(fontSize.2xl);
+  }
+}
+
+a,
+a code,
+code,
+strong {
+  color: inherit;
+}
+
+.title {
+}

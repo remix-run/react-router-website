@@ -7,7 +7,7 @@ import cx from "clsx";
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (props, ref) => {
-    let { variant, ...domProps } = props;
+    let { variant, size, ...domProps } = props;
     return (
       <button ref={ref} {...domProps} className={getButtonClassNames(props)} />
     );
@@ -16,7 +16,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
 const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
   (props, ref) => {
-    let { variant, disabled, ...domProps } = props;
+    let { variant, size, disabled, ...domProps } = props;
     return (
       <Link
         ref={ref}
@@ -31,7 +31,7 @@ const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
 
 const ButtonNavLink = React.forwardRef<HTMLAnchorElement, ButtonNavLinkProps>(
   (props, ref) => {
-    let { variant, disabled, ...domProps } = props;
+    let { variant, size, disabled, ...domProps } = props;
     return (
       <NavLink
         ref={ref}
@@ -55,15 +55,17 @@ function getButtonClassNames({
   variant = "primary",
   disabled = false,
   isActive = false, // for active NavLink styles,
+  size = "base",
 }: {
   className?: string | ((props: { isActive: boolean }) => string);
   variant?: ButtonVariant;
   disabled?: boolean;
   isActive?: boolean;
+  size?: ButtonSize;
 }) {
   return cx(
     typeof className === "function" ? className({ isActive }) : className,
-    `inline-flex items-center justify-center font-bold text-base no-underline border-2 rounded ` +
+    `inline-flex items-center justify-center font-bold no-underline border-2 rounded ` +
       `focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-transparent ` +
       // TODO: Don't add transtion states until after hydration to avoid FOUC
       `transition-colors duration-200`,
@@ -94,6 +96,10 @@ function getButtonClassNames({
         }
         focus:ring-blue-500`]: variant === "documentation",
 
+      ["text-sm"]: size === "small",
+      ["text-base"]: size === "base",
+      ["text-xl"]: size === "large",
+
       // all disabled buttons
       ["pointer-events-none opacity-70"]: disabled,
     }
@@ -102,9 +108,11 @@ function getButtonClassNames({
 
 // Based on the variants in the designs
 type ButtonVariant = "primary" | "secondary" | "documentation";
+type ButtonSize = "small" | "base" | "large";
 
 interface ButtonSharedProps {
   variant?: ButtonVariant;
+  size?: ButtonSize;
   disabled?: boolean;
 }
 
