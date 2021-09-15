@@ -125,6 +125,13 @@ h6,
   @apply uppercase;
 }
 
+.eyebrow-sm {
+  @apply font-normal;
+  @apply leading-none;
+  @apply text-sm;
+  @apply uppercase;
+}
+
 @media screen and (min-width: theme(screens.md)) {
   .title {
     font-size: theme(fontSize.8xl);
@@ -170,7 +177,4 @@ a code,
 code,
 strong {
   color: inherit;
-}
-
-.title {
 }
