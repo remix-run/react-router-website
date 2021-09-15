@@ -48,6 +48,17 @@ stylesheet targets.
 }
 
 /*****************************************************************************/
+/* code blocks */
+.markdown pre[data-filename]:before {
+  content: attr(data-filename);
+  display: block;
+  margin-left: 1rem;
+  padding-left: 1.5rem;
+  padding-bottom: 1rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' width='16' height='16' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' /%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+}
+/*****************************************************************************/
 /* prose */
 
 .codeblock-line {
@@ -56,77 +67,77 @@ stylesheet targets.
   padding-right: 1rem;
 }
 
-.md-prose .icon {
+.markdown .icon {
   display: inline-block;
   fill: currentColor;
   vertical-align: text-bottom;
 }
 
-.md-prose h2 code,
-.md-prose h3 code,
-.md-prose h4 code {
+.markdown h2 code,
+.markdown h3 code,
+.markdown h4 code {
   font-size: 100%;
   padding: 0;
   border: none;
 }
 
-.md-prose h1,
-.md-prose h2,
-.md-prose h3,
-.md-prose h4,
-.md-prose h5,
-.md-prose h6 {
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
   scroll-snap-margin-top: 1em;
   scroll-margin-top: 1em;
 }
 
-.md-prose h1 a,
-.md-prose h2 a,
-.md-prose h3 a,
-.md-prose h4 a,
-.md-prose h5 a,
-.md-prose h6 a {
+.markdown h1 a,
+.markdown h2 a,
+.markdown h3 a,
+.markdown h4 a,
+.markdown h5 a,
+.markdown h6 a {
   float: left;
   line-height: 1;
   margin-left: -20px;
   padding-right: 4px;
 }
 
-.md-prose h1 .icon-link,
-.md-prose h2 .icon-link,
-.md-prose h3 .icon-link,
-.md-prose h4 .icon-link,
-.md-prose h5 .icon-link,
-.md-prose h6 .icon-link {
+.markdown h1 .icon-link,
+.markdown h2 .icon-link,
+.markdown h3 .icon-link,
+.markdown h4 .icon-link,
+.markdown h5 .icon-link,
+.markdown h6 .icon-link {
   color: var(--base0D);
   vertical-align: middle;
   visibility: hidden;
 }
 
-.md-prose h1:hover a,
-.md-prose h2:hover a,
-.md-prose h3:hover a,
-.md-prose h4:hover a,
-.md-prose h5:hover a,
-.md-prose h6:hover a {
+.markdown h1:hover a,
+.markdown h2:hover a,
+.markdown h3:hover a,
+.markdown h4:hover a,
+.markdown h5:hover a,
+.markdown h6:hover a {
   text-decoration: none;
 }
 
-.md-prose h1:hover a .icon-link,
-.md-prose h2:hover a .icon-link,
-.md-prose h3:hover a .icon-link,
-.md-prose h4:hover a .icon-link,
-.md-prose h5:hover a .icon-link,
-.md-prose h6:hover a .icon-link {
+.markdown h1:hover a .icon-link,
+.markdown h2:hover a .icon-link,
+.markdown h3:hover a .icon-link,
+.markdown h4:hover a .icon-link,
+.markdown h5:hover a .icon-link,
+.markdown h6:hover a .icon-link {
   visibility: visible;
 }
 
-.md-prose h1:hover a .icon-link:before,
-.md-prose h2:hover a .icon-link:before,
-.md-prose h3:hover a .icon-link:before,
-.md-prose h4:hover a .icon-link:before,
-.md-prose h5:hover a .icon-link:before,
-.md-prose h6:hover a .icon-link:before {
+.markdown h1:hover a .icon-link:before,
+.markdown h2:hover a .icon-link:before,
+.markdown h3:hover a .icon-link:before,
+.markdown h4:hover a .icon-link:before,
+.markdown h5:hover a .icon-link:before,
+.markdown h6:hover a .icon-link:before {
   width: 16px;
   height: 16px;
   content: " ";
@@ -134,7 +145,7 @@ stylesheet targets.
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' stroke='gray' viewBox='0 0 16 16' version='1.1' width='16' height='16' aria-hidden='true'%3E%3Cpath fill-rule='evenodd' d='M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z'%3E%3C/path%3E%3C/svg%3E");
 }
 
-.md-prose {
+.markdown {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   line-height: 1.5;
@@ -144,112 +155,112 @@ stylesheet targets.
   word-wrap: break-word;
 }
 
-.md-prose details {
+.markdown details {
   display: block;
 }
 
-.md-prose summary {
+.markdown summary {
   display: list-item;
 }
 
-.md-prose a:active,
-.md-prose a:hover {
+.markdown a:active,
+.markdown a:hover {
   outline-width: 0;
 }
 
-.md-prose strong {
+.markdown strong {
   font-weight: inherit;
   font-weight: bolder;
 }
 
-.md-prose h1 {
+.markdown h1 {
   font-size: 2em;
   margin: 0.67em 0;
   margin-top: 5rem;
 }
 
-.md-prose h1:first-child {
+.markdown h1:first-child {
   margin-top: 1rem;
 }
 
-.md-prose img {
+.markdown img {
   border-style: none;
 }
 
-.md-prose code,
-.md-prose kbd,
-.md-prose pre {
+.markdown code,
+.markdown kbd,
+.markdown pre {
   font-size: 0.9em;
 }
 
-.md-prose hr {
+.markdown hr {
   box-sizing: initial;
   height: 0;
   overflow: visible;
 }
 
-.md-prose input {
+.markdown input {
   font: inherit;
   margin: 0;
 }
 
-.md-prose input {
+.markdown input {
   overflow: visible;
 }
 
-.md-prose [type="checkbox"] {
+.markdown [type="checkbox"] {
   box-sizing: border-box;
   padding: 0;
 }
 
-.md-prose * {
+.markdown * {
   box-sizing: border-box;
 }
 
-.md-prose input {
+.markdown input {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
 }
 
-.md-prose a {
+.markdown a {
   color: var(--base0D);
   text-decoration: none;
 }
 
-.md-prose a:hover {
+.markdown a:hover {
   text-decoration: underline;
 }
 
-.md-prose strong {
+.markdown strong {
   font-weight: 600;
 }
 
-.md-prose hr:after,
-.md-prose hr:before {
+.markdown hr:after,
+.markdown hr:before {
   display: table;
   content: "";
 }
 
-.md-prose hr:after {
+.markdown hr:after {
   clear: both;
 }
 
-.md-prose table {
+.markdown table {
   border-spacing: 0;
   border-collapse: collapse;
 }
 
-.md-prose td,
-.md-prose th {
+.markdown td,
+.markdown th {
   padding: 0;
 }
 
-.md-prose details summary {
+.markdown details summary {
   cursor: pointer;
 }
 
-.md-prose kbd {
+.markdown kbd {
   display: inline-block;
   padding: 3px 5px;
   font: 11px SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
@@ -262,136 +273,136 @@ stylesheet targets.
   box-shadow: inset 0 -1px 0 var(--base02);
 }
 
-.md-prose h2,
-.md-prose h3,
-.md-prose h4,
-.md-prose h5,
-.md-prose h6 {
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-.md-prose h1 {
+.markdown h1 {
   font-size: 32px;
 }
 
-.md-prose h1,
-.md-prose h2 {
+.markdown h1,
+.markdown h2 {
   font-weight: 700;
   letter-spacing: -0.025em;
 }
 
-.md-prose h2 {
+.markdown h2 {
   font-size: 24px;
 }
 
-.md-prose h3 {
+.markdown h3 {
   font-size: 20px;
 }
 
-.md-prose h3,
-.md-prose h4 {
+.markdown h3,
+.markdown h4 {
   font-weight: 600;
 }
 
-.md-prose h4 {
+.markdown h4 {
   font-size: 16px;
 }
 
-.md-prose h5 {
+.markdown h5 {
   font-size: 14px;
 }
 
-.md-prose h5,
-.md-prose h6 {
+.markdown h5,
+.markdown h6 {
   font-weight: 600;
 }
 
-.md-prose h6 {
+.markdown h6 {
   font-size: 12px;
 }
 
-.md-prose p,
-.md-prose docs-info,
-.md-prose docs-warning,
-.md-prose docs-error,
-.md-prose p {
+.markdown p,
+.markdown docs-info,
+.markdown docs-warning,
+.markdown docs-error,
+.markdown p {
   margin-top: 0;
   margin-bottom: 10px;
 }
 
-.md-prose blockquote {
+.markdown blockquote {
   margin: 0;
 }
 
-.md-prose ol,
-.md-prose ul {
+.markdown ol,
+.markdown ul {
   padding-left: 0;
   margin-top: 0;
   margin-bottom: 0;
 }
 
-.md-prose ol ol,
-.md-prose ul ol {
+.markdown ol ol,
+.markdown ul ol {
   list-style-type: lower-roman;
 }
 
-.md-prose ol ol ol,
-.md-prose ol ul ol,
-.md-prose ul ol ol,
-.md-prose ul ul ol {
+.markdown ol ol ol,
+.markdown ol ul ol,
+.markdown ul ol ol,
+.markdown ul ul ol {
   list-style-type: lower-alpha;
 }
 
-.md-prose dd {
+.markdown dd {
   margin-left: 0;
 }
 
-.md-prose code,
-.md-prose pre {
+.markdown code,
+.markdown pre {
   font-size: 0.9rem;
 }
 
-.md-prose pre {
+.markdown pre {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-.md-prose input::-webkit-inner-spin-button,
-.md-prose input::-webkit-outer-spin-button {
+.markdown input::-webkit-inner-spin-button,
+.markdown input::-webkit-outer-spin-button {
   margin: 0;
   -webkit-appearance: none;
   appearance: none;
 }
 
-.md-prose:after,
-.md-prose:before {
+.markdown:after,
+.markdown:before {
   display: table;
   content: "";
 }
 
-.md-prose:after {
+.markdown:after {
   clear: both;
 }
 
-.md-prose a:not([href]) {
+.markdown a:not([href]) {
   color: inherit;
   text-decoration: none;
 }
 
-.md-prose blockquote,
-.md-prose details,
-.md-prose dl,
-.md-prose ol,
-.md-prose p,
-.md-prose pre,
-.md-prose table,
-.md-prose ul {
+.markdown blockquote,
+.markdown details,
+.markdown dl,
+.markdown ol,
+.markdown p,
+.markdown pre,
+.markdown table,
+.markdown ul {
   margin-top: 0;
   margin-bottom: 16px;
 }
 
-.md-prose hr {
+.markdown hr {
   height: 0.25em;
   padding: 0;
   margin: 24px 0;
@@ -399,97 +410,97 @@ stylesheet targets.
   border: 0;
 }
 
-.md-prose blockquote {
+.markdown blockquote {
   padding: 0 1em;
   color: var(--base03);
   border-left: 0.25em solid var(--base02);
 }
 
-.md-prose blockquote > :first-child {
+.markdown blockquote > :first-child {
   margin-top: 0;
 }
 
-.md-prose blockquote > :last-child {
+.markdown blockquote > :last-child {
   margin-bottom: 0;
 }
 
-.md-prose h1,
-.md-prose h2 {
+.markdown h1,
+.markdown h2 {
   margin-top: 32px;
   margin-bottom: 16px;
 }
 
-.md-prose h3,
-.md-prose h4,
-.md-prose h5,
-.md-prose h6 {
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
   margin: 32px 0 16px 0;
   font-weight: 600;
   line-height: 1.25;
 }
 
-.md-prose h1 {
+.markdown h1 {
   font-size: 2em;
 }
 
-.md-prose h1,
-.md-prose h2 {
+.markdown h1,
+.markdown h2 {
   padding-bottom: 0.3em;
   /* border-bottom: 1px solid var(--base01); */
 }
 
-.md-prose h2 {
+.markdown h2 {
   font-size: 1.5em;
 }
 
-.md-prose h3 {
+.markdown h3 {
   font-size: 1.25em;
 }
 
-.md-prose h4 {
+.markdown h4 {
   font-size: 1em;
 }
 
-.md-prose h5 {
+.markdown h5 {
   font-size: 0.875em;
 }
 
-.md-prose h6 {
+.markdown h6 {
   font-size: 0.85em;
   color: var(--base05);
 }
 
-.md-prose ol,
-.md-prose ul {
+.markdown ol,
+.markdown ul {
   padding-left: 2em;
 }
 
-.md-prose ol ol,
-.md-prose ol ul,
-.md-prose ul ol,
-.md-prose ul ul {
+.markdown ol ol,
+.markdown ol ul,
+.markdown ul ol,
+.markdown ul ul {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-.md-prose li {
+.markdown li {
   word-wrap: break-all;
   list-style-type: initial;
 }
 
-.md-prose li > p {
+.markdown li > p {
   margin-top: 16px;
 }
 
-.md-prose li + li {
+.markdown li + li {
   margin-top: 0.25em;
 }
 
-.md-prose dl {
+.markdown dl {
   padding: 0;
 }
 
-.md-prose dl dt {
+.markdown dl dt {
   padding: 0;
   margin-top: 16px;
   font-size: 1em;
@@ -497,55 +508,55 @@ stylesheet targets.
   font-weight: 600;
 }
 
-.md-prose dl dd {
+.markdown dl dd {
   padding: 0 16px;
   margin-bottom: 16px;
 }
 
-.md-prose table {
+.markdown table {
   display: block;
   width: 100%;
   overflow: auto;
 }
 
-.md-prose table th {
+.markdown table th {
   font-weight: 600;
 }
 
-.md-prose table td,
-.md-prose table th {
+.markdown table td,
+.markdown table th {
   padding: 6px 13px;
   border: 1px solid var(--base01);
 }
 
-.md-prose table tr {
+.markdown table tr {
   background-color: #fff;
   border-top: 1px solid var(--base01);
 }
 
-.md-prose table tr:nth-child(2n) {
+.markdown table tr:nth-child(2n) {
   background-color: var(--base00);
 }
 
-.md-prose img {
+.markdown img {
   max-width: 100%;
   box-sizing: initial;
   background-color: var(--base00);
 }
 
-.md-prose img[align="right"] {
+.markdown img[align="right"] {
   padding-left: 20px;
 }
 
-.md-prose img[align="left"] {
+.markdown img[align="left"] {
   padding-right: 20px;
 }
 
-.md-prose pre {
+.markdown pre {
   word-wrap: normal;
 }
 
-.md-prose pre > code {
+.markdown pre > code {
   padding: 0;
   margin: 0;
   word-break: normal;
@@ -554,7 +565,7 @@ stylesheet targets.
   border: 0;
 }
 
-.md-prose pre {
+.markdown pre {
   padding: 1rem;
   overflow: auto;
   font-size: 85%;
@@ -563,30 +574,32 @@ stylesheet targets.
   border: solid 1px var(--base01);
 }
 
-.md-prose code {
+.markdown code {
   border-radius: 3px;
-  padding: 0 0.25rem;
+  padding: 0.125rem 0.25rem;
   color: var(--base05);
-  border: solid 1px var(--base01);
+  /* too dark! */
+  /* background: var(--base01); */
+  background: hsla(210, 13%, 72%, 0.2);
 }
 
-.md-prose a code {
+.markdown a code {
   border: none;
   background: inherit;
   color: inherit;
   font-size: inherit;
 }
 
-.md-prose h1 code,
-.md-prose h2 code,
-.md-prose h3 code,
-.md-prose h4 code,
-.md-prose h5 code,
-.md-prose h6 code {
+.markdown h1 code,
+.markdown h2 code,
+.markdown h3 code,
+.markdown h4 code,
+.markdown h5 code,
+.markdown h6 code {
   color: inherit;
 }
 
-.md-prose pre code {
+.markdown pre code {
   display: inline;
   max-width: auto;
   padding: 0;
@@ -599,12 +612,12 @@ stylesheet targets.
   border-radius: initial;
 }
 
-.md-prose pre[data-line-numbers="true"]:not([data-lang="sh"]) {
+.markdown pre[data-line-numbers="true"]:not([data-lang="sh"]) {
   padding-left: 0rem;
   padding-right: 0rem;
 }
 
-.md-prose
+.markdown
   pre[data-line-numbers="true"]:not([data-lang="sh"])
   [data-line-number]:before {
   padding-left: 0rem;
@@ -616,7 +629,7 @@ stylesheet targets.
   margin-right: 1.5rem;
 }
 
-.md-prose
+.markdown
   pre[data-line-numbers="true"]:not([data-lang="sh"])
   [data-line-number][data-highlight="true"]:before {
   content: "+";
@@ -634,9 +647,9 @@ stylesheet targets.
   opacity: 0.1;
 }
 
-.md-prose docs-info,
-.md-prose docs-warning,
-.md-prose docs-error {
+.markdown docs-info,
+.markdown docs-warning,
+.markdown docs-error {
   display: block;
   border-left: solid 2px;
   border-right: solid 2px;
@@ -645,9 +658,9 @@ stylesheet targets.
   border-radius: 1rem;
 }
 
-.md-prose docs-info:before,
-.md-prose docs-warning:before,
-.md-prose docs-error:before {
+.markdown docs-info:before,
+.markdown docs-warning:before,
+.markdown docs-error:before {
   border-radius: 1rem;
   content: "";
   position: absolute;
@@ -656,38 +669,38 @@ stylesheet targets.
   pointer-events: none;
 }
 
-.md-prose docs-warning {
+.markdown docs-warning {
   color: var(--base0A);
 }
-.md-prose docs-warning:before {
+.markdown docs-warning:before {
   background: var(--base0A);
 }
 
-.md-prose docs-info {
+.markdown docs-info {
   color: var(--base0D);
 }
-.md-prose docs-info:before {
+.markdown docs-info:before {
   background: var(--base0D);
 }
 
-.md-prose docs-error {
+.markdown docs-error {
   color: var(--base08);
 }
-.md-prose docs-error:before {
+.markdown docs-error:before {
   background: var(--base08);
 }
 
-.md-prose pre[data-bad] {
+.markdown pre[data-bad] {
   border-color: var(--base08);
 }
 
-.md-prose
+.markdown
   pre[data-line-numbers="true"][data-bad]:not([data-lang="sh"])
   [data-line-number]:before {
   color: var(--base08);
 }
 
-.md-prose pre[data-bad] {
+.markdown pre[data-bad] {
   border-color: var(--base08);
 }
 
