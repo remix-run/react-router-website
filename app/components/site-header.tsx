@@ -23,7 +23,9 @@ const SiteHeader: React.VFC = () => {
         py-[25px]
         w-full top-0
         sticky md:static
-        border-[color:var(--base02)]`
+        border-[color:var(--base02)] z
+        z-[1] md:z-[initial]
+      `
       )}
     >
       <Container className="flex items-center justify-between">
