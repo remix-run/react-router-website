@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Link } from "remix";
-
+import { Link } from "~/components/link";
 import logoCircleUrl from "~/icons/logo-circle.svg";
 import githubLogoUrl from "~/icons/github.svg";
 import twitterLogoUrl from "~/icons/twitter.svg";
@@ -28,16 +27,16 @@ const SiteFooter: React.VFC = () => {
           <div className="mt-10 space-y-10 md:space-y-0 md:mt-6">
             <p>
               React Router is built and maintained by{" "}
-              <a className="font-semibold" href="https://remix.run">
+              <Link className="font-semibold text-[color:var(--base07)]" to="https://remix.run">
                 Remix
-              </a>{" "}
+              </Link>{" "}
               and{" "}
-              <a
-                className="font-semibold"
-                href="https://github.com/ReactTraining/react-router/graphs/contributors"
+              <Link
+                className="font-semibold text-[color:var(--base07)]"
+                to="https://github.com/ReactTraining/react-router/graphs/contributors"
               >
                 hundreds of contributors
-              </a>
+              </Link>
               .
             </p>
 
@@ -49,50 +48,56 @@ const SiteFooter: React.VFC = () => {
             my-12 text-xl leading-8 divide-y md:flex md:divide-none md:space-x-6 md:text-base md:tracking-wider md:font-medium divide-[#d7d7d7] text-[color:var(--base07)] md:text-[color:var(--base07)]/80 md:text-opacity-70"`}
           >
             <li>
-              <Link to="/docs/" className="block py-4 md:py-0">
+              <Link
+                to="/docs/"
+                className="text-[color:var(--base07)] block py-4 md:py-0"
+              >
                 Documentation
               </Link>
             </li>
             <li>
-              <Link to="/resources/" className="block py-4 md:py-0">
+              <Link
+                to="/resources/"
+                className="text-[color:var(--base07)] block py-4 md:py-0"
+              >
                 Resources
               </Link>
             </li>
             <li>
-              <a
-                href="https://github.com/remix-run/react-router"
-                className="block py-4 md:py-0"
+              <Link
+                to="https://github.com/remix-run/react-router"
+                className="text-[color:var(--base07)] block py-4 md:py-0"
               >
                 GitHub
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="https://npm.im/react-router"
-                className="block py-4 md:py-0"
+              <Link
+                to="https://npm.im/react-router"
+                className="text-[color:var(--base07)] block py-4 md:py-0"
               >
                 NPM
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
         <div>
           <ul className="flex items-center space-x-6">
             <li>
-              <a href="https://github.com/remix-run/react-router">
+              <Link to="https://github.com/remix-run/react-router">
                 <span className="sr-only">GitHub</span>
                 <svg className="w-10 h-10">
                   <use href={`${githubLogoUrl}#github`} />
                 </svg>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="https://twitter.com/remix-run">
+              <Link to="https://twitter.com/remix-run">
                 <span className="sr-only">Twitter</span>
                 <svg className="w-10 h-10">
                   <use href={`${twitterLogoUrl}#twitter`} />
                 </svg>
-              </a>
+              </Link>
             </li>
           </ul>
           <p className="mt-8">&copy; {new Date().getFullYear()} Remix</p>
