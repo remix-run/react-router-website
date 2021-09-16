@@ -96,11 +96,11 @@ function getButtonClassNames({
     {
       // primary variant
       [`px-5 py-3 lg:px-6
-        bg-blue-500 hover:bg-blue-700
+        bg-blue-500 hover:bg-blue-600
         border-2 border-blue-500 hover:border-blue-700
         focus:ring-blue-500
         focus:ring-opacity-60
-        text-white`]: variant === "primary",
+        text-white hover:text-white`]: variant === "primary",
 
       // secondary variant
       [`px-5 py-3 lg:px-6
