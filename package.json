@@ -18,7 +18,7 @@
     "@remix-run/node": "0.0.0-experimental-2e859e2",
     "@remix-run/react": "0.0.0-experimental-2e859e2",
     "@remix-run/serve": "0.0.0-experimental-2e859e2",
-    "@ryanflorence/md": "^4.0.0",
+    "@ryanflorence/md": "^5.0.2",
     "accept-language": "3.0.18",
     "clsx": "1.1.1",
     "follow-redirects": "1.14.3",
