@@ -152,7 +152,7 @@ function getFieldClassNames({
 }) {
   return cx(
     className,
-    `flex-1 appearance-none w-full font-medium rounded
+    `flex-1 appearance-none w-full rounded
     py-2 px-3
     bg-[color:var(--base02)] hover:bg-[color:var(--base03)]
     border ${
