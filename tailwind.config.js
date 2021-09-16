@@ -42,6 +42,9 @@ module.exports = {
       },
     },
     extend: {
+      screens: {
+        xs: "480px",
+      },
       fontFamily: {
         sans: ["Inter", ...defaultTheme.fontFamily.sans],
       },
@@ -76,6 +79,7 @@ module.exports = {
     },
   },
   plugins: [
+    require("@tailwindcss/aspect-ratio"),
     // TODO: Get rid of all this when comfortable with `flex: gap`
     flexGap(),
   ],
