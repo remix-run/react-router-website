@@ -3,10 +3,7 @@ import cx from "clsx";
 
 function Card({ children, className, ...props }: CardProps) {
   return (
-    <div
-      {...props}
-      className={cx(className, "grid grid-cols-1 grid-rows-[repeat(2,auto)] gap-8")}
-    >
+    <div {...props} className={className}>
       {children}
     </div>
   );
@@ -18,7 +15,13 @@ function CardImage({ children, className, ...props }: CardImageProps) {
   } = children || { props: {} };
   // TODO: This should be a responsive square, I think.
   return (
-    <div {...props} className={cx(className, "rounded-lg overflow-hidden")}>
+    <div
+      {...props}
+      className={cx(
+        className,
+        "aspect-w-1 aspect-h-1 rounded-lg overflow-hidden mb-4 sm:mb-5 md:mb-6 xl:mb-8"
+      )}
+    >
       {children &&
         React.cloneElement(children, {
           className: cx(childClassName, "object-cover object-center", {
