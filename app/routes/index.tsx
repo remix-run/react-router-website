@@ -1,8 +1,17 @@
 import * as React from "react";
-import type { RouteComponent, MetaFunction } from "remix";
+import {
+  Form,
+  useSubmit,
+  useTransition,
+  useActionData,
+  useLoaderData,
+  redirect,
+} from "remix";
+import { useLocation } from "react-router-dom";
 import cx from "clsx";
+import { VisuallyHidden } from "@reach/visually-hidden";
 import { Section, Heading } from "~/components/section-heading";
-import { ButtonLink, ButtonDiv } from "~/components/button";
+import { Button, ButtonLink, ButtonDiv } from "~/components/button";
 import { Link, ArrowLink } from "~/components/link";
 import {
   IconLayers,
@@ -11,12 +20,24 @@ import {
   IconProtection,
   IconZoom,
 } from "~/components/icons";
+import { Field } from "~/components/form";
+import type {
+  RouteComponent,
+  MetaFunction,
+  LoaderFunction,
+  ActionFunction,
+} from "remix";
 
 const meta: MetaFunction = () => ({
   title: "React Router",
 });
 
 const IndexPage: RouteComponent = () => {
+  let actionData = useActionData();
+  let transition = useTransition();
+
+  useScrollRestoration();
+
   return (
     <div className="py-8">
       <div className="index__hero">
@@ -249,6 +270,46 @@ const IndexPage: RouteComponent = () => {
                 be used alongside React Router to build faster, more powerful
                 applications. Join our newsletter to stay up to date.
               </p>
+              <Form
+                method="post"
+                className="flex flex-col xs:flex-row"
+                onSubmit={(event) => {
+                  if (transition.state === "submitting") {
+                    event.preventDefault();
+                  }
+                }}
+              >
+                <label className="contents">
+                  <VisuallyHidden>Email address</VisuallyHidden>
+                  <Field
+                    type="email"
+                    name="email"
+                    placeholder="billybob@remix.run"
+                    className="mb-4 xs:mb-0 xs:mr-4"
+                    disabled={transition.state === "submitting"}
+                  />
+                </label>
+                <Button disabled={transition.state === "submitting"}>
+                  Subscribe
+                </Button>
+              </Form>
+              {/* TODO: Needs an aria live announcement */}
+              {actionData?.subscription?.state ? (
+                <Status color="green" className="mt-4">
+                  {(() => {
+                    switch (actionData.subscription.state) {
+                      case "inactive":
+                        return "Signup successful! Please check your email to confirm your subscription.";
+                      case "active":
+                      // we shouldn't get here...
+                      case "cancelled":
+                      default:
+                        return "Signup successful! Keep an eye on your inbox for updates.";
+                    }
+                  })()}
+                </Status>
+              ) : null}
+              {/* TODO: Error handling */}
             </div>
           </Section>
         </div>
@@ -259,3 +320,118 @@ const IndexPage: RouteComponent = () => {
 
 export default IndexPage;
 export { meta };
+
+export let loader: LoaderFunction = async () => {
+  return await "ok";
+};
+
+export let action: ActionFunction = async ({ request }) => {
+  const TOKEN = process.env.CONVERTKIT_KEY;
+  const URL = "https://api.convertkit.com/v3";
+  const FORM_ID = "1334747";
+
+  try {
+    let body = new URLSearchParams(await request.text());
+    let email = body.get("email");
+
+    // TODO: Validate email
+
+    if (!email) {
+      return new Response(null, {
+        status: 400,
+        statusText: "Missing email address",
+      });
+    }
+
+    if (request.method.toLowerCase() !== "post") {
+      return new Response(null, {
+        status: 405,
+        statusText: `Expected "POST", received "${request.method.toUpperCase()}"`,
+      });
+    }
+
+    let res = await fetch(`${URL}/forms/${FORM_ID}/subscribe`, {
+      method: request.method,
+      body: JSON.stringify({
+        api_key: TOKEN,
+        email,
+      }),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+    });
+    return res;
+  } catch (err) {
+    console.error(err);
+    return new Response(null, {
+      status: 500,
+      statusText: `Egads! Something went wrong!`,
+    });
+  }
+};
+
+function Status({
+  className,
+  children,
+  color = "green",
+}: {
+  className?: string;
+  children: React.ReactNode;
+  color: "green" | "yellow" | "red";
+}) {
+  return (
+    <div
+      className={cx(className, "p-3 font-semibold rounded", {
+        "bg-green-500/20 text-green-500": color === "green",
+        "bg-yellow-200/70 text-yellow-900": color === "yellow",
+        "bg-red-500/20 text-red-500": color === "red",
+      })}
+    >
+      {children}
+    </div>
+  );
+}
+
+// TODO: Replace w/ useScrollRestoration when ready
+// Adapted from https://github.com/remix-run/remix/issues/186#issuecomment-895583783
+
+const useSSRLayoutEffect =
+  typeof window === "undefined" ? () => {} : React.useLayoutEffect;
+
+// https://github.com/remix-run/remix/issues/240
+type LocationState = undefined | { isSubmission: boolean };
+function useScrollRestoration(enabled: boolean = true) {
+  let positions = React.useRef<Map<string, number>>(new Map()).current;
+  let location = useLocation();
+  let transition = useTransition();
+  let firstRender = React.useRef(true);
+
+  useSSRLayoutEffect(() => {
+    let scrollRestoration = window.history.scrollRestoration;
+    if (scrollRestoration !== "manual") {
+      window.history.scrollRestoration = "manual";
+    }
+    return () => {
+      window.history.scrollRestoration = scrollRestoration;
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (transition.state === "loading") {
+      positions.set(location.pathname, window.scrollY);
+    }
+  }, [transition.state, location.pathname, positions]);
+
+  React.useEffect(() => {
+    if (!enabled) return;
+    if (transition.state !== "idle") return;
+
+    // don't restore scroll on initial render
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    let y = positions.get(location.pathname);
+    window.scrollTo(0, y ?? 0);
+  }, [transition.state, location.pathname, positions, enabled]);
+}
