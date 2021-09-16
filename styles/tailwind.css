@@ -178,3 +178,23 @@ code,
 strong {
   color: inherit;
 }
+
+a {
+  @apply text-blue-500;
+  @apply transition-colors;
+  @apply duration-200;
+  /* TODO: Create TW util for this, or maybe it exists? Just need to add opacity
+  to `transition-colors` */
+  transition-property: opacity, background-color, border-color, color, fill,
+    stroke;
+}
+
+a:hover {
+  @apply text-blue-400;
+}
+
+:focus {
+  @apply outline-none;
+  @apply ring-2;
+  @apply ring-blue-500;
+}
