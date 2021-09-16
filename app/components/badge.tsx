@@ -9,10 +9,11 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
         {...props}
         className={cx(
           className,
-          `inline-flex items-center rounded-full whitespace-nowrap font-semibold
+          `inline-flex items-center rounded-full whitespace-nowrap font-semibold tabular-nums
+           h-7 sm:h-8
            text-sm sm:text-base
-           leading-5 sm:leading-6
-           py-1 px-3 sm:px-4
+           leading-[1]
+           px-3 sm:px-4
           `,
           {
             "text-blue-500 bg-blue-500/20": color === "blue",
