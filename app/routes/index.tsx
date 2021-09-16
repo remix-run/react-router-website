@@ -20,7 +20,7 @@ const IndexPage: RouteComponent = () => {
   return (
     <div className="py-8">
       <div className="index__hero">
-        <div className="contain">
+        <div className="container">
           <div className="text-center mx-auto my-24 md:my-32 lg:mt-36 max-w-xl">
             <h1 className="title mb-7">
               Learn Once.
@@ -69,7 +69,7 @@ const IndexPage: RouteComponent = () => {
       </div>
 
       <div className="index__sponsors">
-        <div className="contain">
+        <div className="container">
           <div className="text-center my-20 md:my-32">
             <h2 className="eyebrow mb-6 md:mb-8">
               Used by dev teams at top companies
@@ -107,7 +107,7 @@ const IndexPage: RouteComponent = () => {
       </div>
 
       <div className="index__features">
-        <div className="contain">
+        <div className="container">
           {[
             {
               heading: "Navigation Routes",
@@ -180,7 +180,7 @@ const IndexPage: RouteComponent = () => {
       </div>
 
       <div className="index__stats">
-        <div className="contain">
+        <div className="container">
           <Section as="section" aria-label="Current user stats">
             <dl
               className={`
@@ -240,7 +240,7 @@ const IndexPage: RouteComponent = () => {
       </div>
 
       <div className="index__signup">
-        <div className="contain">
+        <div className="container">
           <Section wrap className="my-56 md:my-72 lg:my-80">
             <div className="md:max-w-xl">
               <Heading className="mb-1">Join the Remix Community</Heading>

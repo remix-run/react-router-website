@@ -22,7 +22,7 @@ const ResourcesPage: RouteComponent = () => {
   return (
     <div className="py-8">
       <div className="resources__hero">
-        <div className="contain">
+        <div className="container">
           <div
             className={`
               text-center md:text-left
@@ -57,7 +57,7 @@ const ResourcesPage: RouteComponent = () => {
       </div>
 
       <div className="resources__links">
-        <div className="contain">
+        <div className="container">
           <Section as="section">
             <div className="">
               <Heading className="">Around the Web</Heading>
@@ -129,7 +129,7 @@ const ResourcesPage: RouteComponent = () => {
       </div>
 
       <div className="resources__projects">
-        <div className="contain">
+        <div className="container">
           <Section as="section">
             <div className="">
               <Heading className="">Open Source Projects</Heading>
@@ -190,7 +190,7 @@ const ResourcesPage: RouteComponent = () => {
       </div>
 
       <div className="resources__versions">
-        <div className="contain">
+        <div className="container">
           <Section as="section">
             <div className="">
               <Heading className="">Version Downloads</Heading>

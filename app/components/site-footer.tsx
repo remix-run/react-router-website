@@ -11,7 +11,7 @@ const SiteFooter: React.VFC = () => {
       py-6 md:pt-10 md:pb-16
       border-t border-solid border-[color:var(--base02)]`}
     >
-      <div className="contain md:flex md:items-center md:justify-between">
+      <div className="container md:flex md:items-center md:justify-between">
         <div>
           <Link
             to="/"
