@@ -5,6 +5,8 @@
 ```sh
 npm ci
 npx prisma generate
+
+# NOTE: Check the env file and fill in any missing info!
 cp .env.example .env
 ```
 
