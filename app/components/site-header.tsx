@@ -1,10 +1,11 @@
 import * as React from "react";
-import { useLocation, NavLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Container } from "~/components/container";
 import { useMatchScreen } from "~/hooks/match-media";
 import { Link } from "remix";
 import cx from "clsx";
 import logoCircleUrl from "~/icons/logo-circle.svg";
+import { NavLink } from "~/components/link";
 import { isExternalUrl } from "~/utils/links";
 // import type { MenuDir, VersionHead } from "~/utils.server";
 import type { NavLinkProps } from "react-router-dom";
@@ -28,7 +29,7 @@ const SiteHeader: React.VFC = () => {
       <Container className="flex items-center justify-between">
         <Link
           to="/"
-          className="flex items-center space-x-4 text-[color:var(--base07)]"
+          className="flex items-center space-x-4 text-[color:var(--base07)] hover:text-[color:var(--base07)]"
         >
           <svg className="w-9 h-9" aria-hidden>
             <use href={`${logoCircleUrl}#logo-circle`} />
@@ -193,31 +194,16 @@ function useNavState(isMediumScreen: boolean) {
 }
 
 function HeaderNavLink({ to, className, ...props }: NavLinkProps) {
-  if (typeof to === "string" && isExternalUrl(to)) {
-    let { caseSensitive, end, replace, state, style, ...domProps } = props;
-    return (
-      <a
-        {...domProps}
-        href={to}
-        className={cx(
-          "text-[color:var(--base06)] text-opacity-80",
-          typeof className === "function"
-            ? className({ isActive: false })
-            : className
-        )}
-        style={typeof style === "function" ? style({ isActive: false }) : style}
-      />
-    );
-  }
   return (
     <NavLink
       to={to}
       {...props}
       className={(args) =>
         cx(
+          "font-medium",
           args.isActive
-            ? "text-blue-500 font-medium"
-            : "text-[color:var(--base06)] text-opacity-80",
+            ? "text-blue-500 hover:text-blue-400 opacity-100"
+            : "text-[color:var(--base07)] hover:text-[color:var(--base07)] opacity-80 hover:opacity-100",
           typeof className === "function" ? className(args) : className
         )
       }
