@@ -5,3 +5,4 @@ server/build
 .env
 .ds_store
 app/styles/tailwind.css
+prisma/dev.db-journal

@@ -65,18 +65,19 @@ async function saveDocs(ref: string, config: Config) {
       data: {
         docs: {
           create: newEntries.map((entry) => ({
-            ...entry.attributes,
             filePath: entry.path,
             html: entry.html,
-            md: entry.md,
-            title: entry.path,
             lang: entry.lang,
+            md: entry.md,
+            title: entry.attributes.title ?? entry.path,
           })),
           updateMany: existingEntries.map((entry) => ({
             data: {
-              ...entry.attributes,
+              filePath: entry.path,
               html: entry.html,
+              lang: entry.lang,
               md: entry.md,
+              title: entry.attributes.title ?? entry.path,
             },
             where: {
               filePath: entry.path,
@@ -95,12 +96,11 @@ async function saveDocs(ref: string, config: Config) {
         versionHeadOrBranch: info,
         docs: {
           create: entriesWithProcessedMD.map((entry) => ({
-            ...entry.attributes,
             filePath: entry.path,
             html: entry.html,
-            md: entry.md,
-            title: entry.path,
             lang: entry.lang,
+            md: entry.md,
+            title: entry.attributes.title ?? entry.path,
           })),
         },
       },

@@ -37,10 +37,10 @@ const action: ActionFunction = async ({ request }) => {
       console.log(result);
     });
 
-    return redirect("/_refresh");
+    return redirect(request.url);
   } catch (error) {
     console.error(error);
-    return redirect("/_refresh");
+    return redirect(request.url);
   }
 };
 

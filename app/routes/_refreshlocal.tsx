@@ -58,10 +58,10 @@ let action: ActionFunction = async ({ request, context }) => {
       );
     }
 
-    return redirect(url.toString());
+    return redirect(request.url);
   } catch (error) {
     console.error(error);
-    return redirect(url.toString());
+    return redirect(request.url);
   }
 };
 
