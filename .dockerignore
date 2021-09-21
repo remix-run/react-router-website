@@ -6,3 +6,7 @@ server/build
 .ds_store
 app/styles/tailwind.css
 prisma/dev.db-journal
+pm2.config.js
+.vscode
+.github
+scripts
