@@ -8,9 +8,9 @@ import { prisma } from "./db.server";
 let where: "remote" | "local" =
   process.env.NODE_ENV === "production"
     ? "remote"
-    : process.env.LOCAL_DOCS === "true"
-    ? "local"
-    : "remote";
+    : process.env.REMOTE_DOCS === "true"
+    ? "remote"
+    : "local";
 
 let menuCache = new Map<string, MenuDir>();
 
