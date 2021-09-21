@@ -36,7 +36,7 @@ const IndexPage: RouteComponent = () => {
   let actionData = useActionData();
   let transition = useTransition();
 
-  useScrollRestoration();
+  // useScrollRestoration();
 
   return (
     <div className="py-8">
@@ -271,6 +271,7 @@ const IndexPage: RouteComponent = () => {
                 applications. Join our newsletter to stay up to date.
               </p>
               <Form
+                replace
                 method="post"
                 className="flex flex-col xs:flex-row"
                 onSubmit={(event) => {
@@ -322,7 +323,7 @@ export default IndexPage;
 export { meta };
 
 export let loader: LoaderFunction = async () => {
-  return await "ok";
+  return "poop";
 };
 
 export let action: ActionFunction = async ({ request }) => {
@@ -390,48 +391,4 @@ function Status({
       {children}
     </div>
   );
-}
-
-// TODO: Replace w/ useScrollRestoration when ready
-// Adapted from https://github.com/remix-run/remix/issues/186#issuecomment-895583783
-
-const useSSRLayoutEffect =
-  typeof window === "undefined" ? () => {} : React.useLayoutEffect;
-
-// https://github.com/remix-run/remix/issues/240
-type LocationState = undefined | { isSubmission: boolean };
-function useScrollRestoration(enabled: boolean = true) {
-  let positions = React.useRef<Map<string, number>>(new Map()).current;
-  let location = useLocation();
-  let transition = useTransition();
-  let firstRender = React.useRef(true);
-
-  useSSRLayoutEffect(() => {
-    let scrollRestoration = window.history.scrollRestoration;
-    if (scrollRestoration !== "manual") {
-      window.history.scrollRestoration = "manual";
-    }
-    return () => {
-      window.history.scrollRestoration = scrollRestoration;
-    };
-  }, []);
-
-  React.useEffect(() => {
-    if (transition.state === "loading") {
-      positions.set(location.pathname, window.scrollY);
-    }
-  }, [transition.state, location.pathname, positions]);
-
-  React.useEffect(() => {
-    if (!enabled) return;
-    if (transition.state !== "idle") return;
-
-    // don't restore scroll on initial render
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
-    let y = positions.get(location.pathname);
-    window.scrollTo(0, y ?? 0);
-  }, [transition.state, location.pathname, positions, enabled]);
 }

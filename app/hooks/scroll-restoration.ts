@@ -16,6 +16,8 @@ function useScrollRestoration() {
   let location = useLocation();
   let transition = useTransition();
 
+  let wasSubmissionRef = React.useRef(false);
+
   React.useEffect(() => {
     if (transition.location) {
       positions[location.key] = window.scrollY;
@@ -48,10 +50,21 @@ function useScrollRestoration() {
         }
       }
 
+      if (wasSubmissionRef.current === true) {
+        wasSubmissionRef.current = false;
+        return;
+      }
+
       // otherwise go to the top!
       window.scrollTo(0, 0);
     }, [location]);
   }
+
+  React.useEffect(() => {
+    if (transition.submission) {
+      wasSubmissionRef.current = true;
+    }
+  }, [transition]);
 }
 
 export { useScrollRestoration };
