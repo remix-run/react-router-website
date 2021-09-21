@@ -5,8 +5,12 @@ import { processMarkdown } from "@ryanflorence/md";
 import * as semver from "semver";
 import { prisma } from "./db.server";
 
-// let where: "remote" | "local" = "remote";
-let where: "remote" | "local" = "local";
+let where: "remote" | "local" =
+  process.env.NODE_ENV === "production"
+    ? "remote"
+    : process.env.LOCAL_DOCS === "true"
+    ? "local"
+    : "remote";
 
 let menuCache = new Map<string, MenuDir>();
 

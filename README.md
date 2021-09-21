@@ -18,7 +18,7 @@ cp .env.example .env
 npm run dev
 ```
 
-This will pull docs from the file system in dev, it expects the react router source directory to be sibling to this website's source directory. However, I've been developing by just downloading the GitHub tarball and using it via the database. To switch over just update the "where" variable in `utils.server.ts`.
+This will pull docs from the file system in dev, it expects the react router source directory to be sibling to this website's source directory. However, I've been developing by just downloading the GitHub tarball and using it via the database. To switch over start the server using `LOCAL_DOCS=true npm run dev`.
 
 ````
 /wherever/your/code/is/reactrouter.com
