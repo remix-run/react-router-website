@@ -36,8 +36,6 @@ const IndexPage: RouteComponent = () => {
   let actionData = useActionData();
   let transition = useTransition();
 
-  // useScrollRestoration();
-
   return (
     <div className="py-8">
       <div className="index__hero">
@@ -323,7 +321,7 @@ export default IndexPage;
 export { meta };
 
 export let loader: LoaderFunction = async () => {
-  return "poop";
+  return;
 };
 
 export let action: ActionFunction = async ({ request }) => {
