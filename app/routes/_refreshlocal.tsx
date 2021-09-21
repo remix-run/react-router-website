@@ -1,38 +1,21 @@
 import * as React from "react";
 
-import {
-  RouteComponent,
-  ActionFunction,
-  LoaderFunction,
-  json,
-  useRouteData,
-} from "remix";
+import { RouteComponent, ActionFunction } from "remix";
 import { redirect } from "remix";
 import { satisfies } from "semver";
 
 import { saveDocs } from "~/utils/save-docs";
 
-let loader: LoaderFunction = async () => {
-  // return json({ notFound: true }, { status: 404 });
-  return json({});
-};
-
 let action: ActionFunction = async ({ request, context }) => {
-  const url = new URL(request.url);
-
-  if (process.env.NODE_ENV === "development") {
-    if (!url.port) url.port = "3000";
-  }
-
-  let token = request.headers.get("Authorization");
   // verify post request and the token matches
   if (
     request.method !== "POST" ||
-    (process.env.NODE_ENV !== "development" && token !== process.env.AUTH_TOKEN)
+    request.headers.get("Authorization") !== process.env.AUTH_TOKEN
   ) {
     return redirect("/");
   }
 
+  const url = new URL(request.url);
   const ref = url.searchParams.get("ref");
 
   try {
@@ -66,18 +49,8 @@ let action: ActionFunction = async ({ request, context }) => {
 };
 
 const RefreshInstance: RouteComponent = () => {
-  let data = useRouteData();
-
-  if (data.notFound) {
-    return <p>404</p>;
-  }
-
-  return (
-    <form method="post">
-      <button type="submit">Refresh!</button>
-    </form>
-  );
+  return <p>404</p>;
 };
 
 export default RefreshInstance;
-export { action, loader };
+export { action };

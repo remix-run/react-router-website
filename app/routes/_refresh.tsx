@@ -1,13 +1,12 @@
-import type { RouteComponent, ActionFunction } from "remix";
+import { RouteComponent, ActionFunction, json, LoaderFunction } from "remix";
 import { redirect } from "remix";
 import { getInstanceURLs } from "~/utils/get-fly-instance-urls.server";
 
 const action: ActionFunction = async ({ request }) => {
-  let token = request.headers.get("Authorization");
   // verify post request and the token matches
   if (
-    request.method !== "POST"
-    // || (process.env.NODE_ENV !== "development" && token !== process.env.AUTH_TOKEN)
+    request.method !== "POST" ||
+    request.headers.get("Authorization") !== process.env.AUTH_TOKEN
   ) {
     return redirect("/");
   }
@@ -45,19 +44,7 @@ const action: ActionFunction = async ({ request }) => {
 };
 
 const RefreshAllInstancesDocsPage: RouteComponent = () => {
-  return (
-    <form
-      method="post"
-      className="flex flex-col items-center justify-center h-screen"
-    >
-      <button
-        className="px-4 py-1 text-3xl text-white transition-colors duration-150 ease-in-out bg-purple-500 rounded-xl hover:bg-purple-600"
-        type="submit"
-      >
-        Refresh All Instances!
-      </button>
-    </form>
-  );
+  return <p>404</p>;
 };
 
 export default RefreshAllInstancesDocsPage;
