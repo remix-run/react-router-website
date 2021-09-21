@@ -1,0 +1,713 @@
+/*
+Our markdown is parsed by a library Ryan hasn't put anywhere but his computer
+and npm (he'll get it on github soon enough).  It handles a few things that this
+stylesheet targets.
+
+- Syntax highlighting with the same package that vscode uses
+  - TODO: document all the fancy things you can do with code blocks
+- It adds ids and anchors to each heading
+- Builds a table of contents out of the headings in the markdown
+  - the toc links to the generated heading ids
+  - markdown files only get a a ToC if there is a "## toc" in the actual markdown
+  - it puts the toc and content as siblings:
+    ```
+    <div class="toc-container">
+      <ul class="toc"/>
+    </div>
+    <div class="md-prose">
+      <!-- actual markdown HTML -->
+    </div>
+    ```
+*/
+
+/*****************************************************************************/
+/* layout */
+.md-toc-container {
+  display: flex;
+}
+
+.md-prose {
+  flex: 1;
+}
+
+.md-toc-nav {
+  @apply flex-none w-64 pl-8 sticky top-8 h-screen overflow-auto text-sm order-2;
+  @apply hidden xl:block;
+}
+
+.md-toc-title {
+  @apply text-base;
+}
+
+.toc {
+  list-style: none;
+}
+
+.toc a {
+  display: block;
+  padding: 0.5rem 0;
+  margin-left: 1rem;
+}
+
+/*****************************************************************************/
+/* code blocks */
+.markdown pre[data-filename]::before {
+  content: attr(data-filename);
+  display: block;
+  margin-left: 1rem;
+  padding-left: 1.5rem;
+  padding-bottom: 1rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' width='16' height='16' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' /%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+}
+/*****************************************************************************/
+/* prose */
+
+.codeblock-line {
+  display: block;
+  position: relative;
+  padding-right: 1rem;
+}
+
+.md-prose {
+  & .icon {
+    display: inline-block;
+    fill: currentColor;
+    vertical-align: text-bottom;
+  }
+
+  & h2 code,
+  & h3 code,
+  & h4 code {
+    font-size: 100%;
+    padding: 0;
+    border: none;
+  }
+
+  & h1,
+  & h2,
+  & h3,
+  & h4,
+  & h5,
+  & h6 {
+    scroll-snap-margin-top: 1em;
+    scroll-margin-top: 1em;
+  }
+
+  & h1 a,
+  & h2 a,
+  & h3 a,
+  & h4 a,
+  & h5 a,
+  & h6 a {
+    float: left;
+    line-height: 1;
+    margin-left: -20px;
+    padding-right: 4px;
+  }
+
+  & h1 .icon-link,
+  & h2 .icon-link,
+  & h3 .icon-link,
+  & h4 .icon-link,
+  & h5 .icon-link,
+  & h6 .icon-link {
+    color: var(--base0D);
+    vertical-align: middle;
+    visibility: hidden;
+  }
+
+  & h1:hover a,
+  & h2:hover a,
+  & h3:hover a,
+  & h4:hover a,
+  & h5:hover a,
+  & h6:hover a {
+    text-decoration: none;
+  }
+
+  & h1:hover a .icon-link,
+  & h2:hover a .icon-link,
+  & h3:hover a .icon-link,
+  & h4:hover a .icon-link,
+  & h5:hover a .icon-link,
+  & h6:hover a .icon-link {
+    visibility: visible;
+  }
+
+  & h1:hover a .icon-link:before,
+  & h2:hover a .icon-link:before,
+  & h3:hover a .icon-link:before,
+  & h4:hover a .icon-link:before,
+  & h5:hover a .icon-link:before,
+  & h6:hover a .icon-link:before {
+    width: 16px;
+    height: 16px;
+    content: " ";
+    display: inline-block;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' stroke='gray' viewBox='0 0 16 16' version='1.1' width='16' height='16' aria-hidden='true'%3E%3Cpath fill-rule='evenodd' d='M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z'%3E%3C/path%3E%3C/svg%3E");
+  }
+
+  & {
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    line-height: 1.5;
+    color: var(--base06);
+    font-size: 1rem;
+    line-height: 1.5;
+    word-wrap: break-word;
+  }
+
+  & details {
+    display: block;
+  }
+
+  & summary {
+    display: list-item;
+  }
+
+  & a:active,
+  & a:hover {
+    outline-width: 0;
+  }
+
+  & strong {
+    font-weight: inherit;
+    font-weight: bolder;
+  }
+
+  & h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+    margin-top: 5rem;
+  }
+
+  & h1:first-child {
+    margin-top: 1rem;
+  }
+
+  & img {
+    border-style: none;
+  }
+
+  & code,
+  & kbd,
+  & pre {
+    font-size: 0.9em;
+  }
+
+  & hr {
+    box-sizing: initial;
+    height: 0;
+    overflow: visible;
+  }
+
+  & input {
+    font: inherit;
+    margin: 0;
+  }
+
+  & input {
+    overflow: visible;
+  }
+
+  & [type="checkbox"] {
+    box-sizing: border-box;
+    padding: 0;
+  }
+
+  & * {
+    box-sizing: border-box;
+  }
+
+  & input {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  & a {
+    color: var(--base0D);
+    text-decoration: none;
+  }
+
+  & a:hover {
+    text-decoration: underline;
+  }
+
+  & strong {
+    font-weight: 600;
+  }
+
+  & hr:after,
+  & hr:before {
+    display: table;
+    content: "";
+  }
+
+  & hr:after {
+    clear: both;
+  }
+
+  & table {
+    border-spacing: 0;
+    border-collapse: collapse;
+  }
+
+  & td,
+  & th {
+    padding: 0;
+  }
+
+  & details summary {
+    cursor: pointer;
+  }
+
+  & kbd {
+    display: inline-block;
+    padding: 3px 5px;
+    font: 11px SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    line-height: 10px;
+    color: var(--base5);
+    vertical-align: middle;
+    background-color: var(--base01);
+    border: 1px solid var(--base02);
+    border-radius: 3px;
+    box-shadow: inset 0 -1px 0 var(--base02);
+  }
+
+  & h2,
+  & h3,
+  & h4,
+  & h5,
+  & h6 {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  & h1 {
+    font-size: 32px;
+  }
+
+  & h1,
+  & h2 {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  & h2 {
+    font-size: 24px;
+  }
+
+  & h3 {
+    font-size: 20px;
+  }
+
+  & h3,
+  & h4 {
+    font-weight: 600;
+  }
+
+  & h4 {
+    font-size: 16px;
+  }
+
+  & h5 {
+    font-size: 14px;
+  }
+
+  & h5,
+  & h6 {
+    font-weight: 600;
+  }
+
+  & h6 {
+    font-size: 12px;
+  }
+
+  & p,
+  & docs-info,
+  & docs-warning,
+  & docs-error,
+  & p {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+
+  & blockquote {
+    margin: 0;
+  }
+
+  & ol,
+  & ul {
+    padding-left: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  & ol ol,
+  & ul ol {
+    list-style-type: lower-roman;
+  }
+
+  & ol ol ol,
+  & ol ul ol,
+  & ul ol ol,
+  & ul ul ol {
+    list-style-type: lower-alpha;
+  }
+
+  & dd {
+    margin-left: 0;
+  }
+
+  & code,
+  & pre {
+    font-size: 0.9rem;
+  }
+
+  & pre {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  & input::-webkit-inner-spin-button,
+  & input::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  &:after,
+  &:before {
+    display: table;
+    content: "";
+  }
+
+  &:after {
+    clear: both;
+  }
+
+  & a:not([href]) {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  & blockquote,
+  & details,
+  & dl,
+  & ol,
+  & p,
+  & pre,
+  & table,
+  & ul {
+    margin-top: 0;
+    margin-bottom: 16px;
+  }
+
+  & hr {
+    height: 0.25em;
+    padding: 0;
+    margin: 24px 0;
+    background-color: var(--base02);
+    border: 0;
+  }
+
+  & blockquote {
+    padding: 0 1em;
+    color: var(--base03);
+    border-left: 0.25em solid var(--base02);
+  }
+
+  & blockquote > :first-child {
+    margin-top: 0;
+  }
+
+  & blockquote > :last-child {
+    margin-bottom: 0;
+  }
+
+  & h1,
+  & h2 {
+    margin-top: 32px;
+    margin-bottom: 16px;
+  }
+
+  & h3,
+  & h4,
+  & h5,
+  & h6 {
+    margin: 32px 0 16px 0;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  & h1 {
+    font-size: 2em;
+  }
+
+  & h1,
+  & h2 {
+    padding-bottom: 0.3em;
+    /* border-bottom: 1px solid var(--base01); */
+  }
+
+  & h2 {
+    font-size: 1.5em;
+  }
+
+  & h3 {
+    font-size: 1.25em;
+  }
+
+  & h4 {
+    font-size: 1em;
+  }
+
+  & h5 {
+    font-size: 0.875em;
+  }
+
+  & h6 {
+    font-size: 0.85em;
+    color: var(--base05);
+  }
+
+  & ol,
+  & ul {
+    padding-left: 2em;
+  }
+
+  & ol ol,
+  & ol ul,
+  & ul ol,
+  & ul ul {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  & li {
+    word-wrap: break-all;
+    list-style-type: initial;
+  }
+
+  & li > p {
+    margin-top: 16px;
+  }
+
+  & li + li {
+    margin-top: 0.25em;
+  }
+
+  & dl {
+    padding: 0;
+  }
+
+  & dl dt {
+    padding: 0;
+    margin-top: 16px;
+    font-size: 1em;
+    font-style: italic;
+    font-weight: 600;
+  }
+
+  & dl dd {
+    padding: 0 16px;
+    margin-bottom: 16px;
+  }
+
+  & table {
+    display: block;
+    width: 100%;
+    overflow: auto;
+  }
+
+  & table th {
+    font-weight: 600;
+  }
+
+  & table td,
+  & table th {
+    padding: 6px 13px;
+    border: 1px solid var(--base01);
+  }
+
+  & table tr {
+    background-color: #fff;
+    border-top: 1px solid var(--base01);
+  }
+
+  & table tr:nth-child(2n) {
+    background-color: var(--base00);
+  }
+
+  & img {
+    max-width: 100%;
+    box-sizing: initial;
+    background-color: var(--base00);
+  }
+
+  & img[align="right"] {
+    padding-left: 20px;
+  }
+
+  & img[align="left"] {
+    padding-right: 20px;
+  }
+
+  & pre {
+    word-wrap: normal;
+  }
+
+  & pre > code {
+    padding: 0;
+    margin: 0;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+
+  & pre {
+    padding: 1rem;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    border-radius: 1rem;
+    border: solid 1px var(--base01);
+  }
+
+  & code {
+    border-radius: 3px;
+    padding: 0.125rem 0.25rem;
+    color: var(--base05);
+    /* too dark! */
+    /* background: var(--base01); */
+    background: hsla(210, 13%, 72%, 0.2);
+  }
+
+  & a code {
+    border: none;
+    background: inherit;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  & h1 code,
+  & h2 code,
+  & h3 code,
+  & h4 code,
+  & h5 code,
+  & h6 code {
+    color: inherit;
+  }
+
+  & pre code {
+    display: inline;
+    max-width: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: initial;
+    border: 0;
+    border-radius: initial;
+  }
+
+  & pre[data-line-numbers="true"]:not([data-lang="sh"]) {
+    padding-left: 0rem;
+    padding-right: 0rem;
+  }
+
+  &
+    pre[data-line-numbers="true"]:not([data-lang="sh"])
+    [data-line-number]:before {
+    padding-left: 0rem;
+    content: attr(data-line-number);
+    text-align: right;
+    display: inline-block;
+    width: 2rem;
+    color: var(--base03);
+    margin-right: 1.5rem;
+  }
+
+  &
+    pre[data-line-numbers="true"]:not([data-lang="sh"])
+    [data-line-number][data-highlight="true"]:before {
+    content: "+";
+    color: var(--base0B);
+  }
+
+  & docs-info,
+  & docs-warning,
+  & docs-error {
+    display: block;
+    border-left: solid 2px;
+    border-right: solid 2px;
+    padding: 0.5rem 1rem;
+    position: relative;
+    border-radius: 1rem;
+  }
+
+  & docs-info:before,
+  & docs-warning:before,
+  & docs-error:before {
+    border-radius: 1rem;
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  & docs-warning {
+    color: var(--base0A);
+  }
+  & docs-warning:before {
+    background: var(--base0A);
+  }
+
+  & docs-info {
+    color: var(--base0D);
+  }
+  & docs-info:before {
+    background: var(--base0D);
+  }
+
+  & docs-error {
+    color: var(--base08);
+  }
+  & docs-error:before {
+    background: var(--base08);
+  }
+
+  & pre[data-bad] {
+    border-color: var(--base08);
+  }
+
+  &
+    pre[data-line-numbers="true"][data-bad]:not([data-lang="sh"])
+    [data-line-number]:before {
+    color: var(--base08);
+  }
+
+  & pre[data-bad] {
+    border-color: var(--base08);
+  }
+}
+
+.codeblock-line[data-highlight="true"]:after {
+  pointer-events: none;
+  content: " ";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background: var(--base0B);
+  opacity: 0.1;
+}
+
+pre[data-bad] .codeblock-line[data-highlight="true"]:after {
+  background: var(--base08);
+}
