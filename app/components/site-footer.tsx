@@ -1,17 +1,19 @@
 import * as React from "react";
+import cx from "clsx";
 import { Link } from "~/components/link";
 import logoCircleUrl from "~/icons/logo-circle.svg";
 import githubLogoUrl from "~/icons/github.svg";
 import twitterLogoUrl from "~/icons/twitter.svg";
 
-const SiteFooter: React.VFC = () => {
+const SiteFooter: React.VFC<{ className?: string }> = ({ className }) => {
   return (
     <footer
-      className={`
-      py-6 md:pt-10 md:pb-16
-      border-t border-solid border-[color:var(--base02)]`}
+      className={cx(className, [
+        "py-6 md:pt-10 md:pb-16",
+        "border-t border-solid border-[color:var(--base02)]",
+      ])}
     >
-      <div className="container md:flex md:items-center md:justify-between">
+      <div className="container sm-down:max-w-none md:flex md:items-center md:justify-between">
         <div>
           <Link
             to="/"
@@ -27,7 +29,10 @@ const SiteFooter: React.VFC = () => {
           <div className="mt-10 space-y-10 md:space-y-0 md:mt-6">
             <p>
               React Router is built and maintained by{" "}
-              <Link className="font-semibold text-[color:var(--base07)]" to="https://remix.run">
+              <Link
+                className="font-semibold text-[color:var(--base07)]"
+                to="https://remix.run"
+              >
                 Remix
               </Link>{" "}
               and{" "}

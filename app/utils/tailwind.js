@@ -2,6 +2,9 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 const resolveConfig = require("tailwindcss/resolveConfig");
 const colors = require("./colors");
 
+/**
+ * @type {import("tailwindcss/tailwind-config").TailwindConfig['theme']}
+ */
 const theme = {
   colors: {
     transparent: "transparent",
@@ -26,6 +29,15 @@ const theme = {
     "8xl": "4rem", // h1 large
     "9xl": "4.5rem", // title large
   },
+  screens: {
+    xs: "480px",
+    ...defaultTheme.screens,
+    "xs-only": { max: `${parseInt(defaultTheme.screens.sm, 10) - 1}px` },
+    "sm-down": { max: `${parseInt(defaultTheme.screens.md, 10) - 1}px` },
+    "md-down": { max: `${parseInt(defaultTheme.screens.lg, 10) - 1}px` },
+    "lg-down": { max: `${parseInt(defaultTheme.screens.xl, 10) - 1}px` },
+    "xl-down": { max: `${parseInt(defaultTheme.screens["2xl"], 10) - 1}px` },
+  },
   container: {
     center: true,
     padding: {
@@ -38,9 +50,6 @@ const theme = {
     },
   },
   extend: {
-    screens: {
-      xs: "480px",
-    },
     fontFamily: {
       sans: ["Inter", ...defaultTheme.fontFamily.sans],
     },

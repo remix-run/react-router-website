@@ -1,34 +1,69 @@
 import * as React from "react";
 import { useLocation } from "react-router-dom";
-import { Container } from "~/components/container";
+import { useRect } from "@reach/rect";
 import { useMatchScreen } from "~/hooks/match-media";
 import { Link } from "remix";
 import cx from "clsx";
 import logoCircleUrl from "~/icons/logo-circle.svg";
 import { NavLink } from "~/components/link";
-import { isExternalUrl } from "~/utils/links";
 // import type { MenuDir, VersionHead } from "~/utils.server";
 import type { NavLinkProps } from "react-router-dom";
 
-const SiteHeader: React.VFC = () => {
+const SiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
   let isMediumScreen = useMatchScreen("md");
   let [navIsOpen, setNavIsOpen] = useNavState(isMediumScreen);
+  let navRef = React.useRef<HTMLElement>(null);
   useSetBodyHeaderAttributes();
+
+  let location = useLocation();
+  let isDocsPage = location.pathname.startsWith("/docs/");
+
+  // Not handled inline via JSX because we want the `hidden` class included on
+  // the server, which avoids FOUC and ensures the menu doesn't obscure the
+  // content if JS is disabled.
+  React.useEffect(() => {
+    let nav = navRef.current;
+    if (nav) {
+      if (navIsOpen) {
+        nav.classList.remove("hidden");
+      } else {
+        nav.classList.add("hidden");
+      }
+    }
+  }, [navIsOpen]);
+
+  let ref = React.useRef<HTMLElement>(null);
+  let { height } = useRect(ref) || ({} as DOMRect);
+  React.useEffect(() => {
+    let root = document.documentElement;
+    if (height != null) {
+      root.style.setProperty("--site-header-height", `${height}px`);
+    }
+    return () => {
+      root.style.removeProperty("--site-header-height");
+    };
+  }, [height]);
 
   return (
     <header
+      ref={ref}
       className={cx(
-        `border-b border-solid
-        bg-[color:var(--base00)]
-        py-[25px]
-        w-full top-0
-        sticky md:static
-        border-[color:var(--base02)] z
-        z-[1] md:z-[initial]
-      `
+        className,
+        [
+          "border-b border-solid",
+          "bg-[color:var(--base00)]",
+          "py-[25px]",
+          "w-full top-0",
+          "border-[color:var(--base02)]",
+          "z-10",
+        ],
+
+        {
+          ["md:static md:z-[initial]"]: !isDocsPage,
+        }
       )}
     >
-      <Container className="flex items-center justify-between">
+      <div className="flex items-center justify-between container sm-down:max-w-none">
         <Link
           to="/"
           className="flex items-center space-x-4 text-[color:var(--base07)] hover:text-[color:var(--base07)]"
@@ -50,6 +85,7 @@ const SiteHeader: React.VFC = () => {
           {navIsOpen ? <Close /> : <Hamburger />}
         </button>
         <nav
+          ref={navRef}
           // TODO: Update styles to match mocks. This was just enough to get
           // it working.
           className={cx(
@@ -61,6 +97,7 @@ const SiteHeader: React.VFC = () => {
              overflow-y-scroll md:overflow-y-visible
              bg-[color:var(--base00)] md:bg-transparent
              inset-0 right-[theme(spacing.14)]
+             hidden md:block
              flex-none`
             // TODO: // { hidden: !isMediumScreen && !navIsOpen }
           )}
@@ -86,7 +123,7 @@ const SiteHeader: React.VFC = () => {
             </li>
           </ul>
         </nav>
-      </Container>
+      </div>
     </header>
   );
 };

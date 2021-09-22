@@ -1,12 +1,17 @@
 import { useMemo } from "react";
 import type { LoaderFunction } from "remix";
 import { useMatches, json, useLoaderData } from "remix";
-
+import { useNavigate, useParams } from "react-router-dom";
+import cx from "clsx";
 import { DataOutlet } from "~/components/data-outlet";
 import { getMenu, getVersions, MenuDir, VersionHead } from "~/utils.server";
 import { addTrailingSlash } from "~/utils/with-trailing-slash";
 import { time } from "~/utils/time";
-import { createMenuMap, Menu } from "~/components/docs-menu";
+import {
+  createMenuMap,
+  Menu,
+  MenuVersionSelector,
+} from "~/components/docs-menu";
 import markdownStyles from "../../styles/docs.css";
 
 interface DocsRouteData {
@@ -50,6 +55,8 @@ export function links() {
 export default function DocsLayout() {
   let matches = useMatches();
   let { menu, version, versions } = useLoaderData();
+  let navigate = useNavigate();
+  let params = useParams();
 
   let menuMap = useMemo(() => createMenuMap(menu), [menu]);
 
@@ -57,45 +64,48 @@ export default function DocsLayout() {
   if (is404) return <NotFound />;
 
   return (
-    <div className="container">
-      <div className="lg:flex py-6 md:py-8 lg:py-10">
-        <div className="lg:hidden">
-          <details>
-            <summary className="py-4">Docs Navigation</summary>
-            <Menu
-              menu={menu}
-              version={version}
+    <div className="md-layout lg:flex lg:h-full md-down:container">
+      <div className="lg:hidden">
+        <details>
+          <summary className="py-4">Docs Navigation</summary>
+          <div>
+            <MenuVersionSelector
+              className="mb-10"
               versions={versions}
-              className="font-medium text-base py-6"
-            />
-          </details>
-          <hr className="mb-4" />
-        </div>
-        <div
-          className={`
-            hidden lg:block
-            static
-            z-10
-            inset-0
-            flex-none
-            h-auto w-60 xl:w-72
-            overflow-y-visible
-        `}
-        >
-          <div className="h-full overflow-y-auto scrolling-touch lg:h-auto lg:block lg:sticky lg:bg-transparent overflow-hidden lg:top-18 mr-24 lg:mr-0">
-            <Menu
-              menu={menu}
               version={version}
-              versions={versions}
-              className={`
-                mr-8
-                overflow-y-auto
-                font-medium text-base lg:text-sm
-                lg:sticky`}
             />
+            <Menu menu={menu} className="font-medium text-base py-6" />
           </div>
+        </details>
+        <hr className="mb-4" />
+      </div>
+      <div className=" hidden lg:block flex-shrink-0">
+        <div
+          className={cx([
+            // Sidebar nav scroll container
+            "h-full",
+            "w-64 xl:w-80 2xl:w-96", // width
+            "py-10 pl-6 pr-6 xl:pr-10 2xl:pr-12", // spacing
+          ])}
+        >
+          <MenuVersionSelector
+            className="mb-[42px]"
+            versions={versions}
+            version={version}
+          />
+          <Menu menu={menu} />
         </div>
-        <DataOutlet context={menuMap} />
+      </div>
+      <div className="lg:z-[1] flex-grow lg:h-full">
+        <div
+          className={cx([
+            // Main content scroll container (large screens only)
+            "py-6 md:py-8 lg:py-10", // spacing
+            // "flex justify-center",
+          ])}
+        >
+          <DataOutlet context={menuMap} />
+        </div>
       </div>
     </div>
   );

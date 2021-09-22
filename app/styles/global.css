@@ -61,6 +61,11 @@
   font-style: normal;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 .form-dot:checked,
 .form-check:checked {
   border-color: transparent;

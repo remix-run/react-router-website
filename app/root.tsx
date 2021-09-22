@@ -27,8 +27,9 @@ function DocsLiveReload() {
 }
 
 const Document: React.FC<{
-  forceDarkMode: boolean;
-}> = ({ children, forceDarkMode }) => {
+  forceDarkMode?: boolean;
+  className?: string;
+}> = ({ children, className, forceDarkMode }) => {
   return (
     <html lang="en" data-force-dark={forceDarkMode ? "" : undefined}>
       <head>
@@ -39,11 +40,13 @@ const Document: React.FC<{
         <meta name="theme-color" content="var(--base00)" />
       </head>
 
-      <body className="bg-[color:var(--base00)] text-[color:var(--base07)]">
-        <SiteHeader />
-
+      <body
+        className={
+          "bg-[color:var(--base00)] text-[color:var(--base07)]" +
+          (className ? " " + className : "")
+        }
+      >
         {children}
-
         <Scripts />
         <LiveReload />
         <DocsLiveReload />
@@ -54,21 +57,36 @@ const Document: React.FC<{
 
 export let App: RouteComponent = () => {
   let location = useLocation();
-  let forceDarkMode = React.useMemo(
-    () => !location.pathname.startsWith("/docs/"),
+  let isDocsPage = React.useMemo(
+    () => location.pathname.startsWith("/docs/"),
     [location]
   );
 
   useScrollRestoration();
 
+  if (isDocsPage) {
+    return (
+      <Document>
+        <div className="flex flex-col">
+          <SiteHeader className="w-full flex-shrink-0" />
+          <div className="flex flex-col">
+            <Outlet />
+          </div>
+        </div>
+        <SiteFooter className="w-full flex-shrink-0" />
+      </Document>
+    );
+  }
+
   return (
-    <Document forceDarkMode={forceDarkMode}>
+    <Document forceDarkMode>
+      <SiteHeader />
       <div className="flex flex-col min-h-screen">
         <div className="flex-auto">
           <Outlet />
         </div>
-        <SiteFooter />
       </div>
+      <SiteFooter />
     </Document>
   );
 };
