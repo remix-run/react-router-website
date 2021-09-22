@@ -321,7 +321,7 @@ export default IndexPage;
 export { meta };
 
 export let loader: LoaderFunction = async () => {
-  return;
+  return null;
 };
 
 export let action: ActionFunction = async ({ request }) => {

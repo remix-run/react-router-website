@@ -130,7 +130,7 @@ const Page: React.VFC = () => {
 
   if (!doc) {
     return (
-      <div className="container">
+      <div>
         <h1>Not Found</h1>
         <p>Sorry, there is no document here.</p>
       </div>
@@ -140,10 +140,10 @@ const Page: React.VFC = () => {
   return (
     <div>
       <SiblingLinks doc={doc} />
-      <h1 className="my-8 text-4xl font-display">{doc.title}</h1>
+      <h1 className="mb-8 text-4xl font-display">{doc.title}</h1>
       <div
         ref={ref}
-        className="py-8 markdown"
+        className="markdown"
         dangerouslySetInnerHTML={{ __html: doc.html }}
       />
     </div>

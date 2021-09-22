@@ -61,8 +61,8 @@ const SiteHeader: React.VFC = () => {
              overflow-y-scroll md:overflow-y-visible
              bg-[color:var(--base00)] md:bg-transparent
              inset-0 right-[theme(spacing.14)]
-             flex-none`,
-            { hidden: !isMediumScreen && !navIsOpen }
+             flex-none`
+            // TODO: // { hidden: !isMediumScreen && !navIsOpen }
           )}
           aria-label="Main navigation"
           id="main-site-nav"

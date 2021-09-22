@@ -12,18 +12,20 @@ export function Menu({
   menu,
   version,
   versions,
+  className,
 }: {
   menu: MenuDir;
   versions: VersionHead[];
   version: VersionHead;
+  className?: string;
 }) {
   let navigate = useNavigate();
   let params = useParams();
   let isOtherTag = !versions.find((v) => v.head === params.version);
 
   return (
-    <nav className="p-4">
-      <div className="m-4">
+    <nav className={className}>
+      <div className="mb-10">
         <select
           className="select"
           defaultValue={version.head}
@@ -49,14 +51,14 @@ export function Menu({
 function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
   let { lang, version } = useParams();
   let linkPrefix = `/docs/${lang}/${version}`;
-  let sharedItemClassName = "px-4 py-1 block";
+  let sharedItemClassName = "py-1 block";
   if (level === 1) sharedItemClassName += " font-bold";
 
   return (
     <ul className={level === 2 ? "mb-4" : ""}>
       {dir.dirs &&
         dir.dirs.map((dir, index) => (
-          <li className="pl-4" key={index}>
+          <li key={index}>
             {dir.hasIndex ? (
               <NavLink
                 to={`${linkPrefix}${dir.path}`}
