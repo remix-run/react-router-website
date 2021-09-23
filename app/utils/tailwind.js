@@ -50,6 +50,12 @@ const theme = {
     },
   },
   extend: {
+    padding: {
+      "0-5": "0.125rem /* 2px */",
+    },
+    margin: {
+      "0-5": "0.125rem /* 2px */",
+    },
     fontFamily: {
       sans: ["Inter", ...defaultTheme.fontFamily.sans],
     },

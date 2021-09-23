@@ -22,17 +22,6 @@ stylesheet targets.
 
 /*****************************************************************************/
 /* layout */
-html,
-body {
-  scroll-behavior: smooth;
-}
-
-@media (prefers-reduced-motion) {
-  html,
-  body {
-    scroll-behavior: auto;
-  }
-}
 
 @media screen and (min-width: theme(screens.lg)) {
   .markdown,
@@ -99,6 +88,13 @@ body {
 
   & a:not(:hover) {
     @apply text-[color:inherit];
+  }
+
+  & code {
+    font-size: 95%;
+    background: inherit;
+    padding: 0;
+    line-height: inherit;
   }
 
   & > li > ul {
@@ -343,7 +339,6 @@ body {
   & h1,
   & h2 {
     font-weight: 700;
-    letter-spacing: -0.025em;
   }
 
   & h2 {
@@ -497,12 +492,6 @@ body {
     font-size: 2em;
   }
 
-  & h1,
-  & h2 {
-    padding-bottom: 0.3em;
-    /* border-bottom: 1px solid var(--base01); */
-  }
-
   & h2 {
     font-size: 1.5em;
   }
@@ -620,37 +609,30 @@ body {
   }
 
   & pre {
-    padding: 1rem;
-    overflow: auto;
-    font-size: 85%;
-    line-height: 1.45;
-    border-radius: 1rem;
-    border: solid 1px var(--base01);
+    @apply rounded-lg border border-[color:var(--base01)] p-3 md:p-4 overflow-auto text-sm leading-none;
+  }
+
+  & .codeblock-line {
+    @apply leading-relaxed;
   }
 
   & code {
-    border-radius: 3px;
-    padding: 0.125rem 0.25rem;
-    color: var(--base05);
+    @apply rounded text-[color:inherit] py-0-5 px-1;
     /* too dark! */
     /* background: var(--base01); */
     background: hsla(210, 13%, 72%, 0.2);
   }
 
-  & a code {
-    border: none;
-    background: inherit;
-    color: inherit;
-    font-size: inherit;
+  & :not(a, h1, h2, h3, h4, h5, h6) code {
+    @apply text-[color:var(--base05)];
   }
 
-  & h1 code,
-  & h2 code,
-  & h3 code,
-  & h4 code,
-  & h5 code,
-  & h6 code {
-    color: inherit;
+  & :is(h1, h2, h3, h4, h5, h6) code {
+    font-size: 90%;
+    padding-top: max(0.125rem, 0.125em);
+    padding-bottom: max(0.125rem, 0.125em);
+    padding-right: max(0.25rem, 0.25em);
+    padding-left: max(0.25rem, 0.25em);
   }
 
   & pre code {
