@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import * as React from "react";
 import type { LoaderFunction } from "remix";
 import { useMatches, json, useLoaderData } from "remix";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import cx from "clsx";
 import { DataOutlet } from "~/components/data-outlet";
 import { getMenu, getVersions, MenuDir, VersionHead } from "~/utils.server";
@@ -55,18 +55,25 @@ export function links() {
 export default function DocsLayout() {
   let matches = useMatches();
   let { menu, version, versions } = useLoaderData();
-  let navigate = useNavigate();
-  let params = useParams();
 
-  let menuMap = useMemo(() => createMenuMap(menu), [menu]);
+  let menuMap = React.useMemo(() => createMenuMap(menu), [menu]);
 
   let is404 = matches.some((match: any) => match.data && match.data.notFound);
   if (is404) return <NotFound />;
 
+  let location = useLocation();
+  let detailsRef = React.useRef<HTMLDetailsElement>(null);
+  React.useEffect(() => {
+    let details = detailsRef.current;
+    if (details && details.hasAttribute("open")) {
+      details.removeAttribute("open");
+    }
+  }, [location]);
+
   return (
     <div className="md-layout lg:flex lg:h-full md-down:container">
       <div className="lg:hidden">
-        <details>
+        <details ref={detailsRef}>
           <summary className="py-4">Docs Navigation</summary>
           <div>
             <MenuVersionSelector
