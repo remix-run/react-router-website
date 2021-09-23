@@ -51,7 +51,9 @@ interface File {
 export type Doc = {
   html: string;
   title: string;
-  attributes: { [key: string]: string };
+  attributes: {
+    [key: string]: string | boolean;
+  };
 };
 
 export type Config = {

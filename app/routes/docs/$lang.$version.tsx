@@ -105,7 +105,7 @@ export default function DocsLayout() {
         </div>
       </div>
       <div className="lg:z-[1] flex-grow lg:h-full">
-        <div className="py-6 md:py-8 lg:py-10">
+        <div className="py-6 md:py-8 lg:py-10 lg:pr-6">
           <DataOutlet context={menuMap} />
         </div>
       </div>

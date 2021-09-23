@@ -5,18 +5,18 @@ import logoCircleUrl from "~/icons/logo-circle.svg";
 import githubLogoUrl from "~/icons/github.svg";
 import twitterLogoUrl from "~/icons/twitter.svg";
 
-const SiteFooter: React.VFC<{ className?: string }> = ({ className }) => {
+const DocsSiteFooter: React.VFC<{ className?: string }> = ({ className }) => {
   return (
     <footer
       className={cx(className, [
         "border-t border-solid border-[color:var(--base02)]",
-        "py-6 lg:py-8 xl:py-10",
+        "py-6 lg:pt-8 xl:pt-10",
       ])}
     >
       <div
         className={cx([
           "md:flex md:items-center md:justify-between",
-          "container sm-down:max-w-none",
+          "mx-auto max-w-none px-6",
         ])}
       >
         <div>
@@ -117,4 +117,4 @@ const SiteFooter: React.VFC<{ className?: string }> = ({ className }) => {
   );
 };
 
-export { SiteFooter };
+export { DocsSiteFooter };

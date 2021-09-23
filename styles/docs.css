@@ -27,29 +27,44 @@ body {
   scroll-behavior: smooth;
 }
 
-.md-toc-container {
-  @apply lg:pr-6;
+@media (prefers-reduced-motion) {
+  html,
+  body {
+    scroll-behavior: auto;
+  }
 }
 
 @media screen and (min-width: theme(screens.lg)) {
+  .markdown,
+  .markdown-title {
+    max-width: theme(screens.lg);
+  }
+
   .md-toc-container {
     display: grid;
-    grid-template: "main" 1fr / minmax(auto, 1024px);
+    grid-template: "main" 1fr / minmax(auto, theme(screens.lg));
   }
 }
 
 @media screen and (min-width: theme(screens.xl)) {
+  .markdown.has-toc {
+    --w-content: theme(screens.lg);
+    --w-toc: theme(spacing.72);
+    --w-gap: theme(spacing.8);
+    max-width: calc(var(--w-content) + var(--w-gap) + var(--w-toc));
+  }
+
   .md-toc-container {
     display: grid;
-    grid-template: "main toc" 1fr / minmax(auto, 1024px) theme(spacing.72);
-    gap: theme(spacing.8);
+    grid-template: "main toc" 1fr / minmax(auto, var(--w-content)) var(--w-toc);
+    gap: var(--w-gap);
   }
 }
 
 @media screen and (min-width: theme(screens.2xl)) {
-  .md-toc-container {
-    grid-template: "main toc" 1fr / minmax(auto, 1024px) theme(spacing.96);
-    gap: theme(spacing.12);
+  .markdown.has-toc {
+    --w-toc: theme(spacing.96);
+    --w-gap: theme(spacing.12);
   }
 }
 

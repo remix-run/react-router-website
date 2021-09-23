@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import type { MetaFunction } from "remix";
 import { Link, useLoaderData } from "remix";
 import invariant from "tiny-invariant";
+import cx from "clsx";
 
 import { useDelegatedReactRouterLinks } from "~/hooks/delegate-links";
 import type { Doc, MenuDir, VersionHead } from "~/utils.server";
@@ -138,15 +139,17 @@ const Page: React.VFC = () => {
   }
 
   return (
-    <div>
+    <React.Fragment>
       <SiblingLinks doc={doc} />
-      <h1 className="mb-8 text-4xl font-display">{doc.title}</h1>
+      <h1 className="markdown-title mb-8 text-4xl font-display">{doc.title}</h1>
       <div
         ref={ref}
-        className="markdown"
+        className={cx("markdown", {
+          "has-toc": doc.attributes.toc !== false,
+        })}
         dangerouslySetInnerHTML={{ __html: doc.html }}
       />
-    </div>
+    </React.Fragment>
   );
 };
 

@@ -1,15 +1,18 @@
 import * as React from "react";
-import { useLocation } from "react-router-dom";
-import { useRect } from "@reach/rect";
 import { useMatchScreen } from "~/hooks/match-media";
 import { Link } from "remix";
 import cx from "clsx";
 import logoCircleUrl from "~/icons/logo-circle.svg";
 import { NavLink } from "~/components/link";
 // import type { MenuDir, VersionHead } from "~/utils.server";
+import {
+  useHeaderNavState,
+  useSetBodyHeaderAttributes,
+  useSetHeaderHeight,
+} from "~/components/site-header";
 import type { NavLinkProps } from "react-router-dom";
 
-const SiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
+const DocsSiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
   let isMediumScreen = useMatchScreen("md");
   let [navIsOpen, setNavIsOpen] = useHeaderNavState(false, isMediumScreen);
   let headerRef = React.useRef<HTMLElement>(null);
@@ -27,10 +30,9 @@ const SiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
         "w-full top-0",
         "border-[color:var(--base02)]",
         "z-10",
-        "md:static md:z-[initial]",
       ])}
     >
-      <div className="flex items-center justify-between container sm-down:max-w-none">
+      <div className="flex items-center justify-between mx-auto max-w-none px-6">
         <Link
           to="/"
           className="flex items-center space-x-4 text-[color:var(--base07)] hover:text-[color:var(--base07)]"
@@ -136,87 +138,7 @@ function Close() {
   );
 }
 
-export { SiteHeader };
-
-export function useSetHeaderHeight<T extends HTMLElement = HTMLElement>(
-  ref: React.RefObject<T>
-) {
-  let { height } = useRect(ref) || ({} as DOMRect);
-  React.useEffect(() => {
-    let root = document.documentElement;
-    if (height != null) {
-      root.style.setProperty("--site-header-height", `${height}px`);
-    }
-    return () => {
-      root.style.removeProperty("--site-header-height");
-    };
-  }, [height]);
-}
-
-/**
- * Adds attributes to the body element indicating that the header is present on
- * the page.
- */
-export function useSetBodyHeaderAttributes() {
-  let [done, setDone] = React.useState(false);
-  React.useEffect(() => {
-    const DATA_HAS_HEADER = "data-has-header";
-    document.body.setAttribute(DATA_HAS_HEADER, "");
-    setDone(true);
-    return () => {
-      document.body.removeAttribute(DATA_HAS_HEADER);
-    };
-  }, []);
-  return done;
-}
-
-export function useHeaderNavState(initialState: boolean, meetsScreenSizeThreshold: boolean) {
-  let [navIsOpen, setNavIsOpen] = React.useState(initialState);
-  let location = useLocation();
-
-  React.useEffect(() => {
-    const DATA_NAV_OPEN = "data-nav-open";
-    if (meetsScreenSizeThreshold) {
-      return cleanup;
-    }
-    if (navIsOpen) {
-      document.body.setAttribute(DATA_NAV_OPEN, "");
-    } else {
-      document.body.removeAttribute(DATA_NAV_OPEN);
-    }
-
-    return cleanup;
-    function cleanup() {
-      document.body.removeAttribute(DATA_NAV_OPEN);
-    }
-  }, [navIsOpen, meetsScreenSizeThreshold]);
-
-  React.useEffect(() => {
-    if (meetsScreenSizeThreshold) {
-      setNavIsOpen(false);
-    }
-  }, [meetsScreenSizeThreshold]);
-
-  React.useEffect(() => {
-    setNavIsOpen(false);
-  }, [location]);
-
-  React.useEffect(() => {
-    if (navIsOpen) {
-      let listener = (event: KeyboardEvent) => {
-        if (event.key === "Escape") {
-          setNavIsOpen(false);
-        }
-      };
-      window.addEventListener("keydown", listener);
-      return () => {
-        window.removeEventListener("keydown", listener);
-      };
-    }
-  }, [navIsOpen]);
-
-  return [navIsOpen, setNavIsOpen] as const;
-}
+export { DocsSiteHeader };
 
 function HeaderNavLink({ to, className, ...props }: NavLinkProps) {
   return (

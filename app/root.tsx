@@ -6,13 +6,14 @@ import type {
   RouteComponent,
 } from "remix";
 import { Links, LiveReload, Meta, Scripts, json } from "remix";
-
+import cx from "clsx";
 import { SiteFooter } from "./components/site-footer";
 import { SiteHeader } from "./components/site-header";
+import { DocsSiteHeader } from "./components/docs-site-header";
+import { DocsSiteFooter } from "./components/docs-site-footer";
 import { useScrollRestoration } from "./hooks/scroll-restoration";
 import tailwind from "./styles/tailwind.css";
 import global from "./styles/global.css";
-import { useMatchMedia } from "./hooks/match-media";
 
 export let links: LinksFunction = () => {
   return [
@@ -37,14 +38,18 @@ const Document: React.FC<{
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
-        <meta name="theme-color" content="var(--base00)" />
+        <meta
+          name="theme-color"
+          content={forceDarkMode ? "var(--color-black)" : "var(--base00)"}
+        />
       </head>
 
       <body
-        className={
-          "bg-[color:var(--base00)] text-[color:var(--base07)]" +
-          (className ? " " + className : "")
-        }
+        className={cx(className, {
+          ["bg-black text-white"]: forceDarkMode,
+          ["bg-[color:var(--base00)] text-[color:var(--base07)]"]:
+            !forceDarkMode,
+        })}
       >
         {children}
         <Scripts />
@@ -68,12 +73,12 @@ export let App: RouteComponent = () => {
     return (
       <Document>
         <div className="flex flex-col">
-          <SiteHeader className="w-full flex-shrink-0" />
+          <DocsSiteHeader className="w-full flex-shrink-0" />
           <div className="flex flex-col">
             <Outlet />
           </div>
         </div>
-        <SiteFooter className="w-full flex-shrink-0" />
+        <DocsSiteFooter className="w-full flex-shrink-0" />
       </Document>
     );
   }
@@ -95,7 +100,7 @@ export default App;
 
 export let ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   return (
-    <Document forceDarkMode={false}>
+    <Document forceDarkMode>
       <h1>App Error</h1>
       <pre>{error.message}</pre>
       <p>
