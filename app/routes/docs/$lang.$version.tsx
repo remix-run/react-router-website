@@ -79,17 +79,18 @@ export default function DocsLayout() {
         </details>
         <hr className="mb-4" />
       </div>
-      <div className=" hidden lg:block flex-shrink-0">
+      <div className="hidden lg:block flex-shrink-0">
         <div
           className={cx([
             // Sidebar nav scroll container
-            "h-full",
+            "h-full max-h-screen overflow-x-hidden overflow-y-auto", // auto scrolling
+            "sticky top-[-1rem]", // sticky behavior
             "w-64 xl:w-80 2xl:w-96", // width
             "py-10 pl-6 pr-6 xl:pr-10 2xl:pr-12", // spacing
           ])}
         >
           <MenuVersionSelector
-            className="mb-[42px]"
+            className="mb-10"
             versions={versions}
             version={version}
           />
@@ -97,13 +98,7 @@ export default function DocsLayout() {
         </div>
       </div>
       <div className="lg:z-[1] flex-grow lg:h-full">
-        <div
-          className={cx([
-            // Main content scroll container (large screens only)
-            "py-6 md:py-8 lg:py-10", // spacing
-            // "flex justify-center",
-          ])}
-        >
+        <div className="py-6 md:py-8 lg:py-10">
           <DataOutlet context={menuMap} />
         </div>
       </div>

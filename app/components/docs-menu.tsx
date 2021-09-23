@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { NavLink } from "remix";
 import type { MenuDir, VersionHead } from "~/utils.server";
@@ -13,18 +14,23 @@ export function MenuVersionSelector({
   className?: string;
 }) {
   let navigate = useNavigate();
-  let params = useParams();
-  let isOtherTag = !versions.find((v) => v.head === params.version);
+  let { version: versionInParams, lang } = useParams();
+  let isOtherTag = React.useMemo(
+    () => !versions.find((v) => v.head === versionInParams),
+    [versions, versionInParams]
+  );
   return (
     <div className={className}>
       <select
         className="select"
         defaultValue={version.head}
         onChange={(event) => {
-          navigate(`/docs/${params.lang}/${event.target.value}`);
+          navigate(`/docs/${lang}/${event.target.value}`);
         }}
       >
-        {isOtherTag && <option value={params.version}>{params.version}</option>}
+        {isOtherTag && (
+          <option value={versionInParams}>{versionInParams}</option>
+        )}
         {versions.map((v) => (
           <option key={v.version} value={v.head}>
             {v.head} ({v.version})
@@ -49,8 +55,10 @@ export function Menu({
   className?: string;
 }) {
   return (
-    <nav className={cx("md-nav lg:sticky lg:top-6", className)}>
-      <MenuList level={1} dir={menu} />
+    <nav className={cx("md-nav", className)}>
+      <div className="">
+        <MenuList level={1} dir={menu} />
+      </div>
     </nav>
   );
 }
