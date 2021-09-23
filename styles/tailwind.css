@@ -13,14 +13,16 @@
     --base05: #464646;
     --base06: #2c2c2c;
     --base07: #121212;
-    --base08: var(--color-red-500);
-    --base09: var(--color-orange-500);
-    --base0A: var(--color-yellow-500);
-    --base0B: var(--color-green-500);
-    --base0C: var(--color-cyan-500);
-    --base0D: var(--color-blue-500);
-    --base0E: var(--color-violet-500);
-    --base0F: var(--color-amber-500);
+
+    /* code syntax colors */
+    --base08: var(--color-red-700);
+    --base09: var(--color-orange-800);
+    --base0A: var(--color-yellow-900);
+    --base0B: var(--color-green-900);
+    --base0C: var(--color-cyan-900);
+    --base0D: var(--color-blue-700);
+    --base0E: var(--color-violet-600);
+    --base0F: var(--color-amber-800);
   }
 
   :root[data-force-dark] {
@@ -32,6 +34,16 @@
     --base05: #b6b6b6;
     --base06: #e1e1e1;
     --base07: #ffffff;
+
+    /* code syntax colors */
+    --base08: var(--color-red-400);
+    --base09: var(--color-orange-400);
+    --base0A: var(--color-yellow-200);
+    --base0B: var(--color-green-400);
+    --base0C: var(--color-cyan-400);
+    --base0D: var(--color-blue-300);
+    --base0E: var(--color-violet-300);
+    --base0F: var(--color-amber-400);
   }
 
   @media (prefers-color-scheme: dark) {
@@ -44,6 +56,16 @@
       --base05: #b6b6b6;
       --base06: #e1e1e1;
       --base07: #ffffff;
+
+      /* code syntax colors */
+      --base08: var(--color-red-400);
+      --base09: var(--color-orange-400);
+      --base0A: var(--color-yellow-200);
+      --base0B: var(--color-green-400);
+      --base0C: var(--color-cyan-400);
+      --base0D: var(--color-blue-300);
+      --base0E: var(--color-violet-300);
+      --base0F: var(--color-amber-400);
     }
   }
 }

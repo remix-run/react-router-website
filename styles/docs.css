@@ -748,7 +748,7 @@ body {
   }
 }
 
-.codeblock-line[data-highlight="true"]:after {
+.codeblock-line[data-highlight="true"]::after {
   pointer-events: none;
   content: " ";
   position: absolute;
@@ -756,9 +756,9 @@ body {
   top: 0;
   width: 100%;
   background: var(--base0B);
-  opacity: 0.1;
+  opacity: 0.08;
 }
 
-pre[data-bad] .codeblock-line[data-highlight="true"]:after {
+pre[data-bad] .codeblock-line[data-highlight="true"]::after {
   background: var(--base08);
 }
