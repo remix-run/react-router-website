@@ -18,6 +18,14 @@ import type {
   LoaderFunction,
   ActionFunction,
 } from "remix";
+import {
+  BrowserChrome,
+  FastbooksApp,
+  FastbooksSales,
+  FastbooksInvoices,
+  FastbooksInvoice,
+} from "../components/scroll-experience";
+import { Actor, ScrollStage } from "~/stage";
 
 const meta: MetaFunction = () => ({
   title: "React Router",
@@ -118,6 +126,34 @@ const IndexPage: RouteComponent = () => {
 
       <div className="index__features">
         <div className="container">
+          <ScrollStage pages={3}>
+            <div className="sticky top-1/3">
+              <Actor start={0} end={1 / 2}>
+                <BrowserChrome url="https://example.com/sales/invoices/102000">
+                  <FastbooksApp>
+                    <FastbooksSales>
+                      <FastbooksInvoices>
+                        <FastbooksInvoice />
+                      </FastbooksInvoices>
+                    </FastbooksSales>
+                  </FastbooksApp>
+                </BrowserChrome>
+              </Actor>
+
+              <Actor start={1 / 2} end={2}>
+                <BrowserChrome url="https://example.com/sales/invoices/102000">
+                  <FastbooksApp highlight>
+                    <FastbooksSales>
+                      <FastbooksInvoices>
+                        <FastbooksInvoice />
+                      </FastbooksInvoices>
+                    </FastbooksSales>
+                  </FastbooksApp>
+                </BrowserChrome>
+              </Actor>
+            </div>
+          </ScrollStage>
+
           {[
             {
               heading: "Navigation Routes",
