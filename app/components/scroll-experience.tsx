@@ -1,3 +1,5 @@
+import { useActor } from "~/stage";
+
 export function BrowserChrome({
   children,
   url = "https://example.com",
@@ -77,11 +79,7 @@ export function FastbooksApp({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      className={`flex ${
-        highlight ? "relative z-10 ring-4 ring-orange-500" : ""
-      }`}
-    >
+    <div className="flex relative">
       <div className="p-4 border-r border-gray-500">
         <div className="px-2 pb-2 flex items-center">
           <div className="h-3 w-3 rounded-full bg-green-400" />
@@ -96,6 +94,12 @@ export function FastbooksApp({
         </div>
       </div>
       <div className="flex-1">{children}</div>
+      <div
+        className={`
+          absolute inset-0
+          ${highlight ? "bg-orange-500 opacity-50" : ""}
+        `}
+      />
     </div>
   );
 }
@@ -118,10 +122,16 @@ function FastbookNavLink({
   );
 }
 
-export function FastbooksSales({ children }: { children: React.ReactNode }) {
+export function FastbooksSales({
+  children,
+  highlight,
+}: {
+  highlight?: boolean;
+  children: React.ReactNode;
+}) {
   return (
-    <div>
-      <div className="flex justify-between m-4">
+    <div className="relative">
+      <div className="flex justify-between p-4">
         <SalesLink>Overview</SalesLink>
         <SalesLink>Subscriptions</SalesLink>
         <SalesLink active>Invoices</SalesLink>
@@ -129,6 +139,12 @@ export function FastbooksSales({ children }: { children: React.ReactNode }) {
         <SalesLink>Deposits</SalesLink>
       </div>
       <div>{children}</div>
+      <div
+        className={`
+          absolute inset-0
+          ${highlight ? "bg-blue-500 opacity-50" : ""}
+        `}
+      />
     </div>
   );
 }
@@ -151,7 +167,13 @@ function SalesLink({
   );
 }
 
-export function FastbooksInvoices({ children }: { children: React.ReactNode }) {
+export function FastbooksInvoices({
+  children,
+  highlight,
+}: {
+  highlight?: boolean;
+  children: React.ReactNode;
+}) {
   let invoices = [
     {
       name: "Santa Monica",
@@ -186,8 +208,8 @@ export function FastbooksInvoices({ children }: { children: React.ReactNode }) {
     },
   ];
   return (
-    <div data-invoices>
-      <div className="mt-4 mb-6 px-6">
+    <div className="relative">
+      <div className="pt-4 pb-6 px-6">
         <div className="flex justify-between mb-1">
           <div className="text-gray-300">Overdue: $10,800</div>
           <div className="text-gray-300">Due soon: $62,000</div>
@@ -227,40 +249,54 @@ export function FastbooksInvoices({ children }: { children: React.ReactNode }) {
         </div>
         <div className="flex-1">{children}</div>
       </div>
+      <div
+        className={`
+          absolute inset-0
+          ${highlight ? "bg-green-500 opacity-50" : ""}
+        `}
+      />
     </div>
   );
 }
 
-export function FastbooksInvoice() {
+export function FastbooksInvoice({ highlight }: { highlight?: boolean }) {
   return (
-    <div className="p-4 overflow-hidden max-w-xs mx-auto">
-      <div className="flex w-full justify-between">
-        <div>
-          <div className="font-medium text-base">Total Due</div>
-          <div className="text-2xl font-bold">$8,000</div>
+    <div className="p-4 overflow-hidden relative">
+      <div className="max-w-xs mx-auto">
+        <div className="flex w-full justify-between">
+          <div>
+            <div className="font-medium text-base">Total Due</div>
+            <div className="text-2xl font-bold">$8,000</div>
+          </div>
+          <div>
+            <div className="font-medium text-sm">Stankonia</div>
+            <div className="text-gray-300">102000</div>
+          </div>
         </div>
-        <div>
-          <div className="font-medium text-sm">Stankonia</div>
-          <div className="text-gray-300">102000</div>
+        <div className="flex w-full justify-between mt-6">
+          <div className="">
+            <div className="text-sm font-medium">Invoice Date</div>
+            <div className="text-gray-400">10/31/2000</div>
+          </div>
+          <div className="">
+            <div className="text-sm font-medium">Due Date</div>
+            <div className="text-gray-400">12/31/2000</div>
+          </div>
+        </div>
+        <div className="mt-6">
+          <div className="text-sm font-medium">Activity</div>
+          <div>
+            <ActivityItem activity="Created" date="10/28/2000" />
+            <ActivityItem activity="Sent" date="10/30/2000" />
+          </div>
         </div>
       </div>
-      <div className="flex w-full justify-between mt-6">
-        <div className="">
-          <div className="text-sm font-medium">Invoice Date</div>
-          <div className="text-gray-400">10/31/2000</div>
-        </div>
-        <div className="">
-          <div className="text-sm font-medium">Due Date</div>
-          <div className="text-gray-400">12/31/2000</div>
-        </div>
-      </div>
-      <div className="mt-6">
-        <div className="text-sm font-medium">Activity</div>
-        <div>
-          <ActivityItem activity="Created" date="10/28/2000" />
-          <ActivityItem activity="Sent" date="10/30/2000" />
-        </div>
-      </div>
+      <div
+        className={`
+          absolute inset-0
+          ${highlight ? "bg-purple-500 opacity-50" : ""}
+        `}
+      />
     </div>
   );
 }
