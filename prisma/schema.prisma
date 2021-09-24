@@ -33,6 +33,8 @@ model Doc {
   published    String?
   description  String?
   lang         String
+  hidden       Boolean @default(false)
+  toc          Boolean @default(true)
 
   // relations
   version   Version @relation(fields: [versionId], references: [fullVersionOrBranch], onDelete: Cascade)

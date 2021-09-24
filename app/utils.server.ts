@@ -4,6 +4,7 @@ import parseAttributes from "gray-matter";
 import { processMarkdown } from "@ryanflorence/md";
 import * as semver from "semver";
 import { prisma } from "./db.server";
+import { Attributes } from "./utils/process-docs.server";
 
 let where: "remote" | "local" =
   process.env.NODE_ENV === "production"
@@ -22,7 +23,7 @@ export interface MenuDir {
   files: MenuFile[];
   dirs?: MenuDir[];
   hasIndex: boolean;
-  attributes: { [key: string]: string };
+  attributes: Attributes;
 }
 
 export interface MenuFile {
@@ -37,7 +38,7 @@ export interface MenuFile {
    */
   path: string;
   title: string;
-  attributes: { [key: string]: string };
+  attributes: Attributes;
 }
 
 export type MenuItem = MenuDir | MenuFile;
@@ -372,11 +373,9 @@ async function getFileRemote(
   filename: string,
   version: VersionHead
 ): Promise<{
-  attributes: {
-    [key: string]: any;
-  };
+  attributes: Attributes;
   content: string;
-}> {
+} | null> {
   const doc = await prisma.doc.findFirst({
     where: {
       filePath: { equals: filename },
@@ -389,21 +388,19 @@ async function getFileRemote(
   });
 
   if (!doc) {
-    return {
-      attributes: {},
-      content: "",
-    };
+    return null;
   }
 
   return {
     attributes: {
       title: doc.title,
-      order: doc.order,
+      order: doc.order ?? undefined,
       disabled: doc.disabled,
       siblingLinks: doc.siblingLinks,
-      published: doc.published,
-      description: doc.description,
-      lang: doc.lang,
+      published: doc.published ?? undefined,
+      description: doc.description ?? undefined,
+      hidden: doc.hidden,
+      toc: doc.toc,
     },
     content: doc.html,
   };
@@ -413,16 +410,17 @@ async function getFileLocal(
   config: Config,
   fileName: string
 ): Promise<{
-  attributes: {
-    [key: string]: any;
-  };
+  attributes: Attributes;
   content: string;
 }> {
   let docsRoot = path.resolve(process.cwd(), config.localPath);
   let resolvedPath = path.join(docsRoot, fileName);
   let file = await fs.readFile(resolvedPath);
   let { data, content } = parseAttributes(file);
-  return { attributes: data, content };
+  return { attributes: data, content } as {
+    attributes: Attributes;
+    content: string;
+  };
 }
 
 // TODO: need to get the "root route path" into these links
@@ -458,12 +456,54 @@ async function getContentsRecursively(
     return parsed.base === "index.md";
   });
 
-  let { attributes, content } = hasIndexFile
-    ? await getAttributes(config, path.join(dirPath, `index.md`), version)
-    : { attributes: {}, content: "" };
+  let attributes: Attributes = {} as Attributes;
+  let content: string = "";
+
+  if (hasIndexFile) {
+    let parsed = await getAttributes(
+      config,
+      path.join(dirPath, `index.md`),
+      version
+    );
+    if (parsed) {
+      attributes = parsed.attributes;
+      content = parsed.content;
+    }
+  }
 
   let hasIndex = content.trim() !== "";
   let ext = `.md`;
+
+  let dirFiles = await Promise.all(
+    files
+      .filter((file) => !file.path.endsWith(`index${ext}`))
+      .map(async (file): Promise<MenuFile | null> => {
+        let parsed = await getAttributes(config, file.path, version);
+
+        if (!parsed) return null;
+
+        if (parsed.attributes.hidden) return null;
+
+        let parsedPath = path.parse(file.path);
+
+        let filePath = path.format({
+          ...parsedPath,
+          name: parsedPath.name === "index" ? undefined : parsedPath.name,
+          base: parsedPath.name === "index" ? undefined : parsedPath.name,
+          ext: undefined,
+        });
+
+        let linkPath = filePath.endsWith("/") ? filePath : filePath + "/";
+
+        return {
+          name: file.path,
+          path: linkPath,
+          type: "file",
+          attributes: parsed.attributes,
+          title: parsed.attributes.title,
+        };
+      })
+  );
 
   let dir: MenuDir = {
     type: "dir",
@@ -472,38 +512,9 @@ async function getContentsRecursively(
     hasIndex,
     attributes,
     title: attributes.title || dirName,
-    files: (
-      await Promise.all(
-        files
-          .filter((file) => !file.path.endsWith(`index${ext}`))
-          .map(async (file): Promise<MenuFile> => {
-            let { attributes } = await getAttributes(
-              config,
-              file.path,
-              version
-            );
-
-            let parsed = path.parse(file.path);
-
-            let filePath = path.format({
-              ...parsed,
-              name: parsed.name === "index" ? undefined : parsed.name,
-              base: parsed.name === "index" ? undefined : parsed.name,
-              ext: undefined,
-            });
-
-            let linkPath = filePath.endsWith("/") ? filePath : filePath + "/";
-
-            return {
-              name: file.path,
-              path: linkPath,
-              type: "file",
-              attributes,
-              title: attributes.title || path.basename(linkPath),
-            };
-          })
-      )
-    ).sort(sortByAttributes),
+    files: dirFiles
+      .filter((file): file is MenuFile => file !== null)
+      .sort(sortByAttributes),
   };
 
   let dirs = contents.filter((file) => file.type === "dir");
