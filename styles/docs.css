@@ -181,10 +181,10 @@ stylesheet targets.
 
   & li {
     word-wrap: break-all;
-    list-style-type: initial;
+    list-style-type: auto;
 
-    & > p {
-      @apply mt-4;
+    & > p:last-child {
+      @apply m-0;
     }
 
     & + li {
@@ -565,4 +565,22 @@ stylesheet targets.
   & hr {
     @apply p-0 my-6 mx-0 h-[1px] bg-[color:var(--base02)] border-0 overflow-visible;
   }
+}
+
+/* 🥚 */
+body::after {
+  top: 150px;
+  left: 2800px;
+  z-index: 990;
+  user-select: none;
+  pointer-events: none;
+  position: absolute;
+  content: "Whoa, what are you doing here?!";
+  font-weight: bold;
+  width: 174px;
+  height: 510px;
+  background-image: url("/whoa.png");
+  background-position: bottom center;
+  background-size: contain;
+  background-repeat: no-repeat;
 }

@@ -80,7 +80,7 @@ export let App: RouteComponent = () => {
         <div className="flex flex-col">
           <DocsSiteHeader className="w-full flex-shrink-0" />
           <div className="flex flex-col">
-            <SkipNavContent ref={skipNavRef} />
+            <SkipNavContent ref={skipNavRef} tabIndex={-1} />
             <Outlet />
           </div>
         </div>
@@ -95,7 +95,7 @@ export let App: RouteComponent = () => {
       <SiteHeader />
       <div className="flex flex-col min-h-screen">
         <div className="flex-auto">
-          <SkipNavContent ref={skipNavRef} />
+          <SkipNavContent ref={skipNavRef} tabIndex={-1} />
           <Outlet />
         </div>
       </div>

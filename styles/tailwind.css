@@ -79,6 +79,11 @@
   @apply font-semibold bg-[color:var(--base00)] z-20;
 }
 
+[data-reach-skip-nav-content]:focus {
+  outline: none !important;
+  box-shadow: unset !important;
+}
+
 body[data-nav-open] {
   @apply overflow-hidden;
 }
