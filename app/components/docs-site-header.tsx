@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useLocation } from "react-router-dom";
 import { useMatchScreen } from "~/hooks/match-media";
 import { Link } from "remix";
 import cx from "clsx";
@@ -13,8 +14,12 @@ import {
 import type { NavLinkProps } from "react-router-dom";
 
 const DocsSiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
+    let location = useLocation();
   let isMediumScreen = useMatchScreen("md");
-  let [navIsOpen, setNavIsOpen] = useHeaderNavState(false, isMediumScreen);
+  let [navIsOpen, setNavIsOpen] = useHeaderNavState(false, {
+    meetsScreenSizeThreshold: isMediumScreen,
+    location
+  });
   let headerRef = React.useRef<HTMLElement>(null);
   let navRef = React.useRef<HTMLElement>(null);
   useSetBodyHeaderAttributes();
@@ -55,18 +60,19 @@ const DocsSiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
         </button>
         <nav
           ref={navRef}
-          // TODO: Update styles to match mocks. This was just enough to get
-          // it working.
           className={cx(
             [
-              "fixed md:static",
-              "z-40 md:z-auto",
-              "h-full md:h-auto",
-              "w-[calc(100%-theme(spacing.14))] md:w-auto",
-              "p-8 md:p-0",
-              "overflow-y-scroll md:overflow-y-visible",
-              "bg-[color:var(--base00)] md:bg-transparent",
-              "inset-0 right-[theme(spacing.14)]",
+              "sm-down:top-[var(--site-header-height)]",
+              "sm-down:left-0 sm-down:right-0",
+              // 'w-full md:w-auto',
+              "sm-down:absolute",
+              "sm-down:h-[fit-content]",
+              "sm-down:max-h-[calc(100vh-var(--site-header-height)-env(safe-area-inset-bottom))]",
+              "sm-down:z-40",
+              "sm-down:p-6",
+              "sm-down:border-b sm-down:border-[color:var(--base02)]",
+              "sm-down:overflow-scroll",
+              "sm-down:bg-[color:var(--base00)]",
               "flex-none",
             ],
             {
@@ -77,7 +83,7 @@ const DocsSiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
           aria-label="Main navigation"
           id="main-site-nav"
         >
-          <ul className="md:flex md:space-x-8">
+          <ul className="md:flex sm-down:space-y-6 md:space-x-8 text-xl md:text-base">
             <li>
               <HeaderNavLink to="/docs/">Documentation</HeaderNavLink>
             </li>
