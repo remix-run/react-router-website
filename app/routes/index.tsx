@@ -126,9 +126,9 @@ const IndexPage: RouteComponent = () => {
 
       <div className="index__features">
         <div className="container">
-          <ScrollStage pages={3}>
+          <ScrollStage pages={4}>
             <div className="sticky top-1/3">
-              <Actor start={0} end={1 / 2}>
+              <Actor start={0} end={1 / 5}>
                 <BrowserChrome url="https://example.com/sales/invoices/102000">
                   <FastbooksApp>
                     <FastbooksSales>
@@ -140,12 +140,48 @@ const IndexPage: RouteComponent = () => {
                 </BrowserChrome>
               </Actor>
 
-              <Actor start={1 / 2} end={2}>
+              <Actor start={1 / 5} end={2 / 5}>
                 <BrowserChrome url="https://example.com/sales/invoices/102000">
                   <FastbooksApp highlight>
                     <FastbooksSales>
                       <FastbooksInvoices>
                         <FastbooksInvoice />
+                      </FastbooksInvoices>
+                    </FastbooksSales>
+                  </FastbooksApp>
+                </BrowserChrome>
+              </Actor>
+
+              <Actor start={2 / 5} end={3 / 5}>
+                <BrowserChrome url="https://example.com/sales/invoices/102000">
+                  <FastbooksApp>
+                    <FastbooksSales highlight>
+                      <FastbooksInvoices>
+                        <FastbooksInvoice />
+                      </FastbooksInvoices>
+                    </FastbooksSales>
+                  </FastbooksApp>
+                </BrowserChrome>
+              </Actor>
+
+              <Actor start={3 / 5} end={4 / 5}>
+                <BrowserChrome url="https://example.com/sales/invoices/102000">
+                  <FastbooksApp>
+                    <FastbooksSales>
+                      <FastbooksInvoices highlight>
+                        <FastbooksInvoice />
+                      </FastbooksInvoices>
+                    </FastbooksSales>
+                  </FastbooksApp>
+                </BrowserChrome>
+              </Actor>
+
+              <Actor start={4 / 5} end={2}>
+                <BrowserChrome url="https://example.com/sales/invoices/102000">
+                  <FastbooksApp>
+                    <FastbooksSales>
+                      <FastbooksInvoices>
+                        <FastbooksInvoice highlight />
                       </FastbooksInvoices>
                     </FastbooksSales>
                   </FastbooksApp>
