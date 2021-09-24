@@ -2,8 +2,19 @@ import parseAttributes from "gray-matter";
 import { processMarkdown } from "@ryanflorence/md";
 import type { Entry } from "./get-docs.server";
 
+export interface Attributes {
+  title: string;
+  order?: number;
+  disabled: boolean;
+  siblingLinks: boolean;
+  published?: string;
+  description?: string;
+  hidden: boolean;
+  toc: boolean;
+}
+
 async function processDoc(entry: Entry): Promise<{
-  attributes: { [key: string]: string };
+  attributes: Attributes;
   html: string;
   title: string;
   path: string;
@@ -22,7 +33,16 @@ async function processDoc(entry: Entry): Promise<{
   let lang = langMatch?.groups?.lang ?? "en";
 
   return {
-    attributes: data,
+    attributes: {
+      disabled: data.disabled ?? false,
+      toc: data.toc,
+      hidden: data.hidden ?? false,
+      siblingLinks: data.siblingLinks ?? false,
+      title: title,
+      order: data.order,
+      description: data.description,
+      published: data.published,
+    },
     html: html.toString(),
     title,
     path,
