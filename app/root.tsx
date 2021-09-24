@@ -14,6 +14,7 @@ import { DocsSiteFooter } from "./components/docs-site-footer";
 import { useScrollRestoration } from "./hooks/scroll-restoration";
 import tailwind from "./styles/tailwind.css";
 import global from "./styles/global.css";
+import { SkipNavLink, SkipNavContent } from "@reach/skip-nav";
 
 export let links: LinksFunction = () => {
   return [
@@ -62,19 +63,24 @@ const Document: React.FC<{
 
 export let App: RouteComponent = () => {
   let location = useLocation();
+  let pathname = location.pathname;
   let isDocsPage = React.useMemo(
-    () => location.pathname.startsWith("/docs/"),
-    [location]
+    () => pathname.startsWith("/docs/"),
+    [pathname]
   );
+  let skipNavRef = React.useRef<HTMLDivElement | null>(null);
 
   useScrollRestoration();
+  useRouteChangeFocusAndLiveRegionUpdates({ location, focusRef: skipNavRef });
 
   if (isDocsPage) {
     return (
       <Document>
+        <SkipNavLink />
         <div className="flex flex-col">
           <DocsSiteHeader className="w-full flex-shrink-0" />
           <div className="flex flex-col">
+            <SkipNavContent ref={skipNavRef} />
             <Outlet />
           </div>
         </div>
@@ -85,9 +91,11 @@ export let App: RouteComponent = () => {
 
   return (
     <Document forceDarkMode>
+      <SkipNavLink />
       <SiteHeader />
       <div className="flex flex-col min-h-screen">
         <div className="flex-auto">
+          <SkipNavContent ref={skipNavRef} />
           <Outlet />
         </div>
       </div>
@@ -118,3 +126,41 @@ export let ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 // export function unstable_shouldReload() {
 //   return false;
 // }
+
+function useRouteChangeFocusAndLiveRegionUpdates({
+  location,
+  focusRef,
+}: {
+  location: ReturnType<typeof useLocation>;
+  focusRef: React.RefObject<null | undefined | HTMLElement>;
+}) {
+  let pathname = location.pathname;
+  let liveRegionRef = React.useRef<HTMLDivElement | null>(null);
+  React.useEffect(() => {
+    liveRegionRef.current = document.createElement("div");
+    liveRegionRef.current.setAttribute("role", "status");
+    liveRegionRef.current.classList.add("sr-only");
+    liveRegionRef.current.id = "route-change-region";
+    document.body.appendChild(liveRegionRef.current);
+  }, []);
+
+  let firstRenderRef = React.useRef(true);
+  React.useEffect(() => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
+
+    if (focusRef.current) {
+      focusRef.current.focus();
+    }
+
+    if (liveRegionRef.current) {
+      let pageTitle =
+        pathname === "/"
+          ? "Home page"
+          : document.title.replace("React Router | ", "");
+      liveRegionRef.current.textContent = pageTitle;
+    }
+  }, [pathname]);
+}

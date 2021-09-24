@@ -227,7 +227,7 @@ function HeaderNavLink({ to, className, ...props }: NavLinkProps) {
         cx(
           "font-medium",
           args.isActive
-            ? "text-blue-500 hover:text-blue-400 opacity-100"
+            ? "opacity-100"
             : "text-[color:var(--base07)] hover:text-[color:var(--base07)] opacity-80 hover:opacity-100",
           typeof className === "function" ? className(args) : className
         )

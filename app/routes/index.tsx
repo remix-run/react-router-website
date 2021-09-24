@@ -1,15 +1,6 @@
 import * as React from "react";
-import {
-  Form,
-  useSubmit,
-  useTransition,
-  useActionData,
-  useLoaderData,
-  redirect,
-} from "remix";
-import { useLocation } from "react-router-dom";
+import { Form, useTransition, useActionData } from "remix";
 import cx from "clsx";
-import { VisuallyHidden } from "@reach/visually-hidden";
 import { Section, Heading } from "~/components/section-heading";
 import { Button, ButtonLink, ButtonDiv } from "~/components/button";
 import { Link, ArrowLink } from "~/components/link";
@@ -279,7 +270,7 @@ const IndexPage: RouteComponent = () => {
                 }}
               >
                 <label className="contents">
-                  <VisuallyHidden>Email address</VisuallyHidden>
+                  <span className="sr-only">Email address</span>
                   <Field
                     type="email"
                     name="email"

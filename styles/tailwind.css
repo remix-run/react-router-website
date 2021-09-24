@@ -1,3 +1,4 @@
+@import "@reach/skip-nav/styles.css";
 @import "./colors.css";
 @tailwind base;
 @tailwind components;
@@ -68,6 +69,14 @@
       --base0F: var(--color-amber-400);
     }
   }
+}
+
+[data-reach-skip-nav-link] {
+  transition: none !important;
+}
+
+[data-reach-skip-nav-link]:focus {
+  @apply font-semibold bg-[color:var(--base00)] z-20;
 }
 
 body[data-nav-open] {
@@ -201,4 +210,32 @@ a:hover {
   @apply outline-none;
   @apply ring-2;
   @apply ring-blue-500;
+}
+
+:where(:root[data-force-dark]) {
+  & a {
+    @apply text-blue-300;
+  }
+
+  & a:hover {
+    @apply text-blue-200;
+  }
+
+  & :focus {
+    @apply ring-blue-300;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  a {
+    @apply text-blue-300;
+  }
+
+  a:hover {
+    @apply text-blue-200;
+  }
+
+  :focus {
+    @apply ring-blue-300;
+  }
 }

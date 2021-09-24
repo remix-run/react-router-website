@@ -18,7 +18,6 @@
     "@prisma/client": "2.30.3",
     "@reach/rect": "^0.16.0",
     "@reach/skip-nav": "0.16.0",
-    "@reach/visually-hidden": "0.16.0",
     "@remix-run/node": "0.0.0-experimental-2e859e2",
     "@remix-run/react": "0.0.0-experimental-2e859e2",
     "@remix-run/serve": "0.0.0-experimental-2e859e2",
