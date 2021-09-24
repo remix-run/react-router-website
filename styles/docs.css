@@ -151,6 +151,14 @@ stylesheet targets.
   /*****************************************************************************/
   /* lists */
 
+  & ol {
+    list-style: decimal;
+  }
+
+  & ul {
+    list-style: disc;
+  }
+
   & ol,
   & ul {
     @apply pl-8 my-0 mb-4;
@@ -161,11 +169,23 @@ stylesheet targets.
     list-style-type: lower-roman;
   }
 
+  & ol ul,
+  & ul ul {
+    list-style-type: circle;
+  }
+
   & ol ol ol,
   & ol ul ol,
   & ul ol ol,
   & ul ul ol {
     list-style-type: lower-alpha;
+  }
+
+  & ol ol ul,
+  & ol ul ul,
+  & ul ol ul,
+  & ul ul ul {
+    list-style-type: square;
   }
 
   & dd {
@@ -181,10 +201,13 @@ stylesheet targets.
 
   & li {
     word-wrap: break-all;
-    list-style-type: auto;
 
-    & > p:last-child {
+    & > p {
       @apply m-0;
+    }
+
+    & > p + p {
+      @apply mt-4;
     }
 
     & + li {
