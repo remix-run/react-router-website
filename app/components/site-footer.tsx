@@ -94,7 +94,7 @@ const SiteFooter: React.VFC<{ className?: string }> = ({ className }) => {
         <div>
           <ul className="flex items-center space-x-6">
             <li>
-              <Link to="https://github.com/remix-run/react-router">
+              <Link to="https://github.com/remix-run/react-router" className="block text-[color:var(--base05)] hover:text-[color:var(--base07)]">
                 <span className="sr-only">GitHub</span>
                 <svg className="w-10 h-10">
                   <use href={`${githubLogoUrl}#github`} />
@@ -102,7 +102,7 @@ const SiteFooter: React.VFC<{ className?: string }> = ({ className }) => {
               </Link>
             </li>
             <li>
-              <Link to="https://twitter.com/remix-run">
+              <Link to="https://twitter.com/remix-run" className="block text-[color:var(--base05)] hover:text-[color:var(--base07)]">
                 <span className="sr-only">Twitter</span>
                 <svg className="w-10 h-10">
                   <use href={`${twitterLogoUrl}#twitter`} />
