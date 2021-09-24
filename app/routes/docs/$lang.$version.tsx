@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import cx from "clsx";
 import { DataOutlet } from "~/components/data-outlet";
 import { getMenu, getVersions, MenuDir, VersionHead } from "~/utils.server";
-import { addTrailingSlash } from "~/utils/with-trailing-slash";
+
 import { time } from "~/utils/time";
 import {
   createMenuMap,
@@ -20,32 +20,30 @@ interface DocsRouteData {
   version: VersionHead;
 }
 
-export let loader: LoaderFunction = ({ context, request }) => {
-  return addTrailingSlash(request)(async () => {
-    try {
-      let [versionsMS, allVersions] = await time(() => getVersions());
-      let heads = allVersions.filter((v) => v.isLatest);
-      let [latest] = heads;
+export let loader: LoaderFunction = async ({ context }) => {
+  try {
+    let [versionsMS, allVersions] = await time(() => getVersions());
+    let heads = allVersions.filter((v) => v.isLatest);
+    let [latest] = heads;
 
-      let [menuMS, menu] = await time(() => getMenu(context.docs, latest));
+    let [menuMS, menu] = await time(() => getMenu(context.docs, latest));
 
-      let data: DocsRouteData = {
-        menu,
-        version: latest,
-        versions: heads,
-      };
+    let data: DocsRouteData = {
+      menu,
+      version: latest,
+      versions: heads,
+    };
 
-      return json(data, {
-        headers: {
-          "Cache-Control": "max-age=60",
-          "Server-Timing": `versions;dur=${versionsMS}, menu;dur=${menuMS}`,
-        },
-      });
-    } catch (error: unknown) {
-      console.error(error);
-      return json({ notFound: true }, { status: 404 });
-    }
-  });
+    return json(data, {
+      headers: {
+        "Cache-Control": "max-age=60",
+        "Server-Timing": `versions;dur=${versionsMS}, menu;dur=${menuMS}`,
+      },
+    });
+  } catch (error: unknown) {
+    console.error(error);
+    return json({ notFound: true }, { status: 404 });
+  }
 };
 
 export function links() {
@@ -81,12 +79,12 @@ export default function DocsLayout() {
               versions={versions}
               version={version}
             />
-            <Menu menu={menu} className="font-medium text-base py-6" />
+            <Menu menu={menu} className="py-6 text-base font-medium" />
           </div>
         </details>
         <hr className="mb-4" />
       </div>
-      <div className="hidden lg:block flex-shrink-0">
+      <div className="flex-shrink-0 hidden lg:block">
         <div
           className={cx([
             // Sidebar nav scroll container

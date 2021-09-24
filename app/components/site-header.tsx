@@ -12,11 +12,11 @@ import type { NavLinkProps } from "react-router-dom";
 const NAV_ITEMS = [
   {
     label: "Documentation",
-    to: "/docs/",
+    to: "/docs",
   },
   {
     label: "Resources",
-    to: "/resources/",
+    to: "/resources",
   },
   {
     label: "GitHub",
@@ -61,7 +61,7 @@ const SiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
         "md:static md:z-[initial]",
       ])}
     >
-      <div className="flex items-center justify-between container sm-down:max-w-none">
+      <div className="container flex items-center justify-between sm-down:max-w-none">
         <Link
           to="/"
           className="flex items-center space-x-4 text-[color:var(--base07)] hover:text-[color:var(--base07)]"
@@ -109,7 +109,7 @@ const SiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
           aria-label="Main navigation"
           id="main-site-nav"
         >
-          <ul className="md:flex sm-down:space-y-6 md:space-x-8 text-xl md:text-base">
+          <ul className="text-xl md:flex sm-down:space-y-6 md:space-x-8 md:text-base">
             {NAV_ITEMS.map((item) => {
               return (
                 <li key={item.label}>

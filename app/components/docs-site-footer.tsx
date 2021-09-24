@@ -59,7 +59,7 @@ const DocsSiteFooter: React.VFC<{ className?: string }> = ({ className }) => {
           >
             <li>
               <Link
-                to="/docs/"
+                to="/docs"
                 className="text-[color:var(--base07)] block py-4 md:py-0"
               >
                 Documentation
@@ -67,7 +67,7 @@ const DocsSiteFooter: React.VFC<{ className?: string }> = ({ className }) => {
             </li>
             <li>
               <Link
-                to="/resources/"
+                to="/resources"
                 className="text-[color:var(--base07)] block py-4 md:py-0"
               >
                 Resources
