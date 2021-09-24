@@ -537,7 +537,7 @@ async function getContentsRecursively(
 function sortByAttributes(a: MenuItem, b: MenuItem) {
   if (a.attributes.order && !b.attributes.order) return -1;
   if (a.attributes.order && b.attributes.order) {
-    return parseInt(a.attributes.order) - parseInt(b.attributes.order);
+    return a.attributes.order - b.attributes.order;
   }
 
   if (a.attributes.published && b.attributes.published) {
