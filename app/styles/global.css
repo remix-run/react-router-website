@@ -61,11 +61,11 @@
   font-style: normal;
 }
 
-html,
+/* html,
 body {
   height: 100%;
   overflow-x: hidden;
-}
+} */
 
 details summary {
   cursor: pointer;
