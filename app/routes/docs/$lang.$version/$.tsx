@@ -24,9 +24,7 @@ let loader: LoaderFunction = async ({ params, context }) => {
     };
 
     let lang = params.lang;
-    let slugParam = params["*"];
-    // get rid of the trailing `/`
-    let slug = slugParam.replace(/\/$/, "");
+    let slug = params["*"];
     let ext = path.extname(slug);
 
     if (ext) {

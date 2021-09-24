@@ -46,7 +46,7 @@ const PreviousLink: React.VFC = () => {
 
   return (
     <div className="w-12 h-12">
-      <Link to={prevDoc.path + "/"}>
+      <Link to={prevDoc.path}>
         <span className="sr-only">Next up! {prevDoc.title}</span>
         <svg
           viewBox="0 0 48 48"
@@ -82,7 +82,7 @@ const NextLink: React.VFC = () => {
 
   return (
     <div className="w-12 h-12">
-      <Link to={nextDoc.path + "/"}>
+      <Link to={nextDoc.path}>
         <span className="sr-only">Next up! {nextDoc.title}</span>
         <svg
           viewBox="0 0 48 48"
@@ -141,7 +141,7 @@ const Page: React.VFC = () => {
   return (
     <React.Fragment>
       <SiblingLinks doc={doc} />
-      <h1 className="markdown-title mb-8 text-4xl font-display">{doc.title}</h1>
+      <h1 className="mb-8 text-4xl markdown-title font-display">{doc.title}</h1>
       <div
         ref={ref}
         className={cx("markdown", {

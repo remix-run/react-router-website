@@ -493,11 +493,9 @@ async function getContentsRecursively(
           ext: undefined,
         });
 
-        let linkPath = filePath.endsWith("/") ? filePath : filePath + "/";
-
         return {
           name: file.path,
-          path: linkPath,
+          path: filePath,
           type: "file",
           attributes: parsed.attributes,
           title: parsed.attributes.title,
