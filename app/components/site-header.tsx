@@ -9,6 +9,25 @@ import { NavLink } from "~/components/link";
 // import type { MenuDir, VersionHead } from "~/utils.server";
 import type { NavLinkProps } from "react-router-dom";
 
+const NAV_ITEMS = [
+  {
+    label: "Documentation",
+    to: "/docs/",
+  },
+  {
+    label: "Resources",
+    to: "/resources/",
+  },
+  {
+    label: "GitHub",
+    to: "https://github.com/remix-run/react-router",
+  },
+  {
+    label: "npm",
+    to: "https://npm.im/react-router",
+  },
+];
+
 const SiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
   let location = useLocation();
   let isMediumScreen = useMatchScreen("md");
@@ -18,6 +37,14 @@ const SiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
   });
   let headerRef = React.useRef<HTMLElement>(null);
   let navRef = React.useRef<HTMLElement>(null);
+  let handleNavBlur = useCrappyFocusLock({
+    enabled: isMediumScreen ? false : navIsOpen,
+    containerRef: navRef,
+    onBlur: () => {
+      setNavIsOpen(false);
+    },
+  });
+
   useSetBodyHeaderAttributes();
   useSetHeaderHeight(headerRef);
 
@@ -57,6 +84,8 @@ const SiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
         </button>
         <nav
           ref={navRef}
+          onBlur={handleNavBlur}
+          tabIndex={isMediumScreen ? undefined : -1}
           className={cx(
             [
               "sm-down:top-[var(--site-header-height)]",
@@ -81,22 +110,13 @@ const SiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
           id="main-site-nav"
         >
           <ul className="md:flex sm-down:space-y-6 md:space-x-8 text-xl md:text-base">
-            <li>
-              <HeaderNavLink to="/docs/">Documentation</HeaderNavLink>
-            </li>
-            <li>
-              <HeaderNavLink to="/resources/">Resources</HeaderNavLink>
-            </li>
-            <li>
-              <HeaderNavLink to="https://github.com/remix-run/react-router">
-                GitHub
-              </HeaderNavLink>
-            </li>
-            <li>
-              <HeaderNavLink to="https://npm.im/react-router">
-                NPM
-              </HeaderNavLink>
-            </li>
+            {NAV_ITEMS.map((item) => {
+              return (
+                <li key={item.label}>
+                  <HeaderNavLink to={item.to}>{item.label}</HeaderNavLink>
+                </li>
+              );
+            })}
           </ul>
         </nav>
       </div>
@@ -212,20 +232,6 @@ export function useHeaderNavState(
     setNavIsOpen(false);
   }, [location]);
 
-  React.useEffect(() => {
-    if (navIsOpen) {
-      let listener = (event: KeyboardEvent) => {
-        if (event.key === "Escape") {
-          setNavIsOpen(false);
-        }
-      };
-      window.addEventListener("keydown", listener);
-      return () => {
-        window.removeEventListener("keydown", listener);
-      };
-    }
-  }, [navIsOpen]);
-
   return [navIsOpen, setNavIsOpen] as const;
 }
 
@@ -245,4 +251,91 @@ function HeaderNavLink({ to, className, ...props }: NavLinkProps) {
       }
     />
   );
+}
+
+export function useCrappyFocusLock(props: {
+  enabled: boolean;
+  containerRef: React.RefObject<HTMLElement | null | undefined>;
+  onBlur(event: React.FocusEvent): void;
+}) {
+  let { enabled: shouldLockFocus, containerRef, onBlur } = props;
+
+  let lastFocusedRef = React.useRef<HTMLElement | null>(null);
+
+  let firstRenderRef = React.useRef(true);
+  React.useEffect(() => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
+    if (shouldLockFocus) {
+      lastFocusedRef.current = document.activeElement as HTMLElement;
+      let firstAnchor =
+        containerRef.current?.querySelector<HTMLAnchorElement>(
+          "li:first-child a"
+        );
+      (firstAnchor || containerRef.current)?.focus();
+    }
+  }, [shouldLockFocus]);
+
+  let isEscapeKeyPressed = React.useRef(false);
+  let isShiftKeyPressed = React.useRef(false);
+  React.useEffect(() => {
+    if (!shouldLockFocus) {
+      return;
+    }
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.shiftKey) {
+        isShiftKeyPressed.current = true;
+      }
+
+      if (event.key === "Escape") {
+        isShiftKeyPressed.current = false;
+        isEscapeKeyPressed.current = true;
+        (document.activeElement as HTMLElement)?.blur();
+      } else {
+        isEscapeKeyPressed.current = false;
+      }
+    }
+
+    function handleKeyUp(event: KeyboardEvent) {
+      if (event.shiftKey) {
+        isShiftKeyPressed.current = false;
+        isEscapeKeyPressed.current = false;
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [shouldLockFocus]);
+
+  function handleBlur(event: React.FocusEvent<HTMLElement>) {
+    if (!shouldLockFocus || !containerRef.current) {
+      return;
+    }
+
+    let firstAnchor =
+      containerRef.current.querySelector<HTMLAnchorElement>("li:first-child a");
+    let lastAnchor =
+      containerRef.current.querySelector<HTMLAnchorElement>("li:last-child a");
+
+    if (isEscapeKeyPressed.current) {
+      onBlur(event);
+      lastFocusedRef.current?.focus();
+    } else if (!isShiftKeyPressed.current && event.target === lastAnchor) {
+      firstAnchor?.focus();
+    } else if (isShiftKeyPressed.current && event.target === firstAnchor) {
+      lastAnchor?.focus();
+    } else if (
+      !containerRef.current.contains(event.relatedTarget as HTMLElement)
+    ) {
+      onBlur(event);
+      lastFocusedRef.current?.focus();
+    }
+  }
+
+  return handleBlur;
 }

@@ -10,18 +10,45 @@ import {
   useHeaderNavState,
   useSetBodyHeaderAttributes,
   useSetHeaderHeight,
+  useCrappyFocusLock,
 } from "~/components/site-header";
 import type { NavLinkProps } from "react-router-dom";
 
+const NAV_ITEMS = [
+  {
+    label: "Documentation",
+    to: "/docs/",
+  },
+  {
+    label: "Resources",
+    to: "/resources/",
+  },
+  {
+    label: "GitHub",
+    to: "https://github.com/remix-run/react-router",
+  },
+  {
+    label: "npm",
+    to: "https://npm.im/react-router",
+  },
+];
+
 const DocsSiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
-    let location = useLocation();
+  let location = useLocation();
   let isMediumScreen = useMatchScreen("md");
   let [navIsOpen, setNavIsOpen] = useHeaderNavState(false, {
     meetsScreenSizeThreshold: isMediumScreen,
-    location
+    location,
   });
   let headerRef = React.useRef<HTMLElement>(null);
   let navRef = React.useRef<HTMLElement>(null);
+  let handleNavBlur = useCrappyFocusLock({
+    enabled: isMediumScreen ? false : navIsOpen,
+    containerRef: navRef,
+    onBlur: () => {
+      setNavIsOpen(false);
+    },
+  });
   useSetBodyHeaderAttributes();
   useSetHeaderHeight(headerRef);
 
@@ -60,6 +87,8 @@ const DocsSiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
         </button>
         <nav
           ref={navRef}
+          onBlur={handleNavBlur}
+          tabIndex={isMediumScreen ? undefined : -1}
           className={cx(
             [
               "sm-down:top-[var(--site-header-height)]",
@@ -84,22 +113,13 @@ const DocsSiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
           id="main-site-nav"
         >
           <ul className="md:flex sm-down:space-y-6 md:space-x-8 text-xl md:text-base">
-            <li>
-              <HeaderNavLink to="/docs/">Documentation</HeaderNavLink>
-            </li>
-            <li>
-              <HeaderNavLink to="/resources/">Resources</HeaderNavLink>
-            </li>
-            <li>
-              <HeaderNavLink to="https://github.com/remix-run/react-router">
-                GitHub
-              </HeaderNavLink>
-            </li>
-            <li>
-              <HeaderNavLink to="https://npm.im/react-router">
-                NPM
-              </HeaderNavLink>
-            </li>
+            {NAV_ITEMS.map((item) => {
+              return (
+                <li key={item.label}>
+                  <HeaderNavLink to={item.to}>{item.label}</HeaderNavLink>
+                </li>
+              );
+            })}
           </ul>
         </nav>
       </div>
