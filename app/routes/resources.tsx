@@ -32,11 +32,11 @@ const ResourcesPage: RouteComponent = () => {
               max-w-xl
             `}
           >
-            <h1 className="title mb-7">Resources for Developers</h1>
+            <h1 className="title mb-7">Built by Remix</h1>
             <p className="opacity-80 text-lg leading-8 md:text-xl">
-              React Router is built and maintained by our community of
-              like-minded developers. We have over 2.4 million contributors and
-              active moderators to help you implement your code.
+              React Router is built and maintained by the{" "}
+              <a href="https://remix.run">Remix</a> team. You can follow React
+              Router development by following our resources around the web.
             </p>
             <div
               className={`
@@ -46,11 +46,15 @@ const ResourcesPage: RouteComponent = () => {
                 mt-7
               `}
             >
-              <ButtonLink size="large" to="/" className="mb-4 md:mb-0 md:mr-6">
-                Visit GitHub Project
+              <ButtonLink
+                size="large"
+                to="https://github.com/remix-run/react-router"
+                className="mb-4 md:mb-0 md:mr-6"
+              >
+                Visit GitHub Repo
               </ButtonLink>
-              <ButtonLink size="large" to="/">
-                Join Discord Channel
+              <ButtonLink size="large" to="https://discord.gg/VBePs6d">
+                Join Remix Discord
               </ButtonLink>
             </div>
           </div>
@@ -61,12 +65,16 @@ const ResourcesPage: RouteComponent = () => {
         <div className="resources__links">
           <div className="container">
             <Section as="section">
-              <SectionHeader
-                heading="Around the Web"
-                content={`Follow the Remix team for the latest updates on our React tools
-                and applications`}
+              {/* <SectionHeader
+                heading="Built by Remix"
+                content={
+                  <div>
+                    React Router is built by the{" "}
+                    <a href="https://remix.run">Remix</a> team. 
+                  </div>
+                }
                 className="mb-10 md:mb-14"
-              />
+              /> */}
               <dl className="grid grid-cols-1 grid-flow-row sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
                   {
@@ -124,7 +132,7 @@ const ResourcesPage: RouteComponent = () => {
           </div>
         </div>
 
-        <div className="resources__projects">
+        {/* <div className="resources__projects">
           <div className="container">
             <Section as="section">
               <SectionHeader
@@ -181,14 +189,14 @@ const ResourcesPage: RouteComponent = () => {
               </Section>
             </Section>
           </div>
-        </div>
+        </div> */}
 
         <div className="resources__versions">
           <div className="container">
             <Section as="section">
               <SectionHeader
-                heading="Version Downloads"
-                content={`Free and open-source code for developers to use`}
+                heading="Major Releases"
+                content={`We maintain the following major releases of React Router`}
                 className="mb-16 md:mb-28"
               />
               <Section as="div" className="flex flex-col max-w-xl mx-auto">
@@ -196,21 +204,24 @@ const ResourcesPage: RouteComponent = () => {
                   // TODO: Get versions from releases
                   {
                     heading: "React Router v6",
-                    date: "September 2020",
-                    docs: "/",
-                    githubLink: "/",
+                    date: "September 2021",
+                    docs: "/docs",
+                    githubLink:
+                      "https://github.com/remix-run/react-router/releases/tag/v6.0.0",
                   },
                   {
                     heading: "React Router v5",
                     date: "September 2021",
-                    docs: "/",
-                    githubLink: "/",
+                    docs: "https://v5.reactrouter.com",
+                    githubLink:
+                      "https://github.com/remix-run/react-router/releases/tag/v5.3.0",
                   },
                   {
-                    heading: "React Router v4",
-                    date: "September 2021",
-                    docs: "/",
-                    githubLink: "/",
+                    heading: "React Router v3",
+                    date: "February 2019",
+                    docs: "https://github.com/remix-run/react-router/tree/v3.2.6/docs",
+                    githubLink:
+                      "https://github.com/remix-run/react-router/releases/tag/v3.2.6",
                   },
                 ].map((release, i, arr) => {
                   return (

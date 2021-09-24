@@ -41,9 +41,9 @@ const IndexPage: RouteComponent = () => {
         <div className="container">
           <div className="text-center mx-auto my-24 md:my-32 lg:mt-36 max-w-xl">
             <h1 className="title mb-7">
-              Learn Once.
+              React Router
               <br />
-              Route Anywhere.
+              v6 is Here
             </h1>
             <p className="opacity-80 text-lg leading-8 md:text-xl">
               Components are the heart of React's powerful programming model.
@@ -51,11 +51,18 @@ const IndexPage: RouteComponent = () => {
               compose declaratively with your application.
             </p>
             <div className="flex flex-col md:flex-row items-center justify-center flex-shrink-0 flex-wrap mt-7">
-              <ButtonLink size="large" to="/" className="mb-4 md:mb-0 md:mr-6">
-                React Router for Web
+              <ButtonLink
+                size="large"
+                to="/docs"
+                className="mb-4 md:mb-0 md:mr-6"
+              >
+                Read the Docs
               </ButtonLink>
-              <ButtonLink size="large" to="/">
-                React Router for Native
+              <ButtonLink
+                size="large"
+                to="/docs/en/v6/getting-started/tutorial/"
+              >
+                Do the Tutorial
               </ButtonLink>
             </div>
           </div>
@@ -190,74 +197,76 @@ const IndexPage: RouteComponent = () => {
             </div>
           </ScrollStage>
 
-          {[
-            {
-              heading: "Navigation Routes",
-              content: `This is copy about Navigation Routes that will explain how
+          <div className="hidden">
+            {[
+              {
+                heading: "Navigation Routes",
+                content: `This is copy about Navigation Routes that will explain how
             React Router can help devs create one and why it’s better than
             building without it.`,
-              link: "/",
-              color: "blue",
-              icon: <IconNavigation color="white" />,
-            },
-            {
-              heading: "Protected Routes",
-              content: `This is copy about Protected Routes that will explain how React Router can help devs create one and why it’s better than building without it.`,
-              link: "/",
-              color: "green",
-              icon: <IconProtection color="white" />,
-            },
-            {
-              heading: "Nested Routes",
-              content: `This is copy about Nested Routes that will explain how React Router can help devs create one and why it’s better than building without it.`,
-              link: "/",
-              color: "red",
-              icon: <IconLayers color="white" />,
-            },
-          ].map((section) => {
-            return (
-              <Section
-                key={section.heading}
-                wrap
-                className="my-56 md:my-72 lg:my-80"
-              >
-                <div className="md:max-w-[494px]">
-                  <div
-                    className={cx(
-                      "rounded-lg w-12 h-12 flex items-center justify-center flex-grow-0 flex-shrink-0 mb-6 md:mb-8",
-                      {
-                        "bg-blue-500": section.color === "blue",
-                        "bg-green-500": section.color === "green",
-                        "bg-red-500": section.color === "red",
-                      }
-                    )}
-                  >
-                    {section.icon}
+                link: "/",
+                color: "blue",
+                icon: <IconNavigation color="white" />,
+              },
+              {
+                heading: "Protected Routes",
+                content: `This is copy about Protected Routes that will explain how React Router can help devs create one and why it’s better than building without it.`,
+                link: "/",
+                color: "green",
+                icon: <IconProtection color="white" />,
+              },
+              {
+                heading: "Nested Routes",
+                content: `This is copy about Nested Routes that will explain how React Router can help devs create one and why it’s better than building without it.`,
+                link: "/",
+                color: "red",
+                icon: <IconLayers color="white" />,
+              },
+            ].map((section) => {
+              return (
+                <Section
+                  key={section.heading}
+                  wrap
+                  className="my-56 md:my-72 lg:my-80"
+                >
+                  <div className="md:max-w-[494px]">
+                    <div
+                      className={cx(
+                        "rounded-lg w-12 h-12 flex items-center justify-center flex-grow-0 flex-shrink-0 mb-6 md:mb-8",
+                        {
+                          "bg-blue-500": section.color === "blue",
+                          "bg-green-500": section.color === "green",
+                          "bg-red-500": section.color === "red",
+                        }
+                      )}
+                    >
+                      {section.icon}
+                    </div>
+                    <Heading className="mb-1">{section.heading}</Heading>
+                    <p className="text-lg md:text-xl mb-6 opacity-80">
+                      {section.content}
+                    </p>
+                    <ArrowLink
+                      to={section.link}
+                      className={cx(
+                        "text-lg md:text-xl inline-flex items-center font-semibold outline-none focus:ring-2 focus:ring-opacity-60 focus:ring-offset-4 focus:ring-offset-black focus:ring-current",
+                        {
+                          "text-blue-500": section.color === "blue",
+                          "hover:text-blue-400": section.color === "blue",
+                          "text-green-500": section.color === "green",
+                          "hover:text-green-400": section.color === "green",
+                          "text-red-500": section.color === "red",
+                          "hover:text-red-400": section.color === "red",
+                        }
+                      )}
+                    >
+                      Learn More
+                    </ArrowLink>
                   </div>
-                  <Heading className="mb-1">{section.heading}</Heading>
-                  <p className="text-lg md:text-xl mb-6 opacity-80">
-                    {section.content}
-                  </p>
-                  <ArrowLink
-                    to={section.link}
-                    className={cx(
-                      "text-lg md:text-xl inline-flex items-center font-semibold outline-none focus:ring-2 focus:ring-opacity-60 focus:ring-offset-4 focus:ring-offset-black focus:ring-current",
-                      {
-                        "text-blue-500": section.color === "blue",
-                        "hover:text-blue-400": section.color === "blue",
-                        "text-green-500": section.color === "green",
-                        "hover:text-green-400": section.color === "green",
-                        "text-red-500": section.color === "red",
-                        "hover:text-red-400": section.color === "red",
-                      }
-                    )}
-                  >
-                    Learn More
-                  </ArrowLink>
-                </div>
-              </Section>
-            );
-          })}
+                </Section>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -282,17 +291,17 @@ const IndexPage: RouteComponent = () => {
                 },
                 {
                   title: "Contributors",
-                  desc: "656",
-                  tooltip: "656 contributors",
-                },
-                {
-                  title: "Stable Release",
-                  desc: "v6",
-                  tooltip: "Stable Release: v6",
+                  desc: "600+",
+                  tooltip: "Over 656 contributors",
                 },
                 {
                   title: "npm Downloads",
                   desc: "3.6m",
+                  tooltip: "3.6 million npm downloads",
+                },
+                {
+                  title: "of React Apps",
+                  desc: "70%",
                   tooltip: "3.6 million npm downloads",
                 },
               ].map((stat, i, arr) => {
