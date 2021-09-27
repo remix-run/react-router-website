@@ -207,7 +207,7 @@ async function getDocRemote(
   });
 
   if (!doc) {
-    console.log(`NO DOC FOUND FOR "${filePath}"`, { lang, version });
+    console.error(`NO DOC FOUND FOR "${filePath}"`, { lang, version });
     return null;
   }
 

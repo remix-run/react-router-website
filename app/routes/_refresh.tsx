@@ -33,7 +33,7 @@ const action: ActionFunction = async ({ request }) => {
     );
 
     results.forEach((result) => {
-      console.log(result);
+      console.info(result);
     });
 
     return redirect(request.url);

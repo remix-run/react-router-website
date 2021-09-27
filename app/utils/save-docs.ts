@@ -102,7 +102,7 @@ async function saveDocs(ref: string, config: Config, releaseNotes: string) {
       },
     });
 
-    console.log(`Updated release for version: ${result.fullVersionOrBranch}`);
+    console.info(`Updated release for version: ${result.fullVersionOrBranch}`);
     return result;
   } else {
     const result = await prisma.version.create({
@@ -129,7 +129,7 @@ async function saveDocs(ref: string, config: Config, releaseNotes: string) {
       },
     });
 
-    console.log(`Created release for version: ${result.fullVersionOrBranch}`);
+    console.info(`Created release for version: ${result.fullVersionOrBranch}`);
 
     return result;
   }
