@@ -16,6 +16,8 @@ model Version {
   fullVersionOrBranch String @id
   // versionHeadOrBranch v0.17, v6
   versionHeadOrBranch String
+  // markdown process release notes
+  releaseNotes        String
 
   // relations
   docs Doc[]

@@ -4,12 +4,13 @@ import { prisma } from "~/db.server";
 import { findMatchingEntries, getPackage } from "./get-docs.server";
 import { processDocs } from "./process-docs.server";
 import type { Config } from "~/utils.server";
+import { processMarkdown } from "@ryanflorence/md";
 
 /**
  * ref: /refs/tags/v6.0.0-beta.1
  * ref: /refs/heads/dev
  */
-async function saveDocs(ref: string, config: Config) {
+async function saveDocs(ref: string, config: Config, releaseNotes: string) {
   let version = ref.replace(/^\/refs\/tags\//, "");
 
   let tag = coerce(ref);
@@ -108,6 +109,7 @@ async function saveDocs(ref: string, config: Config) {
       data: {
         fullVersionOrBranch: version,
         versionHeadOrBranch: info,
+        releaseNotes: await processMarkdown(releaseNotes),
         docs: {
           create: entriesWithProcessedMD.map((entry) => ({
             filePath: entry.path,
