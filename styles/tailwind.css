@@ -24,6 +24,8 @@
     --base0D: var(--color-blue-700);
     --base0E: var(--color-violet-600);
     --base0F: var(--color-amber-800);
+
+    --color-focus-ring: var(--color-blue-500);
   }
 
   :root[data-force-dark] {
@@ -45,6 +47,8 @@
     --base0D: var(--color-blue-300);
     --base0E: var(--color-violet-300);
     --base0F: var(--color-amber-400);
+
+    --color-focus-ring: var(--color-blue-300);
   }
 
   @media (prefers-color-scheme: dark) {
@@ -67,6 +71,8 @@
       --base0D: var(--color-blue-300);
       --base0E: var(--color-violet-300);
       --base0F: var(--color-amber-400);
+
+      --color-focus-ring: var(--color-blue-300);
     }
   }
 }
@@ -212,9 +218,8 @@ a:hover {
 }
 
 :focus {
-  @apply outline-none;
-  @apply ring-2;
-  @apply ring-blue-500;
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
 }
 
 :where(:root[data-force-dark]) {
@@ -225,10 +230,6 @@ a:hover {
   & a:hover {
     @apply text-blue-200;
   }
-
-  & :focus {
-    @apply ring-blue-300;
-  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -238,9 +239,5 @@ a:hover {
 
   a:hover {
     @apply text-blue-200;
-  }
-
-  :focus {
-    @apply ring-blue-300;
   }
 }

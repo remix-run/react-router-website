@@ -56,12 +56,20 @@ stylesheet targets.
     display: grid;
     grid-template: "main";
     grid-template-columns: minmax(auto, theme(screens.lg));
-    gap: var(--w-gap);
+
+    /*
+     * NOTE: There is a chromium bug that cuts off the focus ring when *any*
+     * overflow value is set on a container. The 0.5rem offset accounts for the
+     * added padding to fix this visually while maintaining the proper visual
+     * space.
+     * https://bugs.chromium.org/p/chromium/issues/detail?id=462609
+     */
+    gap: calc(var(--w-gap) - 0.5rem);
   }
 
   @media screen and (min-width: theme(screens.xl)) {
     grid-template-areas: "main toc";
-    grid-template-columns: minmax(auto, var(--w-content)) var(--w-toc);
+    grid-template-columns: minmax(auto, var(--w-content)) calc(var(--w-toc) + 0.5rem);
   }
 }
 
@@ -78,6 +86,7 @@ stylesheet targets.
   @apply h-full max-h-screen overflow-x-visible overflow-y-auto; /* auto scrolling */
   @apply sticky top-6; /* sticky behavior */
   @apply text-[color:var(--base05)];
+  @apply pl-2;
   grid-area: toc;
 }
 
@@ -91,7 +100,7 @@ stylesheet targets.
 
   & a {
     @apply block;
-    @apply py-1 block text-base lg:text-sm;
+    @apply py-1 inline-block text-base lg:text-sm;
   }
 
   & a:not(:hover) {
@@ -518,29 +527,13 @@ stylesheet targets.
   & docs-info,
   & docs-warning,
   & docs-error {
-    @apply mt-0 mb-3;
-  }
-
-  & docs-info,
-  & docs-warning,
-  & docs-error {
-    display: block;
-    border-left: solid 2px;
-    border-right: solid 2px;
-    padding: 0.5rem 1rem;
-    position: relative;
-    border-radius: 1rem;
+    @apply mt-0 mb-3 relative rounded-lg block border-l-2 border-r-2 border-current py-2 px-4;
   }
 
   & docs-info::before,
   & docs-warning::before,
   & docs-error::before {
-    border-radius: 1rem;
-    content: "";
-    position: absolute;
-    inset: 0;
-    opacity: 0.1;
-    pointer-events: none;
+    @apply inset-0 content-[""] absolute opacity-10 pointer-events-none;
   }
 
   & docs-warning {
@@ -548,7 +541,8 @@ stylesheet targets.
   }
 
   & docs-warning::before {
-    background: var(--base0A);
+    background: var(--color-yellow-600);
+    opacity: 0.15;
   }
 
   & docs-info {

@@ -272,7 +272,11 @@ const IndexPage: RouteComponent = () => {
 
       <div className="index__stats">
         <div className="container">
-          <Section as="section" aria-label="Current user stats">
+          <Section
+            as="section"
+            aria-label="Current user stats"
+            className="my-56 md:my-72 lg:my-80"
+          >
             <dl
               className={`
               grid grid-cols-2
