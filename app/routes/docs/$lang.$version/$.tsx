@@ -12,7 +12,7 @@ import { getDoc, getVersion, getVersions } from "~/utils.server";
 import { Page } from "~/components/doc";
 import { time } from "~/utils/time";
 
-let loader: LoaderFunction = async ({ params, context }) => {
+let loader: LoaderFunction = async ({ context, params, request }) => {
   let path = await import("path");
   try {
     let versions = await getVersions();
@@ -28,11 +28,9 @@ let loader: LoaderFunction = async ({ params, context }) => {
     let ext = path.extname(slug);
 
     if (ext) {
-      let { dir, name } = path.parse(slug);
-
-      let noExtension = dir.endsWith("/") ? dir : dir + "/" + name;
-
-      return redirect(`/docs/${lang}/${version.head}${noExtension}/`);
+      // remove the extension
+      let noExtension = request.url.slice(0, -ext.length);
+      return redirect(noExtension);
     }
 
     let [ms, doc] = await time(() => getDoc(context.docs, slug, version, lang));
