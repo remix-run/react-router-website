@@ -57,16 +57,18 @@ export default function DocsLayout() {
   let menuMap = React.useMemo(() => createMenuMap(menu), [menu]);
 
   let is404 = matches.some((match: any) => match.data && match.data.notFound);
-  if (is404) return <NotFound />;
 
   let location = useLocation();
   let detailsRef = React.useRef<HTMLDetailsElement>(null);
+
   React.useEffect(() => {
     let details = detailsRef.current;
     if (details && details.hasAttribute("open")) {
       details.removeAttribute("open");
     }
   }, [location]);
+
+  if (is404) return <NotFound />;
 
   return (
     <div className="md-layout lg:flex lg:h-full md-down:container">
