@@ -76,11 +76,11 @@ export default function DocsLayout() {
         <details ref={detailsRef}>
           <summary className="py-4">Docs Navigation</summary>
           <div>
-            <MenuVersionSelector
+            {/* <MenuVersionSelector
               className="mb-10"
               versions={versions}
               version={version}
-            />
+            /> */}
             <Menu menu={menu} className="py-6 text-base font-medium" />
           </div>
         </details>
@@ -96,11 +96,11 @@ export default function DocsLayout() {
             "py-10 pl-6 pr-6 xl:pr-10 2xl:pr-12", // spacing
           ])}
         >
-          <MenuVersionSelector
+          {/* <MenuVersionSelector
             className="mb-10"
             versions={versions}
             version={version}
-          />
+          /> */}
           <Menu menu={menu} />
         </div>
       </div>
