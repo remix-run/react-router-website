@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   HeadersFunction,
   LoaderFunction,
@@ -9,7 +8,7 @@ import {
 import { json } from "remix";
 
 import { getDoc, getVersion, getVersions } from "~/utils.server";
-import { Page } from "~/components/doc";
+import { DocsPage } from "~/components/doc";
 import { time } from "~/utils/time";
 
 let loader: LoaderFunction = async ({ context, params, request }) => {
@@ -59,7 +58,7 @@ const headers: HeadersFunction = ({ loaderHeaders }) => {
 };
 
 const SplatPage: RouteComponent = () => {
-  return <Page />;
+  return <DocsPage />;
 };
 
 export default SplatPage;
