@@ -66,12 +66,12 @@ export function Menu({
 function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
   let { lang, version } = useParams();
   let linkPrefix = `/docs/${lang}/${version}`;
-  let itemClassName = cx(
-    "md-nav-item py-1 block text-[color:inherit] text-base lg:text-sm",
-    {
+  let itemClassName = ({ isActive }: { isActive?: boolean } = {}) =>
+    cx("md-nav-item py-1 block text-base lg:text-sm", {
       "md-nav-heading": level === 1,
-    }
-  );
+      ["text-[color:var(--base0D)]"]: isActive,
+      ["text-[color:inherit]"]: !isActive,
+    });
 
   return (
     <ul
@@ -87,10 +87,11 @@ function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
           if (!dir.hasIndex && dir.files.length < 1) {
             return null;
           }
-          let dirItemClassName = cx(itemClassName, {
-            // removes top padding from the first item in the first list
-            ["pt-0"]: level === 1 && index === 0,
-          });
+          let dirItemClassName = ({ isActive }: { isActive?: boolean } = {}) =>
+            cx(itemClassName({ isActive: level !== 1 && isActive }), {
+              // removes top padding from the first item in the first list
+              ["pt-0"]: level === 1 && index === 0,
+            });
           return (
             <li key={index} data-dir="" data-level={level}>
               {dir.hasIndex ? (
@@ -101,7 +102,7 @@ function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
                   {dir.title}
                 </NavLink>
               ) : (
-                <span className={dirItemClassName}>{dir.title}</span>
+                <span className={dirItemClassName()}>{dir.title}</span>
               )}
               <MenuList level={level + 1} dir={dir} />
             </li>
@@ -110,7 +111,7 @@ function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
       {dir.files.map((file, index) => (
         <li key={index} className="" data-file="" data-level={level}>
           {file.attributes.disabled ? (
-            <span className={itemClassName}>{file.title} 🚧</span>
+            <span className={itemClassName()}>{file.title} 🚧</span>
           ) : (
             <NavLink to={`${linkPrefix}${file.path}`} className={itemClassName}>
               {file.title}
