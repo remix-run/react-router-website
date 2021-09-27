@@ -115,13 +115,11 @@ export async function getMenu(
 
   let dirName = "/";
 
-  let menu = await getContentsRecursively(
-    config,
-    dirName,
-    "root",
-    dirName,
-    version
-  );
+  let menu =
+    where === "remote"
+      ? await getRemoteMenu(version)
+      : await getLocalMenu(config, dirName, "root", dirName, version);
+
   menuCache.set(version.version, menu);
   return menu;
 }
@@ -276,67 +274,6 @@ async function getDocLocal(
   return doc;
 }
 
-// TODO: this is a mess, could be optimized and not even need to be recursive, but here we are
-async function getContentsRemote(
-  version: VersionHead,
-  slug: string
-): Promise<File[]> {
-  let slugWithLeadingSlash = slug.startsWith("/") ? slug : `/${slug}`;
-
-  const docs = await prisma.doc.findMany({
-    where: {
-      AND: [
-        { lang: "en" },
-        {
-          filePath: {
-            startsWith: slugWithLeadingSlash,
-          },
-        },
-        {
-          version: {
-            fullVersionOrBranch: {
-              equals: version.version,
-            },
-          },
-        },
-      ],
-    },
-    select: {
-      filePath: true,
-      title: true,
-    },
-  });
-
-  let files = new Map<string, File>();
-
-  for (let doc of docs) {
-    let dirname = path.dirname(doc.filePath);
-
-    if (dirname === slugWithLeadingSlash) {
-      files.set(doc.filePath, {
-        name: doc.title,
-        path: doc.filePath,
-        type: "file",
-      });
-    } else {
-      dirname = dirname.replace(slugWithLeadingSlash, "");
-      files.set(dirname, {
-        name: doc.title,
-        path: dirname.startsWith("/") ? dirname : `/${dirname}`,
-        type: "dir",
-      });
-    }
-  }
-
-  let returnValue: File[] = [];
-
-  for (let [, value] of files) {
-    returnValue.push(value);
-  }
-
-  return returnValue;
-}
-
 async function getContentsLocal(config: Config, slug: string): Promise<File[]> {
   let root = path.join(process.cwd(), config.localPath);
   let dirPath = path.join(root, slug);
@@ -424,17 +361,14 @@ async function getFileLocal(
 }
 
 // TODO: need to get the "root route path" into these links
-async function getContentsRecursively(
+async function getLocalMenu(
   config: Config,
   dirPath: string,
   dirName: string,
   rootName: string,
   version: VersionHead
 ): Promise<MenuDir> {
-  let contents =
-    where === "remote"
-      ? await getContentsRemote(version, dirPath)
-      : await getContentsLocal(config, dirPath);
+  let contents = await getContentsLocal(config, dirPath);
 
   if (!Array.isArray(contents)) {
     throw new Error(
@@ -520,7 +454,7 @@ async function getContentsRecursively(
     dir.dirs = (
       await Promise.all(
         dirs.map((dir) =>
-          getContentsRecursively(config, dir.path, dir.path, rootName, version)
+          getLocalMenu(config, dir.path, dir.path, rootName, version)
         )
       )
     )
@@ -530,6 +464,98 @@ async function getContentsRecursively(
   }
 
   return dir;
+}
+
+async function getRemoteMenu(version: VersionHead): Promise<MenuDir> {
+  const docs = await prisma.doc.findMany({
+    where: {
+      version: {
+        fullVersionOrBranch: version.version,
+      },
+    },
+  });
+
+  let dirMap = new Map<string, MenuItem[]>();
+
+  for (let doc of docs) {
+    let dirname = path.dirname(doc.filePath);
+    let files: MenuFile[] = docs
+      .filter((doc) => path.dirname(doc.filePath) === dirname)
+      .map((file) => {
+        return {
+          name: file.title,
+          path: file.filePath,
+          title: file.title,
+          type: "file",
+          attributes: {
+            title: file.title,
+            disabled: file.disabled,
+            hidden: file.hidden,
+            siblingLinks: file.siblingLinks,
+            toc: file.toc,
+            description: file.description ?? undefined,
+            order: file.order ?? undefined,
+            published: file.published ?? undefined,
+          },
+        };
+      });
+
+    dirMap.set(dirname, files);
+  }
+
+  let menu: MenuDir = {
+    type: "dir",
+    name: "root",
+    path: "/",
+    hasIndex: false,
+    attributes: {} as Attributes,
+    title: "root",
+    files: [],
+    dirs: [],
+  };
+
+  for (let [dir, files] of dirMap) {
+    if (dir === "/") {
+      menu.attributes = {
+        title: dir,
+        disabled: false,
+        hidden: false,
+        siblingLinks: false,
+        toc: false,
+      };
+      menu.dirs = [];
+      menu.hasIndex = files.some((file) => file.path.endsWith("index.md"));
+      menu.title = "root";
+      menu.type = "dir";
+      menu.files = files.sort(sortByAttributes).map((file) => ({
+        ...file,
+        type: "file",
+      }));
+    } else {
+      if (!menu.dirs) menu.dirs = [];
+      menu.dirs.push({
+        attributes: {
+          title: dir,
+          disabled: false,
+          hidden: false,
+          siblingLinks: false,
+          toc: false,
+        },
+        type: "dir",
+        hasIndex: files.some((file) => file.path.endsWith("index.md")),
+        title: dir,
+        path: dir,
+        name: dir,
+        dirs: [],
+        files: files.sort(sortByAttributes).map((file) => ({
+          ...file,
+          type: "file",
+        })),
+      });
+    }
+  }
+
+  return menu;
 }
 
 function sortByAttributes(a: MenuItem, b: MenuItem) {
