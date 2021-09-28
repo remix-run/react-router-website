@@ -67,11 +67,14 @@ function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
   let { lang, version } = useParams();
   let linkPrefix = `/docs/${lang}/${version}`;
   let itemClassName = ({ isActive }: { isActive?: boolean } = {}) =>
-    cx("md-nav-item py-1 block text-base lg:text-sm", {
-      "md-nav-heading": level === 1,
-      ["text-[color:var(--base0D)]"]: isActive,
-      ["text-[color:inherit]"]: !isActive,
-    });
+    cx(
+      "md-nav-item py-1 block text-base lg:text-sm",
+      `md-nav-item--level-${level}`,
+      {
+        ["md-nav-item--active"]: isActive,
+        "md-nav-heading": level === 1,
+      }
+    );
 
   return (
     <ul
@@ -96,6 +99,7 @@ function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
             <li key={index} data-dir="" data-level={level}>
               {dir.hasIndex ? (
                 <NavLink
+                  end
                   to={`${linkPrefix}${dir.path}`}
                   className={dirItemClassName}
                 >
@@ -113,7 +117,11 @@ function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
           {file.attributes.disabled ? (
             <span className={itemClassName()}>{file.title} 🚧</span>
           ) : (
-            <NavLink to={`${linkPrefix}${file.path}`} className={itemClassName}>
+            <NavLink
+              end
+              to={`${linkPrefix}${file.path}`}
+              className={itemClassName}
+            >
               {file.title}
             </NavLink>
           )}

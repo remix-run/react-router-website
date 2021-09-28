@@ -20,6 +20,8 @@ stylesheet targets.
     ```
 */
 
+@import "./colors.css";
+
 /*****************************************************************************/
 /* layout */
 
@@ -69,7 +71,9 @@ stylesheet targets.
 
   @media screen and (min-width: theme(screens.xl)) {
     grid-template-areas: "main toc";
-    grid-template-columns: minmax(auto, var(--w-content)) calc(var(--w-toc) + 0.5rem);
+    grid-template-columns: minmax(auto, var(--w-content)) calc(
+        var(--w-toc) + 0.5rem
+      );
   }
 }
 
@@ -90,17 +94,46 @@ stylesheet targets.
   grid-area: toc;
 }
 
-.md-nav-heading,
+.md-nav-item {
+  @apply rounded;
+  position: relative;
+  color: inherit;
+  transform: translateX(0);
+}
+
+.md-nav-item::before {
+  @apply inset-0 rounded;
+  position: absolute;
+  content: "";
+  background-color: transparent;
+}
+
+.md-nav-item--active {
+  @apply font-semibold;
+  color: var(--base0D);
+  padding-left: 0.25rem;
+  transform: translateX(-0.25rem);
+}
+
+.md-nav-item--active::before {
+  background-color: var(--color-blue-500);
+  opacity: 0.125;
+}
+
+.md-nav-item--level-1,
 .md-toc-title {
-  @apply block font-display text-base mb-2 uppercase font-medium tracking-wide leading-squeezed;
+  @apply font-display text-base mb-2 uppercase font-medium tracking-wide leading-squeezed;
+  display: block;
+  color: var(--base05);
 }
 
 .toc {
   list-style: none;
 
   & a {
-    @apply block;
-    @apply py-1 inline-block text-base lg:text-sm;
+    @apply rounded py-1 block text-base lg:text-sm;
+    /* offset to prevent cutting off focus ring */
+    width: calc(100% - 4px);
   }
 
   & a:not(:hover) {
