@@ -126,12 +126,10 @@ export async function findMatchingEntries(
         try {
           const content = await bufferStream(stream);
 
-          let extension = path.extname(entry.path);
-
           entry = {
             type: "file",
             content: content.toString("utf-8"),
-            path: entry.path.slice(0, -extension.length),
+            path: entry.path,
           };
 
           entries[entry.path] = entry;

@@ -96,7 +96,7 @@ function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
               ["pt-0"]: level === 1 && index === 0,
             });
           return (
-            <li key={index} data-dir="" data-level={level}>
+            <li key={dir.path} data-dir="" data-level={level}>
               {dir.hasIndex ? (
                 <NavLink
                   end
@@ -112,8 +112,8 @@ function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
             </li>
           );
         })}
-      {dir.files.map((file, index) => (
-        <li key={index} className="" data-file="" data-level={level}>
+      {dir.files.map((file) => (
+        <li key={file.path} className="" data-file="" data-level={level}>
           {file.attributes.disabled ? (
             <span className={itemClassName()}>{file.title} 🚧</span>
           ) : (

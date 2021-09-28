@@ -124,7 +124,7 @@ const SiblingLinks: React.VFC<{ doc: Doc }> = ({ doc }) => {
   );
 };
 
-const Page: React.VFC = () => {
+const DocsPage: React.VFC = () => {
   let doc = useLoaderData<Doc>();
   let ref = React.useRef<HTMLDivElement>(null);
   useDelegatedReactRouterLinks(ref);
@@ -176,4 +176,4 @@ function isFirstDoc(parent: MenuDir, docPath: string) {
   return first.path === docPath;
 }
 
-export { Page };
+export { DocsPage };

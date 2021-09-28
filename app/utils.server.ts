@@ -160,7 +160,7 @@ async function getDocRemote(
           AND: [
             {
               lang,
-              filePath: filePath,
+              filePath: filePath + ".md",
               version: {
                 fullVersionOrBranch: version.head,
               },
@@ -171,7 +171,7 @@ async function getDocRemote(
           AND: [
             {
               lang,
-              filePath: filePath,
+              filePath: filePath + ".md",
               version: {
                 versionHeadOrBranch: version.head,
               },
@@ -539,14 +539,15 @@ async function getRemoteMenu(version: VersionHead): Promise<MenuDir> {
     } else {
       let indexFile = files.find((file) => file.path.endsWith("index.md"));
       menu.dirs.push({
-        attributes: {
-          title: dir,
-          disabled: false,
-          hidden: false,
-          siblingLinks: false,
-          toc: false,
-          ...indexFile?.attributes,
-        },
+        attributes: indexFile
+          ? indexFile.attributes
+          : {
+              title: dir,
+              disabled: false,
+              hidden: false,
+              siblingLinks: false,
+              toc: false,
+            },
         type: "dir",
         hasIndex: !!indexFile,
         title: indexFile ? indexFile.attributes.title : dir,
