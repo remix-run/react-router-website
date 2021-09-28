@@ -27,13 +27,15 @@ model Doc {
   filePath     String
   md           String
   html         String
+  lang         String
+
+  // frontmatter attributes
   title        String
   order        Int?
   disabled     Boolean @default(false)
   siblingLinks Boolean @default(false)
   published    String?
   description  String?
-  lang         String
   hidden       Boolean @default(false)
   toc          Boolean @default(true)
 

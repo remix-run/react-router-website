@@ -539,13 +539,15 @@ async function getRemoteMenu(version: VersionHead): Promise<MenuDir> {
       if (!menu.dirs) menu.dirs = [];
       let indexFile = files.find((file) => file.path.endsWith("index.md"));
       menu.dirs.push({
-        attributes: {
-          title: dir,
-          disabled: false,
-          hidden: false,
-          siblingLinks: false,
-          toc: false,
-        },
+        attributes: indexFile
+          ? indexFile.attributes
+          : {
+              title: dir,
+              disabled: false,
+              hidden: false,
+              siblingLinks: false,
+              toc: false,
+            },
         type: "dir",
         hasIndex: !!indexFile,
         title: indexFile ? indexFile.attributes.title : dir,
