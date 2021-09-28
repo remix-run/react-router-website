@@ -2,7 +2,7 @@ import * as React from "react";
 import cx from "clsx";
 import { ButtonLink } from "../components/button";
 import { Section, Heading } from "../components/section-heading";
-import type { RouteComponent, MetaFunction } from "remix";
+import type { RouteComponent, MetaFunction, ActionFunction } from "remix";
 import { IconBox } from "~/components/icon-box";
 import { Badge } from "~/components/badge";
 import { Link, ArrowLink } from "~/components/link";
@@ -11,9 +11,10 @@ import {
   IconStackOverflow,
   IconTwitter,
   IconYoutube,
-  IconArrowRight,
+  // IconArrowRight,
 } from "~/components/icons";
-import { Card, CardContent, CardImage } from "~/components/card";
+// import { Card, CardContent, CardImage } from "~/components/card";
+import { SectionSignup, signupAction } from "~/components/section-signup";
 
 const meta: MetaFunction = () => ({
   title: "React Router | Resources",
@@ -70,7 +71,7 @@ const ResourcesPage: RouteComponent = () => {
                 content={
                   <div>
                     React Router is built by the{" "}
-                    <a href="https://remix.run">Remix</a> team. 
+                    <a href="https://remix.run">Remix</a> team.
                   </div>
                 }
                 className="mb-10 md:mb-14"
@@ -277,6 +278,12 @@ const ResourcesPage: RouteComponent = () => {
         </div>
 
         <div className="mb-20 sm:mb-32 md:mb-40" />
+
+        <div className="index__signup">
+          <div className="container">
+            <SectionSignup />
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -284,6 +291,10 @@ const ResourcesPage: RouteComponent = () => {
 
 export default ResourcesPage;
 export { meta };
+
+export let action: ActionFunction = async (props) => {
+  return signupAction(props);
+};
 
 function SectionHeader({
   heading,

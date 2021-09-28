@@ -241,3 +241,22 @@ a:hover {
     @apply text-blue-200;
   }
 }
+
+.section-signup__image {
+  background-color: var(--color-red-500);
+  background-image: radial-gradient(
+      at 74% 41%,
+      var(--color-green-500) 0,
+      transparent 54%
+    ),
+    radial-gradient(at 100% 1%, var(--color-orange-500) 0, transparent 50%),
+    radial-gradient(at 46% 97%, var(--color-cyan-500) 0, transparent 50%),
+    radial-gradient(at 74% 0%, var(--color-yellow-500) 0, transparent 50%),
+    radial-gradient(at 22% 89%, var(--color-red-500) 0, transparent 50%),
+    radial-gradient(at 0% 100%, var(--color-orange-300) 0, transparent 50%),
+    radial-gradient(at 79% 99%, var(--color-blue-500) 0, transparent 50%);
+
+  & img {
+    filter: drop-shadow(0px 4px 20px rgba(0, 0, 0, 0.7));
+  }
+}

@@ -1,8 +1,7 @@
 import * as React from "react";
-import { Form, useTransition, useActionData } from "remix";
 import cx from "clsx";
 import { Section, Heading } from "~/components/section-heading";
-import { Button, ButtonLink, ButtonDiv } from "~/components/button";
+import { ButtonLink, ButtonDiv } from "~/components/button";
 import { Link, ArrowLink } from "~/components/link";
 import {
   IconLayers,
@@ -11,7 +10,6 @@ import {
   IconProtection,
   IconZoom,
 } from "~/components/icons";
-import { Field } from "~/components/form";
 import type {
   RouteComponent,
   MetaFunction,
@@ -26,15 +24,13 @@ import {
   FastbooksInvoice,
 } from "../components/scroll-experience";
 import { Actor, ScrollStage } from "~/stage";
+import { SectionSignup, signupAction } from "~/components/section-signup";
 
 const meta: MetaFunction = () => ({
   title: "React Router",
 });
 
 const IndexPage: RouteComponent = () => {
-  let actionData = useActionData();
-  let transition = useTransition();
-
   return (
     <div className="py-8">
       <div className="index__hero">
@@ -275,7 +271,7 @@ const IndexPage: RouteComponent = () => {
           <Section
             as="section"
             aria-label="Current user stats"
-            className="my-56 md:my-72 lg:my-80"
+            className="my-32 md:my-72 lg:my-80"
           >
             <dl
               className={`
@@ -336,57 +332,7 @@ const IndexPage: RouteComponent = () => {
 
       <div className="index__signup">
         <div className="container">
-          <Section wrap className="my-56 md:my-72 lg:my-80">
-            <div className="md:max-w-xl">
-              <Heading className="mb-1">Join the Remix Community</Heading>
-              <p className="text-lg md:text-xl mb-6 opacity-80">
-                We’re introducing a new project—Remix—a React framework that can
-                be used alongside React Router to build faster, more powerful
-                applications. Join our newsletter to stay up to date.
-              </p>
-              <Form
-                replace
-                method="post"
-                className="flex flex-col xs:flex-row"
-                onSubmit={(event) => {
-                  if (transition.state === "submitting") {
-                    event.preventDefault();
-                  }
-                }}
-              >
-                <label className="contents">
-                  <span className="sr-only">Email address</span>
-                  <Field
-                    type="email"
-                    name="email"
-                    placeholder="billybob@remix.run"
-                    className="mb-4 xs:mb-0 xs:mr-4"
-                    disabled={transition.state === "submitting"}
-                  />
-                </label>
-                <Button disabled={transition.state === "submitting"}>
-                  Subscribe
-                </Button>
-              </Form>
-              {/* TODO: Needs an aria live announcement */}
-              {actionData?.subscription?.state ? (
-                <Status color="green" className="mt-4">
-                  {(() => {
-                    switch (actionData.subscription.state) {
-                      case "inactive":
-                        return "Signup successful! Please check your email to confirm your subscription.";
-                      case "active":
-                      // we shouldn't get here...
-                      case "cancelled":
-                      default:
-                        return "Signup successful! Keep an eye on your inbox for updates.";
-                    }
-                  })()}
-                </Status>
-              ) : null}
-              {/* TODO: Error handling */}
-            </div>
-          </Section>
+          <SectionSignup />
         </div>
       </div>
     </div>
@@ -400,69 +346,6 @@ export let loader: LoaderFunction = async () => {
   return null;
 };
 
-export let action: ActionFunction = async ({ request }) => {
-  const TOKEN = process.env.CONVERTKIT_KEY;
-  const URL = "https://api.convertkit.com/v3";
-  const FORM_ID = "1334747";
-
-  try {
-    let body = new URLSearchParams(await request.text());
-    let email = body.get("email");
-
-    // TODO: Validate email
-
-    if (!email) {
-      return new Response(null, {
-        status: 400,
-        statusText: "Missing email address",
-      });
-    }
-
-    if (request.method.toLowerCase() !== "post") {
-      return new Response(null, {
-        status: 405,
-        statusText: `Expected "POST", received "${request.method.toUpperCase()}"`,
-      });
-    }
-
-    let res = await fetch(`${URL}/forms/${FORM_ID}/subscribe`, {
-      method: request.method,
-      body: JSON.stringify({
-        api_key: TOKEN,
-        email,
-      }),
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-      },
-    });
-    return res;
-  } catch (err) {
-    console.error(err);
-    return new Response(null, {
-      status: 500,
-      statusText: `Egads! Something went wrong!`,
-    });
-  }
+export let action: ActionFunction = async (props) => {
+  return signupAction(props);
 };
-
-function Status({
-  className,
-  children,
-  color = "green",
-}: {
-  className?: string;
-  children: React.ReactNode;
-  color: "green" | "yellow" | "red";
-}) {
-  return (
-    <div
-      className={cx(className, "p-3 font-semibold rounded", {
-        "bg-green-500/20 text-green-500": color === "green",
-        "bg-yellow-200/70 text-yellow-900": color === "yellow",
-        "bg-red-500/20 text-red-500": color === "red",
-      })}
-    >
-      {children}
-    </div>
-  );
-}
