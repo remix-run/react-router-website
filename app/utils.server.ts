@@ -160,7 +160,7 @@ async function getDocRemote(
           AND: [
             {
               lang,
-              filePath: filePath,
+              filePath: filePath + ".md",
               version: {
                 fullVersionOrBranch: version.head,
               },
@@ -171,7 +171,7 @@ async function getDocRemote(
           AND: [
             {
               lang,
-              filePath: filePath,
+              filePath: filePath + ".md",
               version: {
                 versionHeadOrBranch: version.head,
               },
