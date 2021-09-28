@@ -21,7 +21,7 @@ export interface MenuDir {
   path: string;
   title: string;
   files: MenuFile[];
-  dirs?: MenuDir[];
+  dirs: MenuDir[];
   hasIndex: boolean;
   attributes: Attributes;
 }
@@ -444,6 +444,7 @@ async function getLocalMenu(
     hasIndex,
     attributes,
     title: attributes.title || dirName,
+    dirs: [],
     files: dirFiles
       .filter((file): file is MenuFile => file !== null)
       .sort(sortByAttributes),
@@ -480,8 +481,8 @@ async function getRemoteMenu(version: VersionHead): Promise<MenuDir> {
   for (let doc of docs) {
     let dirname = path.dirname(doc.filePath);
     let files: MenuFile[] = docs
-      .filter((doc) => path.dirname(doc.filePath) === dirname)
-      .map((file) => {
+      .filter((doc: any) => path.dirname(doc.filePath) === dirname)
+      .map((file: any) => {
         return {
           name: file.title,
           path: file.filePath,
@@ -536,7 +537,6 @@ async function getRemoteMenu(version: VersionHead): Promise<MenuDir> {
           type: "file",
         }));
     } else {
-      if (!menu.dirs) menu.dirs = [];
       let indexFile = files.find((file) => file.path.endsWith("index.md"));
       menu.dirs.push({
         attributes: {
@@ -545,6 +545,7 @@ async function getRemoteMenu(version: VersionHead): Promise<MenuDir> {
           hidden: false,
           siblingLinks: false,
           toc: false,
+          ...indexFile?.attributes,
         },
         type: "dir",
         hasIndex: !!indexFile,
@@ -562,6 +563,8 @@ async function getRemoteMenu(version: VersionHead): Promise<MenuDir> {
       });
     }
   }
+
+  menu.dirs.sort(sortByAttributes);
 
   return menu;
 }
@@ -589,12 +592,12 @@ export async function getVersions(): Promise<VersionHead[]> {
 
   let sorted = originalVersions
     // we allow saving branches as versions, but we shouldn't show them
-    .filter((v) => semver.valid(v.fullVersionOrBranch))
-    .sort((a, b) =>
+    .filter((v: any) => semver.valid(v.fullVersionOrBranch))
+    .sort((a: any, b: any) =>
       semver.compare(b.fullVersionOrBranch, a.fullVersionOrBranch)
     );
 
-  let versions = sorted.map((v) => ({
+  let versions = sorted.map((v: any) => ({
     head: v.versionHeadOrBranch,
     version: v.fullVersionOrBranch,
     isLatest: false,
