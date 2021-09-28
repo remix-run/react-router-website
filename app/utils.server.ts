@@ -178,28 +178,6 @@ async function getDocRemote(
             },
           ],
         },
-        {
-          AND: [
-            {
-              lang,
-              filePath: path.join(filePath, "index.md"),
-              version: {
-                fullVersionOrBranch: version.head,
-              },
-            },
-          ],
-        },
-        {
-          AND: [
-            {
-              lang,
-              filePath: path.join(filePath, "index.md"),
-              version: {
-                versionHeadOrBranch: version.head,
-              },
-            },
-          ],
-        },
       ],
     },
   });
@@ -479,6 +457,7 @@ async function getRemoteMenu(version: VersionHead): Promise<MenuDir> {
 
   for (let doc of docs) {
     let dirname = path.dirname(doc.filePath);
+
     let files: MenuFile[] = docs
       .filter((doc) => path.dirname(doc.filePath) === dirname)
       .map((file) => {
@@ -515,21 +494,23 @@ async function getRemoteMenu(version: VersionHead): Promise<MenuDir> {
   };
 
   for (let [dir, files] of dirMap) {
-    let indexFile = files.find((file) => file.path.endsWith("index.md"));
+    let indexFile = files.find((file) => file.path === dir);
     if (dir === "/") {
-      menu.attributes = {
-        title: dir,
-        disabled: false,
-        hidden: false,
-        siblingLinks: false,
-        toc: false,
-      };
+      menu.attributes = indexFile
+        ? indexFile.attributes
+        : {
+            title: dir,
+            disabled: false,
+            hidden: false,
+            siblingLinks: false,
+            toc: false,
+          };
       menu.dirs = [];
       menu.hasIndex = !!indexFile;
       menu.title = indexFile ? indexFile.attributes.title : "root";
       menu.type = "dir";
       menu.files = files
-        .filter((file) => !file.path.endsWith(`index.md`))
+        .filter((file) => file.path !== dir)
         .sort(sortByAttributes)
         .map((file) => ({
           ...file,
@@ -537,7 +518,8 @@ async function getRemoteMenu(version: VersionHead): Promise<MenuDir> {
         }));
     } else {
       if (!menu.dirs) menu.dirs = [];
-      let indexFile = files.find((file) => file.path.endsWith("index.md"));
+      let indexFile = files.find((file) => file.path === dir);
+
       menu.dirs.push({
         attributes: indexFile
           ? indexFile.attributes
@@ -555,7 +537,7 @@ async function getRemoteMenu(version: VersionHead): Promise<MenuDir> {
         name: dir,
         dirs: [],
         files: files
-          .filter((file) => !file.path.endsWith(`index.md`))
+          .filter((file) => file.path !== dir)
           .sort(sortByAttributes)
           .map((file) => ({
             ...file,
