@@ -141,7 +141,6 @@ const Page: React.VFC = () => {
   return (
     <React.Fragment>
       <SiblingLinks doc={doc} />
-      <h1 className="mb-8 text-4xl markdown-title font-display">{doc.title}</h1>
       <div
         ref={ref}
         className={cx("markdown", {
