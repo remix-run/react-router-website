@@ -22,11 +22,11 @@ function SectionSignup() {
         />
       </div>
       <div className="md:max-w-xl md:mr-0 md:ml-auto md:py-40 relative">
-        <Heading className="mb-1">Join the Remix Community</Heading>
+        <Heading className="mb-1">Stay Connected</Heading>
         <p className="text-lg md:text-xl mb-6 opacity-80">
-          We’re introducing a new project—Remix—a React framework that can be
-          used alongside React Router to build faster, more powerful
-          applications. Join our newsletter to stay up to date.
+          React Router is developed by the <a href="https://remix.run">Remix</a>{" "}
+          team. To get updates and special content on React Router (as well as
+          our other projects), subscribe to the Remix newsletter.
         </p>
         <Form
           replace
@@ -52,6 +52,9 @@ function SectionSignup() {
             Subscribe
           </Button>
         </Form>
+        <p className="text-gray-300 text-sm mt-1">
+          We respect your privacy, unsubscribe at any time.
+        </p>
         {/* TODO: Needs an aria live announcement */}
         {actionData?.subscription?.state ? (
           <Status color="green" className="mt-4 w-full md:absolute md:left-0">
