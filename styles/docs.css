@@ -121,7 +121,9 @@ stylesheet targets.
 }
 
 .md-nav-item--level-1,
-.md-toc-title {
+.md-toc-title,
+/* Targets the first link, which is the page title */
+.toc > li > p > a {
   @apply font-display text-base mb-2 uppercase font-medium tracking-wide leading-squeezed;
   display: block;
   color: var(--base05);
@@ -146,12 +148,8 @@ stylesheet targets.
     line-height: inherit;
   }
 
-  & > li > ul {
-    @apply mb-3 ml-3 md:ml-4 lg:ml-3 2xl:ml-4;
-  }
-
   & > li > ul > li > ul {
-    @apply mb-3 ml-6 md:ml-8 lg:ml-6 2xl:ml-8;
+    @apply mb-3 ml-3 md:ml-4 lg:ml-3 2xl:ml-4;
   }
 }
 
@@ -337,7 +335,7 @@ stylesheet targets.
     scroll-margin-top: 1em;
 
     & a {
-      @apply absolute top-0 -left-6 -right-0 leading-none z-10;
+      @apply flex h-full items-center absolute top-0 -left-6 -right-0 leading-none z-10;
     }
 
     &:hover a,
@@ -346,6 +344,7 @@ stylesheet targets.
     }
 
     & .icon-link {
+      @apply flex h-full items-center;
       color: var(--base0D);
       vertical-align: middle;
     }
