@@ -177,9 +177,7 @@ async function getContentsLocal(config: Config, slug: string): Promise<File[]> {
       let fileDiskPath = path.join(dirPath, fileName);
       let isDir = (await fs.stat(fileDiskPath)).isDirectory();
 
-      let emulatedRemotePath = slug.endsWith("/")
-        ? slug + fileName
-        : `${slug}/${fileName}`;
+      let emulatedRemotePath = `${slug}/${fileName}`;
 
       return {
         type: isDir ? "directory" : "file",
@@ -253,7 +251,7 @@ async function getContentsRecursively(
 
             return {
               name: attributes.title || path.basename(linkPath),
-              path: linkPath,
+              path: linkPath.startsWith("/") ? linkPath : `/${linkPath}`,
               type: "file",
               attributes,
               title: attributes.title || path.basename(linkPath),
