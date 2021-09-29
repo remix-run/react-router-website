@@ -3,6 +3,8 @@ import path from "path";
 import parseAttributes from "gray-matter";
 import { processMarkdown } from "@ryanflorence/md";
 import * as semver from "semver";
+import { isPresent } from "ts-is-present";
+
 import { prisma } from "./db.server";
 import { Attributes } from "./utils/process-docs.server";
 
@@ -21,7 +23,7 @@ export interface MenuDir {
   path: string;
   title: string;
   files: MenuFile[];
-  dirs?: MenuDir[];
+  dirs: MenuDir[];
   hasIndex: boolean;
   attributes: Attributes;
 }
@@ -440,27 +442,40 @@ async function getLocalMenu(
   let dir: MenuDir = {
     type: "dir",
     name: dirName,
-    path: `/${dirPath.replace(rootName, "")}`,
+    path: dirPath,
     hasIndex,
     attributes,
     title: attributes.title || dirName,
-    files: dirFiles
-      .filter((file): file is MenuFile => file !== null)
-      .sort(sortByAttributes),
+    dirs: [],
+    files: dirFiles.filter(isPresent).sort(sortByAttributes),
   };
 
   let dirs = contents.filter((file) => file.type === "dir");
   if (dirs.length) {
-    dir.dirs = (
-      await Promise.all(
-        dirs.map((dir) =>
-          getLocalMenu(config, dir.path, dir.path, rootName, version)
-        )
+    let subDirs = await Promise.all(
+      dirs.map((dir) =>
+        getLocalMenu(config, dir.path, dir.path, rootName, version)
       )
-    )
+    );
+
+    let filteredSubDirs = subDirs
       // get rid of directories with no files
-      .filter((dir) => dir.files.length)
-      .sort(sortByAttributes);
+      .filter((dir) => dir.files.length);
+
+    filteredSubDirs.push(
+      ...dirFiles.filter(isPresent).map<MenuDir>((file) => ({
+        type: "dir",
+        name: file.name.replace(/\.md$/, ""),
+        path: file.path,
+        hasIndex: true,
+        attributes: file.attributes,
+        title: file.title,
+        dirs: [],
+        files: [],
+      }))
+    );
+
+    dir.dirs = filteredSubDirs.sort(sortByAttributes);
   }
 
   return dir;
