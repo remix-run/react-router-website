@@ -4,10 +4,17 @@ import { Section, Heading } from "~/components/section-heading";
 import { ButtonLink, ButtonDiv } from "~/components/button";
 import { Link, ArrowLink } from "~/components/link";
 import {
+  IconAirbnb,
+  IconApple,
+  IconCoinbase,
+  IconDiscord,
   IconLayers,
+  IconMicrosoft,
   IconNavigation,
+  IconNetflix,
   IconPlay,
   IconProtection,
+  IconTwitter,
   IconZoom,
 } from "~/components/icons";
 import type {
@@ -25,12 +32,67 @@ import {
 } from "../components/scroll-experience";
 import { Actor, ScrollStage } from "~/stage";
 import { SectionSignup, signupAction } from "~/components/section-signup";
+import { useMatchMedia } from "../hooks/match-media";
+import { tailwindConfig } from "~/utils/tailwind";
 
 const meta: MetaFunction = () => ({
   title: "React Router",
 });
 
+const brandIcons = [
+  {
+    name: "apple",
+    icon: <IconApple className="w-[40px] h-auto" />,
+  },
+  {
+    name: "netflix",
+    icon: <IconNetflix className="w-[160px] h-auto" />,
+  },
+  {
+    name: "microsoft",
+    icon: <IconMicrosoft className="w-[220px] h-auto" />,
+  },
+  {
+    name: "airbnb",
+    icon: <IconAirbnb className="w-[180px] h-auto" />,
+  },
+  {
+    name: "twitter",
+    icon: <IconTwitter className="w-[52px] h-auto" />,
+  },
+  {
+    name: "discord",
+    icon: <IconDiscord className="w-[220px] h-auto" />,
+  },
+  {
+    name: "coinbase",
+    icon: <IconCoinbase className="w-[170px] h-auto" />,
+  },
+  {
+    name: "zoom",
+    icon: <IconZoom className="w-[130px] h-auto" />,
+  },
+];
+
+function Marquee({
+  shouldScroll = true,
+  ...props
+}: React.ComponentPropsWithoutRef<"div"> & { shouldScroll?: boolean }) {
+  let prefersReducedMotion = useMatchMedia(`(prefers-reduced-motion)`);
+  return prefersReducedMotion || !shouldScroll ? (
+    <div {...props} />
+  ) : (
+    /* @ts-ignore */
+    <marquee scrollamount={3} {...props} />
+  );
+}
+
 const IndexPage: RouteComponent = () => {
+  let isSmallScreen = useMatchMedia(
+    `screen and (max-width: ${tailwindConfig.theme.screens?.["sm-down"].max})`,
+    { initialState: false }
+  );
+
   return (
     <div className="py-8">
       <div className="index__hero">
@@ -90,38 +152,34 @@ const IndexPage: RouteComponent = () => {
       </div>
 
       <div className="index__sponsors">
-        <div className="container">
+        <div className="md:container max-w-full overflow-hidden md:max-w-5xl">
           <div className="text-center my-20 md:my-32">
             <h2 className="eyebrow mb-6 md:mb-8">
               Used by dev teams at top companies
             </h2>
-            <div className="flex-gap-wrapper">
-              <ul
-                className={`
-                list-none
-                flex flex-shrink-0 flex-grow-0 flex-wrap
-                flex-gap flex-gap-6 md:flex-gap-8 lg:flex-gap-12
-                items-center justify-center`}
-              >
-                {[
-                  "shopify",
-                  "zoom",
-                  "microsoft",
-                  "amazon",
-                  "adobe",
-                  "google",
-                ].map((icon) => {
-                  return (
-                    <li
-                      key={icon}
-                      className="flex flex-shrink-0 flex-grow-0 items-center justify-center"
-                    >
-                      {/* TODO: Icons */}
-                      <IconZoom />
-                    </li>
-                  );
-                })}
-              </ul>
+            <div className="sponsor-wrapper flex-gap-wrapper">
+              <Marquee shouldScroll={isSmallScreen}>
+                <ul
+                  className={cx("sponsor-wrapper__list", [
+                    "list-none",
+                    "flex flex-shrink-0 flex-grow-0 flex-nowrap md:flex-wrap",
+                    "flex-gap flex-gap-8 md:flex-gap-12 lg:flex-gap-14",
+                    "items-center justify-center",
+                  ])}
+                >
+                  {brandIcons.map(({ name, icon }) => {
+                    return (
+                      <li
+                        key={name}
+                        className="flex flex-shrink-0 flex-grow-0 items-center justify-center max-w-xs max-h-[80px]"
+                      >
+                        {icon}
+                      </li>
+                    );
+                  })}
+                </ul>
+                {/* @ts-ignore */}
+              </Marquee>
             </div>
           </div>
         </div>
