@@ -12,12 +12,13 @@ import {
   Menu,
   MenuVersionSelector,
 } from "~/components/docs-menu";
+import type { MenuMap } from "~/components/docs-menu";
 import markdownStyles from "../../styles/docs.css";
 
 interface DocsRouteData {
-  menu: MenuDir;
+  menu: MenuDir | undefined;
   versions: VersionHead[];
-  version: VersionHead;
+  version: VersionHead | undefined;
 }
 
 export let loader: LoaderFunction = async ({ context }) => {
@@ -52,9 +53,12 @@ export function links() {
 
 export default function DocsLayout() {
   let matches = useMatches();
-  let { menu, version, versions } = useLoaderData();
+  let { menu, version, versions } = useLoaderData<DocsRouteData>();
 
-  let menuMap = React.useMemo(() => createMenuMap(menu), [menu]);
+  let menuMap = React.useMemo<MenuMap>(
+    () => (menu ? createMenuMap(menu) : new Map()),
+    [menu]
+  );
 
   let is404 = matches.some((match: any) => match.data && match.data.notFound);
 
@@ -81,7 +85,9 @@ export default function DocsLayout() {
               versions={versions}
               version={version}
             /> */}
-            <Menu menu={menu} className="py-6 text-base font-medium" />
+            {menu && (
+              <Menu menu={menu} className="py-6 text-base font-medium" />
+            )}
           </div>
         </details>
         <hr className="mb-4" />
@@ -101,7 +107,7 @@ export default function DocsLayout() {
             versions={versions}
             version={version}
           /> */}
-          <Menu menu={menu} />
+          {menu && <Menu menu={menu} />}
         </div>
       </div>
       <div className="lg:z-[1] flex-grow lg:h-full">
