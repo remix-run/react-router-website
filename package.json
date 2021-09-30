@@ -34,7 +34,8 @@
     "semver": "7.3.5",
     "tailwindcss": "2.2.16",
     "tar-stream": "2.2.0",
-    "tiny-invariant": "1.1.0"
+    "tiny-invariant": "1.1.0",
+    "ts-is-present": "1.2.2"
   },
   "devDependencies": {
     "@remix-run/dev": "0.0.0-experimental-5f57a94",

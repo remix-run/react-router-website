@@ -9,35 +9,39 @@ export function BrowserChrome({
 }) {
   return (
     <div className="bg-gray-700 border border-gray-600 drop-shadow-lg rounded-xl overflow-hidden">
-      <div className="pb-2 border-b border-gray-500">
-        <div className="flex p-2">
+      <div className="pb-[0.5em] border-b border-gray-500">
+        <div className="flex p-[0.75em]">
           <WindowButton className="bg-red-400" />
           <WindowButton className="bg-yellow-400" />
           <WindowButton className="bg-green-300" />
         </div>
-        <div className="flex items-center px-2">
+        <div className="flex items-center px-[0.5em]">
           <IconArrowLeft />
-          <IconArrowLeft className="rotate-180 ml-3" />
-          <IconRefresh className="rotate ml-3" />
-          <div className="ml-3 bg-gray-800 rounded-full px-4 py-1 w-full text-sm">
+          <IconArrowLeft className="rotate-180 ml-[0.75em]" />
+          <IconRefresh className="rotate ml-[0.75em]" />
+          <div className="ml-[0.75em] bg-gray-800 rounded-full px-[1em] py-[0.25em] w-full text-[85%]">
             {url}
           </div>
         </div>
       </div>
-      <div className="text-xs">{children}</div>
+      <div className="text-[75%]">{children}</div>
     </div>
   );
 }
 
 function WindowButton({ className }: { className: string }) {
-  return <div className={`rounded-full mr-2 h-3 w-3 ${className}`} />;
+  return (
+    <div
+      className={`rounded-full mr-[0.5em] inline-block h-[0.75em] w-[0.75em] ${className}`}
+    />
+  );
 }
 
 function IconArrowLeft({ className = "" }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`h-5 w-5 ${className}`}
+      className={`h-[1.25em] w-[1.25em] ${className}`}
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
@@ -56,7 +60,7 @@ function IconRefresh({ className = "" }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`h-5 w-5 ${className}`}
+      className={`h-[1.25em] w-[1.25em] ${className}`}
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
@@ -80,10 +84,10 @@ export function FastbooksApp({
 }) {
   return (
     <div className="flex relative">
-      <div className="p-4 border-r border-gray-500">
-        <div className="px-2 pb-2 flex items-center">
-          <div className="h-3 w-3 rounded-full bg-green-400" />
-          <div className="ml-1 font-light text-base">Fastbooks</div>
+      <div className="p-[1em] border-r border-gray-500">
+        <div className="px-[0.5em] pb-[0.5em] flex items-center">
+          <div className="h-[0.75em] w-[0.75em] rounded-full bg-green-400" />
+          <div className="ml-[0.25em] font-light text-[100%]">Fastbooks</div>
         </div>
         <div>
           <FastbookNavLink>Dashboard</FastbookNavLink>
@@ -113,7 +117,7 @@ function FastbookNavLink({
 }) {
   return (
     <div
-      className={`px-2 py-1 my-2 rounded-md font-medium text-sm ${
+      className={`px-[0.5em] py-[0.25em] my-[0.5em] rounded-md font-medium text-[100%] ${
         active ? "bg-green-800 text-green-300" : ""
       }`}
     >
@@ -131,7 +135,7 @@ export function FastbooksSales({
 }) {
   return (
     <div className="relative">
-      <div className="flex justify-between p-4">
+      <div className="flex justify-between px-[1.5em] py-[1em]">
         <SalesLink>Overview</SalesLink>
         <SalesLink>Subscriptions</SalesLink>
         <SalesLink active>Invoices</SalesLink>
@@ -158,7 +162,7 @@ function SalesLink({
 }) {
   return (
     <div
-      className={`text-sm font-medium pr-4 last:pr-0 ${
+      className={`font-medium pr-[1em] last:pr-0 ${
         active ? "text-green-400" : ""
       }`}
     >
@@ -208,15 +212,15 @@ export function FastbooksInvoices({
     },
   ];
   return (
-    <div className="relative">
-      <div className="pt-4 pb-6 px-6">
-        <div className="flex justify-between mb-1">
+    <div className="relative h-full">
+      <div className="pt-[1em] pb-[1.5em] px-[1.5em]">
+        <div className="flex justify-between mb-[0.25em]">
           <div className="text-gray-300">Overdue: $10,800</div>
           <div className="text-gray-300">Due soon: $62,000</div>
         </div>
         <div className="flex">
-          <div className="h-4 bg-yellow-200 w-1/3" />
-          <div className="h-4 flex-grow ml-1 bg-gray-300" />
+          <div className="h-[1.5em] bg-yellow-200 w-1/3" />
+          <div className="h-[1.5em] flex-grow ml-[0.25em] bg-gray-300" />
         </div>
       </div>
       <div className="flex border-t border-gray-500">
@@ -224,7 +228,7 @@ export function FastbooksInvoices({
           {invoices.map((invoice) => (
             <div
               key={invoice.number}
-              className={`flex justify-between text-xs p-2 m-2 ${
+              className={`flex justify-between text-[87.5%] p-[0.75em] m-[0.75em] ${
                 invoice.active ? "bg-green-800 rounded-md" : ""
               }`}
             >
@@ -232,7 +236,7 @@ export function FastbooksInvoices({
                 <div className="font-medium">{invoice.name}</div>
                 <div className="text-gray-400">10{invoice.number}</div>
               </div>
-              <div className="ml-4 text-right">
+              <div className="ml-[1em] text-right">
                 <div className="font-medium">{invoice.amount}</div>
                 {invoice.due === false ? (
                   <div>paid</div>
@@ -261,30 +265,30 @@ export function FastbooksInvoices({
 
 export function FastbooksInvoice({ highlight }: { highlight?: boolean }) {
   return (
-    <div className="p-4 overflow-hidden relative">
+    <div className="p-[1em] h-full overflow-hidden relative">
       <div className="max-w-xs mx-auto">
         <div className="flex w-full justify-between">
           <div>
-            <div className="font-medium text-base">Total Due</div>
-            <div className="text-2xl font-bold">$8,000</div>
+            <div className="font-medium text-[125%]">Total Due</div>
+            <div className="text-[200%] font-bold">$8,000</div>
           </div>
           <div>
-            <div className="font-medium text-sm">Stankonia</div>
+            <div className="font-medium text-[85%]">Stankonia</div>
             <div className="text-gray-300">102000</div>
           </div>
         </div>
-        <div className="flex w-full justify-between mt-6">
+        <div className="flex w-full justify-between mt-[1.5em]">
           <div className="">
-            <div className="text-sm font-medium">Invoice Date</div>
+            <div className="text-[85%] font-medium">Invoice Date</div>
             <div className="text-gray-400">10/31/2000</div>
           </div>
           <div className="">
-            <div className="text-sm font-medium">Due Date</div>
+            <div className="text-[85%] font-medium">Due Date</div>
             <div className="text-gray-400">12/31/2000</div>
           </div>
         </div>
-        <div className="mt-6">
-          <div className="text-sm font-medium">Activity</div>
+        <div className="mt-[3em]">
+          <div className="text-[100%] font-medium">Activity</div>
           <div>
             <ActivityItem activity="Created" date="10/28/2000" />
             <ActivityItem activity="Sent" date="10/30/2000" />
@@ -303,10 +307,10 @@ export function FastbooksInvoice({ highlight }: { highlight?: boolean }) {
 function ActivityItem({ activity, date }: { activity: string; date: string }) {
   return (
     <div className="relative">
-      <div className="h-8 border-l border-green-500 absolute top-6 left-2" />
-      <div className="mt-4 flex items-center">
-        <div className="h-4 w-4 rounded-full bg-green-500" />
-        <div className="ml-4">
+      <div className="h-[6em] border-l border-green-500 absolute top-[2em] left-[0.4em] sm:top-[1.5em] sm:left-[0.5em]" />
+      <div className="mt-[1em] flex items-center">
+        <div className="h-[1em] w-[1em] rounded-full bg-green-500" />
+        <div className="ml-[1em]">
           <div className="font-medium">{activity}</div>
           <div className="text-gray-400">{date}</div>
         </div>

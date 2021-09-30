@@ -12,6 +12,61 @@ if (typeof window !== "undefined") {
   }
 }
 
+// function useScrollRestoration() {
+//   let location = useLocation();
+//   let transition = useTransition();
+
+//   let wasSubmissionRef = React.useRef(false);
+
+//   React.useEffect(() => {
+//     if (transition.location) {
+//       positions[location.key] = window.scrollY;
+//     }
+//   }, [transition, location]);
+
+//   useBeforeUnload(
+//     React.useCallback(() => {
+//       positions[location.key] = window.scrollY;
+//       sessionStorage.setItem("positions", JSON.stringify(positions));
+//     }, [])
+//   );
+
+//   if (typeof window !== "undefined") {
+//     React.useLayoutEffect(() => {
+//       let y = positions[location.key];
+
+//       // been here before, scroll to it (maybe want history action?)
+//       if (y) {
+//         window.scrollTo(0, y);
+//         return;
+//       }
+
+//       // try to scroll to the hash
+//       if (location.hash) {
+//         let el = document.querySelector(location.hash);
+//         if (el) {
+//           el.scrollIntoView();
+//           return;
+//         }
+//       }
+
+//       if (wasSubmissionRef.current === true) {
+//         wasSubmissionRef.current = false;
+//         return;
+//       }
+
+//       // otherwise go to the top!
+//       window.scrollTo(0, 0);
+//     }, [location]);
+//   }
+
+//   React.useEffect(() => {
+//     if (transition.submission) {
+//       wasSubmissionRef.current = true;
+//     }
+//   }, [transition]);
+// }
+
 function useScrollRestoration() {
   let location = useLocation();
   let transition = useTransition();
@@ -19,14 +74,22 @@ function useScrollRestoration() {
   let wasSubmissionRef = React.useRef(false);
 
   React.useEffect(() => {
-    if (transition.location) {
-      positions[location.key] = window.scrollY;
+    if (transition.submission) {
+      wasSubmissionRef.current = true;
     }
-  }, [transition, location]);
+  }, [transition]);
+
+  React.useEffect(() => {
+    let savePosition = () => {
+      positions[location.key] = window.scrollY;
+      console.log("savePosition", positions);
+    };
+    window.addEventListener("scroll", savePosition);
+    return () => window.removeEventListener("scroll", savePosition);
+  }, [location]);
 
   useBeforeUnload(
     React.useCallback(() => {
-      positions[location.key] = window.scrollY;
       sessionStorage.setItem("positions", JSON.stringify(positions));
     }, [])
   );
@@ -35,8 +98,9 @@ function useScrollRestoration() {
     React.useLayoutEffect(() => {
       let y = positions[location.key];
 
-      // been here before, scroll to it (maybe want history action?)
+      // been here before, scroll to it
       if (y) {
+        console.log("been here, scroll to it", location.key, y);
         window.scrollTo(0, y);
         return;
       }
@@ -50,12 +114,14 @@ function useScrollRestoration() {
         }
       }
 
+      // don't do anything on submissions
       if (wasSubmissionRef.current === true) {
         wasSubmissionRef.current = false;
         return;
       }
 
-      // otherwise go to the top!
+      // otherwise go to the top on new locations
+      console.log("brand new, up to the top!", location.key);
       window.scrollTo(0, 0);
     }, [location]);
   }

@@ -118,9 +118,9 @@ const IndexPage: RouteComponent = () => {
               </ButtonLink>
               <ButtonLink
                 size="large"
-                to="/docs/en/v6/getting-started/tutorial/"
+                to="/docs/en/v6/getting-started/tutorial"
               >
-                Do the Tutorial
+                Start the Tutorial
               </ButtonLink>
             </div>
           </div>
@@ -185,7 +185,7 @@ const IndexPage: RouteComponent = () => {
         </div>
       </div>
 
-      <div className="index__features">
+      <div className="text-[50%] sm:text-[100%] max-w-3xl mx-auto">
         <div className="container">
           <ScrollStage pages={4}>
             <div className="sticky top-1/3">

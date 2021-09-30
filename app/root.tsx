@@ -153,7 +153,11 @@ function useRouteChangeFocusAndLiveRegionUpdates({
     }
 
     if (focusRef.current) {
-      focusRef.current.focus();
+      // FIXME: this breaks scroll restoration, we need to figure out how to
+      // manage focus and scroll without sacrificing one for the other. For now
+      // we're prioritizing scroll restoration since browsers don't really have
+      // any good answers for focus on back clicks either.
+      // focusRef.current.focus();
     }
 
     if (liveRegionRef.current) {

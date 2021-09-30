@@ -1,8 +1,11 @@
 import { promises as fs } from "fs";
 import path from "path";
+
 import parseAttributes from "gray-matter";
 import { processMarkdown } from "@ryanflorence/md";
 import * as semver from "semver";
+import type { Doc as PrismaDoc } from "@prisma/client";
+
 import { prisma } from "./db.server";
 import { Attributes } from "./utils/process-docs.server";
 
@@ -16,7 +19,7 @@ let where: "remote" | "local" =
 let menuCache = new Map<string, MenuDir>();
 
 export interface MenuDir {
-  type: "dir";
+  type: "directory";
   name: string;
   path: string;
   title: string;
@@ -32,7 +35,6 @@ export interface MenuFile {
    * The file name on disk, with extension
    */
   name: string;
-
   /**
    * The url path in the UI
    */
@@ -43,8 +45,8 @@ export interface MenuFile {
 
 export type MenuItem = MenuDir | MenuFile;
 
-interface File {
-  type: string;
+export interface File {
+  type: "file" | "directory";
   name: string;
   path: string;
 }
@@ -52,9 +54,7 @@ interface File {
 export type Doc = {
   html: string;
   title: string;
-  attributes: {
-    [key: string]: string | boolean;
-  };
+  attributes: Attributes;
 };
 
 export type Config = {
@@ -66,22 +66,18 @@ export type Config = {
    * The repo name containing the docs.
    */
   repo: string;
-
   /**
    * The path of the docs in the repo on GitHub
    */
   remotePath: string;
-
   /**
    * Local path of files during development
    */
   localPath: string;
-
   /**
    * Directory name of where to find localized docs during development
    */
   localLangDir: string;
-
   /**
    * Semver range of versions you want to show up in the versions dropdown
    */
@@ -109,19 +105,195 @@ export async function getMenu(
   config: Config,
   version: VersionHead
 ): Promise<MenuDir> {
-  if (menuCache.has(version.version)) {
-    return menuCache.get(version.version)!;
+  let dirName = "/";
+  let menu = await getContentsRecursively(
+    config,
+    dirName,
+    "root",
+    dirName,
+    version
+  );
+  return menu;
+}
+
+// TODO: this is a mess, could be optimized and not even need to be recursive, but here we are
+async function getContentsRemote(
+  version: VersionHead,
+  slug: string
+): Promise<File[]> {
+  let slugWithLeadingSlash = slug.startsWith("/") ? slug : `/${slug}`;
+
+  const docs = await prisma.doc.findMany({
+    where: {
+      lang: "en",
+      filePath: { startsWith: slugWithLeadingSlash },
+      version: {
+        fullVersionOrBranch: version.version,
+      },
+    },
+    select: {
+      filePath: true,
+      title: true,
+    },
+  });
+
+  let files = new Map<string, File>();
+
+  for (let doc of docs) {
+    let dirname = path.dirname(doc.filePath);
+
+    if (dirname === slugWithLeadingSlash) {
+      files.set(doc.filePath, {
+        name: doc.title,
+        path: doc.filePath,
+        type: "file",
+      });
+    } else {
+      dirname = dirname.replace(slugWithLeadingSlash, "");
+      files.set(dirname, {
+        name: doc.title,
+        path: dirname.startsWith("/") ? dirname : `/${dirname}`,
+        type: "directory",
+      });
+    }
   }
 
-  let dirName = "/";
+  let returnValue: File[] = [];
 
-  let menu =
+  for (let [, value] of files) {
+    returnValue.push(value);
+  }
+
+  return returnValue;
+}
+
+async function getContentsLocal(config: Config, slug: string): Promise<File[]> {
+  let root = path.join(process.cwd(), config.localPath);
+  let dirPath = path.join(root, slug);
+  let dir = await fs.readdir(dirPath);
+
+  return Promise.all(
+    dir.map(async (fileName): Promise<File> => {
+      let fileDiskPath = path.join(dirPath, fileName);
+      let isDir = (await fs.stat(fileDiskPath)).isDirectory();
+
+      let emulatedRemotePath = `${slug}/${fileName}`;
+
+      return {
+        type: isDir ? "directory" : "file",
+        name: fileName,
+        path: emulatedRemotePath,
+      };
+    })
+  );
+}
+
+async function getContentsRecursively(
+  config: Config,
+  dirPath: string,
+  dirName: string,
+  rootName: string,
+  version: VersionHead
+): Promise<MenuDir> {
+  let contents =
     where === "remote"
-      ? await getRemoteMenu(version)
-      : await getLocalMenu(config, dirName, "root", dirName, version);
+      ? await getContentsRemote(version, dirPath)
+      : await getContentsLocal(config, dirPath);
 
-  menuCache.set(version.version, menu);
-  return menu;
+  if (!Array.isArray(contents)) {
+    throw new Error(
+      `You need to have some folders inside of ${dirPath} to make a menu`
+    );
+  }
+
+  let files = contents.filter(
+    (file) =>
+      file.type === "file" &&
+      // is markdown
+      file.name.match(/\.md$/) &&
+      // not 404
+      !file.name.match(/^404\.md$/)
+  );
+
+  let hasIndexFile = !!contents.find((file) => file.name === `index.md`);
+  let { attributes, content } = hasIndexFile
+    ? await getAttributes(config, path.join(dirPath, `index.md`), version, "en")
+    : ({ attributes: {}, content: "" } as {
+        attributes: Attributes;
+        content: string;
+      });
+
+  let hasIndex = content.trim() !== "";
+  let ext = `.md`;
+
+  let dir: MenuDir = {
+    type: "directory",
+    name: dirName,
+    path: dirPath.replace(rootName, ""),
+    hasIndex,
+    attributes,
+    title: attributes.title || dirName,
+    dirs: [],
+    files: (
+      await Promise.all(
+        files
+          .filter((file) => file.name !== `index${ext}`)
+          .map(async (file): Promise<MenuFile> => {
+            let { attributes } = await getAttributes(
+              config,
+              file.path,
+              version,
+              "en"
+            );
+            let linkPath = file.path
+              .replace(rootName, "")
+              .slice(0, -ext.length);
+
+            return {
+              name: attributes.title || path.basename(linkPath),
+              path: linkPath.startsWith("/") ? linkPath : `/${linkPath}`,
+              type: "file",
+              attributes,
+              title: attributes.title || path.basename(linkPath),
+            };
+          })
+      )
+    ).sort(sortByAttributes),
+  };
+
+  let dirs = contents.filter((file) => file.type === "directory");
+  if (dirs.length) {
+    let subDirs = await Promise.all(
+      dirs.map((dir) =>
+        getContentsRecursively(config, dir.path, dir.name, rootName, version)
+      )
+    );
+
+    // grab the current directories files and make them directories
+    // this lets us sort them into the correct order
+    // (e.g /guides/migrating-5-to-6 will be before /guides/building-the-user-interface/index.md)
+    let subDirFiles = [...dir.files].map<MenuDir>((file) => ({
+      attributes: file.attributes,
+      dirs: [],
+      files: [],
+      hasIndex: true,
+      name: file.name,
+      path: file.path,
+      title: file.attributes.title,
+      type: "directory",
+    }));
+
+    // empty out the current directories files to prevent duplication
+    dir.files = [];
+
+    // merge the sub directories and files into the current directory and sort them
+    let sortedSubDirs = [...subDirs, ...subDirFiles].sort(sortByAttributes);
+
+    // add the sub directories to the current directory
+    dir.dirs.push(...sortedSubDirs);
+  }
+
+  return dir;
 }
 
 export async function getDoc(
@@ -129,98 +301,88 @@ export async function getDoc(
   slug: string,
   version: VersionHead,
   lang: string
-): Promise<Doc | null> {
-  let fileContents =
-    where === "remote"
-      ? await getDocRemote(slug, version, lang)
-      : await getDocLocal(config, slug, lang);
-
-  // retry with english
-  if (!fileContents) {
-    let englishFileContents =
-      where === "remote"
-        ? await getDocRemote(slug, version, "en")
-        : await getDocLocal(config, slug, "en");
-
-    return englishFileContents;
-  }
-
-  return fileContents;
+): Promise<Doc> {
+  return where === "remote"
+    ? getDocRemote(slug, version, lang)
+    : getDocLocal(config, slug, lang);
 }
 
 async function getDocRemote(
-  filePath: string,
+  slug: string,
   version: VersionHead,
   lang: string
-): Promise<Doc | null> {
-  let doc = await prisma.doc.findFirst({
-    where: {
-      OR: [
-        {
-          AND: [
-            {
-              lang,
-              filePath: filePath + ".md",
-              version: {
-                fullVersionOrBranch: version.head,
-              },
+): Promise<Doc> {
+  let doc: PrismaDoc;
+  try {
+    doc = await prisma.doc.findFirst({
+      where: {
+        OR: [
+          {
+            version: {
+              versionHeadOrBranch: version.head,
             },
-          ],
-        },
-        {
-          AND: [
-            {
-              lang,
-              filePath: filePath + ".md",
-              version: {
-                versionHeadOrBranch: version.head,
-              },
+            filePath: slug + ".md",
+            lang: lang,
+          },
+          {
+            version: {
+              versionHeadOrBranch: version.head,
             },
-          ],
-        },
-        {
-          AND: [
+            filePath: path.join(slug, "index.md"),
+            lang: lang,
+          },
+        ],
+      },
+      rejectOnNotFound: true,
+    });
+  } catch (error: unknown) {
+    try {
+      doc = await prisma.doc.findFirst({
+        where: {
+          OR: [
             {
-              lang,
-              filePath: path.join(filePath, "index.md"),
-              version: {
-                fullVersionOrBranch: version.head,
-              },
-            },
-          ],
-        },
-        {
-          AND: [
-            {
-              lang,
-              filePath: path.join(filePath, "index.md"),
               version: {
                 versionHeadOrBranch: version.head,
               },
+              filePath: slug + ".md",
+              lang: "en",
+            },
+            {
+              version: {
+                versionHeadOrBranch: version.head,
+              },
+              filePath: path.join(slug, "index.md"),
+              lang: "en",
             },
           ],
         },
-      ],
-    },
-  });
-
-  if (!doc) {
-    console.error(`NO DOC FOUND FOR "${filePath}"`, { lang, version });
-    return null;
+        rejectOnNotFound: true,
+      });
+    } catch (error: unknown) {
+      // still not found
+      throw new Error("Doc not found.");
+    }
   }
 
   return {
     attributes: {
       title: doc.title,
+      disabled: doc.disabled,
+      hidden: doc.hidden,
+      description: doc.description ?? undefined,
+      siblingLinks: doc.siblingLinks,
+      toc: doc.toc,
+      order: doc.order ?? undefined,
+      published: doc.published ?? undefined,
     },
     html: doc.html,
-    title: doc.title ?? doc.filePath,
+    title: doc.title,
   };
 }
 
 async function getDocLocal(
   config: Config,
-  filePath: string,
+  slug: string,
   lang: string
 ): Promise<Doc> {
   let root =
@@ -232,10 +394,10 @@ async function getDocLocal(
           config.localLangDir,
           lang
         );
-  let dirName = path.join(root, filePath);
-  let ext = `.md`;
+  let dirName = path.join(root, slug);
+  let ext = ".md";
 
-  let fileName = dirName + ext;
+  let fileName = dirName.endsWith(ext) ? dirName : dirName + ext;
   let indexName = path.join(dirName, "index") + ext;
   let notFoundFileName = path.join(root, "404") + ext;
 
@@ -243,89 +405,101 @@ async function getDocLocal(
 
   try {
     // if it's a folder
-    await fs.access(dirName);
-    actualFileWeWant = indexName;
-  } catch (e) {
+    const stats = await fs.stat(dirName);
+    if (stats.isDirectory()) {
+      actualFileWeWant = indexName;
+    } else {
+      actualFileWeWant = fileName;
+    }
+  } catch (error: unknown) {
     actualFileWeWant = fileName;
   }
 
   try {
     // see if we have the file
     await fs.access(actualFileWeWant);
-  } catch (error) {
+  } catch (error: unknown) {
     // 404 doc
     actualFileWeWant = notFoundFileName;
     try {
       fs.access(actualFileWeWant);
-    } catch (error) {
+    } catch (error: unknown) {
       // seriously, come on...
       throw new Error("Doc not found, also, the 404 doc was not found.");
     }
   }
 
-  let file = await fs.readFile(actualFileWeWant);
+  let file = await fs.readFile(actualFileWeWant, "utf-8");
 
   let { data, content } = parseAttributes(file);
-  let title = data.title || filePath;
+  let title = data.title || slug;
   let html = await processMarkdown(
     data.toc === false ? content : "## toc\n" + content
   );
-  let doc: Doc = { attributes: data, html: html.toString(), title };
-  return doc;
-}
 
-async function getContentsLocal(config: Config, slug: string): Promise<File[]> {
-  let root = path.join(process.cwd(), config.localPath);
-  let dirPath = path.join(root, slug);
-  let dir = await fs.readdir(dirPath);
-
-  return Promise.all(
-    dir.map(async (fileName) => {
-      let fileDiskPath = path.join(dirPath, fileName);
-      let isDir = (await fs.stat(fileDiskPath)).isDirectory();
-      let emulatedRemotePath = `${slug}/${fileName}`;
-      return {
-        type: isDir ? "dir" : "file",
-        name: fileName,
-        path: emulatedRemotePath,
-      };
-    })
-  );
+  return {
+    attributes: {
+      title,
+      disabled: data.disabled ?? false,
+      hidden: data.hidden ?? false,
+      description: data.description ?? undefined,
+      siblingLinks: data.siblingLinks ?? false,
+      toc: data.toc ?? true,
+      order: data.order ?? undefined,
+      published: data.published ?? undefined,
+    },
+    html: html.toString(),
+    title,
+  };
 }
 
 async function getAttributes(
   config: Config,
-  diskPath: string,
-  version: VersionHead
-) {
+  slug: string,
+  version: VersionHead,
+  lang: string
+): Promise<{ attributes: Attributes; content: string }> {
   let contents =
     where === "remote"
-      ? await getFileRemote(diskPath, version)
-      : await getFileLocal(config, diskPath);
+      ? await getRemoteFileAttributes(config, slug, version, lang)
+      : await getLocalFileAttributes(config, slug, version, lang);
 
   return contents;
 }
 
-async function getFileRemote(
-  filename: string,
-  version: VersionHead
+async function getRemoteFileAttributes(
+  config: Config,
+  slug: string,
+  version: VersionHead,
+  lang: string
 ): Promise<{
   attributes: Attributes;
   content: string;
-} | null> {
-  const doc = await prisma.doc.findFirst({
-    where: {
-      filePath: { equals: filename },
-      version: {
-        fullVersionOrBranch: {
-          equals: version.version,
-        },
+}> {
+  let doc: PrismaDoc;
+  try {
+    doc = await prisma.doc.findFirst({
+      where: {
+        filePath: slug,
+        version: { fullVersionOrBranch: version.version },
+        lang: lang,
       },
-    },
-  });
-
-  if (!doc) {
-    return null;
+      rejectOnNotFound: true,
+    });
+  } catch (error: unknown) {
+    try {
+      doc = await prisma.doc.findFirst({
+        where: {
+          filePath: slug,
+          version: { fullVersionOrBranch: version.version },
+          lang: "en",
+        },
+        rejectOnNotFound: true,
+      });
+    } catch (error) {
+      // still not found...
+      throw new Error("Doc not found");
+    }
   }
 
   return {
@@ -343,231 +517,21 @@ async function getFileRemote(
   };
 }
 
-async function getFileLocal(
+async function getLocalFileAttributes(
   config: Config,
-  fileName: string
+  slug: string,
+  version: VersionHead,
+  lang: string
 ): Promise<{
   attributes: Attributes;
   content: string;
 }> {
-  let docsRoot = path.resolve(process.cwd(), config.localPath);
-  let resolvedPath = path.join(docsRoot, fileName);
-  let file = await fs.readFile(resolvedPath);
-  let { data, content } = parseAttributes(file);
-  return { attributes: data, content } as {
-    attributes: Attributes;
-    content: string;
+  let doc = await getDocLocal(config, slug, lang);
+
+  return {
+    attributes: doc.attributes,
+    content: doc.html,
   };
-}
-
-// TODO: need to get the "root route path" into these links
-async function getLocalMenu(
-  config: Config,
-  dirPath: string,
-  dirName: string,
-  rootName: string,
-  version: VersionHead
-): Promise<MenuDir> {
-  let contents = await getContentsLocal(config, dirPath);
-
-  if (!Array.isArray(contents)) {
-    throw new Error(
-      `You need to have some folders inside of ${dirPath} to make a menu`
-    );
-  }
-
-  let files = contents.filter(
-    (file) =>
-      file.type === "file" &&
-      // is markdown
-      file.path.match(/\.md$/) &&
-      // not 404
-      !file.path.match(/^404\.md$/)
-  );
-
-  let hasIndexFile = !!contents.find((file) => {
-    let parsed = path.parse(file.path);
-    return parsed.base === "index.md";
-  });
-
-  let attributes: Attributes = {} as Attributes;
-  let content: string = "";
-
-  if (hasIndexFile) {
-    let parsed = await getAttributes(
-      config,
-      path.join(dirPath, `index.md`),
-      version
-    );
-    if (parsed) {
-      attributes = parsed.attributes;
-      content = parsed.content;
-    }
-  }
-
-  let hasIndex = content.trim() !== "";
-  let ext = `.md`;
-
-  let dirFiles = await Promise.all(
-    files
-      .filter((file) => !file.path.endsWith(`index${ext}`))
-      .map(async (file): Promise<MenuFile | null> => {
-        let parsed = await getAttributes(config, file.path, version);
-
-        if (!parsed) return null;
-
-        if (parsed.attributes.hidden) return null;
-
-        let parsedPath = path.parse(file.path);
-
-        let filePath = path.format({
-          ...parsedPath,
-          name: parsedPath.name === "index" ? undefined : parsedPath.name,
-          base: parsedPath.name === "index" ? undefined : parsedPath.name,
-          ext: undefined,
-        });
-
-        return {
-          name: file.path,
-          path: filePath,
-          type: "file",
-          attributes: parsed.attributes,
-          title: parsed.attributes.title,
-        };
-      })
-  );
-
-  let dir: MenuDir = {
-    type: "dir",
-    name: dirName,
-    path: `/${dirPath.replace(rootName, "")}`,
-    hasIndex,
-    attributes,
-    title: attributes.title || dirName,
-    dirs: [],
-    files: dirFiles
-      .filter((file): file is MenuFile => file !== null)
-      .sort(sortByAttributes),
-  };
-
-  let dirs = contents.filter((file) => file.type === "dir");
-  if (dirs.length) {
-    dir.dirs = (
-      await Promise.all(
-        dirs.map((dir) =>
-          getLocalMenu(config, dir.path, dir.path, rootName, version)
-        )
-      )
-    )
-      // get rid of directories with no files
-      .filter((dir) => dir.files.length)
-      .sort(sortByAttributes);
-  }
-
-  return dir;
-}
-
-async function getRemoteMenu(version: VersionHead): Promise<MenuDir> {
-  const docs = await prisma.doc.findMany({
-    where: {
-      version: {
-        fullVersionOrBranch: version.version,
-      },
-    },
-  });
-
-  let dirMap = new Map<string, MenuItem[]>();
-
-  for (let doc of docs) {
-    let dirname = path.dirname(doc.filePath);
-    let files: MenuFile[] = docs
-      .filter((doc: any) => path.dirname(doc.filePath) === dirname)
-      .map((file: any) => {
-        return {
-          name: file.title,
-          path: file.filePath,
-          title: file.title,
-          type: "file",
-          attributes: {
-            title: file.title,
-            disabled: file.disabled,
-            hidden: file.hidden,
-            siblingLinks: file.siblingLinks,
-            toc: file.toc,
-            description: file.description ?? undefined,
-            order: file.order ?? undefined,
-            published: file.published ?? undefined,
-          },
-        };
-      });
-
-    dirMap.set(dirname, files);
-  }
-
-  let menu: MenuDir = {
-    type: "dir",
-    name: "root",
-    path: "/",
-    hasIndex: false,
-    attributes: {} as Attributes,
-    title: "root",
-    files: [],
-    dirs: [],
-  };
-
-  for (let [dir, files] of dirMap) {
-    let indexFile = files.find((file) => file.path.endsWith("index.md"));
-    if (dir === "/") {
-      menu.attributes = {
-        title: dir,
-        disabled: false,
-        hidden: false,
-        siblingLinks: false,
-        toc: false,
-      };
-      menu.dirs = [];
-      menu.hasIndex = !!indexFile;
-      menu.title = indexFile ? indexFile.attributes.title : "root";
-      menu.type = "dir";
-      menu.files = files
-        .filter((file) => !file.path.endsWith(`index.md`))
-        .sort(sortByAttributes)
-        .map((file) => ({
-          ...file,
-          type: "file",
-        }));
-    } else {
-      let indexFile = files.find((file) => file.path.endsWith("index.md"));
-      menu.dirs.push({
-        attributes: indexFile
-          ? indexFile.attributes
-          : {
-              title: dir,
-              disabled: false,
-              hidden: false,
-              siblingLinks: false,
-              toc: false,
-            },
-        type: "dir",
-        hasIndex: !!indexFile,
-        title: indexFile ? indexFile.attributes.title : dir,
-        path: dir,
-        name: dir,
-        dirs: [],
-        files: files
-          .filter((file) => !file.path.endsWith(`index.md`))
-          .sort(sortByAttributes)
-          .map((file) => ({
-            ...file,
-            type: "file",
-          })),
-      });
-    }
-  }
-
-  menu.dirs.sort(sortByAttributes);
-
-  return menu;
 }
 
 function sortByAttributes(a: MenuItem, b: MenuItem) {
