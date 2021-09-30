@@ -107,6 +107,7 @@ export let App: RouteComponent = () => {
 export default App;
 
 export let ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+  console.error(error);
   return (
     <Document forceDarkMode>
       <h1>App Error</h1>
