@@ -26,7 +26,8 @@ function SectionSignup() {
         <p className="text-lg md:text-xl mb-6 opacity-80">
           React Router is developed by the <a href="https://remix.run">Remix</a>{" "}
           team. To get updates and special content on React Router (as well as
-          our other projects), subscribe to the Remix newsletter.
+          our other projects), subscribe to the Remix newsletter or join the{" "}
+          <a href="#">conversation on Discord</a>.
         </p>
         <Form
           replace

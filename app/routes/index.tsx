@@ -1,8 +1,8 @@
 import * as React from "react";
 import cx from "clsx";
 import { Section, Heading } from "~/components/section-heading";
-import { ButtonLink, ButtonDiv } from "~/components/button";
-import { Link, ArrowLink } from "~/components/link";
+import { ButtonLink /* , ButtonDiv */ } from "~/components/button";
+import { ArrowLink /* , Link */ } from "~/components/link";
 import {
   IconAirbnb,
   IconApple,
@@ -12,7 +12,7 @@ import {
   IconMicrosoft,
   IconNavigation,
   IconNetflix,
-  IconPlay,
+  // IconPlay,
   IconProtection,
   IconTwitter,
   IconZoom,
@@ -97,7 +97,7 @@ const IndexPage: RouteComponent = () => {
     <div className="py-8">
       <div className="index__hero">
         <div className="container">
-          <div className="text-center mx-auto my-24 md:my-32 lg:mt-36 max-w-xl">
+          <div className="text-center mx-auto my-20 md:mt-32 lg:mt-36 max-w-xl">
             <h1 className="title mb-7">
               React Router
               <br />
@@ -124,7 +124,7 @@ const IndexPage: RouteComponent = () => {
               </ButtonLink>
             </div>
           </div>
-          <div className="max-w-[1084px] m-auto">
+          {/* <div className="max-w-[1084px] m-auto">
             <div className="relative group">
               <Link
                 to="/"
@@ -148,12 +148,13 @@ const IndexPage: RouteComponent = () => {
               </Link>
             </div>
           </div>
+         */}
         </div>
       </div>
 
       <div className="index__sponsors">
         <div className="md:container max-w-full overflow-hidden md:max-w-5xl">
-          <div className="text-center my-20 md:my-32">
+          <div className="text-center my-20 md:mb-32">
             <h2 className="eyebrow mb-6 md:mb-8">
               Used by dev teams at top companies
             </h2>
