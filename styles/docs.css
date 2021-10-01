@@ -593,6 +593,35 @@ stylesheet targets.
     background: var(--base08);
   }
 
+  & docs-cards {
+    @apply flex flex-col md:grid grid-cols-2 gap-6;
+
+    & > a {
+      display: contents;
+      color: unset;
+    }
+
+    & > a:hover {
+      text-decoration: unset;
+    }
+  }
+
+  & docs-card {
+    @apply w-full rounded border border-[color:var(--base03)] shadow transition-shadow ease-out p-6;
+
+    & > :first-child {
+      @apply mt-0;
+    }
+
+    & > :last-child {
+      @apply mb-0;
+    }
+  }
+
+  & a:hover docs-card {
+    @apply shadow-lg;
+  }
+
   /*****************************************************************************/
   /* blockquotes */
 
