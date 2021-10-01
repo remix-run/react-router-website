@@ -82,7 +82,6 @@ function useScrollRestoration() {
   React.useEffect(() => {
     let savePosition = () => {
       positions[location.key] = window.scrollY;
-      console.log("savePosition", positions);
     };
     window.addEventListener("scroll", savePosition);
     return () => window.removeEventListener("scroll", savePosition);
@@ -100,7 +99,6 @@ function useScrollRestoration() {
 
       // been here before, scroll to it
       if (y) {
-        console.log("been here, scroll to it", location.key, y);
         window.scrollTo(0, y);
         return;
       }
@@ -121,7 +119,6 @@ function useScrollRestoration() {
       }
 
       // otherwise go to the top on new locations
-      console.log("brand new, up to the top!", location.key);
       window.scrollTo(0, 0);
     }, [location]);
   }

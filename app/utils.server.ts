@@ -433,9 +433,12 @@ async function getDocLocal(
 
   let { data, content } = parseAttributes(file);
   let title = data.title || slug;
-  let html = await processMarkdown(
-    data.toc === false ? content : "## toc\n" + content
-  );
+  let html =
+    content.trim() === ""
+      ? ""
+      : await processMarkdown(
+          data.toc === false ? content : "## toc\n" + content
+        );
 
   return {
     attributes: {
