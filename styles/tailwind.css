@@ -6,6 +6,25 @@
 
 @layer base {
   :root {
+    --hue-0000: var(--color-white);
+    --hue-0050: var(--color-gray-050);
+    --hue-0100: var(--color-gray-100);
+    --hue-0150: var(--color-gray-150);
+    --hue-0200: var(--color-gray-200);
+    --hue-0250: var(--color-gray-250);
+    --hue-0300: var(--color-gray-300);
+    --hue-0400: var(--color-gray-400);
+    --hue-0500: var(--color-gray-500);
+    --hue-0600: var(--color-gray-600);
+    --hue-0700: var(--color-gray-700);
+    --hue-0750: var(--color-gray-750);
+    --hue-0800: var(--color-gray-800);
+    --hue-0850: var(--color-gray-850);
+    --hue-0900: var(--color-gray-900);
+    --hue-0950: var(--color-gray-950);
+    --hue-1000: var(--color-black);
+
+    /* code syntax colors */
     --base00: #ffffff;
     --base01: #e1e1e1;
     --base02: #b6b6b6;
@@ -14,8 +33,6 @@
     --base05: #464646;
     --base06: #2c2c2c;
     --base07: #121212;
-
-    /* code syntax colors */
     --base08: var(--color-red-700);
     --base09: var(--color-orange-800);
     --base0A: var(--color-yellow-900);
@@ -29,6 +46,25 @@
   }
 
   :root[data-force-dark] {
+    --hue-0000: var(--color-black);
+    --hue-0050: var(--color-gray-950);
+    --hue-0100: var(--color-gray-900);
+    --hue-0150: var(--color-gray-850);
+    --hue-0200: var(--color-gray-800);
+    --hue-0250: var(--color-gray-750);
+    --hue-0300: var(--color-gray-700);
+    --hue-0400: var(--color-gray-600);
+    --hue-0500: var(--color-gray-500);
+    --hue-0600: var(--color-gray-400);
+    --hue-0700: var(--color-gray-300);
+    --hue-0750: var(--color-gray-250);
+    --hue-0800: var(--color-gray-200);
+    --hue-0850: var(--color-gray-250);
+    --hue-0900: var(--color-gray-100);
+    --hue-0950: var(--color-gray-150);
+    --hue-1000: var(--color-white);
+
+    /* code syntax colors */
     --base00: #121212;
     --base01: #2c2c2c;
     --base02: #464646;
@@ -37,8 +73,6 @@
     --base05: #b6b6b6;
     --base06: #e1e1e1;
     --base07: #ffffff;
-
-    /* code syntax colors */
     --base08: var(--color-red-400);
     --base09: var(--color-orange-400);
     --base0A: var(--color-yellow-200);
@@ -53,6 +87,25 @@
 
   @media (prefers-color-scheme: dark) {
     :root {
+      --hue-0000: var(--color-black);
+      --hue-0050: var(--color-gray-950);
+      --hue-0100: var(--color-gray-900);
+      --hue-0150: var(--color-gray-850);
+      --hue-0200: var(--color-gray-800);
+      --hue-0250: var(--color-gray-750);
+      --hue-0300: var(--color-gray-700);
+      --hue-0400: var(--color-gray-600);
+      --hue-0500: var(--color-gray-500);
+      --hue-0600: var(--color-gray-400);
+      --hue-0700: var(--color-gray-300);
+      --hue-0750: var(--color-gray-250);
+      --hue-0800: var(--color-gray-200);
+      --hue-0850: var(--color-gray-250);
+      --hue-0900: var(--color-gray-100);
+      --hue-0950: var(--color-gray-150);
+      --hue-1000: var(--color-white);
+
+      /* code syntax colors */
       --base00: #121212;
       --base01: #2c2c2c;
       --base02: #464646;
@@ -61,8 +114,6 @@
       --base05: #b6b6b6;
       --base06: #e1e1e1;
       --base07: #ffffff;
-
-      /* code syntax colors */
       --base08: var(--color-red-400);
       --base09: var(--color-orange-400);
       --base0A: var(--color-yellow-200);
@@ -82,7 +133,7 @@
 }
 
 [data-reach-skip-nav-link]:focus {
-  @apply font-semibold bg-[color:var(--base00)] z-20;
+  @apply font-semibold bg-[color:var(--hue-0000)] z-20;
 }
 
 [data-reach-skip-nav-content]:focus {
@@ -110,7 +161,7 @@ h6,
   @apply leading-squeezed;
   @apply font-display;
   @apply font-bold;
-  color: var(--base07);
+  color: var(--hue-1000);
 }
 
 .title {

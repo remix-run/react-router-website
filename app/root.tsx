@@ -39,18 +39,14 @@ const Document: React.FC<{
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
-        <meta
-          name="theme-color"
-          content={forceDarkMode ? "var(--color-black)" : "var(--base00)"}
-        />
+        <meta name="theme-color" content="var(--hue-0000)" />
       </head>
 
       <body
-        className={cx(className, {
-          ["bg-black text-white"]: forceDarkMode,
-          ["bg-[color:var(--base00)] text-[color:var(--base07)]"]:
-            !forceDarkMode,
-        })}
+        className={cx(
+          className,
+          "bg-[color:var(--hue-0000)] text-[color:var(--hue-1000)]"
+        )}
       >
         {children}
         <Scripts />
