@@ -104,18 +104,18 @@ function getButtonClassNames({
 
       // secondary variant
       [`px-5 py-3 lg:px-6
-        bg-transparent hover:bg-[color:var(--base07)]
-        border-2 border-[color:var(--base06)] hover:border-[color:var(--base07)]
+        bg-transparent hover:bg-[color:var(--hue-1000)]
+        border-2 border-[color:var(--hue-0750)] hover:border-[color:var(--hue-1000)]
         focus:ring-blue-500
         focus:ring-opacity-60
-        text-[color:var(--base06)] hover:text-[color:var(--base00)]`]:
+        text-[color:var(--hue-0750)] hover:text-[color:var(--hue-0000)]`]:
         variant === "secondary",
 
       // transparent variant
       [`px-5 py-3 lg:px-6
         focus:ring-blue-500
         focus:ring-opacity-60
-        text-[color:var(--base06)] hover:text-[color:var(--base07)]`]:
+        text-[color:var(--hue-0750)] hover:text-[color:var(--hue-1000)]`]:
         variant === "transparent",
 
       // documentation variant
@@ -125,7 +125,7 @@ function getButtonClassNames({
         ${
           isActive
             ? "text-blue-500 hover:text-blue-700"
-            : "text-gray-300 hover:text-[color:var(--base01)]"
+            : "text-gray-300 hover:text-[color:var(--hue-0100)]"
         }
         focus:ring-blue-500
         focus:ring-opacity-60`]: variant === "documentation",

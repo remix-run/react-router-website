@@ -78,7 +78,7 @@ function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
 
   return (
     <ul
-      className={cx("md-nav-list text-[color:var(--base05)] mb-3", {
+      className={cx("md-nav-list text-[color:var(--hue-0750)] mb-3", {
         ["ml-3 md:ml-4 lg:ml-3 2xl:ml-4"]: level === 3,
         ["ml-6 md:ml-8 lg:ml-6 2xl:ml-8"]: level === 4,
       })}

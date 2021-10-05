@@ -49,7 +49,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         className={cx(
           className,
           `appearance-none rounded h-5 w-5 form-check
-           text-[color:var(--base02)] hover:text-[color:var(--base03)]
+           text-[color:var(--hue-0200)] hover:text-[color:var(--hue-0250)]
            checked:text-blue-500 hover:checked:text-blue-600 bg-current
            border ${
              validationState === "invalid"
@@ -89,7 +89,7 @@ const Radio = React.forwardRef<HTMLInputElement, RadioProps>((props, ref) => {
       className={cx(
         className,
         `appearance-none rounded-full h-5 w-5 form-dot
-         text-[color:var(--base02)] hover:text-[color:var(--base03)]
+         text-[color:var(--hue-0200)] hover:text-[color:var(--hue-0250)]
          checked:text-blue-500 hover:checked:text-blue-600 bg-current
          border ${
            validationState === "invalid"
@@ -154,16 +154,16 @@ function getFieldClassNames({
     className,
     `flex-1 appearance-none w-full rounded
     py-2 px-3
-    bg-[color:var(--base02)] hover:bg-[color:var(--base03)]
+    bg-[color:var(--hue-0200)] hover:bg-[color:var(--hue-0250)]
     border ${
       validationState === "invalid"
         ? "border-red-500 focus:border-red-500"
         : "border-transparent focus:border-blue-500"
     }
-    placeholder-[color:var(--base04)] text-base ${
+    placeholder-[color:var(--hue-0600)] text-base ${
       validationState === "invalid"
         ? "text-red-500"
-        : "text-[color:var(--base07)]"
+        : "text-[color:var(--hue-1000)]"
     }
     focus:outline-none focus:ring-2 ${
       validationState === "invalid"

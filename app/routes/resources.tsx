@@ -111,7 +111,7 @@ const ResourcesPage: RouteComponent = () => {
                     <div key={title}>
                       <IconBox
                         icon={icon}
-                        className="bg-[color:var(--base07)] text-[color:var(--base00)] mb-6"
+                        className="bg-[color:var(--hue-1000)] text-[color:var(--hue-0000)] mb-6"
                       />
                       <dt className="h3">{title}</dt>
                       <dd>
@@ -229,7 +229,7 @@ const ResourcesPage: RouteComponent = () => {
                     <div
                       key={release.heading}
                       className={cx({
-                        "pb-8 md:pb-10 mb-8 md:mb-10 border-b border-[color:var(--base02)]":
+                        "pb-8 md:pb-10 mb-8 md:mb-10 border-b border-[color:var(--hue-0200)]":
                           i !== arr.length - 1,
                       })}
                     >

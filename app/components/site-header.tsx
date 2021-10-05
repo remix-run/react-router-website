@@ -53,10 +53,10 @@ const SiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
       ref={headerRef}
       className={cx(className, [
         "border-b border-solid",
-        "bg-[color:var(--base00)]",
+        "bg-[color:var(--hue-0000)]",
         "py-[25px]",
         "w-full top-0",
-        "border-[color:var(--base02)]",
+        "border-[color:var(--hue-0200)]",
         "z-10",
         "md:static md:z-[initial]",
       ])}
@@ -64,7 +64,7 @@ const SiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
       <div className="container flex items-center justify-between sm-down:max-w-none">
         <Link
           to="/"
-          className="flex items-center space-x-4 text-[color:var(--base07)] hover:text-[color:var(--base07)]"
+          className="flex items-center space-x-4 text-[color:var(--hue-1000)] hover:text-[color:var(--hue-1000)]"
         >
           <svg className="w-9 h-9" aria-hidden>
             <use href={`${logoCircleUrl}#logo-circle`} />
@@ -96,9 +96,9 @@ const SiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
               "sm-down:max-h-[calc(100vh-var(--site-header-height)-env(safe-area-inset-bottom))]",
               "sm-down:z-40",
               "sm-down:p-6",
-              "sm-down:border-b sm-down:border-[color:var(--base02)]",
+              "sm-down:border-b sm-down:border-[color:var(--hue-0200)]",
               "sm-down:overflow-scroll",
-              "sm-down:bg-[color:var(--base00)]",
+              "sm-down:bg-[color:var(--hue-0000)]",
               "flex-none",
             ],
             {
@@ -245,7 +245,7 @@ function HeaderNavLink({ to, className, ...props }: NavLinkProps) {
           "font-medium",
           args.isActive
             ? "opacity-100"
-            : "text-[color:var(--base07)] hover:text-[color:var(--base07)] opacity-80 hover:opacity-100",
+            : "text-[color:var(--hue-1000)] hover:text-[color:var(--hue-1000)] opacity-80 hover:opacity-100",
           typeof className === "function" ? className(args) : className
         )
       }

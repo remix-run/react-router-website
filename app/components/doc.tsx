@@ -52,7 +52,7 @@ const PreviousLink: React.VFC = () => {
           viewBox="0 0 48 48"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="text-[color:var(--base07)]"
+          className="text-[color:var(--hue-1000)]"
         >
           <path
             d="M26 19L20.75 24L26 29"
@@ -88,7 +88,7 @@ const NextLink: React.VFC = () => {
           viewBox="0 0 48 48"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="[var(--base07)]"
+          className="[var(--hue-1000)]"
         >
           <path
             d="M26 19L31.25 24L26 29"
@@ -114,9 +114,9 @@ const SiblingLinks: React.VFC<{ doc: Doc }> = ({ doc }) => {
   }
 
   return (
-    <div className="border-b border-solid border-[color:var(--base01)] py-5 px-2 flex items-center justify-between">
+    <div className="border-b border-solid border-[color:var(--hue-0100)] py-5 px-2 flex items-center justify-between">
       <PreviousLink />
-      <h1 className="text-[color:var(--base07)] text-center truncate max-w-full">
+      <h1 className="text-[color:var(--hue-1000)] text-center truncate max-w-full">
         {doc.title}
       </h1>
       <NextLink />
