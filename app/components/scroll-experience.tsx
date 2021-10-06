@@ -1,30 +1,177 @@
-import { useActor } from "~/stage";
+import type { Page, Sequence } from "@ryanflorence/mdtut";
+import { Actor, useActor, ScrollStage, useStage } from "~/stage";
+
+// <div className="hidden">
+//   {[
+//     {
+//       heading: "Navigation Routes",
+//       content: `This is copy about Navigation Routes that will explain how
+//     React Router can help devs create one and why it’s better than
+//     building without it.`,
+//       link: "/",
+//       color: "blue",
+//       icon: <IconNavigation color="white" />,
+//     },
+//     {
+//       heading: "Protected Routes",
+//       content: `This is copy about Protected Routes that will explain how React Router can help devs create one and why it’s better than building without it.`,
+//       link: "/",
+//       color: "green",
+//       icon: <IconProtection color="white" />,
+//     },
+//     {
+//       heading: "Nested Routes",
+//       content: `This is copy about Nested Routes that will explain how React Router can help devs create one and why it’s better than building without it.`,
+//       link: "/",
+//       color: "red",
+//       icon: <IconLayers color="white" />,
+//     },
+//   ].map((section) => {
+//     return (
+//       <Section
+//         key={section.heading}
+//         wrap
+//         className="my-56 md:my-72 lg:my-80"
+//       >
+//         <div className="md:max-w-[494px]">
+//           <div
+//             className={cx(
+//               "rounded-lg w-12 h-12 flex items-center justify-center flex-grow-0 flex-shrink-0 mb-6 md:mb-8",
+//               {
+//                 "bg-blue-500": section.color === "blue",
+//                 "bg-green-500": section.color === "green",
+//                 "bg-red-500": section.color === "red",
+//               }
+//             )}
+//           >
+//             {section.icon}
+//           </div>
+//           <Heading className="mb-1">{section.heading}</Heading>
+//           <p className="text-lg md:text-xl mb-6 opacity-80">
+//             {section.content}
+//           </p>
+//           <ArrowLink
+//             to={section.link}
+//             className={cx(
+//               "text-lg md:text-xl inline-flex items-center font-semibold outline-none focus:ring-2 focus:ring-opacity-60 focus:ring-offset-4 focus:ring-offset-black focus:ring-current",
+//               {
+//                 "text-blue-500": section.color === "blue",
+//                 "hover:text-blue-400": section.color === "blue",
+//                 "text-green-500": section.color === "green",
+//                 "hover:text-green-400": section.color === "green",
+//                 "text-red-500": section.color === "red",
+//                 "hover:text-red-400": section.color === "red",
+//               }
+//             )}
+//           >
+//             Learn More
+//           </ArrowLink>
+//         </div>
+//       </Section>
+//     );
+//   })}
+// </div>
+
+export function MdtScroller({ mdt }: { mdt: Page }) {
+  return (
+    <div>
+      {mdt.map((section, index) =>
+        section.type === "prose" ? (
+          <div
+            key={index}
+            className="md-prose"
+            dangerouslySetInnerHTML={{ __html: section.html }}
+          />
+        ) : section.type === "sequence" ? (
+          <Slides key={index} sequence={section} />
+        ) : null
+      )}
+    </div>
+  );
+}
+
+export function ScrollLogger() {
+  let stage = useStage();
+  console.log(stage.progress);
+  return null;
+}
+
+function Slides({ sequence }: { sequence: Sequence }) {
+  let commentaryHeight = 0.5;
+  let pages = sequence.slides.length * commentaryHeight + commentaryHeight;
+  return (
+    <ScrollStage pages={pages}>
+      <div className="mdt-grid flex flex-col">
+        <section className="mdt-commentary order-2 mt-[-50vh]">
+          {sequence.slides.map(({ html }, index) => (
+            <div
+              key={index}
+              className="h-[50vh] box-border flex items-center w-[80%] m-auto"
+            >
+              <div
+                className="md-prose p-4 bg-gray-800 rounded-xl"
+                dangerouslySetInnerHTML={{ __html: html }}
+              />
+            </div>
+          ))}
+        </section>
+
+        <aside className="mdt-subject order-1 sticky top-0 h-[40vh] mb-[50vh] box-border w-full overflow-x-hidden p-4 bg-gray-900">
+          {sequence.slides.map(({ subject }, index, arr) => {
+            let increment = 1 / (arr.length + 1);
+            let buffer = 0.33;
+            let firstEnd = (1 / arr.length) * 2 + buffer * increment;
+            let start = index * increment + firstEnd - increment;
+            let end = start + increment;
+            if (index === 0) {
+              start = 0;
+              end = firstEnd;
+            }
+            return (
+              <Actor key={index} start={start} end={end}>
+                {/* <div className="grid h-[33vh] md:h-screen items-center justify-center bg-gray-50"> */}
+                <div>
+                  <div
+                    className="md-prose text-sm"
+                    dangerouslySetInnerHTML={{ __html: subject }}
+                  />
+                </div>
+              </Actor>
+            );
+          })}
+        </aside>
+      </div>
+    </ScrollStage>
+  );
+}
 
 export function BrowserChrome({
   children,
   url = "https://example.com",
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   url?: string;
 }) {
   return (
-    <div className="bg-gray-700 border border-gray-600 drop-shadow-lg rounded-xl overflow-hidden">
-      <div className="pb-[0.5em] border-b border-gray-500">
-        <div className="flex p-[0.75em]">
-          <WindowButton className="bg-red-400" />
-          <WindowButton className="bg-yellow-400" />
-          <WindowButton className="bg-green-300" />
-        </div>
-        <div className="flex items-center px-[0.5em]">
-          <IconArrowLeft />
-          <IconArrowLeft className="rotate-180 ml-[0.75em]" />
-          <IconRefresh className="rotate ml-[0.75em]" />
-          <div className="ml-[0.75em] bg-gray-800 rounded-full px-[1em] py-[0.25em] w-full text-[85%]">
-            {url}
+    <div className="text-[50%] h-[45vh] sm:text-[100%] px-2">
+      <div className="h-full bg-gray-700 border border-gray-600 drop-shadow-lg rounded-xl overflow-hidden">
+        <div className="pb-[0.5em] border-b border-gray-500">
+          <div className="flex p-[0.75em]">
+            <WindowButton className="bg-red-400" />
+            <WindowButton className="bg-yellow-400" />
+            <WindowButton className="bg-green-300" />
+          </div>
+          <div className="flex items-center px-[0.5em]">
+            <IconArrowLeft />
+            <IconArrowLeft className="rotate-180 ml-[0.75em]" />
+            <IconRefresh className="rotate ml-[0.75em]" />
+            <div className="ml-[0.75em] bg-gray-800 rounded-full px-[1em] py-[0.25em] w-full text-[85%]">
+              {url}
+            </div>
           </div>
         </div>
+        <div className="text-[75%] h-full">{children}</div>
       </div>
-      <div className="text-[75%]">{children}</div>
     </div>
   );
 }
@@ -80,11 +227,11 @@ export function FastbooksApp({
   highlight,
 }: {
   highlight?: boolean;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }) {
   return (
-    <div className="flex relative">
-      <div className="p-[1em] border-r border-gray-500">
+    <div className="flex relative h-full">
+      <div className="p-[1em] border-r h-full border-gray-500">
         <div className="px-[0.5em] pb-[0.5em] flex items-center">
           <div className="h-[0.75em] w-[0.75em] rounded-full bg-green-400" />
           <div className="ml-[0.25em] font-light text-[100%]">Fastbooks</div>
@@ -101,7 +248,7 @@ export function FastbooksApp({
       <div
         className={`
           absolute inset-0
-          ${highlight ? "bg-orange-500 opacity-50" : ""}
+          ${highlight ? "bg-blue-500 opacity-50" : ""}
         `}
       />
     </div>
@@ -134,7 +281,7 @@ export function FastbooksSales({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative">
+    <div className="relative h-full">
       <div className="flex justify-between px-[1.5em] py-[1em]">
         <SalesLink>Overview</SalesLink>
         <SalesLink>Subscriptions</SalesLink>
@@ -176,7 +323,7 @@ export function FastbooksInvoices({
   highlight,
 }: {
   highlight?: boolean;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }) {
   let invoices = [
     {
@@ -256,7 +403,7 @@ export function FastbooksInvoices({
       <div
         className={`
           absolute inset-0
-          ${highlight ? "bg-green-500 opacity-50" : ""}
+          ${highlight ? "bg-blue-500 opacity-50" : ""}
         `}
       />
     </div>
@@ -298,7 +445,7 @@ export function FastbooksInvoice({ highlight }: { highlight?: boolean }) {
       <div
         className={`
           absolute inset-0
-          ${highlight ? "bg-purple-500 opacity-50" : ""}
+          ${highlight ? "bg-blue-500 opacity-50" : ""}
         `}
       />
     </div>
@@ -315,6 +462,69 @@ function ActivityItem({ activity, date }: { activity: string; date: string }) {
           <div className="text-gray-400">{date}</div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function Zoomer({ children }: { children: React.ReactNode }) {
+  let actor = useActor();
+  return (
+    <div
+      className="h-screen sticky top-0 grid items-center justify-center"
+      style={{
+        transform: `scale(${actor.progress})`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function Spinner({ children }: { children: React.ReactNode }) {
+  let actor = useActor();
+  return (
+    <div
+      className="h-screen sticky top-0 grid items-center justify-center"
+      style={{
+        transform: `rotate(${actor.progress * 360}deg)`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function Fader({ children }: { children: React.ReactNode }) {
+  let actor = useActor();
+  return (
+    <div
+      className="h-screen sticky top-0 grid items-center justify-center"
+      style={{
+        opacity: actor.progress,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function Commentary({
+  active,
+  children,
+}: {
+  active: [number, number];
+  children: React.ReactNode;
+}) {
+  let stage = useStage();
+  let [start, end] = active;
+  let isActive = stage.progress >= start && stage.progress < end;
+  return (
+    <div
+      className={`p-12 transition-colors ${
+        isActive ? "bg-blue-200" : "bg-gray-200"
+      }`}
+    >
+      {children}
     </div>
   );
 }

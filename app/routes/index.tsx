@@ -1,8 +1,11 @@
 import * as React from "react";
+import type { Page, PageNode, Sequence } from "@ryanflorence/mdtut";
+import { processMdt } from "~/utils/mdt";
 import cx from "clsx";
 import { Section, Heading } from "~/components/section-heading";
 import { ButtonLink /* , ButtonDiv */ } from "~/components/button";
 import { ArrowLink /* , Link */ } from "~/components/link";
+import indexStyles from "~/styles/index.css";
 import {
   IconAirbnb,
   IconApple,
@@ -17,11 +20,12 @@ import {
   IconTwitter,
   IconZoom,
 } from "~/components/icons";
-import type {
+import {
   RouteComponent,
   MetaFunction,
   LoaderFunction,
   ActionFunction,
+  useLoaderData,
 } from "remix";
 import {
   BrowserChrome,
@@ -29,11 +33,13 @@ import {
   FastbooksSales,
   FastbooksInvoices,
   FastbooksInvoice,
+  ScrollLogger,
 } from "../components/scroll-experience";
-import { Actor, ScrollStage } from "~/stage";
+import { Actor, ScrollStage, useStage } from "~/stage";
 import { SectionSignup, signupAction } from "~/components/section-signup";
 import { useMatchMedia } from "../hooks/match-media";
 import { tailwindConfig } from "~/utils/tailwind";
+import { MdtScroller } from "~/components/scroll-experience";
 
 const meta: MetaFunction = () => ({
   title: "React Router",
@@ -87,7 +93,135 @@ function Marquee({
   );
 }
 
+function PersistentCode({
+  slides,
+  frames,
+}: {
+  slides: Sequence["slides"];
+  frames: number[];
+}) {
+  let stage = useStage();
+  let frame = frames.findIndex((frame, index, arr) => {
+    let start = index === 0 ? 0 : frames[index - 1];
+    let end = index - 1 === arr.length ? 1 : frame;
+    return stage.progress >= start && stage.progress < end;
+  });
+  let slide = slides[frame] || slides[slides.length - 1];
+  return <Code html={slide.subject} />;
+}
+
+export function NestedRoutes({ mdt }: { mdt: Page }) {
+  let [, { slides }] = mdt as [null, Sequence];
+  let frames = [0.39, 0.51, 0.66, 0.78, 0.93];
+
+  return (
+    <ScrollStage pages={5 * 0.25 + 1}>
+      <div className="scrollxp-nested text-gray-100">
+        {slides.map((slide, index) => (
+          <div className="h-[25vh] flex items-center" key={index}>
+            <div
+              className="m-4"
+              dangerouslySetInnerHTML={{ __html: slide.html }}
+            />
+          </div>
+        ))}
+      </div>
+      <div className="mt-[25vh] max-w-3xl mx-auto sticky bottom-[-2em]">
+        {/* <ScrollLogger /> */}
+
+        <PersistentCode slides={slides} frames={frames} />
+
+        <Actor start={0} end={frames[0]}>
+          <BrowserChrome url="about:blank" />
+        </Actor>
+
+        <Actor start={frames[0]} end={frames[1]}>
+          <BrowserChrome url="example.com">
+            <FastbooksApp highlight />
+          </BrowserChrome>
+        </Actor>
+
+        <Actor start={frames[1]} end={frames[2]}>
+          <BrowserChrome url="example.com/sales">
+            <FastbooksApp>
+              <FastbooksSales highlight>
+                {/* <FastbooksInvoices>
+                    <FastbooksInvoice />
+                  </FastbooksInvoices> */}
+              </FastbooksSales>
+            </FastbooksApp>
+          </BrowserChrome>
+        </Actor>
+
+        <Actor start={frames[2]} end={frames[3]}>
+          <BrowserChrome url="example.com/sales/invoices">
+            <FastbooksApp>
+              <FastbooksSales>
+                <FastbooksInvoices highlight />
+              </FastbooksSales>
+            </FastbooksApp>
+          </BrowserChrome>
+        </Actor>
+
+        <Actor start={frames[3]} end={frames[4]}>
+          <BrowserChrome url="example.com/sales/invoices/102000">
+            <FastbooksApp>
+              <FastbooksSales>
+                <FastbooksInvoices>
+                  <FastbooksInvoice highlight />
+                </FastbooksInvoices>
+              </FastbooksSales>
+            </FastbooksApp>
+          </BrowserChrome>
+        </Actor>
+
+        <Actor start={frames[4]} end={frames[5]}>
+          <BrowserChrome url="example.com/sales/invoices/102000">
+            <FastbooksApp>
+              <FastbooksSales>
+                <FastbooksInvoices>
+                  <FastbooksInvoice />
+                </FastbooksInvoices>
+              </FastbooksSales>
+            </FastbooksApp>
+          </BrowserChrome>
+        </Actor>
+      </div>
+    </ScrollStage>
+  );
+}
+
+function Code({
+  html,
+  size = "small",
+}: {
+  html: string;
+  size?: "normal" | "small";
+}) {
+  let ref = React.useRef<HTMLDivElement>(null);
+  let [height, setHeight] = React.useState(0);
+  React.useEffect(() => {
+    if (ref.current) {
+      setHeight(ref.current.scrollHeight);
+    }
+  }, [html]);
+  return (
+    <div
+      style={{ transition: "height 100ms", height: height }}
+      className="box-border -mb-2 mx-8 border-t border-l border-r rounded-lg bg-gray-900 border-gray-600"
+    >
+      <div
+        ref={ref}
+        className={"text-xs overflow-hidden overflow-x-auto px-4 pt-2 pb-4"}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    </div>
+  );
+}
+
 const IndexPage: RouteComponent = () => {
+  let { mdt } = useLoaderData<IndexData>();
+
   let isSmallScreen = useMatchMedia(
     `screen and (max-width: ${tailwindConfig.theme.screens?.["sm-down"].max})`,
     { initialState: false }
@@ -104,9 +238,9 @@ const IndexPage: RouteComponent = () => {
               v6 is Here
             </h1>
             <p className="opacity-80 text-lg leading-8 md:text-xl">
-              Components are the heart of React's powerful programming model.
-              React Router is a collection of navigational components that
-              compose declaratively with your application.
+              Closing in on a decade of client side routing experience, React
+              Router v6 takes the best features from v3, v5, and its sister
+              project, Reach Router, in the smallest package yet.
             </p>
             <div className="flex flex-col md:flex-row items-center justify-center flex-shrink-0 flex-wrap mt-7">
               <ButtonLink
@@ -186,144 +320,9 @@ const IndexPage: RouteComponent = () => {
         </div>
       </div>
 
-      <div className="text-[50%] sm:text-[100%] max-w-3xl mx-auto">
-        <div className="container">
-          <ScrollStage pages={4}>
-            <div className="sticky top-1/3">
-              <Actor start={0} end={1 / 5}>
-                <BrowserChrome url="https://example.com/sales/invoices/102000">
-                  <FastbooksApp>
-                    <FastbooksSales>
-                      <FastbooksInvoices>
-                        <FastbooksInvoice />
-                      </FastbooksInvoices>
-                    </FastbooksSales>
-                  </FastbooksApp>
-                </BrowserChrome>
-              </Actor>
+      <NestedRoutes mdt={mdt.nestedRoutes} />
 
-              <Actor start={1 / 5} end={2 / 5}>
-                <BrowserChrome url="https://example.com/sales/invoices/102000">
-                  <FastbooksApp highlight>
-                    <FastbooksSales>
-                      <FastbooksInvoices>
-                        <FastbooksInvoice />
-                      </FastbooksInvoices>
-                    </FastbooksSales>
-                  </FastbooksApp>
-                </BrowserChrome>
-              </Actor>
-
-              <Actor start={2 / 5} end={3 / 5}>
-                <BrowserChrome url="https://example.com/sales/invoices/102000">
-                  <FastbooksApp>
-                    <FastbooksSales highlight>
-                      <FastbooksInvoices>
-                        <FastbooksInvoice />
-                      </FastbooksInvoices>
-                    </FastbooksSales>
-                  </FastbooksApp>
-                </BrowserChrome>
-              </Actor>
-
-              <Actor start={3 / 5} end={4 / 5}>
-                <BrowserChrome url="https://example.com/sales/invoices/102000">
-                  <FastbooksApp>
-                    <FastbooksSales>
-                      <FastbooksInvoices highlight>
-                        <FastbooksInvoice />
-                      </FastbooksInvoices>
-                    </FastbooksSales>
-                  </FastbooksApp>
-                </BrowserChrome>
-              </Actor>
-
-              <Actor start={4 / 5} end={2}>
-                <BrowserChrome url="https://example.com/sales/invoices/102000">
-                  <FastbooksApp>
-                    <FastbooksSales>
-                      <FastbooksInvoices>
-                        <FastbooksInvoice highlight />
-                      </FastbooksInvoices>
-                    </FastbooksSales>
-                  </FastbooksApp>
-                </BrowserChrome>
-              </Actor>
-            </div>
-          </ScrollStage>
-
-          <div className="hidden">
-            {[
-              {
-                heading: "Navigation Routes",
-                content: `This is copy about Navigation Routes that will explain how
-            React Router can help devs create one and why it’s better than
-            building without it.`,
-                link: "/",
-                color: "blue",
-                icon: <IconNavigation color="white" />,
-              },
-              {
-                heading: "Protected Routes",
-                content: `This is copy about Protected Routes that will explain how React Router can help devs create one and why it’s better than building without it.`,
-                link: "/",
-                color: "green",
-                icon: <IconProtection color="white" />,
-              },
-              {
-                heading: "Nested Routes",
-                content: `This is copy about Nested Routes that will explain how React Router can help devs create one and why it’s better than building without it.`,
-                link: "/",
-                color: "red",
-                icon: <IconLayers color="white" />,
-              },
-            ].map((section) => {
-              return (
-                <Section
-                  key={section.heading}
-                  wrap
-                  className="my-56 md:my-72 lg:my-80"
-                >
-                  <div className="md:max-w-[494px]">
-                    <div
-                      className={cx(
-                        "rounded-lg w-12 h-12 flex items-center justify-center flex-grow-0 flex-shrink-0 mb-6 md:mb-8",
-                        {
-                          "bg-blue-500": section.color === "blue",
-                          "bg-green-500": section.color === "green",
-                          "bg-red-500": section.color === "red",
-                        }
-                      )}
-                    >
-                      {section.icon}
-                    </div>
-                    <Heading className="mb-1">{section.heading}</Heading>
-                    <p className="text-lg md:text-xl mb-6 opacity-80">
-                      {section.content}
-                    </p>
-                    <ArrowLink
-                      to={section.link}
-                      className={cx(
-                        "text-lg md:text-xl inline-flex items-center font-semibold outline-none focus:ring-2 focus:ring-opacity-60 focus:ring-offset-4 focus:ring-offset-black focus:ring-current",
-                        {
-                          "text-blue-500": section.color === "blue",
-                          "hover:text-blue-400": section.color === "blue",
-                          "text-green-500": section.color === "green",
-                          "hover:text-green-400": section.color === "green",
-                          "text-red-500": section.color === "red",
-                          "hover:text-red-400": section.color === "red",
-                        }
-                      )}
-                    >
-                      Learn More
-                    </ArrowLink>
-                  </div>
-                </Section>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      {/* <MdtScroller mdt={mdt.nestedRoutes} /> */}
 
       <div className="index__stats">
         <div className="container">
@@ -401,10 +400,22 @@ const IndexPage: RouteComponent = () => {
 export default IndexPage;
 export { meta };
 
+interface IndexData {
+  mdt: {
+    nestedRoutes: Page;
+  };
+}
+
 export let loader: LoaderFunction = async () => {
-  return null;
+  let nestedRoutes = await processMdt("nested-routes-2.md");
+  let data: IndexData = { mdt: { nestedRoutes } };
+  return data;
 };
 
 export let action: ActionFunction = async (props) => {
   return signupAction(props);
 };
+
+export function links() {
+  return [{ rel: "stylesheet", href: indexStyles }];
+}

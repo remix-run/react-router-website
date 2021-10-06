@@ -63,6 +63,9 @@ const theme = {
       negative: "0.88",
       squeezed: "1.125",
     },
+    transitionProperty: {
+      height: "height",
+    },
     typography: (theme) => ({
       DEFAULT: {
         css: {

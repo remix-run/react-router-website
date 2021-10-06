@@ -4,6 +4,5 @@ public/build
 server/build
 .env
 .ds_store
-app/styles/tailwind.css
-app/styles/docs.css
+app/styles
 prisma/dev.db-journal

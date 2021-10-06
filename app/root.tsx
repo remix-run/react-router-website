@@ -51,7 +51,7 @@ const Document: React.FC<{
         {children}
         <Scripts />
         <LiveReload />
-        <DocsLiveReload />
+        {/* <DocsLiveReload /> */}
       </body>
     </html>
   );

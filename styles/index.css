@@ -1,0 +1,17 @@
+.scrollxp-nested {
+  & h2 {
+    @apply text-4xl font-display text-white px-4;
+  }
+
+  & p {
+    @apply py-8 px-4;
+  }
+
+  & h2 + p {
+    @apply py-0;
+  }
+
+  & pre {
+    @apply px-4 pb-8;
+  }
+}

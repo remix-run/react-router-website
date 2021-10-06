@@ -1,3 +1,6 @@
+// TODO: YOU ARE HERE
+// iOS is reporting a bad length, might need to find a better way to measure it?
+
 import {
   createContext,
   useCallback,
@@ -105,7 +108,8 @@ export let ScrollStage = ({
 }: TScrollStageProps) => {
   let ref = useRef<HTMLDivElement>(null);
   let relativeScroll = useRelativeWindowScroll(ref, fallbackFrame);
-  let getLength = () => document.documentElement.clientHeight * pages;
+  // let getLength = () => document.documentElement.clientHeight * pages;
+  let getLength = () => window.innerHeight * pages;
   let hydrated = useHydrated();
   let [length, setLength] = useState<number>(() => {
     return hydrated ? getLength() : fallbackLength;
@@ -121,7 +125,7 @@ export let ScrollStage = ({
       length={length}
       DEBUG={DEBUG}
     >
-      <div ref={ref} style={{ height: length }}>
+      <div ref={ref} style={{ height: `${pages * 100}vh` }}>
         {children}
       </div>
     </Stage>
@@ -178,7 +182,8 @@ export function useRelativeWindowScroll(
   let windowScroll = useWindowScroll(fallback);
   if (!ref.current) return fallback;
   return (
-    windowScroll - ref.current.offsetTop + document.documentElement.clientHeight
+    // windowScroll - ref.current.offsetTop + document.documentElement.clientHeight
+    windowScroll - ref.current.offsetTop + window.innerHeight
     // windowScroll - ref.current.offsetTop
   );
 }
