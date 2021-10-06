@@ -153,8 +153,8 @@ export function BrowserChrome({
   url?: string;
 }) {
   return (
-    <div className="text-[50%] h-[45vh] sm:text-[100%] px-2">
-      <div className="h-full bg-gray-700 border border-gray-600 drop-shadow-lg rounded-xl overflow-hidden">
+    <div className="text-[80%] h-[45vh] md:text-[100%] lg:text-[110%] xl:text-[125%] px-2">
+      <div className="h-full bg-gray-800 border border-gray-600 drop-shadow-lg rounded-xl overflow-hidden">
         <div className="pb-[0.5em] border-b border-gray-500">
           <div className="flex p-[0.75em]">
             <WindowButton className="bg-red-400" />
@@ -165,7 +165,7 @@ export function BrowserChrome({
             <IconArrowLeft />
             <IconArrowLeft className="rotate-180 ml-[0.75em]" />
             <IconRefresh className="rotate ml-[0.75em]" />
-            <div className="ml-[0.75em] bg-gray-800 rounded-full px-[1em] py-[0.25em] w-full text-[85%]">
+            <div className="ml-[0.75em] bg-gray-900 rounded-full px-[1em] py-[0.25em] w-full text-[85%]">
               {url}
             </div>
           </div>
@@ -248,7 +248,7 @@ export function FastbooksApp({
       <div
         className={`
           absolute inset-0
-          ${highlight ? "bg-blue-500 opacity-50" : ""}
+          ${highlight ? "bg-green-500 opacity-50" : ""}
         `}
       />
     </div>
@@ -289,11 +289,11 @@ export function FastbooksSales({
         <SalesLink>Customers</SalesLink>
         <SalesLink>Deposits</SalesLink>
       </div>
-      <div>{children}</div>
+      <div className="h-full">{children}</div>
       <div
         className={`
           absolute inset-0
-          ${highlight ? "bg-blue-500 opacity-50" : ""}
+          ${highlight ? "bg-green-500 opacity-50" : ""}
         `}
       />
     </div>
@@ -370,7 +370,7 @@ export function FastbooksInvoices({
           <div className="h-[1.5em] flex-grow ml-[0.25em] bg-gray-300" />
         </div>
       </div>
-      <div className="flex border-t border-gray-500">
+      <div className="h-full flex border-t border-gray-500">
         <div className="border-r border-gray-500">
           {invoices.map((invoice) => (
             <div
@@ -403,7 +403,7 @@ export function FastbooksInvoices({
       <div
         className={`
           absolute inset-0
-          ${highlight ? "bg-blue-500 opacity-50" : ""}
+          ${highlight ? "bg-green-500 opacity-50" : ""}
         `}
       />
     </div>
@@ -445,7 +445,7 @@ export function FastbooksInvoice({ highlight }: { highlight?: boolean }) {
       <div
         className={`
           absolute inset-0
-          ${highlight ? "bg-blue-500 opacity-50" : ""}
+          ${highlight ? "bg-green-500 opacity-50" : ""}
         `}
       />
     </div>

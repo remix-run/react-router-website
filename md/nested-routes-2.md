@@ -1,3 +1,5 @@
+Howdy!
+
 :::
 
 ## Nested Routes
@@ -69,4 +71,15 @@ With React Router, this is all built-in. Nested routes add both segments to the 
 
 :::
 
-The end
+## Ranked Routes
+
+Sometimes a URL like `teams/new` can match two route patterns:
+
+```tsx
+<Routes>
+  <Route path="teams/:teamId" element={<Team />} />
+  <Route path="teams/new" element={<NewTeam />} />
+</Routes>
+```
+
+React Router ranks your routes and picks the best one. In this case it will pick `<NewTeam />` because it's more specific. No more messing with `exact` props or careful ordering!

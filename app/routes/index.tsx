@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { Page, PageNode, Sequence } from "@ryanflorence/mdtut";
+import type { Page, PageNode, Prose, Sequence } from "@ryanflorence/mdtut";
 import { processMdt } from "~/utils/mdt";
 import cx from "clsx";
 import { Section, Heading } from "~/components/section-heading";
@@ -26,6 +26,7 @@ import {
   LoaderFunction,
   ActionFunction,
   useLoaderData,
+  Link,
 } from "remix";
 import {
   BrowserChrome,
@@ -110,94 +111,106 @@ function PersistentCode({
   return <Code html={slide.subject} />;
 }
 
+export function RankedRoutes({ mdt }: { mdt: Page }) {
+  let [, , prose] = mdt as [null, null, Prose];
+  return (
+    <div className="max-w-4xl mx-auto">
+      <div dangerouslySetInnerHTML={{ __html: prose.html }} />
+    </div>
+  );
+}
+
 export function NestedRoutes({ mdt }: { mdt: Page }) {
   let [, { slides }] = mdt as [null, Sequence];
   let frames = [0.39, 0.51, 0.66, 0.78, 0.93];
 
   return (
-    <ScrollStage pages={5 * 0.25 + 1}>
-      <div className="scrollxp-nested text-gray-100">
-        {slides.map((slide, index) => (
-          <div className="h-[25vh] flex items-center" key={index}>
-            <div
-              className="m-4"
-              dangerouslySetInnerHTML={{ __html: slide.html }}
-            />
+    <div className="mt-32 pt-36 border-t border-gray-850">
+      <ScrollStage pages={5 * 0.25 + 1}>
+        <div className="scrollxp-nested">
+          {slides.map((slide, index) => (
+            <div className="h-[25vh] flex items-center text-black" key={index}>
+              <div
+                className="m-4 mx-auto max-w-md"
+                dangerouslySetInnerHTML={{ __html: slide.html }}
+              />
+            </div>
+          ))}
+          <div className="text-center -mb-10">
+            <ButtonLink size="large" to="/docs">
+              Learn More
+            </ButtonLink>
           </div>
-        ))}
-      </div>
-      <div className="mt-[25vh] max-w-3xl mx-auto sticky bottom-[-2em]">
-        {/* <ScrollLogger /> */}
+        </div>
+        <div className="mt-[25vh] max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto sticky bottom-[-2em]">
+          {/* <ScrollLogger /> */}
 
-        <PersistentCode slides={slides} frames={frames} />
+          <PersistentCode slides={slides} frames={frames} />
 
-        <Actor start={0} end={frames[0]}>
-          <BrowserChrome url="about:blank" />
-        </Actor>
+          <Actor start={0} end={frames[0]}>
+            <BrowserChrome url="about:blank" />
+          </Actor>
 
-        <Actor start={frames[0]} end={frames[1]}>
-          <BrowserChrome url="example.com">
-            <FastbooksApp highlight />
-          </BrowserChrome>
-        </Actor>
+          <Actor start={frames[0]} end={frames[1]}>
+            <BrowserChrome url="example.com">
+              <FastbooksApp highlight />
+            </BrowserChrome>
+          </Actor>
 
-        <Actor start={frames[1]} end={frames[2]}>
-          <BrowserChrome url="example.com/sales">
-            <FastbooksApp>
-              <FastbooksSales highlight>
-                {/* <FastbooksInvoices>
+          <Actor start={frames[1]} end={frames[2]}>
+            <BrowserChrome url="example.com/sales">
+              <FastbooksApp>
+                <FastbooksSales highlight>
+                  {/* <FastbooksInvoices>
                     <FastbooksInvoice />
                   </FastbooksInvoices> */}
-              </FastbooksSales>
-            </FastbooksApp>
-          </BrowserChrome>
-        </Actor>
+                </FastbooksSales>
+              </FastbooksApp>
+            </BrowserChrome>
+          </Actor>
 
-        <Actor start={frames[2]} end={frames[3]}>
-          <BrowserChrome url="example.com/sales/invoices">
-            <FastbooksApp>
-              <FastbooksSales>
-                <FastbooksInvoices highlight />
-              </FastbooksSales>
-            </FastbooksApp>
-          </BrowserChrome>
-        </Actor>
+          <Actor start={frames[2]} end={frames[3]}>
+            <BrowserChrome url="example.com/sales/invoices">
+              <FastbooksApp>
+                <FastbooksSales>
+                  <FastbooksInvoices highlight />
+                </FastbooksSales>
+              </FastbooksApp>
+            </BrowserChrome>
+          </Actor>
 
-        <Actor start={frames[3]} end={frames[4]}>
-          <BrowserChrome url="example.com/sales/invoices/102000">
-            <FastbooksApp>
-              <FastbooksSales>
-                <FastbooksInvoices>
-                  <FastbooksInvoice highlight />
-                </FastbooksInvoices>
-              </FastbooksSales>
-            </FastbooksApp>
-          </BrowserChrome>
-        </Actor>
+          <Actor start={frames[3]} end={frames[4]}>
+            <BrowserChrome url="example.com/sales/invoices/102000">
+              <FastbooksApp>
+                <FastbooksSales>
+                  <FastbooksInvoices>
+                    <FastbooksInvoice highlight />
+                  </FastbooksInvoices>
+                </FastbooksSales>
+              </FastbooksApp>
+            </BrowserChrome>
+          </Actor>
 
-        <Actor start={frames[4]} end={frames[5]}>
-          <BrowserChrome url="example.com/sales/invoices/102000">
-            <FastbooksApp>
-              <FastbooksSales>
-                <FastbooksInvoices>
-                  <FastbooksInvoice />
-                </FastbooksInvoices>
-              </FastbooksSales>
-            </FastbooksApp>
-          </BrowserChrome>
-        </Actor>
-      </div>
-    </ScrollStage>
+          <Actor start={frames[4]} end={frames[5]}>
+            <BrowserChrome url="example.com/sales/invoices/102000">
+              <FastbooksApp>
+                <FastbooksSales>
+                  <FastbooksInvoices>
+                    <FastbooksInvoice />
+                  </FastbooksInvoices>
+                </FastbooksSales>
+              </FastbooksApp>
+            </BrowserChrome>
+          </Actor>
+        </div>
+      </ScrollStage>
+      {/* push down from the negative margin on the browser */}
+      <div className="h-48" />
+    </div>
   );
 }
 
-function Code({
-  html,
-  size = "small",
-}: {
-  html: string;
-  size?: "normal" | "small";
-}) {
+function Code({ html }: { html: string }) {
   let ref = React.useRef<HTMLDivElement>(null);
   let [height, setHeight] = React.useState(0);
   React.useEffect(() => {
@@ -207,12 +220,17 @@ function Code({
   }, [html]);
   return (
     <div
-      style={{ transition: "height 100ms", height: height }}
-      className="box-border -mb-2 mx-8 border-t border-l border-r rounded-lg bg-gray-900 border-gray-600"
+      style={{
+        transition: "height 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+        height: height,
+      }}
+      className="box-border -mb-2 mx-8 border-t border-l border-r rounded-lg bg-gray-950 border-gray-600"
     >
       <div
         ref={ref}
-        className={"text-xs overflow-hidden overflow-x-auto px-4 pt-2 pb-4"}
+        className={
+          "text-xs md:text-sm lg:text-base xl:text-lg overflow-hidden overflow-x-auto px-4 pt-2 pb-4"
+        }
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>
@@ -322,7 +340,7 @@ const IndexPage: RouteComponent = () => {
 
       <NestedRoutes mdt={mdt.nestedRoutes} />
 
-      {/* <MdtScroller mdt={mdt.nestedRoutes} /> */}
+      <RankedRoutes mdt={mdt.nestedRoutes} />
 
       <div className="index__stats">
         <div className="container">
