@@ -63,6 +63,7 @@ const SiteHeader: React.VFC<{ className?: string }> = ({ className }) => {
     >
       <div className="container flex items-center justify-between sm-down:max-w-none">
         <Link
+          prefetch="intent"
           to="/"
           className="flex items-center space-x-4 text-[color:var(--hue-1000)] hover:text-[color:var(--hue-1000)]"
         >

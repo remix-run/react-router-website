@@ -99,6 +99,7 @@ function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
             <li key={dir.path} data-dir="" data-level={level}>
               {dir.hasIndex ? (
                 <NavLink
+                  prefetch="intent"
                   end
                   to={`${linkPrefix}${dir.path}`}
                   className={dirItemClassName}
@@ -118,6 +119,7 @@ function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
             <span className={itemClassName()}>{file.title} 🚧</span>
           ) : (
             <NavLink
+              prefetch="intent"
               end
               to={`${linkPrefix}${file.path}`}
               className={itemClassName}

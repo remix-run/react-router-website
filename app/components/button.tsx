@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink } from "remix";
 import type { LinkProps, NavLinkProps } from "react-router-dom";
 import cx from "clsx";
 
@@ -19,6 +19,7 @@ const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
     let { variant, size, disabled, rounded, ...domProps } = props;
     return (
       <Link
+        prefetch="intent"
         ref={ref}
         aria-disabled={disabled || undefined}
         tabIndex={disabled ? -1 : undefined}
@@ -34,6 +35,7 @@ const ButtonNavLink = React.forwardRef<HTMLAnchorElement, ButtonNavLinkProps>(
     let { variant, size, disabled, rounded, ...domProps } = props;
     return (
       <NavLink
+        prefetch="intent"
         ref={ref}
         aria-disabled={disabled || undefined}
         tabIndex={disabled ? -1 : undefined}

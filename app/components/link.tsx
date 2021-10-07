@@ -1,6 +1,6 @@
 import * as React from "react";
 import cx from "clsx";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link } from "remix";
 import { isExternalUrl } from "~/utils/links";
 import { isFunction } from "~/utils/type-utils";
 import { IconArrowRight } from "~/components/icons";
@@ -30,7 +30,7 @@ const CustomNavLink = React.forwardRef<HTMLAnchorElement, NavLinkProps>(
         />
       );
     }
-    return <NavLink to={to} {...props} ref={ref} />;
+    return <NavLink prefetch="intent" to={to} {...props} ref={ref} />;
   }
 );
 CustomNavLink.displayName = "NavLink";
@@ -41,7 +41,7 @@ const CustomLink = React.forwardRef<HTMLAnchorElement, LinkProps>(
       let { replace, state, ...domProps } = props;
       return <a {...domProps} ref={ref} href={to} />;
     }
-    return <Link to={to} {...props} ref={ref} />;
+    return <Link prefetch="intent" to={to} {...props} ref={ref} />;
   }
 );
 CustomLink.displayName = "Link";
