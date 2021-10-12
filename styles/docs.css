@@ -87,7 +87,7 @@ stylesheet targets.
 
 .md-toc-nav {
   @apply hidden xl:block; /* visibility */
-  @apply h-full max-h-screen overflow-x-visible overflow-y-auto; /* auto scrolling */
+  @apply h-full max-h-screen;
   @apply sticky top-6; /* sticky behavior */
   @apply text-[color:var(--hue-0750)];
   @apply pl-2;
@@ -130,26 +130,43 @@ stylesheet targets.
 }
 
 .toc {
-  list-style: none;
+  @apply list-none py-3 px-0 rounded-lg border border-[color:var(--hue-0100)];
+
+  & > li > ul {
+    height: 100%;
+    max-height: 50vh;
+    max-height: calc(50vh - env(safe-area-inset-bottom));
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  & > li > ul > li > ul {
+    @apply mb-3 ml-3 md:ml-4 lg:ml-3 2xl:ml-4;
+  }
 
   & a {
-    @apply rounded py-1 block text-base lg:text-sm;
-    /* offset to prevent cutting off focus ring */
-    width: calc(100% - 4px);
+    @apply block py-1 px-5 text-base lg:text-sm relative;
+  }
+
+  & a:focus {
+    @apply outline-none bg-[color:var(--hue-0050)];
   }
 
   & a:not(:hover) {
     @apply text-[color:inherit];
   }
 
-  & code {
+  & a[data-active] {
+    @apply text-blue-500;
+  }
+
+  & a[data-active]::before {
+    @apply content-[""] absolute top-0 left-0 h-full w-1 bg-blue-500;
+  }
+  data1 & code {
     background: inherit;
     padding: 0;
     line-height: inherit;
-  }
-
-  & > li > ul > li > ul {
-    @apply mb-3 ml-3 md:ml-4 lg:ml-3 2xl:ml-4;
   }
 }
 
