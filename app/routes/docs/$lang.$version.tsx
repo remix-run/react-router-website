@@ -72,73 +72,6 @@ export default function DocsLayout() {
     }
   }, [location]);
 
-  let [found, setFound] = React.useState<{
-    heading: Element | null;
-    anchor: Element | null;
-  }>({
-    heading: null,
-    anchor: null,
-  });
-  console.log(found);
-
-  React.useEffect(() => {
-    let proseContainer = document.querySelector<HTMLDivElement>(".md-prose");
-    let toc = document.querySelector<HTMLUListElement>(
-      ".markdown.has-toc .toc"
-    );
-    if (!toc || !proseContainer) {
-      return;
-    }
-    let headings =
-      proseContainer.querySelectorAll<HTMLHeadingElement>("h2, h3, h4");
-
-    let observer = new IntersectionObserver(
-      (entries) => {
-        for (let entry of entries) {
-          if (entry.isIntersecting) {
-            setFound({
-              heading: entry.target,
-              anchor: getAnchor(entry.target),
-            });
-          }
-        }
-      },
-      {
-        root: null,
-        rootMargin: "-50% 0% -50% 0%",
-        threshold: 0,
-      }
-    );
-
-    for (let heading of headings) {
-      observer.observe(heading);
-    }
-    window.requestAnimationFrame(() => {
-      if (!found.heading) {
-        setFound({
-          heading: headings[0],
-          anchor: getAnchor(headings[0]),
-        });
-      }
-    });
-    return () => observer.disconnect();
-
-    function getAnchor(heading: Element) {
-      let id = heading.id;
-      return toc?.querySelector(`[href="#${id}"]`) || null;
-    }
-  }, []);
-
-  let anchor = found.anchor;
-  let previousAnchor = usePrevious(anchor);
-
-  React.useEffect(() => {
-    if (previousAnchor?.hasAttribute("data-active")) {
-      previousAnchor.removeAttribute("data-active");
-    }
-    anchor?.setAttribute("data-active", "");
-  }, [anchor]);
-
   if (is404) return <NotFound />;
 
   return (
@@ -198,10 +131,78 @@ export function unstable_shouldReload() {
   return false;
 }
 
-function usePrevious<V>(value: V) {
-  const ref = React.useRef<V>();
-  React.useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
+// function usePrevious<V>(value: V) {
+//   const ref = React.useRef<V>();
+//   React.useEffect(() => {
+//     ref.current = value;
+//   });
+//   return ref.current;
+// }
+
+// function useFancyPantsActiveLinkHighlights() {
+//   let [found, setFound] = React.useState<{
+//     heading: Element | null;
+//     anchor: Element | null;
+//   }>({
+//     heading: null,
+//     anchor: null,
+//   });
+
+//   React.useEffect(() => {
+//     let proseContainer = document.querySelector<HTMLDivElement>(".md-prose");
+//     let toc = document.querySelector<HTMLUListElement>(
+//       ".markdown.has-toc .toc"
+//     );
+//     if (!toc || !proseContainer) {
+//       return;
+//     }
+//     let headings =
+//       proseContainer.querySelectorAll<HTMLHeadingElement>("h2, h3, h4");
+
+//     let observer = new IntersectionObserver(
+//       (entries) => {
+//         for (let entry of entries) {
+//           if (entry.isIntersecting) {
+//             setFound({
+//               heading: entry.target,
+//               anchor: getAnchor(entry.target),
+//             });
+//           }
+//         }
+//       },
+//       {
+//         root: null,
+//         rootMargin: "-50% 0% -50% 0%",
+//         threshold: 0,
+//       }
+//     );
+
+//     for (let heading of headings) {
+//       observer.observe(heading);
+//     }
+//     window.requestAnimationFrame(() => {
+//       if (!found.heading) {
+//         setFound({
+//           heading: headings[0],
+//           anchor: getAnchor(headings[0]),
+//         });
+//       }
+//     });
+//     return () => observer.disconnect();
+
+//     function getAnchor(heading: Element) {
+//       let id = heading.id;
+//       return toc?.querySelector(`[href="#${id}"]`) || null;
+//     }
+//   }, []);
+
+//   let anchor = found.anchor;
+//   let previousAnchor = usePrevious(anchor);
+
+//   React.useEffect(() => {
+//     if (previousAnchor?.hasAttribute("data-active")) {
+//       previousAnchor.removeAttribute("data-active");
+//     }
+//     anchor?.setAttribute("data-active", "");
+//   }, [anchor]);
+// }
