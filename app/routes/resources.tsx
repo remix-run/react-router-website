@@ -1,6 +1,6 @@
 import * as React from "react";
 import cx from "clsx";
-import { ButtonLink } from "../components/button";
+import { ButtonAnchor } from "../components/button";
 import { Section, Heading } from "../components/section-heading";
 import type { RouteComponent, MetaFunction, ActionFunction } from "remix";
 import { IconBox } from "~/components/icon-box";
@@ -47,16 +47,16 @@ const ResourcesPage: RouteComponent = () => {
                 mt-7
               `}
             >
-              <ButtonLink
+              <ButtonAnchor
                 size="large"
-                to="https://github.com/remix-run/react-router"
+                href="https://github.com/remix-run/react-router"
                 className="mb-4 md:mb-0 md:mr-6"
               >
                 Visit GitHub Repo
-              </ButtonLink>
-              <ButtonLink size="large" to="https://discord.gg/VBePs6d">
+              </ButtonAnchor>
+              <ButtonAnchor size="large" href="https://discord.gg/VBePs6d">
                 Join Remix Discord
-              </ButtonLink>
+              </ButtonAnchor>
             </div>
           </div>
         </div>
@@ -208,7 +208,7 @@ const ResourcesPage: RouteComponent = () => {
                     date: "September 2021",
                     docs: "/docs",
                     githubLink:
-                      "https://github.com/remix-run/react-router/releases/tag/v6.0.0",
+                      "https://github.com/remix-run/react-router/releases/tag/v6.0.0-beta.6",
                   },
                   {
                     heading: "React Router v5",

@@ -27,7 +27,7 @@ function SectionSignup() {
           React Router is developed by the <a href="https://remix.run">Remix</a>{" "}
           team. To get updates and special content on React Router (as well as
           our other projects), subscribe to the Remix newsletter or join the{" "}
-          <a href="#">conversation on Discord</a>.
+          <a href="https://discord.gg/VBePs6d">conversation on Discord</a>.
         </p>
         <Form
           replace

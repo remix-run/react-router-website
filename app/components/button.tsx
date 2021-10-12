@@ -30,6 +30,21 @@ const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
   }
 );
 
+const ButtonAnchor = React.forwardRef<HTMLAnchorElement, ButtonAnchorProps>(
+  (props, ref) => {
+    let { variant, size, disabled, rounded, ...domProps } = props;
+    return (
+      <a
+        ref={ref}
+        aria-disabled={disabled || undefined}
+        tabIndex={disabled ? -1 : undefined}
+        {...domProps}
+        className={getButtonClassNames(props)}
+      />
+    );
+  }
+);
+
 const ButtonNavLink = React.forwardRef<HTMLAnchorElement, ButtonNavLinkProps>(
   (props, ref) => {
     let { variant, size, disabled, rounded, ...domProps } = props;
@@ -70,6 +85,7 @@ const ButtonDiv = React.forwardRef<HTMLDivElement, ButtonDivProps>(
 );
 
 Button.displayName = "Button";
+ButtonAnchor.displayName = "ButtonAnchor";
 ButtonLink.displayName = "ButtonLink";
 ButtonNavLink.displayName = "ButtonNavLink";
 ButtonDiv.displayName = "ButtonDiv";
@@ -165,12 +181,16 @@ interface ButtonDivProps
   extends React.ComponentPropsWithRef<"div">,
     ButtonSharedProps {}
 interface ButtonLinkProps extends LinkProps, ButtonSharedProps {}
+interface ButtonAnchorProps
+  extends React.ComponentPropsWithRef<"a">,
+    ButtonSharedProps {}
 interface ButtonNavLinkProps extends NavLinkProps, ButtonSharedProps {}
 
 export type {
   ButtonProps,
+  ButtonAnchorProps,
   ButtonLinkProps,
   ButtonNavLinkProps,
   ButtonDivProps,
 };
-export { Button, ButtonLink, ButtonNavLink, ButtonDiv };
+export { Button, ButtonAnchor, ButtonLink, ButtonNavLink, ButtonDiv };
