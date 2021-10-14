@@ -2,6 +2,7 @@ import { RouteData } from "@remix-run/react/routeData";
 import type { AppData, LinkDescriptor } from "remix";
 import type { Params } from "react-router";
 import type { Location } from "history";
+import merge from "lodash.merge";
 
 type Meta = { [name: string]: string };
 type Links = LinkDescriptor[];
@@ -9,6 +10,9 @@ type Links = LinkDescriptor[];
 export const seo = getSeo({
   titleTemplate: "%s | React Router",
   defaultTitle: "React Router",
+  twitter: {
+    site: "@remix_run",
+  },
   openGraph: {
     defaultImageHeight: 250,
     defaultImageWidth: 500,
@@ -25,7 +29,7 @@ export function getSeo(defaultConfig: SeoProps) {
       location?: Location;
     }
   ): [Meta, Links] {
-    config = { ...defaultConfig, ...config };
+    config = merge(defaultConfig, config);
     let title = getSeoTitle(config, data);
     let meta: Meta = title ? { title } : {};
     let links: Links = [];

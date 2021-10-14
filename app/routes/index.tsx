@@ -27,6 +27,7 @@ import {
   ActionFunction,
   useLoaderData,
   Link,
+  LinksFunction,
 } from "remix";
 import {
   BrowserChrome,
@@ -40,11 +41,27 @@ import { Actor, ScrollStage, useStage } from "~/stage";
 import { SectionSignup, signupAction } from "~/components/section-signup";
 import { useMatchMedia } from "../hooks/match-media";
 import { tailwindConfig } from "~/utils/tailwind";
+import { seo } from "~/utils/seo";
 import { MdtScroller } from "~/components/scroll-experience";
 
-const meta: MetaFunction = () => ({
-  title: "React Router",
+let [seoMeta, seoLinks] = seo({
+  title: "Declarative routing for React apps at any scale",
+  description:
+    "Version 6 of React Router is here! React Router v6 takes the best features from v3, v5, and its sister project, Reach Router, in our smallest and most powerful package yet.",
+  twitter: {
+    creator: "@remix_run",
+  },
+  openGraph: {},
 });
+
+export const meta: MetaFunction = () => ({
+  ...seoMeta,
+});
+
+export const links: LinksFunction = () => [
+  ...seoLinks,
+  { rel: "stylesheet", href: indexStyles },
+];
 
 const brandIcons = [
   {
@@ -258,7 +275,8 @@ const IndexPage: RouteComponent = () => {
             <p className="opacity-80 text-lg leading-8 md:text-xl">
               Closing in on a decade of client side routing experience, React
               Router v6 takes the best features from v3, v5, and its sister
-              project, Reach Router, in the smallest package yet.
+              project, Reach Router, in our smallest and most powerful package
+              yet.
             </p>
             <div className="flex flex-col md:flex-row items-center justify-center flex-shrink-0 flex-wrap mt-7">
               <ButtonLink
@@ -416,7 +434,6 @@ const IndexPage: RouteComponent = () => {
 };
 
 export default IndexPage;
-export { meta };
 
 interface IndexData {
   mdt: {
@@ -433,7 +450,3 @@ export let loader: LoaderFunction = async () => {
 export let action: ActionFunction = async (props) => {
   return signupAction(props);
 };
-
-export function links() {
-  return [{ rel: "stylesheet", href: indexStyles }];
-}

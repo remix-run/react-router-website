@@ -2,7 +2,12 @@ import * as React from "react";
 import cx from "clsx";
 import { ButtonAnchor } from "../components/button";
 import { Section, Heading } from "../components/section-heading";
-import type { RouteComponent, MetaFunction, ActionFunction } from "remix";
+import type {
+  RouteComponent,
+  MetaFunction,
+  ActionFunction,
+  LinksFunction,
+} from "remix";
 import { IconBox } from "~/components/icon-box";
 import { Badge } from "~/components/badge";
 import { Link, ArrowLink } from "~/components/link";
@@ -15,10 +20,19 @@ import {
 } from "~/components/icons";
 // import { Card, CardContent, CardImage } from "~/components/card";
 import { SectionSignup, signupAction } from "~/components/section-signup";
+import { seo } from "~/utils/seo";
 
-const meta: MetaFunction = () => ({
-  title: "React Router | Resources",
+let [seoMeta, seoLinks] = seo({
+  title: "Resources",
+  description:
+    "React Router is built and maintained by the Remix team. Check out the various resources we offer to help you build better websites.",
 });
+
+export const meta: MetaFunction = () => ({
+  ...seoMeta,
+});
+
+export const links: LinksFunction = () => [...seoLinks];
 
 const ResourcesPage: RouteComponent = () => {
   return (
@@ -290,7 +304,6 @@ const ResourcesPage: RouteComponent = () => {
 };
 
 export default ResourcesPage;
-export { meta };
 
 export let action: ActionFunction = async (props) => {
   return signupAction(props);

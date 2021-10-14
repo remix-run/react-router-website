@@ -52,6 +52,7 @@
     "@tailwindcss/typography": "0.4.1",
     "@types/follow-redirects": "1.13.1",
     "@types/gunzip-maybe": "1.4.0",
+    "@types/lodash.merge": "^4.6.6",
     "@types/react": "17.0.24",
     "@types/react-dom": "17.0.9",
     "@types/semver": "7.3.8",
