@@ -1,9 +1,11 @@
+import path from "path";
 import { Migrate } from "@prisma/migrate";
+import { ensureDatabaseExists } from "@prisma/migrate/dist/utils/ensureDatabaseExists";
+import { printFilesFromMigrationIds } from "@prisma/migrate/dist/utils/printFiles";
 import { satisfies } from "semver";
 import { GitHubRelease } from "./@types/github";
 import { saveDocs } from "./utils/save-docs";
-import { installGlobals } from "@remix-run/node";
-installGlobals();
+import fetch from "node-fetch";
 
 // FIXME: this is duplicated from `getLoadContext`, should figure out how to not
 // do that and figure out what we really even need and where. Might not even
@@ -20,10 +22,6 @@ let context = {
 };
 
 async function seed() {
-  // FIXME: remove this, using the docs branch until we track v6 head
-  await saveDocs("/refs/heads/dev", context.docs, "");
-
-  // the rest
   const releasesPromise = await fetch(
     `https://api.github.com/repos/${context.docs.owner}/${context.docs.repo}/releases`,
     {
@@ -39,18 +37,39 @@ async function seed() {
     return satisfies(release.tag_name, context.docs.versions);
   });
 
-  await Promise.all(
-    releasesToUse.map((release: any) =>
-      saveDocs(`/refs/tags/${release.tag_name}`, context.docs, release.body)
-    )
+  let promises = releasesToUse.map((release: any) =>
+    saveDocs(`/refs/tags/${release.tag_name}`, context.docs, release.body)
   );
+
+  // FIXME: remove this, using the docs branch until we track v6 head
+  promises.unshift(saveDocs("/refs/heads/dev", context.docs, ""));
+
+  await Promise.all(promises);
 }
 
 async function resetAndSeed() {
-  const migrate = new Migrate();
-  await migrate.reset();
-  await migrate.applyMigrations();
+  let schemaPath = path.join(process.cwd(), "prisma/schema.prisma");
+  const migrate = new Migrate(schemaPath);
+  await ensureDatabaseExists("create", true, schemaPath);
+
+  let migrationIds: string[];
+  try {
+    await migrate.reset();
+
+    const { appliedMigrationNames } = await migrate.applyMigrations();
+    migrationIds = appliedMigrationNames;
+  } finally {
+    migrate.stop();
+  }
+
   await migrate.tryToRunGenerate();
+
+  if (migrationIds.length === 0) {
+    console.info("Database reset successful\n");
+  } else {
+    console.log("Database reset successful");
+  }
+
   await seed();
 }
 
