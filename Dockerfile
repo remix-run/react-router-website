@@ -23,7 +23,7 @@ WORKDIR /remixapp
 ENV NODE_ENV production
 
 # Seed the database
-RUN prisma migrate reset --force
+RUN npm run db:reset
 
 COPY --from=builder /remixapp/public ./public
 COPY --from=builder /remixapp/server ./server
