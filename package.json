@@ -18,7 +18,7 @@
     "start": "NODE_ENV=production node server",
     "postinstall": "remix setup && patch-package",
     "clean": "del app/styles .cache public/build server/build",
-    "db:reset": "prisma migrate reset"
+    "db:reset": "ts-node app/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "3.1.1",
@@ -47,6 +47,7 @@
     "ts-is-present": "1.2.2"
   },
   "devDependencies": {
+    "@prisma/migrate": "3.2.1",
     "@remix-run/dev": "0.19.3",
     "@tailwindcss/aspect-ratio": "0.2.1",
     "@tailwindcss/typography": "0.4.1",
