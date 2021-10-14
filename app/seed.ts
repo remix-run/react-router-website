@@ -20,7 +20,7 @@ let context = {
 
 async function seed() {
   // FIXME: remove this, using the docs branch until we track v6 head
-  await saveDocs("/refs/heads/docs", context.docs, "");
+  await saveDocs("/refs/heads/dev", context.docs, "");
 
   // the rest
   const releasesPromise = await fetch(
