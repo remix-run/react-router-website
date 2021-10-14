@@ -30,6 +30,33 @@ export interface MenuNode {
   children: MenuNode[];
 }
 
+export type Config = {
+  /**
+   * The owner of the repo containing the docs
+   */
+  owner: string;
+  /**
+   * The repo name containing the docs.
+   */
+  repo: string;
+  /**
+   * The path of the docs in the repo on GitHub
+   */
+  remotePath: string;
+  /**
+   * Local path of files during development
+   */
+  localPath: string;
+  /**
+   * Directory name of where to find localized docs during development
+   */
+  localLangDir: string;
+  /**
+   * Semver range of versions you want to show up in the versions dropdown
+   */
+  versions: string;
+};
+
 export async function getMenu(
   version: string,
   lang: string

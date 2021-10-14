@@ -12,5 +12,10 @@
     "noEmit": true,
     "module": "ES2020",
     "paths": { "~/*": ["./app/*"] }
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
   }
 }

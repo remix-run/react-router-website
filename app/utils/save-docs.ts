@@ -1,9 +1,9 @@
 import { coerce } from "semver";
 
-import { prisma } from "~/db.server";
+import { prisma } from "../db.server";
 import { findMatchingEntries, getPackage } from "./get-docs.server";
 import { processDocs } from "./process-docs.server";
-import type { Config } from "~/utils.server";
+import type { Config } from "../utils.server";
 import { processMarkdown } from "@ryanflorence/md";
 
 /**

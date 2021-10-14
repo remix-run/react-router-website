@@ -3,6 +3,9 @@
   "name": "reactrouter-dot-com",
   "description": "",
   "license": "",
+  "prisma": {
+    "seed": "ts-node app/seed.ts"
+  },
   "scripts": {
     "build:css": "postcss styles --base styles --dir app/styles --env production",
     "dev:css": "postcss styles --base styles --dir app/styles -w",

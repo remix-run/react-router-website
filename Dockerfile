@@ -22,6 +22,9 @@ FROM node:15-alpine AS runner
 WORKDIR /remixapp
 ENV NODE_ENV production
 
+# Seed the database
+RUN prisma migrate reset --force
+
 COPY --from=builder /remixapp/public ./public
 COPY --from=builder /remixapp/server ./server
 COPY --from=builder /remixapp/node_modules ./node_modules
