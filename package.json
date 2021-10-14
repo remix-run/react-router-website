@@ -3,24 +3,30 @@
   "name": "reactrouter-dot-com",
   "description": "",
   "license": "",
+  "prisma": {
+    "seed": "ts-node app/seed.ts"
+  },
   "scripts": {
     "build:css": "postcss styles --base styles --dir app/styles --env production",
     "dev:css": "postcss styles --base styles --dir app/styles -w",
     "build:remix": "NODE_ENV=production remix build",
     "build": "run-s build:*",
     "dev": "pm2-dev pm2.config.js",
-    "deploy": "flyctl deploy --build-arg REMIX_TOKEN=${REMIX_TOKEN}",
+    "deploy": "flyctl deploy --config fly.staging.toml --build-arg REMIX_TOKEN=${REMIX_TOKEN} --build-arg DATABASE_URL=file:./dev.db",
+    "deploy:manual": "flyctl deploy --config fly.staging.toml --build-arg REMIX_TOKEN=${REMIX_TOKEN} --build-arg DATABASE_URL=file:./dev.db --build-arg SKIP_RESET=1",
+    "deploy:production:manual": "flyctl deploy --config fly.production.toml --build-arg REMIX_TOKEN=${REMIX_TOKEN} --build-arg DATABASE_URL=file:./dev.db  --build-arg SKIP_RESET=1",
     "start": "NODE_ENV=production node server",
     "postinstall": "remix setup && patch-package",
-    "clean": "del app/styles .cache public/build server/build"
+    "clean": "del app/styles .cache public/build server/build",
+    "db:reset": "prisma migrate reset"
   },
   "dependencies": {
     "@prisma/client": "3.1.1",
     "@reach/rect": "^0.16.0",
     "@reach/skip-nav": "0.16.0",
-    "@remix-run/node": "0.19.0-pre.1",
-    "@remix-run/react": "0.19.0-pre.1",
-    "@remix-run/serve": "0.19.0-pre.1",
+    "@remix-run/node": "0.19.3",
+    "@remix-run/react": "0.19.3",
+    "@remix-run/serve": "0.19.3",
     "@ryanflorence/md": "^6.1.1",
     "@ryanflorence/mdtut": "^1.2.1",
     "accept-language": "3.0.18",
@@ -33,7 +39,7 @@
     "react-router-dom": "6.0.0-beta.6",
     "remark": "^13.0.0",
     "remark-html": "^13.0.1",
-    "remix": "0.19.0-pre.1",
+    "remix": "0.19.3",
     "semver": "7.3.5",
     "tailwindcss": "2.2.16",
     "tar-stream": "2.2.0",
@@ -41,7 +47,7 @@
     "ts-is-present": "1.2.2"
   },
   "devDependencies": {
-    "@remix-run/dev": "0.19.0-pre.1",
+    "@remix-run/dev": "0.19.3",
     "@tailwindcss/aspect-ratio": "0.2.1",
     "@tailwindcss/typography": "0.4.1",
     "@types/follow-redirects": "1.13.1",
@@ -65,6 +71,7 @@
     "postcss-import": "^14.0.2",
     "postcss-nesting": "^8.0.1",
     "prisma": "3.1.1",
+    "ts-node": "^10.3.0",
     "typescript": "4.4.3"
   },
   "engines": {

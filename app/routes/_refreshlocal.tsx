@@ -1,22 +1,30 @@
 import * as React from "react";
 
-import { RouteComponent, ActionFunction } from "remix";
+import { RouteComponent, ActionFunction, Link, json } from "remix";
 import { redirect } from "remix";
 import { satisfies } from "semver";
 
 import { GitHubRelease } from "~/@types/github";
+import { Button } from "~/components/button";
 import { saveDocs } from "~/utils/save-docs";
 
 let action: ActionFunction = async ({ request, context }) => {
-  // verify post request and the token matches
-  if (
-    request.method !== "POST" ||
-    request.headers.get("Authorization") !== process.env.AUTH_TOKEN
-  ) {
-    return redirect("/");
+  const url = new URL(request.url);
+
+  if (request.method !== "POST") {
+    throw new Response("", { status: 405 });
   }
 
-  const url = new URL(request.url);
+  if (
+    // verify post request and the token matches or doing it locally
+    !(
+      request.headers.get("Authorization") === process.env.AUTH_TOKEN ||
+      url.hostname === "localhost"
+    )
+  ) {
+    throw new Response("", { status: 401 });
+  }
+
   const ref = url.searchParams.get("ref");
 
   try {
@@ -60,15 +68,33 @@ let action: ActionFunction = async ({ request, context }) => {
       );
     }
 
-    return redirect(request.url);
+    return json({ ok: true }, { status: 200 });
   } catch (error) {
     console.error(error);
-    return redirect(request.url);
+    return json({ ok: true }, { status: 500 });
   }
 };
 
 const RefreshInstance: RouteComponent = () => {
-  return <p>404</p>;
+  let [ref, setRef] = React.useState("");
+  let action = ref.length ? `?${ref}` : "";
+
+  return (
+    <form method="post" action={action} className="m-10">
+      <p className="my-4">
+        This will only work if you're on localhost. You probably want to run{" "}
+        <code>npm run db:reset</code> first.
+      </p>
+      <p className="my-4">
+        You can do a specific ref by{" "}
+        <Link to="/_refreshlocal?ref=/refs/heads/docs">
+          adding it to the URL
+        </Link>
+        .
+      </p>
+      <Button type="submit">Seed Database</Button>
+    </form>
+  );
 };
 
 export default RefreshInstance;

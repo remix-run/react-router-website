@@ -1,60 +1,20 @@
-import {
-  HeadersFunction,
-  LoaderFunction,
-  redirect,
-  RouteComponent,
-} from "remix";
+import invariant from "tiny-invariant";
+import { LoaderFunction, RouteComponent } from "remix";
 
 import { json } from "remix";
 
-import { getDoc, getVersion, getVersions } from "~/utils.server";
+import { getDoc } from "~/utils.server";
 import { DocsPage } from "~/components/doc";
-import { time } from "~/utils/time";
 
-let loader: LoaderFunction = async ({ context, params, request }) => {
-  let path = await import("path");
-  try {
-    let versions = await getVersions();
+let loader: LoaderFunction = async ({ params }) => {
+  invariant(!!params.version, "Expected version param");
+  invariant(!!params.lang, "Expected language param");
+  invariant(!!params["*"], "Expected file path");
 
-    let version = getVersion(params.version, versions) || {
-      version: params.version,
-      head: params.version,
-      isLatest: false,
-    };
+  let { lang, version } = params;
+  let doc = await getDoc(params["*"], version, lang);
 
-    let lang = params.lang;
-    let slug = params["*"];
-    let ext = path.extname(slug);
-
-    if (ext) {
-      // remove the extension
-      let noExtension = request.url.slice(0, -ext.length);
-      return redirect(noExtension);
-    }
-
-    let [ms, doc] = await time(() => getDoc(context.docs, slug, version, lang));
-
-    // we could also throw an error in getDoc if the doc doesn't exist
-    if (!doc) {
-      return json({ notFound: true }, { status: 404 });
-    }
-
-    return json(doc, {
-      headers: {
-        "Cache-Control": "max-age=60",
-        "Server-Timing": `db;dur=${ms}`,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    return json({ notFound: true }, { status: 404 });
-  }
-};
-
-const headers: HeadersFunction = ({ loaderHeaders }) => {
-  return {
-    "Server-Timing": loaderHeaders.get("Server-Timing") ?? "",
-  };
+  return json(doc);
 };
 
 const SplatPage: RouteComponent = () => {
@@ -62,5 +22,5 @@ const SplatPage: RouteComponent = () => {
 };
 
 export default SplatPage;
-export { headers, loader };
-export { meta } from "~/components/doc";
+export { loader };
+export { meta, CatchBoundary } from "~/components/doc";

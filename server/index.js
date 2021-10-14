@@ -53,7 +53,7 @@ function getLoadContext() {
       remotePath: "docs",
       localPath: "../react-router/docs",
       localLangDir: "_i18n",
-      versions: ">=6.0.0-beta.0",
+      versions: ">=6.0.0-beta.6",
     },
   };
 }

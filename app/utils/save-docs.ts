@@ -1,9 +1,9 @@
 import { coerce } from "semver";
 
-import { prisma } from "~/db.server";
+import { prisma } from "../db.server";
 import { findMatchingEntries, getPackage } from "./get-docs.server";
 import { processDocs } from "./process-docs.server";
-import type { Config } from "~/utils.server";
+import type { Config } from "../utils.server";
 import { processMarkdown } from "@ryanflorence/md";
 
 /**
@@ -70,6 +70,7 @@ async function saveDocs(ref: string, config: Config, releaseNotes: string) {
             html: entry.html,
             lang: entry.lang,
             md: entry.md,
+            hasContent: entry.hasContent,
             title: entry.attributes.title,
             description: entry.attributes.description,
             disabled: entry.attributes.disabled,
@@ -85,6 +86,7 @@ async function saveDocs(ref: string, config: Config, releaseNotes: string) {
               html: entry.html,
               lang: entry.lang,
               md: entry.md,
+              hasContent: entry.hasContent,
               title: entry.attributes.title,
               description: entry.attributes.description,
               disabled: entry.attributes.disabled,
@@ -116,6 +118,7 @@ async function saveDocs(ref: string, config: Config, releaseNotes: string) {
             html: entry.html,
             lang: entry.lang,
             md: entry.md,
+            hasContent: entry.hasContent,
             title: entry.attributes.title,
             description: entry.attributes.description,
             disabled: entry.attributes.disabled,
@@ -130,7 +133,6 @@ async function saveDocs(ref: string, config: Config, releaseNotes: string) {
     });
 
     console.info(`Created release for version: ${result.fullVersionOrBranch}`);
-
     return result;
   }
 }
