@@ -21,7 +21,7 @@ ENV DATABASE_URL=${DATABASE_URL}
 WORKDIR /remixapp
 COPY . .
 COPY --from=deps /remixapp/node_modules ./node_modules
-# Seed the database
+# Seed the database - comment this out if you don't want to seed the database
 RUN npm run db:reset -- --force
 RUN npm run build
 
