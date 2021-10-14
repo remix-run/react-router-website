@@ -23,11 +23,12 @@ model Version {
 }
 
 model Doc {
-  id           String  @id @default(cuid())
-  filePath     String
-  md           String
-  html         String
-  lang         String
+  id         String  @id @default(cuid())
+  filePath   String
+  md         String
+  html       String
+  lang       String
+  hasContent Boolean @default(false)
 
   // frontmatter attributes
   title        String

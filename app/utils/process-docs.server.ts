@@ -20,14 +20,17 @@ async function processDoc(entry: Entry): Promise<{
   path: string;
   md: string;
   lang: string;
+  hasContent: boolean;
 }> {
   let { data, content } = parseAttributes(entry.content!);
+  let hasContent = content.trim() !== "";
 
   let path = entry.path.replace(/^\/docs/, "");
   let title = data.title || path;
-  let html = await processMarkdown(
-    data.toc === false ? content : "## toc\n" + content
-  );
+  let html = hasContent
+    ? await processMarkdown(data.toc === false ? content : "## toc\n" + content)
+    : "";
+
   let langMatch = path.match(/^\/_i18n\/(?<lang>[a-z]{2})\//);
 
   let lang = langMatch?.groups?.lang ?? "en";
@@ -47,6 +50,7 @@ async function processDoc(entry: Entry): Promise<{
     title,
     path,
     md: content,
+    hasContent,
     lang,
   };
 }

@@ -1,69 +1,23 @@
-import * as React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { NavLink } from "remix";
-import type { MenuDir, VersionHead } from "~/utils.server";
+import type { MenuNode } from "~/utils.server";
 import cx from "clsx";
 
-export function MenuVersionSelector({
-  version,
-  versions,
-  className,
-}: {
-  versions: VersionHead[];
-  version: VersionHead;
-  className?: string;
-}) {
-  let navigate = useNavigate();
-  let { version: versionInParams, lang } = useParams();
-  let isOtherTag = React.useMemo(
-    () => !versions.find((v) => v.head === versionInParams),
-    [versions, versionInParams]
-  );
-  return (
-    <div className={className}>
-      <select
-        className="select"
-        defaultValue={version.head}
-        onChange={(event) => {
-          navigate(`/docs/${lang}/${event.target.value}`);
-        }}
-      >
-        {isOtherTag && (
-          <option value={versionInParams}>{versionInParams}</option>
-        )}
-        {versions.map((v) => (
-          <option key={v.version} value={v.head}>
-            {v.head} ({v.version})
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
-
-/**
- * Used to lookup docs from other docs when we have sibling links (step by step
- * tutorials, etc.)
- */
-export type MenuMap = Map<string, MenuDir>;
-
 export function Menu({
-  menu,
+  nodes,
   className,
 }: {
-  menu: MenuDir;
+  nodes: MenuNode[];
   className?: string;
 }) {
   return (
     <nav className={cx("md-nav", className)}>
-      <div className="">
-        <MenuList level={1} dir={menu} />
-      </div>
+      <MenuList level={1} nodes={nodes} />
     </nav>
   );
 }
 
-function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
+function MenuList({ nodes, level = 1 }: { nodes: MenuNode[]; level?: number }) {
   let { lang, version } = useParams();
   let linkPrefix = `/docs/${lang}/${version}`;
   let itemClassName = ({ isActive }: { isActive?: boolean } = {}) =>
@@ -84,63 +38,34 @@ function MenuList({ dir, level = 1 }: { dir: MenuDir; level?: number }) {
       })}
       data-level={level}
     >
-      {dir.dirs &&
-        dir.dirs.map((dir, index) => {
-          // ignore empty directories
-          if (!dir.hasIndex && dir.files.length < 1) {
-            return null;
-          }
+      {nodes
+        .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity))
+        .map((node, index) => {
           let dirItemClassName = ({ isActive }: { isActive?: boolean } = {}) =>
             cx(itemClassName({ isActive: level !== 1 && isActive }), {
-              // removes top padding from the first item in the first list
               ["pt-0"]: level === 1 && index === 0,
             });
+
           return (
-            <li key={dir.path} data-dir="" data-level={level}>
-              {dir.hasIndex ? (
+            <li key={node.slug} data-dir="" data-level={level}>
+              {node.hasContent ? (
                 <NavLink
                   prefetch="intent"
                   end
-                  to={`${linkPrefix}${dir.path}`}
+                  to={`${linkPrefix}${node.slug}`}
                   className={dirItemClassName}
                 >
-                  {dir.title}
+                  {node.title}
                 </NavLink>
               ) : (
-                <span className={dirItemClassName()}>{dir.title}</span>
+                <span className={dirItemClassName()}>{node.title}</span>
               )}
-              <MenuList level={level + 1} dir={dir} />
+              {node.children.length > 0 && (
+                <MenuList level={level + 1} nodes={node.children} />
+              )}
             </li>
           );
         })}
-      {dir.files.map((file) => (
-        <li key={file.path} className="" data-file="" data-level={level}>
-          {file.attributes.disabled ? (
-            <span className={itemClassName()}>{file.title} 🚧</span>
-          ) : (
-            <NavLink
-              prefetch="intent"
-              end
-              to={`${linkPrefix}${file.path}`}
-              className={itemClassName}
-            >
-              {file.title}
-            </NavLink>
-          )}
-        </li>
-      ))}
     </ul>
   );
-}
-
-export function createMenuMap(dir: MenuDir, map: MenuMap = new Map()) {
-  for (let file of dir.files) {
-    map.set(file.path, dir);
-  }
-  if (dir.dirs) {
-    for (let childDir of dir.dirs) {
-      createMenuMap(childDir, map);
-    }
-  }
-  return map;
 }

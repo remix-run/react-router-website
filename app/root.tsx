@@ -1,9 +1,10 @@
 import * as React from "react";
 import { useLocation, Outlet } from "react-router-dom";
-import type {
+import {
   ErrorBoundaryComponent,
   LinksFunction,
   RouteComponent,
+  useCatch,
 } from "remix";
 import { Links, LiveReload, Meta, Scripts, json } from "remix";
 import cx from "clsx";
@@ -116,13 +117,15 @@ export let ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   );
 };
 
-// export function loader() {
-//   return json(null, { headers: { "Cache-Control": "max-age=3600" } });
-// }
-
-// export function unstable_shouldReload() {
-//   return false;
-// }
+export let CatchBoundary = () => {
+  let caught = useCatch();
+  return (
+    <Document forceDarkMode>
+      <h1>{caught.status}</h1>
+      <pre>{caught.statusText}</pre>
+    </Document>
+  );
+};
 
 function useRouteChangeFocusAndLiveRegionUpdates({
   location,

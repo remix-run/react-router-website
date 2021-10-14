@@ -1,50 +1,20 @@
+import invariant from "tiny-invariant";
 import * as React from "react";
+import { json, useLoaderData, Outlet } from "remix";
 import type { LoaderFunction } from "remix";
-import { useMatches, json, useLoaderData } from "remix";
 import { useLocation } from "react-router-dom";
 import cx from "clsx";
-import { DataOutlet } from "~/components/data-outlet";
-import { getMenu, getVersions, MenuDir, VersionHead } from "~/utils.server";
 
-import { time } from "~/utils/time";
-import {
-  createMenuMap,
-  Menu,
-  MenuVersionSelector,
-} from "~/components/docs-menu";
-import type { MenuMap } from "~/components/docs-menu";
-import markdownStyles from "../../styles/docs.css";
+import { getMenu, MenuNode } from "~/utils.server";
+import markdownStyles from "~/styles/docs.css";
+import { Menu } from "~/components/docs-menu";
 
-interface DocsRouteData {
-  menu: MenuDir | undefined;
-  versions: VersionHead[];
-  version: VersionHead | undefined;
-}
+export let loader: LoaderFunction = async ({ context, params }) => {
+  invariant(!!params.version, "Need a version param");
+  invariant(!!params.lang, "Need a lang param");
 
-export let loader: LoaderFunction = async ({ context }) => {
-  try {
-    let [versionsMS, allVersions] = await time(() => getVersions());
-    let heads = allVersions.filter((v) => v.isLatest);
-    let [latest] = heads;
-
-    let [menuMS, menu] = await time(() => getMenu(context.docs, latest));
-
-    let data: DocsRouteData = {
-      menu,
-      version: latest,
-      versions: heads,
-    };
-
-    return json(data, {
-      headers: {
-        "Cache-Control": "max-age=60",
-        "Server-Timing": `versions;dur=${versionsMS}, menu;dur=${menuMS}`,
-      },
-    });
-  } catch (error: unknown) {
-    console.error(error);
-    return json({ notFound: true }, { status: 404 });
-  }
+  let menu: MenuNode[] = await getMenu(params.version, params.lang);
+  return json(menu);
 };
 
 export function links() {
@@ -52,16 +22,7 @@ export function links() {
 }
 
 export default function DocsLayout() {
-  let matches = useMatches();
-  let { menu, version, versions } = useLoaderData<DocsRouteData>();
-
-  let menuMap = React.useMemo<MenuMap>(
-    () => (menu ? createMenuMap(menu) : new Map()),
-    [menu]
-  );
-
-  let is404 = matches.some((match: any) => match.data && match.data.notFound);
-
+  let menu = useLoaderData<MenuNode[]>();
   let location = useLocation();
   let detailsRef = React.useRef<HTMLDetailsElement>(null);
 
@@ -79,7 +40,6 @@ export default function DocsLayout() {
     heading: null,
     anchor: null,
   });
-  console.log(found);
 
   React.useEffect(() => {
     let proseContainer = document.querySelector<HTMLDivElement>(".md-prose");
@@ -139,22 +99,13 @@ export default function DocsLayout() {
     anchor?.setAttribute("data-active", "");
   }, [anchor]);
 
-  if (is404) return <NotFound />;
-
   return (
     <div className="md-layout lg:flex lg:h-full md-down:container">
       <div className="lg:hidden">
         <details ref={detailsRef}>
           <summary className="py-4">Docs Navigation</summary>
           <div>
-            {/* <MenuVersionSelector
-              className="mb-10"
-              versions={versions}
-              version={version}
-            /> */}
-            {menu && (
-              <Menu menu={menu} className="py-6 text-base font-medium" />
-            )}
+            <Menu nodes={menu} className="py-6 text-base font-medium" />
           </div>
         </details>
         <hr className="mb-4" />
@@ -169,33 +120,16 @@ export default function DocsLayout() {
             "py-10 pl-6 pr-3 xl:pr-5 2xl:pr-6", // spacing
           ])}
         >
-          {/* <MenuVersionSelector
-            className="mb-10"
-            versions={versions}
-            version={version}
-          /> */}
-          {menu && <Menu menu={menu} />}
+          <Menu nodes={menu} />
         </div>
       </div>
       <div className="lg:z-[1] flex-grow lg:h-full">
         <div className="py-6 md:py-8 lg:py-10 lg:pr-6 lg:pl-3 xl:pl-5 2xl:pl-6">
-          <DataOutlet context={menuMap} />
+          <Outlet />
         </div>
       </div>
     </div>
   );
-}
-
-function NotFound() {
-  return (
-    <div>
-      <h1>Not Found</h1>
-    </div>
-  );
-}
-
-export function unstable_shouldReload() {
-  return false;
 }
 
 function usePrevious<V>(value: V) {

@@ -1,34 +1,17 @@
 import type { HeadersFunction, LoaderFunction, RouteComponent } from "remix";
 import { json } from "remix";
-import { getDoc, getVersion, getVersions } from "~/utils.server";
+import { getDoc } from "~/utils.server";
 import { DocsPage } from "~/components/doc";
-import { time } from "~/utils/time";
+import invariant from "tiny-invariant";
 
 // this and splat.tsx loader are identical except the "index" vs. params["*"]
 // part
-let loader: LoaderFunction = async ({ context, params }) => {
-  let versions = await getVersions();
-  let version = getVersion(params.version, versions) || {
-    version: params.version,
-    head: params.version,
-    isLatest: false,
-  };
+let loader: LoaderFunction = async ({ params }) => {
+  invariant(!!params.version, "Expected version param");
+  invariant(!!params.lang, "Expected language param");
 
-  try {
-    let [ms, doc] = await time(() =>
-      getDoc(context.docs, "/index", version, params.lang)
-    );
-
-    // we could also throw an error in getDoc if the doc doesn't exist
-    if (!doc) {
-      return json({ notFound: true }, { status: 404 });
-    }
-
-    return json(doc, { headers: { "Server-Timing": `db;dur=${ms}` } });
-  } catch (error: unknown) {
-    console.error(error);
-    return json({ notFound: true }, { status: 404 });
-  }
+  let doc = await getDoc("index", params.version, params.lang);
+  return json(doc);
 };
 
 const headers: HeadersFunction = ({ loaderHeaders }) => {
@@ -45,4 +28,4 @@ const VersionIndexPage: RouteComponent = () => {
 
 export default VersionIndexPage;
 export { headers, loader };
-export { meta } from "~/components/doc";
+export { meta, CatchBoundary } from "~/components/doc";
