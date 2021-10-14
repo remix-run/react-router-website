@@ -18,11 +18,14 @@ RUN npm ci
 FROM node:15-alpine AS builder
 ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
+# Supplying SKIP_RESET=1 will skip the DB reset and seeding - WILL USE YOUR LOCAL DB
+ARG SKIP_RESET="0"
 WORKDIR /remixapp
 COPY . .
 COPY --from=deps /remixapp/node_modules ./node_modules
-# Seed the database - comment this out if you don't want to seed the database
-RUN npm run db:reset -- --force
+# Reset and seed the database only if SKIP_RESET is not set
+RUN if [ "$SKIP_RESET" = "1" ]; then echo "SKIPPING DATABASE RESET AND SEED"; else npm run db:reset -- --force; fi
+
 RUN npm run build
 
 ################################################################
