@@ -1,14 +1,13 @@
-import { RouteComponent, ActionFunction, json, LoaderFunction } from "remix";
-import { redirect } from "remix";
+import { RouteComponent, ActionFunction, json } from "remix";
 import { getInstanceURLs } from "~/utils/get-fly-instance-urls.server";
 
 const action: ActionFunction = async ({ request }) => {
   // verify post request and the token matches
-  if (
-    request.method !== "POST" ||
-    request.headers.get("Authorization") !== process.env.AUTH_TOKEN
-  ) {
-    return redirect("/");
+  if (request.method !== "POST") {
+    return json({}, { status: 405 });
+  }
+  if (request.headers.get("Authorization") !== process.env.AUTH_TOKEN) {
+    return json({}, { status: 401 });
   }
 
   const { search } = new URL(request.url);
@@ -36,10 +35,10 @@ const action: ActionFunction = async ({ request }) => {
       console.info(result);
     });
 
-    return redirect(request.url);
+    return json({ ok: true });
   } catch (error) {
     console.error(error);
-    return redirect(request.url);
+    return json({ ok: false }, { status: 500 });
   }
 };
 

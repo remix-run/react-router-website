@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { RouteComponent, ActionFunction, Link } from "remix";
+import { RouteComponent, ActionFunction, Link, json } from "remix";
 import { redirect } from "remix";
 import { satisfies } from "semver";
 
@@ -68,10 +68,10 @@ let action: ActionFunction = async ({ request, context }) => {
       );
     }
 
-    return redirect(request.url);
+    return json({ ok: true }, { status: 200 });
   } catch (error) {
     console.error(error);
-    return redirect(request.url);
+    return json({ ok: true }, { status: 500 });
   }
 };
 
