@@ -1,3 +1,6 @@
+# We have 3 stages to our dockerfile
+# one for installing dependencies, one for building (and seeding the db), and one for running
+
 # Install dependencies only when needed
 FROM node:15-alpine AS deps
 ARG REMIX_TOKEN
@@ -7,23 +10,27 @@ RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache sqlite
 WORKDIR /remixapp
 COPY .npmrc package.json package-lock.json ./
-COPY ./prisma/ ./prisma/
 RUN npm ci
+
+################################################################
 
 # Rebuild the source code only when needed
 FROM node:15-alpine AS builder
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
 WORKDIR /remixapp
 COPY . .
 COPY --from=deps /remixapp/node_modules ./node_modules
+# Seed the database
+RUN npm run db:reset -- --force
 RUN npm run build
+
+################################################################
 
 # Production image, copy all the files and run our server
 FROM node:15-alpine AS runner
 WORKDIR /remixapp
 ENV NODE_ENV production
-
-# Seed the database
-RUN npm run db:reset
 
 COPY --from=builder /remixapp/public ./public
 COPY --from=builder /remixapp/server ./server

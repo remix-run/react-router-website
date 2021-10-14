@@ -12,11 +12,11 @@
     "build:remix": "NODE_ENV=production remix build",
     "build": "run-s build:*",
     "dev": "pm2-dev pm2.config.js",
-    "deploy": "flyctl deploy --config fly.staging.toml --build-arg REMIX_TOKEN=${REMIX_TOKEN}",
+    "deploy": "flyctl deploy --config fly.staging.toml --build-arg REMIX_TOKEN=${REMIX_TOKEN} --build-arg DATABASE_URL=file:./dev.db",
     "start": "NODE_ENV=production node server",
     "postinstall": "remix setup && patch-package",
     "clean": "del app/styles .cache public/build server/build",
-    "db:reset": "prisma migrate reset --force"
+    "db:reset": "prisma migrate reset"
   },
   "dependencies": {
     "@prisma/client": "3.1.1",
