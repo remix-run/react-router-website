@@ -1,7 +1,6 @@
 import path from "path";
 import { Migrate } from "@prisma/migrate";
 import { ensureDatabaseExists } from "@prisma/migrate/dist/utils/ensureDatabaseExists";
-import { printFilesFromMigrationIds } from "@prisma/migrate/dist/utils/printFiles";
 import { satisfies } from "semver";
 import { GitHubRelease } from "./@types/github";
 import { saveDocs } from "./utils/save-docs";
