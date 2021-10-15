@@ -12,21 +12,25 @@ generator client {
 
 model GitHubRef {
   // fullVersionOrBranch v0.17.0, v6.0.1
-  ref          String @id
+  ref          String   @id
   // markdown process release notes
   releaseNotes String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   // relations
   docs Doc[]
 }
 
 model Doc {
-  id         String  @id @default(cuid())
+  id         String   @id @default(cuid())
   filePath   String
   md         String
   html       String
   lang       String
-  hasContent Boolean @default(false)
+  hasContent Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // frontmatter attributes
   title        String
