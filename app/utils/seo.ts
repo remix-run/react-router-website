@@ -12,8 +12,20 @@ export const seo = getSeo({
   defaultTitle: "React Router",
   twitter: {
     site: "@remix_run",
+    image: {
+      url: "https://res.cloudinary.com/remix-run/image/upload/v1634323120/reactrouter.com/twitterimage_fbx9l8.jpg",
+      alt: "React Router logo",
+    },
   },
   openGraph: {
+    images: [
+      {
+        url: "https://res.cloudinary.com/remix-run/image/upload/v1634323120/reactrouter.com/ogimage_uzcxl1.jpg",
+        alt: "React Router v6 is here. React Router v6 takes the best features from previous versions—and its sister project, Reach Router—in our smallest and most powerful package yet.",
+        height: 627,
+        width: 1200,
+      },
+    ],
     defaultImageHeight: 250,
     defaultImageWidth: 500,
   },
@@ -137,6 +149,13 @@ export function getSeo(defaultConfig: SeoProps) {
 
       if (config.twitter.creator) {
         meta["twitter:creator"] = config.twitter.creator;
+      }
+
+      if (config.twitter.image && config.twitter.image.url) {
+        meta["twitter:image"] = config.twitter.image.url;
+        if (config.twitter.image.alt) {
+          meta["twitter:image:alt"] = config.twitter.image.url;
+        }
       }
 
       // TODO: Finish implementation of all Twitter options
@@ -434,7 +453,7 @@ export interface OpenGraphMedia {
   url: string;
   width?: number;
   height?: number;
-  alt?: string;
+  alt: string;
   type?: string;
   secureUrl?: string;
 }
@@ -555,6 +574,10 @@ export interface TwitterMeta {
   creator?: string;
   site?: string;
   card?: string;
+  image?: {
+    url: string;
+    alt: string;
+  };
 }
 
 export interface FacebookMeta {
