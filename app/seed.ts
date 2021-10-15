@@ -46,12 +46,11 @@ async function seed() {
   );
 }
 
-async function resetAndSeed() {
+try {
   const migrate = new Migrate();
-  await migrate.reset();
-  await migrate.applyMigrations();
-  await migrate.tryToRunGenerate();
-  await seed();
+  migrate.reset().then(() => {
+    seed();
+  });
+} catch (e) {
+  throw e;
 }
-
-resetAndSeed();
