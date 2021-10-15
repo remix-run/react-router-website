@@ -198,7 +198,17 @@ export function NestedRoutes({ mdt }: { mdt: Page }) {
             </div>
           ))}
           <div className="text-center -mb-10">
-            <ButtonLink size="large" to="/docs">
+            <ButtonLink
+              size="large"
+              to="/docs"
+              style={{
+                // When the button is focused it is centered in the veiwport if
+                // the browser needs to scroll, and it will be obscured by the
+                // fixed position graphic. This offset should fix that in most
+                // modern browsers.
+                scrollMarginBottom: 500,
+              }}
+            >
               Learn More<span className="sr-only"> about Nested Routes</span>
             </ButtonLink>
           </div>
