@@ -40,7 +40,6 @@ import {
 import { Actor, ScrollStage, useStage } from "~/stage";
 import { SectionSignup, signupAction } from "~/components/section-signup";
 import { useMatchMedia } from "../hooks/match-media";
-import { tailwindConfig } from "~/utils/tailwind";
 import { seo } from "~/utils/seo";
 import { MdtScroller } from "~/components/scroll-experience";
 
@@ -257,10 +256,9 @@ function Code({ html }: { html: string }) {
 const IndexPage: RouteComponent = () => {
   let { mdt } = useLoaderData<IndexData>();
 
-  let isSmallScreen = useMatchMedia(
-    `screen and (max-width: ${tailwindConfig.theme.screens?.["sm-down"].max})`,
-    { initialState: false }
-  );
+  let isSmallScreen = useMatchMedia("screen and (max-width: 639px)", {
+    initialState: false,
+  });
 
   return (
     <div className="py-8">

@@ -1,5 +1,4 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import { tailwindConfig } from "~/utils/tailwind";
 
 export function useMatchMedia(
   query: string,
@@ -21,13 +20,21 @@ export function useMatchMedia(
   return matches;
 }
 
+const screens = {
+  sm: "640px",
+  md: "768px",
+  lg: "1024px",
+  xl: "1280px",
+  "2xl": "1536px",
+};
+
 type Screen = "sm" | "md" | "lg" | "xl" | "2xl";
 export function useMatchScreen(
   screen: Screen,
   opts?: { initialState?: boolean; layoutEffect?: boolean }
 ) {
   let matches = useMatchMedia(
-    `screen and (min-width: ${tailwindConfig.theme.screens?.[screen]})`,
+    `screen and (min-width: ${screens[screen]})`,
     opts
   );
   return matches;
