@@ -3,9 +3,9 @@ import { PrismaClient } from "@prisma/client";
 let prisma = new PrismaClient();
 
 async function go() {
-  let versions = await prisma.version.count();
+  let refs = await prisma.gitHubRef.count();
 
-  if (versions) {
+  if (refs) {
     process.exit(0);
   } else {
     process.exit(1);
