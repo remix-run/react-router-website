@@ -2,7 +2,7 @@
 # one for installing dependencies, one for building (and seeding the db), and one for running
 
 # Install dependencies only when needed
-FROM node:15-alpine AS deps
+FROM node:16-alpine AS deps
 ARG REMIX_TOKEN
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
@@ -15,7 +15,7 @@ RUN npm ci
 ################################################################
 
 # Rebuild the source code only when needed
-FROM node:15-alpine AS builder
+FROM node:16-alpine AS builder
 ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
 # Supplying SKIP_RESET=1 will skip the DB reset and seeding - WILL USE YOUR LOCAL DB
@@ -31,7 +31,7 @@ RUN npm run build
 ################################################################
 
 # Production image, copy all the files and run our server
-FROM node:15-alpine AS runner
+FROM node:16-alpine AS runner
 WORKDIR /remixapp
 ENV NODE_ENV production
 
