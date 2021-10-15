@@ -42,10 +42,10 @@
     "remark-html": "^13.0.1",
     "remix": "0.19.3",
     "semver": "7.3.5",
-    "tailwindcss": "2.2.16",
     "tar-stream": "2.2.0",
     "tiny-invariant": "1.1.0",
-    "ts-is-present": "1.2.2"
+    "ts-is-present": "1.2.2",
+    "use-throttle": "^0.0.3"
   },
   "devDependencies": {
     "@prisma/migrate": "3.2.1",
@@ -73,6 +73,7 @@
     "postcss-import": "^14.0.2",
     "postcss-nesting": "^8.0.1",
     "prisma": "3.1.1",
+    "tailwindcss": "2.2.16",
     "ts-node": "^10.3.0",
     "typescript": "4.4.3"
   },
