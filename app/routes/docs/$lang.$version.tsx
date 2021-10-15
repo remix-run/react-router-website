@@ -9,7 +9,7 @@ import { getMenu, MenuNode } from "~/utils.server";
 import markdownStyles from "~/styles/docs.css";
 import { Menu } from "~/components/docs-menu";
 
-export let loader: LoaderFunction = async ({ context, params }) => {
+export let loader: LoaderFunction = async ({ params }) => {
   invariant(!!params.version, "Need a version param");
   invariant(!!params.lang, "Need a lang param");
 

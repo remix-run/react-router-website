@@ -58,14 +58,15 @@ export type Config = {
 };
 
 export async function getMenu(
-  version: string,
+  versionParam: string,
   lang: string
 ): Promise<MenuNode[]> {
+  let head = await getLatestVersionFromParam(versionParam);
   let docs = await prisma.doc.findMany({
     where: {
       lang,
       version: {
-        fullVersionOrBranch: version,
+        fullVersionOrBranch: head,
       },
     },
     select: {
@@ -180,6 +181,19 @@ export async function getDoc(
   }
 
   return doc;
+}
+
+export async function getLatestVersionFromParam(head: string): Promise<string> {
+  let versions = await prisma.version.findMany({
+    where: { versionHeadOrBranch: head },
+    select: { fullVersionOrBranch: true },
+  });
+
+  let sorted = semver.sort(versions.map((v) => v.fullVersionOrBranch));
+
+  invariant(sorted.length > 0, "No versions");
+
+  return sorted[0];
 }
 
 export async function getVersions(): Promise<VersionHead[]> {

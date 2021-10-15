@@ -34,7 +34,7 @@ let action: ActionFunction = async ({ request, context }) => {
       let tag = ref.replace(/^\/refs\/tags\//, "");
 
       const releasePromise = await fetch(
-        `https://api.github.com/repos/${context.docs.owner}/${context.docs.repo}/releases/tags/${tag}`,
+        `https://api.github.com/repos/${process.env.REPO}/releases/tags/${tag}`,
         {
           headers: {
             accept: "application/vnd.github.v3+json",
@@ -44,10 +44,10 @@ let action: ActionFunction = async ({ request, context }) => {
 
       const release = (await releasePromise.json()) as GitHubRelease;
 
-      await saveDocs(ref, context.docs, release.body);
+      await saveDocs(ref, release.body);
     } else {
       const releasesPromise = await fetch(
-        `https://api.github.com/repos/${context.docs.owner}/${context.docs.repo}/releases`,
+        `https://api.github.com/repos/${process.env.REPO}/releases`,
         {
           headers: {
             accept: "application/vnd.github.v3+json",
@@ -63,7 +63,7 @@ let action: ActionFunction = async ({ request, context }) => {
 
       await Promise.all(
         releasesToUse.map((release: any) =>
-          saveDocs(`/refs/tags/${release.tag_name}`, context.docs, release.body)
+          saveDocs(`/refs/tags/${release.tag_name}`, release.body)
         )
       );
     }
