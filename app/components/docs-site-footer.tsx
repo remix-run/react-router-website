@@ -24,7 +24,7 @@ const DocsSiteFooter: React.VFC<{ className?: string }> = ({ className }) => {
             to="/"
             className="flex items-center space-x-4 text-[color:var(--hue-1000)]"
           >
-            <svg className="w-9 h-9">
+            <svg className="w-9 h-9" aria-hidden>
               <use href={`${logoCircleUrl}#logo-circle`} />
             </svg>
             <span className="text-3xl font-bold font-display">
@@ -99,7 +99,7 @@ const DocsSiteFooter: React.VFC<{ className?: string }> = ({ className }) => {
                 className="block text-[color:var(--hue-0750)] hover:text-[color:var(--hue-1000)]"
               >
                 <span className="sr-only">GitHub</span>
-                <svg className="w-10 h-10">
+                <svg className="w-10 h-10" aria-hidden>
                   <use href={`${githubLogoUrl}#github`} />
                 </svg>
               </Link>
@@ -110,7 +110,7 @@ const DocsSiteFooter: React.VFC<{ className?: string }> = ({ className }) => {
                 className="block text-[color:var(--hue-0750)] hover:text-[color:var(--hue-1000)]"
               >
                 <span className="sr-only">Twitter</span>
-                <svg className="w-10 h-10">
+                <svg className="w-10 h-10" aria-hidden>
                   <use href={`${twitterLogoUrl}#twitter`} />
                 </svg>
               </Link>

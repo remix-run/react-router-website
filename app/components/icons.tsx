@@ -1,26 +1,58 @@
 import * as React from "react";
 
-export const Svg = React.forwardRef<
-  SVGSVGElement,
-  React.ComponentPropsWithRef<"svg">
->((props, ref) => {
-  return (
-    <svg
-      preserveAspectRatio="xMidYMid meet"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-      ref={ref}
-    />
-  );
-});
+interface SvgOwnProps {
+  title?: string;
+}
+
+interface SvgPropsWithRef extends React.ComponentPropsWithRef<"svg"> {
+  title?: string;
+}
+
+interface SvgProps extends React.ComponentPropsWithoutRef<"svg"> {
+  title?: string;
+}
+
+interface IconProps extends SvgProps {
+  color?: string;
+}
+
+export const Svg = React.forwardRef<SVGSVGElement, SvgPropsWithRef>(
+  ({ title, children, role, ...props }, ref) => {
+    return (
+      <svg
+        preserveAspectRatio="xMidYMid meet"
+        xmlns="http://www.w3.org/2000/svg"
+        role={
+          props["aria-hidden"] && props["aria-hidden"] !== "false"
+            ? undefined
+            : role
+        }
+        {...props}
+        ref={ref}
+      >
+        {title && <title>{title}</title>}
+        {children}
+      </svg>
+    );
+  }
+);
 Svg.displayName = "Svg";
 
 export function IconAirbnb({
   color = "currentColor",
+  title,
   ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+}: IconProps) {
   return (
-    <Svg width="320" height="100" viewBox="0 0 320 100" fill="none" {...props}>
+    <Svg
+      width="320"
+      height="100"
+      viewBox="0 0 320 100"
+      fill="none"
+      role="img"
+      title="Airbnb"
+      {...props}
+    >
       <path
         fill={color}
         d="M168.7,25.1c0,3.6-2.9,6.5-6.5,6.5s-6.5-2.9-6.5-6.5s2.8-6.5,6.5-6.5C165.9,18.7,168.7,21.6,168.7,25.1z   M141.9,38.2c0,0.6,0,1.6,0,1.6s-3.1-4-9.7-4c-10.9,0-19.4,8.3-19.4,19.8c0,11.4,8.4,19.8,19.4,19.8c6.7,0,9.7-4.1,9.7-4.1v1.7  c0,0.8,0.6,1.4,1.4,1.4h8.1V36.8c0,0-7.4,0-8.1,0C142.5,36.8,141.9,37.5,141.9,38.2z M141.9,62.3c-1.5,2.2-4.5,4.1-8.1,4.1  c-6.4,0-11.3-4-11.3-10.8s4.9-10.8,11.3-10.8c3.5,0,6.7,2,8.1,4.1V62.3z M157.4,36.8h9.6v37.6h-9.6V36.8z M300.8,35.8  c-6.6,0-9.7,4-9.7,4V18.7h-9.6v55.7c0,0,7.4,0,8.1,0c0.8,0,1.4-0.7,1.4-1.4v-1.7l0,0c0,0,3.1,4.1,9.7,4.1c10.9,0,19.4-8.4,19.4-19.8  C320.0,44.2,311.6,35.8,300.8,35.8z M299.2,66.3c-3.7,0-6.6-1.9-8.1-4.1V48.8c1.5-2,4.7-4.1,8.1-4.1c6.4,0,11.3,4,11.3,10.8  S305.6,66.3,299.2,66.3z M276.5,52.1v22.4h-9.6V53.2c0-6.2-2-8.7-7.4-8.7c-2.9,0-5.9,1.5-7.8,3.7v26.2h-9.6V36.8h7.6  c0.8,0,1.4,0.7,1.4,1.4v1.6c2.8-2.9,6.5-4,10.2-4c4.2,0,7.7,1.2,10.5,3.6C275.2,42.2,276.5,45.8,276.5,52.1z M218.8,35.8  c-6.6,0-9.7,4-9.7,4V18.7h-9.6v55.7c0,0,7.4,0,8.1,0c0.8,0,1.4-0.7,1.4-1.4v-1.7l0,0c0,0,3.1,4.1,9.7,4.1c10.9,0,19.4-8.4,19.4-19.8  C238.2,44.2,229.7,35.8,218.8,35.8z M217.2,66.3c-3.7,0-6.6-1.9-8.1-4.1V48.8c1.5-2,4.7-4.1,8.1-4.1c6.4,0,11.3,4,11.3,10.8  S223.6,66.3,217.2,66.3z M191.2,35.8c2.9,0,4.4,0.5,4.4,0.5v8.9c0,0-8-2.7-13,3v26.3h-9.6V36.8c0,0,7.4,0,8.1,0  c0.8,0,1.4,0.7,1.4,1.4v1.6C184.3,37.7,188.2,35.8,191.2,35.8z M91.5,71c-0.5-1.2-1-2.5-1.5-3.6c-0.8-1.8-1.6-3.5-2.3-5.1l-0.1-0.1  c-6.9-15-14.3-30.2-22.1-45.2l-0.3-0.6c-0.8-1.5-1.6-3.1-2.4-4.7c-1-1.8-2-3.7-3.6-5.5C56,2.2,51.4,0,46.5,0c-5,0-9.5,2.2-12.8,6  c-1.5,1.8-2.6,3.7-3.6,5.5c-0.8,1.6-1.6,3.2-2.4,4.7l-0.3,0.6C19.7,31.8,12.2,47,5.3,62l-0.1,0.2c-0.7,1.6-1.5,3.3-2.3,5.1  c-0.5,1.1-1,2.3-1.5,3.6c-1.3,3.7-1.7,7.2-1.2,10.8c1.1,7.5,6.1,13.8,13,16.6c2.6,1.1,5.3,1.6,8.1,1.6c0.8,0,1.8-0.1,2.6-0.2  c3.3-0.4,6.7-1.5,10-3.4c4.1-2.3,8-5.6,12.4-10.4c4.4,4.8,8.4,8.1,12.4,10.4c3.3,1.9,6.7,3,10,3.4c0.8,0.1,1.8,0.2,2.6,0.2  c2.8,0,5.6-0.5,8.1-1.6c7-2.8,11.9-9.2,13-16.6C93.2,78.2,92.8,74.7,91.5,71z M46.4,76.2c-5.4-6.8-8.9-13.2-10.1-18.6  c-0.5-2.3-0.6-4.3-0.3-6.1c0.2-1.6,0.8-3,1.6-4.2c1.9-2.7,5.1-4.4,8.8-4.4c3.7,0,7,1.6,8.8,4.4c0.8,1.2,1.4,2.6,1.6,4.2  c0.3,1.8,0.2,3.9-0.3,6.1C55.3,62.9,51.8,69.3,46.4,76.2z M86.3,80.9c-0.7,5.2-4.2,9.7-9.1,11.7c-2.4,1-5,1.3-7.6,1  c-2.5-0.3-5-1.1-7.6-2.6c-3.6-2-7.2-5.1-11.4-9.7c6.6-8.1,10.6-15.5,12.1-22.1c0.7-3.1,0.8-5.9,0.5-8.5c-0.4-2.5-1.3-4.8-2.7-6.8  c-3.1-4.5-8.3-7.1-14.1-7.1s-11,2.7-14.1,7.1c-1.4,2-2.3,4.3-2.7,6.8c-0.4,2.6-0.3,5.5,0.5,8.5c1.5,6.6,5.6,14.1,12.1,22.2  c-4.1,4.6-7.8,7.7-11.4,9.7c-2.6,1.5-5.1,2.3-7.6,2.6c-2.7,0.3-5.3-0.1-7.6-1c-4.9-2-8.4-6.5-9.1-11.7c-0.3-2.5-0.1-5,0.9-7.8  c0.3-1,0.8-2,1.3-3.2c0.7-1.6,1.5-3.3,2.3-5l0.1-0.2c6.9-14.9,14.3-30.1,22-44.9l0.3-0.6c0.8-1.5,1.6-3.1,2.4-4.6  c0.8-1.6,1.7-3.1,2.8-4.4c2.1-2.4,4.9-3.7,8-3.7c3.1,0,5.9,1.3,8,3.7c1.1,1.3,2,2.8,2.8,4.4c0.8,1.5,1.6,3.1,2.4,4.6l0.3,0.6  C67.7,34.8,75.1,50,82,64.9L82,65c0.8,1.6,1.5,3.4,2.3,5c0.5,1.2,1,2.2,1.3,3.2C86.4,75.8,86.7,78.3,86.3,80.9z"
@@ -29,16 +61,15 @@ export function IconAirbnb({
   );
 }
 
-export function IconApple({
-  color = "currentColor",
-  ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+export function IconApple({ color = "currentColor", ...props }: IconProps) {
   return (
     <Svg
       width="842"
       height="1000"
       viewBox="0 0 842 1000"
       fill="none"
+      role="img"
+      title="Apple"
       {...props}
     >
       <path
@@ -49,16 +80,15 @@ export function IconApple({
   );
 }
 
-export function IconCoinbase({
-  color = "currentColor",
-  ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+export function IconCoinbase({ color = "currentColor", ...props }: IconProps) {
   return (
     <Svg
       width="1101.64"
       height="240.79"
       viewBox="0 0 1101.64 240.79"
       fill="none"
+      role="img"
+      title="Coinbase"
       {...props}
     >
       <path
@@ -69,12 +99,17 @@ export function IconCoinbase({
   );
 }
 
-export function IconDiscord({
-  color = "currentColor",
-  ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+export function IconDiscord({ color = "currentColor", ...props }: IconProps) {
   return (
-    <Svg width="124" height="34" viewBox="0 0 124 34" fill="none" {...props}>
+    <Svg
+      width="124"
+      height="34"
+      viewBox="0 0 124 34"
+      fill="none"
+      role="img"
+      title="Discord"
+      {...props}
+    >
       <g fill={color}>
         <path d="M26.0015 6.9529C24.0021 6.03845 21.8787 5.37198 19.6623 5C19.3833 5.48048 19.0733 6.13144 18.8563 6.64292C16.4989 6.30193 14.1585 6.30193 11.8336 6.64292C11.6166 6.13144 11.2911 5.48048 11.0276 5C8.79575 5.37198 6.67235 6.03845 4.6869 6.9529C0.672601 12.8736 -0.41235 18.6548 0.130124 24.3585C2.79599 26.2959 5.36889 27.4739 7.89682 28.2489C8.51679 27.4119 9.07477 26.5129 9.55525 25.5675C8.64079 25.2265 7.77283 24.808 6.93587 24.312C7.15286 24.1571 7.36986 23.9866 7.57135 23.8161C12.6241 26.1255 18.0969 26.1255 23.0876 23.8161C23.3046 23.9866 23.5061 24.1571 23.7231 24.312C22.8861 24.808 22.0182 25.2265 21.1037 25.5675C21.5842 26.5129 22.1422 27.4119 22.7621 28.2489C25.2885 27.4739 27.8769 26.2959 30.5288 24.3585C31.1952 17.7559 29.4733 12.0212 26.0015 6.9529ZM10.2527 20.8402C8.73376 20.8402 7.49382 19.4608 7.49382 17.7714C7.49382 16.082 8.70276 14.7025 10.2527 14.7025C11.7871 14.7025 13.0425 16.082 13.0115 17.7714C13.0115 19.4608 11.7871 20.8402 10.2527 20.8402ZM20.4373 20.8402C18.9183 20.8402 17.6768 19.4608 17.6768 17.7714C17.6768 16.082 18.8873 14.7025 20.4373 14.7025C21.9717 14.7025 23.2271 16.082 23.1961 17.7714C23.1961 19.4608 21.9872 20.8402 20.4373 20.8402Z" />
         <path d="M41.2697 9.86615H47.8585C49.4394 9.86615 50.7878 10.1141 51.8883 10.6101C52.9887 11.1061 53.8102 11.7881 54.3527 12.6715C54.8951 13.555 55.1741 14.5624 55.1741 15.7094C55.1741 16.8253 54.8952 17.8328 54.3217 18.7472C53.7482 19.6462 52.8803 20.3746 51.7178 20.9016C50.5554 21.4286 49.1139 21.6921 47.3935 21.6921H41.2697V9.86615ZM47.316 18.6852C48.3854 18.6852 49.2069 18.4217 49.7804 17.8793C50.3539 17.3523 50.6484 16.6083 50.6484 15.6939C50.6484 14.8414 50.3849 14.1594 49.8734 13.648C49.3619 13.1365 48.587 12.873 47.5485 12.873H45.4871V18.6852H47.316Z" />
@@ -90,16 +125,15 @@ export function IconDiscord({
   );
 }
 
-export function IconMicrosoft({
-  color = "currentColor",
-  ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+export function IconMicrosoft({ color = "currentColor", ...props }: IconProps) {
   return (
     <Svg
       width="337.6"
       height="72"
       viewBox="0 0 337.6 72"
       fill="none"
+      role="img"
+      title="Microsoft"
       {...props}
     >
       <path
@@ -136,16 +170,15 @@ export function IconMicrosoft({
   );
 }
 
-export function IconNetflix({
-  color = "currentColor",
-  ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+export function IconNetflix({ color = "currentColor", ...props }: IconProps) {
   return (
     <Svg
       width="1024"
       height="276.742"
       viewBox="0 0 1024 276.742"
       fill="none"
+      role="img"
+      title="Netflix"
       {...props}
     >
       <path
@@ -156,12 +189,17 @@ export function IconNetflix({
   );
 }
 
-export function IconZoom({
-  color = "currentColor",
-  ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+export function IconZoom({ color = "currentColor", ...props }: IconProps) {
   return (
-    <Svg width="108" height="24" viewBox="0 0 108 24" fill="none" {...props}>
+    <Svg
+      width="108"
+      height="24"
+      viewBox="0 0 108 24"
+      fill="none"
+      role="img"
+      title="Zoom"
+      {...props}
+    >
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -175,9 +213,17 @@ export function IconZoom({
 export function IconArrowRight({
   color = "currentColor",
   ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+}: IconProps) {
   return (
-    <Svg width="16" height="12" viewBox="0 0 16 12" fill="none" {...props}>
+    <Svg
+      width="16"
+      height="12"
+      viewBox="0 0 16 12"
+      fill="none"
+      role="img"
+      title="Arrow Right"
+      {...props}
+    >
       <path
         d="M1 6H15M15 6L9.75 1M15 6L9.75 11"
         stroke={color}
@@ -192,9 +238,17 @@ export function IconArrowRight({
 export function IconNavigation({
   color = "currentColor",
   ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+}: IconProps) {
   return (
-    <Svg width="29" height="29" viewBox="0 0 29 29" fill="none" {...props}>
+    <Svg
+      width="29"
+      height="29"
+      viewBox="0 0 29 29"
+      fill="none"
+      role="img"
+      title="Navigation"
+      {...props}
+    >
       <path
         d="M27.631 16.1506C25.8059 14.2709 22.8467 14.2709 21.0216 16.1506C19.5122 17.7052 19.2173 20.1154 20.3051 22.007L23.3172 27.2451H6.14315C4.66215 27.2451 3.45727 26.0041 3.45727 24.4788C3.45727 22.9535 4.66215 21.7126 6.14315 21.7126H14.22C16.6315 21.7126 18.5934 19.692 18.5934 17.2084C18.5934 14.7247 16.6315 12.7042 14.22 12.7042H5.88272L8.89485 7.46612C9.98261 5.57456 9.68769 3.16427 8.17834 1.60976C6.35319 -0.269985 3.39405 -0.269985 1.5689 1.60976C0.0595444 3.16421 -0.235374 5.5745 0.852389 7.46606L4.87365 14.459L4.88332 14.4422H14.22C15.701 14.4422 16.9059 15.6831 16.9059 17.2084C16.9059 18.7337 15.701 19.9746 14.22 19.9746H6.14315C3.73166 19.9746 1.76977 21.9952 1.76977 24.4788C1.76977 26.9625 3.73166 28.9831 6.14315 28.9831H24.3166L24.3263 29L28.3475 22.0071C29.4353 20.1154 29.1404 17.7052 27.631 16.1506ZM4.87359 6.53068C4.06123 6.53068 3.40035 5.85003 3.40035 5.01337C3.40035 4.1767 4.06123 3.49605 4.87359 3.49605C5.68595 3.49605 6.34684 4.1767 6.34684 5.01337C6.34684 5.85003 5.68595 6.53068 4.87359 6.53068ZM24.2631 21.0716C23.4508 21.0716 22.7899 20.391 22.7899 19.5543C22.7899 18.7176 23.4508 18.037 24.2631 18.037C25.0755 18.037 25.7364 18.7176 25.7364 19.5543C25.7364 20.391 25.0755 21.0716 24.2631 21.0716Z"
         fill={color}
@@ -206,9 +260,17 @@ export function IconNavigation({
 export function IconProtection({
   color = "currentColor",
   ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+}: IconProps) {
   return (
-    <Svg width="30" height="36" viewBox="0 0 30 36" fill="none" {...props}>
+    <Svg
+      width="30"
+      height="36"
+      viewBox="0 0 30 36"
+      fill="none"
+      role="img"
+      title="Protection"
+      {...props}
+    >
       <path
         d="M29.3639 9.71154C29.3229 8.81128 29.3229 7.95194 29.3229 7.0926C29.3229 6.39695 28.791 5.86498 28.0953 5.86498C22.9802 5.86498 19.0927 4.39182 15.86 1.24092C15.3689 0.790788 14.6323 0.790788 14.1413 1.24092C10.9086 4.39182 7.02107 5.86498 1.90596 5.86498C1.21031 5.86498 0.678337 6.39695 0.678337 7.0926C0.678337 7.95194 0.678337 8.81128 0.637416 9.71154C0.473733 18.3049 0.228207 30.0901 14.5914 35.0415L15.0006 35.1234L15.4098 35.0415C29.7321 30.0901 29.5275 18.3458 29.3639 9.71154ZM14.0185 21.6195C13.773 21.8241 13.4866 21.9469 13.1592 21.9469H13.1183C12.7909 21.9469 12.4635 21.7832 12.2589 21.5377L8.4533 17.3228L10.2947 15.686L13.282 19.0006L19.9111 12.6988L21.5889 14.4993L14.0185 21.6195Z"
         fill={color}
@@ -217,12 +279,17 @@ export function IconProtection({
   );
 }
 
-export function IconLayers({
-  color = "currentColor",
-  ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+export function IconLayers({ color = "currentColor", ...props }: IconProps) {
   return (
-    <Svg width="30" height="30" viewBox="0 0 30 30" fill="none" {...props}>
+    <Svg
+      width="30"
+      height="30"
+      viewBox="0 0 30 30"
+      fill="none"
+      role="img"
+      title="Layers"
+      {...props}
+    >
       <path
         d="M28.9489 14.1478C28.9198 14.1284 28.8899 14.1104 28.859 14.094L26.8152 12.9935L15.4814 18.9941C15.1803 19.1536 14.8198 19.1536 14.5187 18.9941L3.18488 12.9935L1.14108 14.094C0.644348 14.3577 0.455349 14.9741 0.71902 15.4708C0.735413 15.5017 0.753373 15.5317 0.772839 15.5607L15 23.093L29.2272 15.5607C29.5405 15.0937 29.4159 14.4612 28.9489 14.1478Z"
         fill={color}
@@ -239,12 +306,17 @@ export function IconLayers({
   );
 }
 
-export function IconPlay({
-  color = "currentColor",
-  ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+export function IconPlay({ color = "currentColor", ...props }: IconProps) {
   return (
-    <Svg width="14" height="16" viewBox="0 0 14 16" fill="none" {...props}>
+    <Svg
+      width="14"
+      height="16"
+      viewBox="0 0 14 16"
+      fill="none"
+      role="img"
+      title="Play"
+      {...props}
+    >
       <path
         d="M13.3433 7.14832C13.9778 7.5388 13.9778 8.46115 13.3433 8.85164L2.06951 15.7893C1.40324 16.1994 0.54541 15.72 0.54541 14.9377V1.06227C0.54541 0.27995 1.40324 -0.199401 2.06951 0.210611L13.3433 7.14832Z"
         fill={color}
@@ -253,12 +325,17 @@ export function IconPlay({
   );
 }
 
-export function IconGithub({
-  color = "currentColor",
-  ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+export function IconGithub({ color = "currentColor", ...props }: IconProps) {
   return (
-    <Svg width="34" height="34" viewBox="0 0 34 34" fill="none" {...props}>
+    <Svg
+      width="34"
+      height="34"
+      viewBox="0 0 34 34"
+      fill="none"
+      role="img"
+      title="GitHub"
+      {...props}
+    >
       <path
         d="M16.9979 0.549805C7.72215 0.549805 0.199951 8.10141 0.199951 17.417C0.199951 24.8678 5.01315 31.1888 11.6912 33.4211C12.5312 33.5765 12.8378 33.0557 12.8378 32.6084C12.8378 32.2073 12.8231 31.1468 12.8147 29.7398C8.14215 30.7583 7.15515 27.4781 7.15515 27.4781C6.39285 25.5293 5.29035 25.0106 5.29035 25.0106C3.76365 23.9648 5.40375 23.9858 5.40375 23.9858C7.09005 24.1055 7.97625 25.7246 7.97625 25.7246C9.47565 28.3013 11.9096 27.5579 12.8672 27.1253C13.0184 26.0354 13.4531 25.292 13.934 24.8699C10.2044 24.4436 6.28155 22.9967 6.28155 16.535C6.28155 14.6933 6.93675 13.1876 8.01195 12.0074C7.83765 11.5811 7.26225 9.86541 8.17575 7.54491C8.17575 7.54491 9.58695 7.09131 12.7958 9.27321C14.1356 8.89941 15.572 8.71251 17.0021 8.70621C18.428 8.71461 19.8665 8.89941 21.2084 9.27531C24.4151 7.09341 25.8242 7.54701 25.8242 7.54701C26.7398 9.86961 26.1644 11.5832 25.9922 12.0095C27.0695 13.1897 27.7184 14.6954 27.7184 16.5371C27.7184 23.0156 23.7914 24.4415 20.0492 24.8594C20.6519 25.3802 21.1895 26.4092 21.1895 27.9821C21.1895 30.2375 21.1685 32.0561 21.1685 32.6084C21.1685 33.0599 21.4709 33.5849 22.3235 33.419C28.991 31.1846 33.8 24.8657 33.8 17.417C33.8 8.10141 26.2778 0.549805 16.9979 0.549805Z"
         fill={color}
@@ -267,12 +344,17 @@ export function IconGithub({
   );
 }
 
-export function IconTwitter({
-  color = "currentColor",
-  ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+export function IconTwitter({ color = "currentColor", ...props }: IconProps) {
   return (
-    <Svg width="32" height="26" viewBox="0 0 32 26" fill="none" {...props}>
+    <Svg
+      width="32"
+      height="26"
+      viewBox="0 0 32 26"
+      fill="none"
+      role="img"
+      title="Twitter"
+      {...props}
+    >
       <path
         d="M32 3.078C30.81 3.6 29.542 3.946 28.22 4.114C29.58 3.302 30.618 2.026 31.106 0.488C29.838 1.244 28.438 1.778 26.946 2.076C25.742 0.794 24.026 0 22.154 0C18.522 0 15.598 2.948 15.598 6.562C15.598 7.082 15.642 7.582 15.75 8.058C10.296 7.792 5.47 5.178 2.228 1.196C1.662 2.178 1.33 3.302 1.33 4.512C1.33 6.784 2.5 8.798 4.244 9.964C3.19 9.944 2.156 9.638 1.28 9.156C1.28 9.176 1.28 9.202 1.28 9.228C1.28 12.416 3.554 15.064 6.536 15.674C6.002 15.82 5.42 15.89 4.816 15.89C4.396 15.89 3.972 15.866 3.574 15.778C4.424 18.376 6.836 20.286 9.704 20.348C7.472 22.094 4.638 23.146 1.57 23.146C1.032 23.146 0.516 23.122 0 23.056C2.906 24.93 6.35 26 10.064 26C22.136 26 28.736 16 28.736 7.332C28.736 7.042 28.726 6.762 28.712 6.484C30.014 5.56 31.108 4.406 32 3.078Z"
         fill={color}
@@ -281,12 +363,17 @@ export function IconTwitter({
   );
 }
 
-export function IconYoutube({
-  color = "currentColor",
-  ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+export function IconYoutube({ color = "currentColor", ...props }: IconProps) {
   return (
-    <Svg width="35" height="24" viewBox="0 0 35 24" fill="none" {...props}>
+    <Svg
+      width="35"
+      height="24"
+      viewBox="0 0 35 24"
+      fill="none"
+      role="img"
+      title="YouTube"
+      {...props}
+    >
       <path
         d="M33.4255 2.31273C32.4785 0.628363 31.4509 0.318545 29.3586 0.200727C27.2684 0.0589091 22.0124 0 17.4589 0C12.8967 0 7.63855 0.0589093 5.55055 0.198546C3.46255 0.318546 2.43273 0.626182 1.47709 2.31273C0.501818 3.99491 0 6.89236 0 11.9935C0 11.9978 0 12 0 12C0 12.0044 0 12.0065 0 12.0065V12.0109C0 17.0902 0.501818 20.0095 1.47709 21.6742C2.43273 23.3585 3.46036 23.664 5.54836 23.8058C7.63855 23.928 12.8967 24 17.4589 24C22.0124 24 27.2684 23.928 29.3607 23.808C31.4531 23.6662 32.4807 23.3607 33.4276 21.6764C34.4116 20.0116 34.9091 17.0924 34.9091 12.0131C34.9091 12.0131 34.9091 12.0065 34.9091 12.0022C34.9091 12.0022 34.9091 11.9978 34.9091 11.9956C34.9091 6.89236 34.4116 3.99491 33.4255 2.31273ZM13.0909 18.5455V5.45455L24 12L13.0909 18.5455Z"
         fill={color}
@@ -298,9 +385,17 @@ export function IconYoutube({
 export function IconStackOverflow({
   color = "currentColor",
   ...props
-}: React.ComponentPropsWithoutRef<"svg"> & { color?: string }) {
+}: IconProps) {
   return (
-    <Svg width="20" height="24" viewBox="0 0 20 24" fill="none" {...props}>
+    <Svg
+      width="20"
+      height="24"
+      viewBox="0 0 20 24"
+      fill="none"
+      role="img"
+      title="Stack Overflow"
+      {...props}
+    >
       <path
         d="M4.44434 14.8391L14.7823 17.0351L15.2153 14.9461L4.87733 12.7341L4.44434 14.8391Z"
         fill={color}

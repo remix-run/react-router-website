@@ -152,9 +152,17 @@ export function BrowserChrome({
   children?: React.ReactNode;
   url?: string;
 }) {
+  // TODO: Test potential screen reader experiences so that this visual is
+  // represented well if we can. Hiding all inner content in the mean time as it
+  // is really just presentational content, and we'll display the current URL
+  // for screen readers.
   return (
     <div className="text-[80%] h-[45vh] md:text-[100%] lg:text-[110%] xl:text-[125%] px-2">
-      <div className="h-full bg-gray-800 border border-gray-600 drop-shadow-lg rounded-xl overflow-hidden">
+      <span className="sr-only">Current URL: {url}</span>
+      <div
+        className="h-full bg-gray-800 border border-gray-600 drop-shadow-lg rounded-xl overflow-hidden user-select-none select-none"
+        role="presentation"
+      >
         <div className="pb-[0.5em] border-b border-gray-500">
           <div className="flex p-[0.75em]">
             <WindowButton className="bg-red-400" />
@@ -165,7 +173,7 @@ export function BrowserChrome({
             <IconArrowLeft />
             <IconArrowLeft className="rotate-180 ml-[0.75em]" />
             <IconRefresh className="rotate ml-[0.75em]" />
-            <div className="ml-[0.75em] bg-gray-900 rounded-full px-[1em] py-[0.25em] w-full text-[85%]">
+            <div className="ml-[0.75em] bg-gray-900 rounded-full px-[1em] py-[0.25em] w-full text-[85%] select-text">
               {url}
             </div>
           </div>
