@@ -50,7 +50,7 @@ async function saveDocs(ref: string, config: Config, releaseNotes: string) {
 
   // release exists already, so we need to update it
   if (release) {
-    const releaseDocs = release.docs.map((doc: any) => doc.filePath);
+    const releaseDocs = release.docs.map((doc) => doc.filePath);
     const existingEntries = entriesWithProcessedMD.filter((entry) => {
       return releaseDocs.includes(entry.path);
     });
