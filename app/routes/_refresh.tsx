@@ -10,7 +10,11 @@ const action: ActionFunction = async ({ request }) => {
     return json({}, { status: 401 });
   }
 
-  const { search } = new URL(request.url);
+  const { search, searchParams } = new URL(request.url);
+
+  console.log(
+    `Refreshing docs for all instances for ref ${searchParams.get("ref")}`
+  );
 
   try {
     // get all app instances and refresh them
@@ -21,6 +25,8 @@ const action: ActionFunction = async ({ request }) => {
         const url = new URL(instance);
         url.pathname = "/_refreshlocal";
         url.search = search;
+
+        console.log(`forwarding post to ${url.toString()}`);
 
         return fetch(url.toString(), {
           method: "POST",
