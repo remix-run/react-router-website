@@ -27,7 +27,8 @@ const action: ActionFunction = async ({ request }) => {
 
       console.log(`forwarding post to ${url.toString()}`);
 
-      return fetch(url.toString(), {
+      // we purposefully don't await, we're just notifying everybody
+      fetch(url.toString(), {
         method: "POST",
         headers: {
           Authorization: process.env.AUTH_TOKEN!,
