@@ -18,7 +18,7 @@
     "start": "NODE_ENV=production node server",
     "postinstall": "remix setup && patch-package",
     "clean": "del app/styles .cache public/build server/build",
-    "db:reset": "prisma migrate reset --force && node app/verify-seed"
+    "db:reset": "prisma migrate reset --force && ts-node app/verify-seed"
   },
   "dependencies": {
     "@prisma/client": "3.1.1",
