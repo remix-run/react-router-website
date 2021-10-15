@@ -27,7 +27,7 @@
     "@remix-run/node": "0.19.3",
     "@remix-run/react": "0.19.3",
     "@remix-run/serve": "0.19.3",
-    "@ryanflorence/md": "^6.1.1",
+    "@ryanflorence/md": "^6.1.2",
     "@ryanflorence/mdtut": "^1.2.1",
     "accept-language": "3.0.18",
     "clsx": "1.1.1",
