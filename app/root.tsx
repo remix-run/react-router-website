@@ -19,6 +19,7 @@ import { seo } from "./utils/seo";
 import tailwind from "./styles/tailwind.css";
 import global from "./styles/global.css";
 import { SkipNavLink, SkipNavContent } from "@reach/skip-nav";
+import { useLogoAnimation } from "./hooks/logo-animation";
 
 let [seoMeta, seoLinks] = seo({
   description: "Declarative routing for React apps at any scale",
@@ -136,11 +137,59 @@ export let ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 };
 
 export let CatchBoundary = () => {
+  let skipNavRef = React.useRef<HTMLDivElement | null>(null);
+  let [colors, changeColors] = useLogoAnimation();
   let caught = useCatch();
+
+  let message: string = caught.statusText;
+  if (caught.status === 404) {
+    message = "That page was not found!";
+    // TODO: moar codes
+  } else if (caught.status >= 500 && caught.status <= 599) {
+    message = "Oh no! Something went wrong!";
+  }
+
   return (
     <Document forceDarkMode>
-      <h1>{caught.status}</h1>
-      <pre>{caught.statusText}</pre>
+      <div className="min-h-screen w-full flex flex-col">
+        <SkipNavLink />
+        <SiteHeader />
+        <div className="flex flex-col flex-grow">
+          <SkipNavContent ref={skipNavRef} tabIndex={-1} />
+          <div
+            className="flex-grow w-full container flex items-center justify-center"
+            onPointerMove={changeColors}
+            onFocus={changeColors}
+            onBlur={changeColors}
+          >
+            <div className="text-center pt-2 pb-7">
+              <h1 className="remix-caught-status remix-text-glow">
+                {String(caught.status)
+                  .split("")
+                  .map((letter, i) => (
+                    <span
+                      {...(i === 1 && {
+                        "data-color": colors[i],
+                        "data-content": letter,
+                        className: "remix-text-flicker",
+                      })}
+                      key={i}
+                      style={{
+                        // @ts-ignore
+                        "--anim-color": colors[i],
+                        color: colors[i],
+                      }}
+                    >
+                      {letter}
+                    </span>
+                  ))}
+              </h1>
+              <div className="text-base font-mono">{message}</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </Document>
   );
 };

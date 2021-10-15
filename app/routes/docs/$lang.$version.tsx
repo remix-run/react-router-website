@@ -33,32 +33,34 @@ export default function DocsLayout() {
     }
   }, [location]);
 
-  // if (is404) return <NotFound />;
-
   return (
     <div className="md-layout lg:flex lg:h-full md-down:container">
-      <div className="lg:hidden">
-        <details ref={detailsRef}>
-          <summary className="py-4">Docs Navigation</summary>
-          <div>
-            <Menu nodes={menu} className="py-6 text-base font-medium" />
-          </div>
-        </details>
-        <hr className="mb-4" />
-      </div>
-      <div className="flex-shrink-0 hidden lg:block">
-        <div
-          className={cx([
-            // Sidebar nav scroll container
-            "h-full max-h-screen overflow-x-hidden overflow-y-auto", // auto scrolling
-            "sticky top-[-1rem]", // sticky behavior
-            "w-64 xl:w-80 2xl:w-96", // width
-            "py-10 pl-6 pr-3 xl:pr-5 2xl:pr-6", // spacing
-          ])}
-        >
-          <Menu nodes={menu} />
+      {menu.length > 0 ? (
+        <div className="lg:hidden">
+          <details ref={detailsRef}>
+            <summary className="py-4">Docs Navigation</summary>
+            <div>
+              <Menu nodes={menu} className="py-6 text-base font-medium" />
+            </div>
+          </details>
+          <hr className="mb-4" />
         </div>
-      </div>
+      ) : null}
+      {menu.length > 0 ? (
+        <div className="flex-shrink-0 hidden lg:block">
+          <div
+            className={cx([
+              // Sidebar nav scroll container
+              "h-full max-h-screen overflow-x-hidden overflow-y-auto", // auto scrolling
+              "sticky top-[-1rem]", // sticky behavior
+              "w-64 xl:w-80 2xl:w-96", // width
+              "py-10 pl-6 pr-3 xl:pr-5 2xl:pr-6", // spacing
+            ])}
+          >
+            <Menu nodes={menu} />
+          </div>
+        </div>
+      ) : null}
       <div className="lg:z-[1] flex-grow lg:h-full">
         <div className="py-6 md:py-8 lg:py-10 lg:pr-6 lg:pl-3 xl:pl-5 2xl:pl-6">
           <Outlet />

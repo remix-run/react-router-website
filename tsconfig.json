@@ -11,7 +11,10 @@
     "skipLibCheck": true,
     "noEmit": true,
     "module": "ES2020",
-    "paths": { "~/*": ["./app/*"] }
+    "paths": {
+      "~/*": ["./app/*"],
+      "*": ["./app/@types/*"]
+    }
   },
   "ts-node": {
     "compilerOptions": {
