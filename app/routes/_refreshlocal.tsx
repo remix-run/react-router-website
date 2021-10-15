@@ -25,6 +25,8 @@ let action: ActionFunction = async ({ request, context }) => {
 
   const ref = url.searchParams.get("ref");
 
+  console.log(`Refreshing docs for instance for ref ${ref}`);
+
   try {
     // generate docs for specified ref
     // otherwise generate docs for all releases
