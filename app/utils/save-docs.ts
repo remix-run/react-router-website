@@ -1,5 +1,3 @@
-import { coerce, sort } from "semver";
-
 import { prisma } from "../db.server";
 import { findMatchingEntries, getPackage } from "./get-docs.server";
 import { processDocs } from "./process-docs.server";
@@ -20,47 +18,13 @@ if (!REPO || !REPO_DOCS_PATH || !REPO_LATEST_BRANCH) {
  * ref: /refs/heads/dev
  */
 async function saveDocs(ref: string, releaseNotes: string) {
-  let version = ref.replace(/^\/refs\/tags\//, "");
-
-  let tag = coerce(ref);
-
-  let info: string;
-
-  if (!tag) {
-    if (ref === REPO_LATEST_BRANCH) {
-      let versions = await prisma.version.findMany({
-        select: { fullVersionOrBranch: true },
-      });
-
-      let [latest] = sort(
-        versions.map((v) => v.fullVersionOrBranch),
-        { includePrerelease: true }
-      );
-      version = latest;
-      info = latest;
-    } else {
-      let branch = ref.replace(/^\/refs\/heads\//, "");
-      version = branch;
-      info = branch;
-    }
-  } else {
-    info =
-      tag.major > 0
-        ? `v${tag.major}`
-        : tag.minor > 0
-        ? `v0.${tag.minor}`
-        : `v0.0.${tag.patch}`;
-  }
-
   const stream = await getPackage(REPO, ref);
   const entries = await findMatchingEntries(stream, "/docs");
   const entriesWithProcessedMD = await processDocs(entries);
 
   // check if we have this release already
-  let release = await prisma.version.findUnique({
-    where: {
-      fullVersionOrBranch: version,
-    },
+  let release = await prisma.gitHubRef.findUnique({
+    where: { ref },
     include: {
       docs: {
         select: {
@@ -73,17 +37,11 @@ async function saveDocs(ref: string, releaseNotes: string) {
   // release exists already, so we need to update it
   if (release) {
     await prisma.doc.deleteMany({
-      where: {
-        version: {
-          fullVersionOrBranch: release.fullVersionOrBranch,
-        },
-      },
+      where: { githubRef: { ref } },
     });
 
-    const result = await prisma.version.update({
-      where: {
-        fullVersionOrBranch: version,
-      },
+    const result = await prisma.gitHubRef.update({
+      where: { ref },
       data: {
         docs: {
           create: entriesWithProcessedMD.map((entry) => ({
@@ -105,13 +63,12 @@ async function saveDocs(ref: string, releaseNotes: string) {
       },
     });
 
-    console.info(`Updated release for version: ${result.fullVersionOrBranch}`);
+    console.info(`Updated release for version: ${result.ref}`);
     return result;
   } else {
-    const result = await prisma.version.create({
+    const result = await prisma.gitHubRef.create({
       data: {
-        fullVersionOrBranch: version,
-        versionHeadOrBranch: info,
+        ref,
         releaseNotes: await processMarkdown(releaseNotes),
         docs: {
           create: entriesWithProcessedMD.map((entry) => ({
@@ -133,7 +90,7 @@ async function saveDocs(ref: string, releaseNotes: string) {
       },
     });
 
-    console.info(`Created release for version: ${result.fullVersionOrBranch}`);
+    console.info(`Created release for version: ${result.ref}`);
     return result;
   }
 }

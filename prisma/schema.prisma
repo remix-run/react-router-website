@@ -10,13 +10,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Version {
+model GitHubRef {
   // fullVersionOrBranch v0.17.0, v6.0.1
-  fullVersionOrBranch String @id
-  // versionHeadOrBranch v0.17, v6
-  versionHeadOrBranch String
+  ref          String @id
   // markdown process release notes
-  releaseNotes        String
+  releaseNotes String
 
   // relations
   docs Doc[]
@@ -41,11 +39,11 @@ model Doc {
   toc          Boolean @default(true)
 
   // relations
-  version   Version @relation(fields: [versionId], references: [fullVersionOrBranch], onDelete: Cascade)
-  versionId String
+  githubRef   GitHubRef @relation(fields: [githubRefId], references: [ref], onDelete: Cascade)
+  githubRefId String
 
   // unique filePath per fullVersionOrBranch and lang
   // /installation/add-to-a-website.md in EN v6.0.0 ✅
   // /installation/add-to-a-website.md in FR v6.0.0 ✅
-  @@unique([filePath, versionId, lang])
+  @@unique([filePath, githubRefId, lang])
 }

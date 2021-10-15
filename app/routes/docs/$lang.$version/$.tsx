@@ -12,6 +12,7 @@ let loader: LoaderFunction = async ({ params }) => {
   invariant(!!params["*"], "Expected file path");
 
   let { lang, version } = params;
+
   let doc = await getDoc(params["*"], version, lang);
 
   return json(doc);
