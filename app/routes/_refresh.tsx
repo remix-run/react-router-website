@@ -35,6 +35,8 @@ const action: ActionFunction = async ({ request }) => {
       });
     }
 
+    console.log(instances);
+
     return json({ instances });
   } catch (error) {
     console.error(error);
