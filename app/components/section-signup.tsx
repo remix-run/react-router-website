@@ -26,10 +26,14 @@ function SectionSignup() {
         <p className="text-lg md:text-xl mb-6 opacity-80">
           React Router is developed by the <a href="https://remix.run">Remix</a>{" "}
           team. To get updates and special content on React Router (as well as
-          our other projects), subscribe to the Remix newsletter or join the{" "}
-          <a href="https://discord.gg/VBePs6d">conversation on Discord</a>.
+          our other projects), subscribe to the Remix newsletter or{" "}
+          <a href="https://discord.gg/VBePs6d">
+            join the conversation on Discord
+          </a>
+          .
         </p>
         <Form
+          aria-label="Subscribe to the newsletter!"
           replace
           method="post"
           className="flex flex-col xs:flex-row"
@@ -47,6 +51,7 @@ function SectionSignup() {
               placeholder="billybob@remix.run"
               className="mb-4 xs:mb-0 xs:mr-4"
               disabled={transition.state === "submitting"}
+              required
             />
           </label>
           <Button disabled={transition.state === "submitting"}>

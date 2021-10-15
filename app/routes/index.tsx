@@ -199,7 +199,7 @@ export function NestedRoutes({ mdt }: { mdt: Page }) {
           ))}
           <div className="text-center -mb-10">
             <ButtonLink size="large" to="/docs">
-              Learn More
+              Learn More<span className="sr-only"> about Nested Routes</span>
             </ButtonLink>
           </div>
         </div>
