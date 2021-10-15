@@ -20,28 +20,22 @@ const action: ActionFunction = async ({ request }) => {
     // get all app instances and refresh them
     const instances = await getInstanceURLs();
 
-    const results = await Promise.allSettled(
-      instances.map(async (instance) => {
-        const url = new URL(instance);
-        url.pathname = "/_refreshlocal";
-        url.search = search;
+    for (const instance of instances) {
+      const url = new URL(instance);
+      url.pathname = "/_refreshlocal";
+      url.search = search;
 
-        console.log(`forwarding post to ${url.toString()}`);
+      console.log(`forwarding post to ${url.toString()}`);
 
-        return fetch(url.toString(), {
-          method: "POST",
-          headers: {
-            Authorization: process.env.AUTH_TOKEN!,
-          },
-        });
-      })
-    );
+      return fetch(url.toString(), {
+        method: "POST",
+        headers: {
+          Authorization: process.env.AUTH_TOKEN!,
+        },
+      });
+    }
 
-    results.forEach((result) => {
-      console.info(result);
-    });
-
-    return json({ ok: true });
+    return json({ instances });
   } catch (error) {
     console.error(error);
     return json({ ok: false }, { status: 500 });
