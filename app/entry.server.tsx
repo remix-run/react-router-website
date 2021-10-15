@@ -9,7 +9,6 @@ export default function handleRequest(
   remixContext: EntryContext
 ) {
   let markup = ReactDOMServer.renderToString(
-    // @ts-expect-error why is this context type wrong on the dev branch?
     <RemixServer context={remixContext} url={request.url} />
   );
 
