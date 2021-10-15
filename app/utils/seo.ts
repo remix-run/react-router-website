@@ -10,8 +10,15 @@ type Links = LinkDescriptor[];
 export const seo = getSeo({
   titleTemplate: "%s | React Router",
   defaultTitle: "React Router",
+  description:
+    "React Router v6 is here. React Router v6 takes the best features from previous versions—and its sister project, Reach Router—in our smallest and most powerful package yet.",
   twitter: {
     site: "@remix_run",
+    creator: "@remix_run",
+    title: "React Router",
+    card: "summary",
+    description:
+      "React Router v6 is here. React Router v6 takes the best features from previous versions—and its sister project, Reach Router—in our smallest and most powerful package yet.",
     image: {
       url: "https://res.cloudinary.com/remix-run/image/upload/v1634323120/reactrouter.com/twitterimage_fbx9l8.jpg",
       alt: "React Router logo",
@@ -139,6 +146,21 @@ export function getSeo(defaultConfig: SeoProps) {
 
     // OG: Twitter
     if (config.twitter) {
+      if (config.twitter.title || title) {
+        meta["twitter:title"] = config.twitter.title || title;
+      }
+
+      if (
+        config.twitter.description ||
+        config.openGraph?.description ||
+        config.description
+      ) {
+        meta["twitter:description"] =
+          config.twitter.description ||
+          config.openGraph?.description ||
+          config.description!;
+      }
+
       if (config.twitter.card) {
         meta["twitter:card"] = config.twitter.card;
       }
@@ -156,10 +178,10 @@ export function getSeo(defaultConfig: SeoProps) {
         if (config.twitter.image.alt) {
           meta["twitter:image:alt"] = config.twitter.image.url;
         }
+        if (!meta["twitter:card"]) {
+          meta["twitter:card"] = "summary";
+        }
       }
-
-      // TODO: Finish implementation of all Twitter options
-      // https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
     }
 
     // OG: Facebook
@@ -571,9 +593,11 @@ export interface OpenGraphVideo {
 }
 
 export interface TwitterMeta {
+  title?: string;
   creator?: string;
   site?: string;
   card?: string;
+  description?: string;
   image?: {
     url: string;
     alt: string;

@@ -23,9 +23,6 @@ import { useLogoAnimation } from "./hooks/logo-animation";
 
 let [seoMeta, seoLinks] = seo({
   description: "Declarative routing for React apps at any scale",
-  twitter: {
-    creator: "@remix_run",
-  },
   openGraph: {},
 });
 
@@ -188,7 +185,6 @@ export let CatchBoundary = () => {
             </div>
           </div>
         </div>
-
       </div>
     </Document>
   );
