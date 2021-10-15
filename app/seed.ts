@@ -1,4 +1,3 @@
-import { Migrate } from "@prisma/migrate";
 import { satisfies } from "semver";
 import { GitHubRelease } from "./@types/github";
 import { saveDocs } from "./utils/save-docs";
@@ -47,10 +46,7 @@ async function seed() {
 }
 
 try {
-  const migrate = new Migrate();
-  migrate.reset().then(() => {
-    seed();
-  });
+  seed();
 } catch (e) {
   throw e;
 }
