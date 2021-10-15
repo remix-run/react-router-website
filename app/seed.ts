@@ -4,8 +4,8 @@ installGlobals();
 
 async function seed() {
   await Promise.all([
-    saveDocs("/refs/tags/v6.0.0-beta.6", ""),
-    saveDocs("/refs/heads/main", ""),
+    saveDocs("refs/tags/v6.0.0-beta.6", ""),
+    saveDocs("refs/heads/main", ""),
   ]);
 }
 

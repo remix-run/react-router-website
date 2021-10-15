@@ -1,11 +1,9 @@
-import * as React from "react";
+import { RouteComponent, ActionFunction, json } from "remix";
 
-import { RouteComponent, ActionFunction, Link, json } from "remix";
-import { redirect } from "remix";
 import { satisfies } from "semver";
 
 import { GitHubRelease } from "~/@types/github";
-import { Button } from "~/components/button";
+
 import { saveDocs } from "~/utils/save-docs";
 
 let action: ActionFunction = async ({ request, context }) => {
@@ -31,7 +29,7 @@ let action: ActionFunction = async ({ request, context }) => {
     // generate docs for specified ref
     // otherwise generate docs for all releases
     if (ref) {
-      let tag = ref.replace(/^\/refs\/tags\//, "");
+      let tag = ref.replace(/^refs\/tags\//, "");
 
       const releasePromise = await fetch(
         `https://api.github.com/repos/${process.env.REPO}/releases/tags/${tag}`,
@@ -63,7 +61,7 @@ let action: ActionFunction = async ({ request, context }) => {
 
       await Promise.all(
         releasesToUse.map((release: any) =>
-          saveDocs(`/refs/tags/${release.tag_name}`, release.body)
+          saveDocs(`refs/tags/${release.tag_name}`, release.body)
         )
       );
     }
@@ -76,25 +74,7 @@ let action: ActionFunction = async ({ request, context }) => {
 };
 
 const RefreshInstance: RouteComponent = () => {
-  let [ref, setRef] = React.useState("");
-  let action = ref.length ? `?${ref}` : "";
-
-  return (
-    <form method="post" action={action} className="m-10">
-      <p className="my-4">
-        This will only work if you're on localhost. You probably want to run{" "}
-        <code>npm run db:reset</code> first.
-      </p>
-      <p className="my-4">
-        You can do a specific ref by{" "}
-        <Link to="/_refreshlocal?ref=/refs/heads/docs">
-          adding it to the URL
-        </Link>
-        .
-      </p>
-      <Button type="submit">Seed Database</Button>
-    </form>
-  );
+  return null;
 };
 
 export default RefreshInstance;

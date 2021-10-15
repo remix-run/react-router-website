@@ -14,8 +14,8 @@ if (!REPO || !REPO_DOCS_PATH || !REPO_LATEST_BRANCH) {
 }
 
 /**
- * ref: /refs/tags/v6.0.0-beta.1
- * ref: /refs/heads/dev
+ * ref: refs/tags/v6.0.0-beta.1
+ * ref: refs/heads/dev
  */
 async function saveDocs(ref: string, releaseNotes: string) {
   const stream = await getPackage(REPO, ref);

@@ -62,6 +62,7 @@ export async function getMenu(
   lang: string
 ): Promise<MenuNode[]> {
   let ref = await getLatestRefFromParam(versionOrBranchParam);
+
   let docs = await prisma.doc.findMany({
     where: {
       lang,
@@ -165,7 +166,7 @@ export async function getDoc(
 export async function getLatestRefFromParam(refParam: string): Promise<string> {
   let version = semver.valid(semver.coerce(refParam));
 
-  let ref = version ? `/refs/tags/${version}` : `/refs/heads/${refParam}`;
+  let ref = version ? `refs/tags/${version}` : `refs/heads/${refParam}`;
 
   if (!version) return ref;
 
@@ -176,10 +177,10 @@ export async function getLatestRefFromParam(refParam: string): Promise<string> {
   let tags = refs
     .filter(
       (ref) =>
-        ref.ref.startsWith("/refs/tags/") &&
-        semver.valid(ref.ref.replace(/^\/refs\/tags\//, ""))
+        ref.ref.startsWith("refs/tags/") &&
+        semver.valid(ref.ref.replace(/^refs\/tags\//, ""))
     )
-    .map((ref) => ref.ref.replace(/^\/refs\/tags\//, ""));
+    .map((ref) => ref.ref.replace(/^refs\/tags\//, ""));
 
   // TODO: remove includePrerelease after v6 release (or before v7 🤪)
   let sorted = semver.sort(tags, { includePrerelease: true });
@@ -204,18 +205,18 @@ export async function getVersions(): Promise<VersionHead[]> {
     // we allow saving branches as versions, but we shouldn't show them
     .filter(
       (ref) =>
-        ref.ref.startsWith("/refs/tags/") &&
-        semver.valid(ref.ref.replace(/^\/refs\/tags\//, ""))
+        ref.ref.startsWith("refs/tags/") &&
+        semver.valid(ref.ref.replace(/^refs\/tags\//, ""))
     )
     .sort((a, b) =>
       semver.compare(
-        b.ref.replace(/^\/refs\/tags\//, ""),
-        a.ref.replace(/^\/refs\/tags\//, "")
+        b.ref.replace(/^refs\/tags\//, ""),
+        a.ref.replace(/^refs\/tags\//, "")
       )
     );
 
   let versions = sorted.map((ref) => {
-    let version = ref.ref.replace(/^\/refs\/tags\//, "");
+    let version = ref.ref.replace(/^refs\/tags\//, "");
     let tag = semver.coerce(version);
 
     invariant(tag, "Invalid version");
