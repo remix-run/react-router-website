@@ -156,8 +156,6 @@ export async function getDoc(
       rejectOnNotFound: true,
     });
   } catch (error: unknown) {
-    console.error(error);
-
     throw new Response("", { status: 404, statusText: "Doc not found" });
   }
 
@@ -167,7 +165,7 @@ export async function getDoc(
 export async function getLatestRefFromParam(refParam: string): Promise<string> {
   let version = semver.valid(semver.coerce(refParam));
 
-  let ref = version ? `/refs/tags/${version}` : `/refs/heads/${version}`;
+  let ref = version ? `/refs/tags/${version}` : `/refs/heads/${refParam}`;
 
   if (!version) return ref;
 
