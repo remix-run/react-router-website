@@ -24,16 +24,13 @@ async function saveDocs(ref: string, releaseNotes: string) {
   // check if we have this release already
   let release = await prisma.gitHubRef.findUnique({
     where: { ref },
+    select: {
+      docs: { select: { filePath: true } },
+    },
   });
 
-  // release exists already, so we need to update it
-  if (release) {
-    // delete all the docs for that release
-    // this way if we deleted one, it's gone
-    await prisma.doc.deleteMany({
-      where: { githubRef: { ref } },
-    });
-  } else {
+  // if we don't have this release, create it
+  if (!release) {
     await prisma.gitHubRef.create({
       data: {
         ref,
@@ -42,8 +39,10 @@ async function saveDocs(ref: string, releaseNotes: string) {
     });
   }
 
+  let existingDocs = release?.docs.map((d) => d.filePath) || [];
+
   let stream = await getPackage(REPO, ref);
-  await findMatchingEntries(stream, "/docs", ref);
+  await findMatchingEntries(stream, ref, "/docs", existingDocs);
 }
 
 export { saveDocs };
