@@ -202,6 +202,8 @@ export async function findMatchingEntries(
           },
         });
         console.log(`> deleted ${deleted.count} docs for ${ref}`);
+      } else {
+        console.log("> no deleted docs");
       }
 
       console.log(`> done with ${ref}`);
