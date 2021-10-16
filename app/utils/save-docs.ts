@@ -21,8 +21,6 @@ async function saveDocs(ref: string, releaseNotes: string) {
   // sometimes I (Logan) still use a leading slash when github doesn't
   ref = ref.startsWith("/") ? ref.slice(1) : ref;
 
-  let stream = await getPackage(REPO, ref);
-
   // check if we have this release already
   let release = await prisma.gitHubRef.findUnique({
     where: { ref },
@@ -44,6 +42,7 @@ async function saveDocs(ref: string, releaseNotes: string) {
     });
   }
 
+  let stream = await getPackage(REPO, ref);
   await findMatchingEntries(stream, "/docs", ref);
 }
 
