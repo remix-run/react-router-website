@@ -1,5 +1,5 @@
 {
-  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx", "prisma/seed.js"],
+  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2019"],
     "allowJs": true,
@@ -12,8 +12,7 @@
     "noEmit": true,
     "module": "ES2020",
     "paths": {
-      "~/*": ["./app/*"],
-      "*": ["./app/@types/*"]
+      "~/*": ["./app/*"]
     }
   },
   "ts-node": {
