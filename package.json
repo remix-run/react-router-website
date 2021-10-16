@@ -15,7 +15,7 @@
     "deploy": "flyctl deploy --config fly.staging.toml --build-arg REMIX_TOKEN=${REMIX_TOKEN} --build-arg DATABASE_URL=file:./dev.db",
     "deploy:localdb": "flyctl deploy --config fly.staging.toml --build-arg REMIX_TOKEN=${REMIX_TOKEN} --build-arg DATABASE_URL=file:./dev.db --build-arg SKIP_RESET=1",
     "deploy:production:localdb": "flyctl deploy --config fly.production.toml --build-arg REMIX_TOKEN=${REMIX_TOKEN} --build-arg DATABASE_URL=file:./dev.db --build-arg SKIP_RESET=1",
-    "start": "NODE_ENV=production node server --max-old-space-size=900",
+    "start": "NODE_ENV=production node --max-old-space-size=900 server/index.js",
     "postinstall": "remix setup && patch-package",
     "clean": "del app/styles .cache public/build server/build",
     "db:reset": "prisma migrate reset --force && ts-node app/verify-seed"
