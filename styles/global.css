@@ -1,6 +1,11 @@
 @font-face {
   font-family: "Founders Grotesk";
-  src: url("/font/test-founders-grotesk-bold.woff2") format("woff2");
+  /* we bought a license, this is the test version though because it's only 10kb
+   * and the licensed one is 34kb! There are some missing special characters, so
+   * be careful, if you need the full font, let one of the founders know you need
+   * the ... ~founders~ font. DO YOU GET IT?!
+   */
+  src: url("/font/founders-grotesk-bold.woff2") format("woff2");
   font-style: normal;
 }
 
