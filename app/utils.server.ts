@@ -106,7 +106,7 @@ export async function getMenu(
       children: [],
     };
 
-    let parentSlug = slug.substr(0, slug.lastIndexOf("/"));
+    let parentSlug = slug.substring(0, slug.lastIndexOf("/"));
     map.set(slug, node);
     if (parentSlug) {
       let parent = map.get(parentSlug);
