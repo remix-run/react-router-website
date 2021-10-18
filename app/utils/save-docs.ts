@@ -9,7 +9,7 @@ const REPO_LATEST_BRANCH = process.env.REPO_LATEST_BRANCH as string;
 
 if (!REPO || !REPO_DOCS_PATH || !REPO_LATEST_BRANCH) {
   throw new Error(
-    "yo, you forgot something, missing of the following REPO, REPO_DOCS_PATH, REPO_LATEST_BRANCH"
+    "yo, you forgot something, missing one of the following: REPO, REPO_DOCS_PATH, REPO_LATEST_BRANCH"
   );
 }
 
