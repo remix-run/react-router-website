@@ -20,4 +20,4 @@ jobs:
       - uses: actions/checkout@v2
       - uses: superfly/flyctl-actions@1.1
         with:
-          args: "deploy --config ./fly.staging.toml --build-arg REMIX_TOKEN=${{ secrets.REMIX_TOKEN }} --build-arg DATABASE_URL=file:./dev.db?connection_limit=1 --build-arg REPO=${{ secrets.REPO }} --build-arg REPO_DOCS_PATH=${{ secrets.REPO_DOCS_PATH }} --build-arg REPO_LATEST_BRANCH=${{ secrets.REPO_LATEST_BRANCH }}"
+          args: 'deploy --config ./fly.staging.toml --build-arg REMIX_TOKEN=${{ secrets.REMIX_TOKEN }} --build-arg DATABASE_URL="file:./dev.db?connection_limit=1" --build-arg REPO=${{ secrets.REPO }} --build-arg REPO_DOCS_PATH=${{ secrets.REPO_DOCS_PATH }} --build-arg REPO_LATEST_BRANCH=${{ secrets.REPO_LATEST_BRANCH }}'
