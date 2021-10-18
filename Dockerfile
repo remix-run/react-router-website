@@ -1,11 +1,11 @@
 # base node image
 FROM node:16-bullseye-slim as base
-ARG REMIX_TOKEN
 
 ################################################################
 
 # install dependencies
 FROM base as deps
+ARG REMIX_TOKEN
 
 # set docker working directory, we'll need to this in every stage
 WORKDIR /remixapp/
@@ -38,7 +38,7 @@ ENV REPO_DOCS_PATH=$REPO_DOCS_PATH
 ARG REPO_LATEST_BRANCH
 ENV REPO_LATEST_BRANCH=$REPO_LATEST_BRANCH
 
-# Supplying SKIP_RESET=1 will skip the DB reset and seeding - WILL USE YOUR LOCAL DB
+# supplying SKIP_RESET=1 will skip the DB reset and seeding - WILL USE YOUR LOCAL DB
 ARG SKIP_RESET="0"
 
 WORKDIR /remixapp/
