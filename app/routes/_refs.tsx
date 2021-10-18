@@ -21,6 +21,7 @@ type Ref = Prisma.GitHubRefGetPayload<typeof refs>;
 
 interface RouteData {
   refs: (Ref & { versionOrBranch: string })[];
+  commit: string;
 }
 
 const loader: LoaderFunction = async () => {
@@ -33,6 +34,7 @@ const loader: LoaderFunction = async () => {
   });
 
   return json({
+    commit: process.env.COMMIT_SHA,
     refs: refs.map((ref) => ({
       ...ref,
       versionOrBranch: ref.ref.replace(/^refs\/(heads|tags)\//, ""),
@@ -49,6 +51,7 @@ const RefsPage: RouteComponent = () => {
   return (
     <div className="px-6">
       <h1>Refs we got</h1>
+      <h2>GitHub commit: {data.commit}</h2>
       <ul className="space-y-10">
         {data.refs.map((ref) => (
           <li key={ref.ref}>
