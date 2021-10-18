@@ -132,7 +132,7 @@ export function RankedRoutes({ mdt }: { mdt: Page }) {
   return (
     <div className="max-w-5xl mx-auto my-32 md:my-72 lg:mb-80 lg:mt-96 md-down:container">
       <h2 className="mb-4">Ranked Routes</h2>
-      <div className="md-down:space-y-6 lg:grid lg:grid-cols-[1fr,1.2fr] lg:gap-6">
+      <div className="md-down:space-y-6 lg:grid lg:grid-cols-[1fr,1.4fr] lg:gap-6">
         <div>
           <div>
             <p className="mb-4">
