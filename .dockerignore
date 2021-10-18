@@ -9,4 +9,3 @@ prisma/dev.db-journal
 pm2.config.js
 .vscode
 .github
-scripts

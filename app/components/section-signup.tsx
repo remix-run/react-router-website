@@ -14,7 +14,7 @@ function SectionSignup() {
     <Section wrap className="section-signup relative my-36 md:my-64 lg:my-72">
       <div className="section-signup__image flex items-center justify-center overflow-hidden md:justify-end p-8 md:p-0 mb-6 md:mb-0 rounded-xl md:rounded-3xl md:absolute md:w-[1416px] md:h-[584px] md:right-[40rem] md:top-1/2 md:-translate-y-1/2">
         <img
-          src="/discord-screen.png"
+          src="https://res.cloudinary.com/remix-run/image/upload/q_auto/v1634272891/reactrouter.com/discord_muyfnl.png"
           alt="Screenshot of the Remix Discord channel"
           height="456"
           width="630"
@@ -26,10 +26,14 @@ function SectionSignup() {
         <p className="text-lg md:text-xl mb-6 opacity-80">
           React Router is developed by the <a href="https://remix.run">Remix</a>{" "}
           team. To get updates and special content on React Router (as well as
-          our other projects), subscribe to the Remix newsletter or join the{" "}
-          <a href="https://discord.gg/VBePs6d">conversation on Discord</a>.
+          our other projects), subscribe to the Remix newsletter or{" "}
+          <a href="https://discord.gg/VBePs6d">
+            join the conversation on Discord
+          </a>
+          .
         </p>
         <Form
+          aria-label="Subscribe to the newsletter!"
           replace
           method="post"
           className="flex flex-col xs:flex-row"
@@ -47,6 +51,7 @@ function SectionSignup() {
               placeholder="billybob@remix.run"
               className="mb-4 xs:mb-0 xs:mr-4"
               disabled={transition.state === "submitting"}
+              required
             />
           </label>
           <Button disabled={transition.state === "submitting"}>

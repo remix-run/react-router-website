@@ -1,5 +1,5 @@
-const colors = require("../app/utils/colors");
 const path = require("path");
+const colors = require("./colors");
 const { writeFile } = require("fs/promises");
 
 main();

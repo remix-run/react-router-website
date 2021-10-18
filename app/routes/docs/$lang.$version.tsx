@@ -9,7 +9,7 @@ import { getMenu, MenuNode } from "~/utils.server";
 import markdownStyles from "~/styles/docs.css";
 import { Menu } from "~/components/docs-menu";
 
-export let loader: LoaderFunction = async ({ context, params }) => {
+export let loader: LoaderFunction = async ({ params }) => {
   invariant(!!params.version, "Need a version param");
   invariant(!!params.lang, "Need a lang param");
 
@@ -33,96 +33,34 @@ export default function DocsLayout() {
     }
   }, [location]);
 
-  let [found, setFound] = React.useState<{
-    heading: Element | null;
-    anchor: Element | null;
-  }>({
-    heading: null,
-    anchor: null,
-  });
-
-  React.useEffect(() => {
-    let proseContainer = document.querySelector<HTMLDivElement>(".md-prose");
-    let toc = document.querySelector<HTMLUListElement>(
-      ".markdown.has-toc .toc"
-    );
-    if (!toc || !proseContainer) {
-      return;
-    }
-    let headings =
-      proseContainer.querySelectorAll<HTMLHeadingElement>("h2, h3, h4");
-
-    let observer = new IntersectionObserver(
-      (entries) => {
-        for (let entry of entries) {
-          if (entry.isIntersecting) {
-            setFound({
-              heading: entry.target,
-              anchor: getAnchor(entry.target),
-            });
-          }
-        }
-      },
-      {
-        root: null,
-        rootMargin: "-50% 0% -50% 0%",
-        threshold: 0,
-      }
-    );
-
-    for (let heading of headings) {
-      observer.observe(heading);
-    }
-    window.requestAnimationFrame(() => {
-      if (!found.heading) {
-        setFound({
-          heading: headings[0],
-          anchor: getAnchor(headings[0]),
-        });
-      }
-    });
-    return () => observer.disconnect();
-
-    function getAnchor(heading: Element) {
-      let id = heading.id;
-      return toc?.querySelector(`[href="#${id}"]`) || null;
-    }
-  }, []);
-
-  let anchor = found.anchor;
-  let previousAnchor = usePrevious(anchor);
-
-  React.useEffect(() => {
-    if (previousAnchor?.hasAttribute("data-active")) {
-      previousAnchor.removeAttribute("data-active");
-    }
-    anchor?.setAttribute("data-active", "");
-  }, [anchor]);
-
   return (
     <div className="md-layout lg:flex lg:h-full md-down:container">
-      <div className="lg:hidden">
-        <details ref={detailsRef}>
-          <summary className="py-4">Docs Navigation</summary>
-          <div>
-            <Menu nodes={menu} className="py-6 text-base font-medium" />
-          </div>
-        </details>
-        <hr className="mb-4" />
-      </div>
-      <div className="flex-shrink-0 hidden lg:block">
-        <div
-          className={cx([
-            // Sidebar nav scroll container
-            "h-full max-h-screen overflow-x-hidden overflow-y-auto", // auto scrolling
-            "sticky top-[-1rem]", // sticky behavior
-            "w-64 xl:w-80 2xl:w-96", // width
-            "py-10 pl-6 pr-3 xl:pr-5 2xl:pr-6", // spacing
-          ])}
-        >
-          <Menu nodes={menu} />
+      {menu.length > 0 ? (
+        <div className="lg:hidden">
+          <details ref={detailsRef}>
+            <summary className="py-4">Docs Navigation</summary>
+            <div>
+              <Menu nodes={menu} className="py-6 text-base font-medium" />
+            </div>
+          </details>
+          <hr className="mb-4" />
         </div>
-      </div>
+      ) : null}
+      {menu.length > 0 ? (
+        <div className="flex-shrink-0 hidden lg:block">
+          <div
+            className={cx([
+              // Sidebar nav scroll container
+              "h-full max-h-screen overflow-x-hidden overflow-y-auto", // auto scrolling
+              "sticky top-[-1rem]", // sticky behavior
+              "w-64 xl:w-80 2xl:w-96", // width
+              "py-10 pl-6 pr-3 xl:pr-5 2xl:pr-6", // spacing
+            ])}
+          >
+            <Menu nodes={menu} />
+          </div>
+        </div>
+      ) : null}
       <div className="lg:z-[1] flex-grow lg:h-full">
         <div className="py-6 md:py-8 lg:py-10 lg:pr-6 lg:pl-3 xl:pl-5 2xl:pl-6">
           <Outlet />
@@ -132,10 +70,90 @@ export default function DocsLayout() {
   );
 }
 
-function usePrevious<V>(value: V) {
-  const ref = React.useRef<V>();
-  React.useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
+function NotFound() {
+  return (
+    <div>
+      <h1>Not Found</h1>
+    </div>
+  );
 }
+
+export function unstable_shouldReload() {
+  return false;
+}
+
+// function usePrevious<V>(value: V) {
+//   const ref = React.useRef<V>();
+//   React.useEffect(() => {
+//     ref.current = value;
+//   });
+//   return ref.current;
+// }
+
+// function useFancyPantsActiveLinkHighlights() {
+//   let [found, setFound] = React.useState<{
+//     heading: Element | null;
+//     anchor: Element | null;
+//   }>({
+//     heading: null,
+//     anchor: null,
+//   });
+
+//   React.useEffect(() => {
+//     let proseContainer = document.querySelector<HTMLDivElement>(".md-prose");
+//     let toc = document.querySelector<HTMLUListElement>(
+//       ".markdown.has-toc .toc"
+//     );
+//     if (!toc || !proseContainer) {
+//       return;
+//     }
+//     let headings =
+//       proseContainer.querySelectorAll<HTMLHeadingElement>("h2, h3, h4");
+
+//     let observer = new IntersectionObserver(
+//       (entries) => {
+//         for (let entry of entries) {
+//           if (entry.isIntersecting) {
+//             setFound({
+//               heading: entry.target,
+//               anchor: getAnchor(entry.target),
+//             });
+//           }
+//         }
+//       },
+//       {
+//         root: null,
+//         rootMargin: "-50% 0% -50% 0%",
+//         threshold: 0,
+//       }
+//     );
+
+//     for (let heading of headings) {
+//       observer.observe(heading);
+//     }
+//     window.requestAnimationFrame(() => {
+//       if (!found.heading) {
+//         setFound({
+//           heading: headings[0],
+//           anchor: getAnchor(headings[0]),
+//         });
+//       }
+//     });
+//     return () => observer.disconnect();
+
+//     function getAnchor(heading: Element) {
+//       let id = heading.id;
+//       return toc?.querySelector(`[href="#${id}"]`) || null;
+//     }
+//   }, []);
+
+//   let anchor = found.anchor;
+//   let previousAnchor = usePrevious(anchor);
+
+//   React.useEffect(() => {
+//     if (previousAnchor?.hasAttribute("data-active")) {
+//       previousAnchor.removeAttribute("data-active");
+//     }
+//     anchor?.setAttribute("data-active", "");
+//   }, [anchor]);
+// }

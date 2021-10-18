@@ -34,16 +34,17 @@ const DocsPage: React.VFC = () => {
   );
 };
 
-export function CatchBoundary() {
-  let caught = useCatch();
-  return (
-    <div>
-      <h1>{caught.status}</h1>
-      <h2>
-        <code>{caught.statusText}</code>
-      </h2>
-    </div>
-  );
-}
+// TODO: Revisit this
+// export function CatchBoundary() {
+//     let caught = useCatch();
+//     return (
+//       <div>
+//         <h1>{caught.status}</h1>
+//         <h2>
+//           <code>{caught.statusText}</code>
+//         </h2>
+//       </div>
+//     );
+//   }
 
 export { DocsPage };

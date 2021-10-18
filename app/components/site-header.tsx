@@ -133,7 +133,7 @@ function Hamburger() {
       viewBox="0 0 20 16"
       stroke="currentColor"
       className="block w-5 h-4"
-      aria-hidden="true"
+      aria-hidden
     >
       <path fill="currentColor" d="M0 0h20v2H0zM0 6h20v2H0zM0 12h20v2H0z" />
     </svg>
@@ -148,7 +148,7 @@ function Close() {
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      aria-hidden="true"
+      aria-hidden
     >
       <path
         fill="currentColor"

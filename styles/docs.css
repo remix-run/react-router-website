@@ -156,13 +156,14 @@ stylesheet targets.
     @apply text-[color:inherit];
   }
 
-  & a[data-active] {
+  /* & a[data-active] {
     @apply text-blue-500;
   }
 
   & a[data-active]::before {
     @apply content-[""] absolute top-0 left-0 h-full w-1 bg-blue-500;
-  }
+  } */
+
   data1 & code {
     background: inherit;
     padding: 0;

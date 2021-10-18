@@ -275,11 +275,11 @@ a:hover {
 
 :where(:root[data-force-dark]) {
   & a {
-    @apply text-blue-300;
+    @apply text-blue-200;
   }
 
   & a:hover {
-    @apply text-blue-200;
+    @apply text-blue-100;
   }
 }
 

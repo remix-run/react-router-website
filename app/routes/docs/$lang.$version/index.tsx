@@ -28,4 +28,4 @@ const VersionIndexPage: RouteComponent = () => {
 
 export default VersionIndexPage;
 export { headers, loader };
-export { meta, CatchBoundary } from "~/components/doc";
+export { meta } from "~/components/doc";

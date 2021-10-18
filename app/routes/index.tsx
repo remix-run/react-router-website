@@ -27,6 +27,7 @@ import {
   ActionFunction,
   useLoaderData,
   Link,
+  LinksFunction,
 } from "remix";
 import {
   BrowserChrome,
@@ -39,12 +40,27 @@ import {
 import { Actor, ScrollStage, useStage } from "~/stage";
 import { SectionSignup, signupAction } from "~/components/section-signup";
 import { useMatchMedia } from "../hooks/match-media";
-import { tailwindConfig } from "~/utils/tailwind";
+import { seo } from "~/utils/seo";
 import { MdtScroller } from "~/components/scroll-experience";
 
-const meta: MetaFunction = () => ({
-  title: "React Router",
+let [seoMeta, seoLinks] = seo({
+  title: "Declarative routing for React apps at any scale",
+  description:
+    "Version 6 of React Router is here! React Router v6 takes the best features from v3, v5, and its sister project, Reach Router, in our smallest and most powerful package yet.",
+  twitter: {
+    creator: "@remix_run",
+  },
+  openGraph: {},
 });
+
+export const meta: MetaFunction = () => ({
+  ...seoMeta,
+});
+
+export const links: LinksFunction = () => [
+  ...seoLinks,
+  { rel: "stylesheet", href: indexStyles },
+];
 
 const brandIcons = [
   {
@@ -112,10 +128,55 @@ function PersistentCode({
 }
 
 export function RankedRoutes({ mdt }: { mdt: Page }) {
-  let [, , prose] = mdt as [null, null, Prose];
+  // let [, , prose] = mdt as [null, null, Prose];
   return (
-    <div className="max-w-4xl mx-auto">
-      <div dangerouslySetInnerHTML={{ __html: prose.html }} />
+    <div className="max-w-5xl mx-auto my-32 md:my-72 lg:mb-80 lg:mt-96 md-down:container">
+      <h2 className="mb-4">Ranked Routes</h2>
+      <div className="md-down:space-y-6 lg:grid lg:grid-cols-[1fr,1.4fr] lg:gap-6">
+        <div>
+          <div>
+            <p className="mb-4">
+              Sometimes a URL like can match more than one route pattern. React
+              Router ranks your routes and picks the best one.
+            </p>
+
+            <p className="mb-4">
+              If you are visiting{" "}
+              <code className="whitespace-nowrap text-gray-300">
+                https://myapp.com/teams/new
+              </code>
+              , React Router will render{" "}
+              <code className="whitespace-nowrap text-green-300">
+                {"<NewTeam />"}
+              </code>{" "}
+              because it's more specific than the{" "}
+              <code className="whitespace-nowrap text-gray-300">:teamId</code>{" "}
+              parameter. No more messing with <code>exact</code> props or
+              careful (but fragile) route ordering!
+            </p>
+          </div>
+        </div>
+        <div>
+          <div className="text-xs md:text-sm lg:text-base xl:text-lg overflow-hidden overflow-x-auto p-4 border rounded-lg bg-gray-950 border-gray-600">
+            <pre
+              className="overflow-x-auto"
+              data-line-numbers="true"
+              data-lang="tsx"
+              style={{
+                color: "var(--base05)",
+              }}
+              dangerouslySetInnerHTML={{
+                __html: `<code><span class="codeblock-line" data-line-number="1">&lt;<span style="color: var(--base0A)">Routes</span>&gt;
+</span><span class="codeblock-line" data-line-number="2">  &lt;<span style="color: var(--base0A)">Route</span> <span style="color: var(--base0D)">path</span><span style="color: var(--base0E)">=</span>"<span style="color: var(--base0B)">teams/:teamId</span>" <span style="color: var(--base0D)">element</span><span style="color: var(--base0E)">=</span><span style="color: var(--base0F)">{</span>&lt;<span style="color: var(--base0A)">Team</span> /&gt;<span style="color: var(--base0F)">}</span> /&gt;
+</span><span class="codeblock-line" data-line-number="3">  &lt;<span style="color: var(--base0A)">Route</span> <span style="color: var(--base0D)">path</span><span style="color: var(--base0E)">=</span>"<span style="color: var(--base0B)">teams/new</span>" <span style="color: var(--base0D)">element</span><span style="color: var(--base0E)">=</span><span style="color: var(--base0F)">{</span>&lt;<span style="color: var(--base0A)">NewTeam</span> /&gt;<span style="color: var(--base0F)">}</span> /&gt;
+</span><span class="codeblock-line" data-line-number="4">&lt;/<span style="color: var(--base0A)">Routes</span>&gt;
+</span></code>`,
+              }}
+            ></pre>
+          </div>
+        </div>
+      </div>
+      {/* TODO: Fix this layout in the Markdown instead and rip off this bandaid! <div dangerouslySetInnerHTML={{ __html: prose.html }} /> */}
     </div>
   );
 }
@@ -137,8 +198,18 @@ export function NestedRoutes({ mdt }: { mdt: Page }) {
             </div>
           ))}
           <div className="text-center -mb-10">
-            <ButtonLink size="large" to="/docs">
-              Learn More
+            <ButtonLink
+              size="large"
+              to="/docs"
+              style={{
+                // When the button is focused it is centered in the veiwport if
+                // the browser needs to scroll, and it will be obscured by the
+                // fixed position graphic. This offset should fix that in most
+                // modern browsers.
+                scrollMarginBottom: 500,
+              }}
+            >
+              Learn More<span className="sr-only"> about Nested Routes</span>
             </ButtonLink>
           </div>
         </div>
@@ -240,10 +311,9 @@ function Code({ html }: { html: string }) {
 const IndexPage: RouteComponent = () => {
   let { mdt } = useLoaderData<IndexData>();
 
-  let isSmallScreen = useMatchMedia(
-    `screen and (max-width: ${tailwindConfig.theme.screens?.["sm-down"].max})`,
-    { initialState: false }
-  );
+  let isSmallScreen = useMatchMedia("screen and (max-width: 639px)", {
+    initialState: false,
+  });
 
   return (
     <div className="py-8">
@@ -256,9 +326,10 @@ const IndexPage: RouteComponent = () => {
               v6 is Here
             </h1>
             <p className="opacity-80 text-lg leading-8 md:text-xl">
-              Closing in on a decade of client side routing experience, React
-              Router v6 takes the best features from v3, v5, and its sister
-              project, Reach Router, in the smallest package yet.
+              Closing in on a decade of client-side routing, React Router v6
+              takes the best features from previous versions—and its sister
+              project, Reach Router—in our smallest and most powerful package
+              yet.
             </p>
             <div className="flex flex-col md:flex-row items-center justify-center flex-shrink-0 flex-wrap mt-7">
               <ButtonLink
@@ -416,7 +487,6 @@ const IndexPage: RouteComponent = () => {
 };
 
 export default IndexPage;
-export { meta };
 
 interface IndexData {
   mdt: {
@@ -433,7 +503,3 @@ export let loader: LoaderFunction = async () => {
 export let action: ActionFunction = async (props) => {
   return signupAction(props);
 };
-
-export function links() {
-  return [{ rel: "stylesheet", href: indexStyles }];
-}

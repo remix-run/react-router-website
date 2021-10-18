@@ -1,53 +1,75 @@
-# We have 3 stages to our dockerfile
-# one for installing dependencies, one for building (and seeding the db), and one for running
+# base node image
+FROM node:16-bullseye-slim as base
 
-# Install dependencies only when needed
-FROM node:15-alpine AS deps
+################################################################
+
+# install dependencies
+FROM base as deps
 ARG REMIX_TOKEN
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
-# We're gonna need sqlite to use sqlite :)
-RUN apk add --no-cache sqlite
-WORKDIR /remixapp
-COPY .npmrc package.json package-lock.json ./
+
+# set docker working directory, we'll need to this in every stage
+WORKDIR /remixapp/
+
+ADD package.json package-lock.json .npmrc ./
 RUN npm ci
 
 ################################################################
 
-# Rebuild the source code only when needed
-FROM node:15-alpine AS builder
-ARG DATABASE_URL
-ENV DATABASE_URL=${DATABASE_URL}
-# Supplying SKIP_RESET=1 will skip the DB reset and seeding - WILL USE YOUR LOCAL DB
-ARG SKIP_RESET="0"
-WORKDIR /remixapp
-COPY . .
-COPY --from=deps /remixapp/node_modules ./node_modules
-# Reset and seed the database only if SKIP_RESET is not set
-RUN if [ "$SKIP_RESET" = "1" ]; then echo "SKIPPING DATABASE RESET AND SEED"; else npm run db:reset -- --force; fi
+# prune devDependencies
+FROM base as production-deps
 
+WORKDIR /remixapp/
+
+# copy all node_modules from deps stage
+COPY --from=deps /remixapp/node_modules /remixapp/node_modules
+ADD package.json package-lock.json .npmrc /remixapp/
+RUN npm prune --production
+
+################################################################
+
+# build app
+FROM base as build
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+ARG REPO
+ENV REPO=$REPO
+ARG REPO_DOCS_PATH
+ENV REPO_DOCS_PATH=$REPO_DOCS_PATH
+ARG REPO_LATEST_BRANCH
+ENV REPO_LATEST_BRANCH=$REPO_LATEST_BRANCH
+
+# supplying SKIP_RESET=1 will skip the DB reset and seeding - WILL USE YOUR LOCAL DB
+ARG SKIP_RESET="0"
+
+WORKDIR /remixapp/
+
+# copy all node_modules from deps stage
+COPY --from=deps /remixapp/node_modules /remixapp/node_modules
+ADD package.json .
+
+# schema doesn't change much so these will stay cached
+ADD prisma .
+
+# app code changes all the time
+ADD . .
+# Reset and seed the database only if SKIP_RESET is not set
+RUN if [ "$SKIP_RESET" = "1" ]; then echo "SKIPPING DATABASE RESET AND SEED"; else npm run db:reset; fi
 RUN npm run build
 
 ################################################################
 
-# Production image, copy all the files and run our server
-FROM node:15-alpine AS runner
-WORKDIR /remixapp
-ENV NODE_ENV production
+# pruned app build used for running
+FROM base
+ENV NODE_ENV=production
 
-COPY --from=builder /remixapp/public ./public
-COPY --from=builder /remixapp/server ./server
-COPY --from=builder /remixapp/node_modules ./node_modules
-COPY --from=builder /remixapp/package.json ./package.json
-COPY --from=builder /remixapp/prisma ./prisma
-COPY --from=builder /remixapp/md ./md
+WORKDIR /remixapp/
 
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S remix -u 1001
-RUN chown -R remix:nodejs /remixapp/server
-RUN chown -R remix:nodejs /remixapp/prisma
-USER remix
+# copy files from previous stages
+COPY --from=production-deps /remixapp/node_modules /remixapp/node_modules
+COPY --from=build /remixapp/node_modules/.prisma /remixapp/node_modules/.prisma
+COPY --from=build /remixapp/server /remixapp/server
+COPY --from=build /remixapp/public /remixapp/public
+ADD . .
+USER 1001
 
-EXPOSE 3000
-
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]

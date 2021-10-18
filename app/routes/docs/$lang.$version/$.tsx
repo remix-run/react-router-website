@@ -12,6 +12,7 @@ let loader: LoaderFunction = async ({ params }) => {
   invariant(!!params["*"], "Expected file path");
 
   let { lang, version } = params;
+
   let doc = await getDoc(params["*"], version, lang);
 
   return json(doc);
@@ -23,4 +24,4 @@ const SplatPage: RouteComponent = () => {
 
 export default SplatPage;
 export { loader };
-export { meta, CatchBoundary } from "~/components/doc";
+export { meta } from "~/components/doc";
