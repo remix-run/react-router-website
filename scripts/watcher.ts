@@ -1,56 +1,29 @@
-const fsp = require("fs/promises");
-const path = require("path");
+import fsp from "fs/promises";
+import path from "path";
 
-const { PrismaClient } = require("@prisma/client");
-const chokidar = require("chokidar");
-const parseAttributes = require("gray-matter");
-const { processMarkdown } = require("@ryanflorence/md");
+import { PrismaClient } from "@prisma/client";
+import chokidar from "chokidar";
+
+import { processDoc, ProcessedDoc } from "../app/utils/process-docs.server";
 
 let prisma = new PrismaClient();
 
-let DOCS_DIR = path.resolve(process.cwd(), "../react-router/docs");
-let DOCS_FILES = DOCS_DIR + "/**/*.md";
-let BRANCH = "local";
-
-async function processFile(entry) {
-  let { data, content } = parseAttributes(entry.content);
-  let hasContent = content.trim() !== "";
-
-  let path = entry.path.replace(DOCS_DIR, "");
-  let title = data.title || path;
-  let html = hasContent
-    ? await processMarkdown(data.toc === false ? content : "## toc\n" + content)
-    : "";
-
-  let langMatch = path.match(/^\/_i18n\/(?<lang>[a-z]{2})\//);
-
-  let lang = langMatch?.groups?.lang ?? "en";
-
-  return {
-    attributes: {
-      disabled: data.disabled ?? false,
-      toc: data.toc,
-      hidden: data.hidden ?? false,
-      siblingLinks: data.siblingLinks ?? false,
-      title: title,
-      order: data.order,
-      description: data.description,
-      published: data.published,
-    },
-    html: html.toString(),
-    title,
-    path,
-    md: content,
-    hasContent,
-    lang,
-  };
+if (!process.env.REPO_LATEST_BRANCH || !process.env.LOCAL_DOCS_PATH) {
+  throw new Error(
+    "yo, you forgot something, missing one of the following LOCAL_DOCS_PATH, REPO_LATEST_BRANCH"
+  );
 }
 
-async function updateOrCreateDoc(processed) {
+let DOCS_DIR = path.resolve(process.cwd(), process.env.LOCAL_DOCS_PATH);
+let DOCS_FILES = DOCS_DIR + "/**/*.md";
+let BRANCH = process.env.REPO_LATEST_BRANCH;
+
+async function updateOrCreateDoc(processed: ProcessedDoc) {
   let exists = await prisma.doc.findFirst({
     where: {
       filePath: processed.path,
-      version: { fullVersionOrBranch: BRANCH },
+      lang: processed.lang,
+      githubRef: { ref: BRANCH },
     },
   });
 
@@ -59,7 +32,8 @@ async function updateOrCreateDoc(processed) {
       await prisma.doc.updateMany({
         where: {
           filePath: processed.path,
-          version: { fullVersionOrBranch: BRANCH },
+          lang: processed.lang,
+          githubRef: { ref: BRANCH },
         },
         data: {
           ...processed.attributes,
@@ -86,14 +60,15 @@ async function updateOrCreateDoc(processed) {
           lang: processed.lang,
           hasContent: processed.hasContent,
           title: processed.title,
-          version: {
+          githubRef: {
             connectOrCreate: {
+              where: {
+                ref: BRANCH,
+              },
               create: {
-                fullVersionOrBranch: BRANCH,
-                versionHeadOrBranch: BRANCH,
+                ref: BRANCH,
                 releaseNotes: "",
               },
-              where: { fullVersionOrBranch: BRANCH },
             },
           },
         },
@@ -114,54 +89,64 @@ let watcher = chokidar.watch(DOCS_FILES, {
 watcher
   .on("ready", async () => {
     console.log("Syncing all local files with the DB");
-    let allFiles = Object.entries(watcher.getWatched()).reduce(
-      (acc, [dir, files]) => {
-        let newPaths = files.map((file) => path.join(DOCS_DIR, dir, file));
-        return [...acc, ...newPaths];
-      },
-      []
-    );
+    let entries = Object.entries(watcher.getWatched());
+    let allFiles = entries.reduce<string[]>((acc, [dir, files]) => {
+      let newPaths = files.map((file) => path.join(DOCS_DIR, dir, file));
+      return [...acc, ...newPaths];
+    }, []);
 
     let promises = [];
 
     for (let filepath of allFiles) {
       let content = await fsp.readFile(filepath, "utf8");
-      let processed = await processFile({
+      let actualFilePath = path.join(
+        "/docs",
+        path.relative(DOCS_DIR, filepath)
+      );
+      console.log({ actualFilePath });
+
+      let processed = await processDoc({
         type: "file",
         content,
-        path: filepath,
+        path: actualFilePath,
       });
+
       promises.push(updateOrCreateDoc(processed));
     }
 
     await Promise.all(promises);
-    console.log(allFiles);
 
     console.log("Initial scan complete. Ready for changes");
   })
   .on("error", (error) => console.error(error))
   .on("add", async (filepath) => {
-    console.log(`File ${filepath} has been added`);
+    let actualFilePath = path.join("/docs", filepath);
+    console.log(`File ${actualFilePath} has been added`);
     let absolutePath = path.join(DOCS_DIR, filepath);
     let content = await fsp.readFile(absolutePath, "utf8");
-    let processed = await processFile({
+    let processed = await processDoc({
       type: "file",
       content,
-      path: filepath,
+      path: actualFilePath,
     });
 
     await updateOrCreateDoc(processed);
   })
   .on("change", async (filepath) => {
-    console.log(`File ${filepath} has been changed`);
+    let actualFilePath = path.join("/docs", filepath);
+    console.log(`File ${actualFilePath} has been changed`);
     let absolutePath = path.join(DOCS_DIR, filepath);
     let content = await fsp.readFile(absolutePath, "utf8");
-    let processed = await processFile({
+    let processed = await processDoc({
       type: "file",
       content,
-      path: filepath,
+      path: actualFilePath,
     });
 
     await updateOrCreateDoc(processed);
   })
-  .on("unlink", (filepath) => console.log(`File ${filepath} has been removed`));
+  .on("unlink", (filepath) => {
+    let actualFilePath = path.join("/docs", filepath);
+    console.log(`File ${actualFilePath} has been removed`);
+    // TODO: delete from db
+  });
