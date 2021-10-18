@@ -144,8 +144,22 @@ watcher
 
     await updateOrCreateDoc(processed);
   })
-  .on("unlink", (filepath) => {
+  .on("unlink", async (filepath) => {
     let actualFilePath = path.join("/docs", filepath);
     console.log(`File ${actualFilePath} has been removed`);
-    // TODO: delete from db
+    let langMatch = actualFilePath.match(/^\/docs\/_i18n\/(?<lang>[a-z]{2})\//);
+
+    let lang = langMatch?.groups?.lang ?? "en";
+
+    let nonLocalizedPath = actualFilePath.replace(
+      /^\/docs\/_i18n\/[a-z]{2}/,
+      ""
+    );
+
+    await prisma.doc.deleteMany({
+      where: {
+        filePath: nonLocalizedPath,
+        lang,
+      },
+    });
   });
