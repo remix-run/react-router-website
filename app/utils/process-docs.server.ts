@@ -37,6 +37,8 @@ async function processDoc(entry: Entry): Promise<ProcessedDoc> {
 
   let lang = langMatch?.groups?.lang ?? "en";
 
+  let filePath = path.replace(/^\/_i18n\/[a-z]{2}/, "");
+
   return {
     attributes: {
       disabled: data.disabled ?? false,
@@ -50,7 +52,7 @@ async function processDoc(entry: Entry): Promise<ProcessedDoc> {
     },
     html: html.toString(),
     title,
-    path,
+    path: filePath,
     md: content,
     hasContent,
     lang,
