@@ -103,7 +103,6 @@ watcher
         "/docs",
         path.relative(DOCS_DIR, filepath)
       );
-      console.log({ actualFilePath });
 
       let processed = await processDoc({
         type: "file",
