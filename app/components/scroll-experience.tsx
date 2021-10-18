@@ -160,7 +160,7 @@ export function BrowserChrome({
     <div className="text-[80%] h-[45vh] md:text-[100%] lg:text-[110%] xl:text-[125%] px-2">
       <span className="sr-only">Current URL: {url}</span>
       <div
-        className="h-full bg-gray-800 border border-gray-600 drop-shadow-lg rounded-xl overflow-hidden user-select-none select-none"
+        className="h-full bg-gray-800 border border-gray-600 drop-shadow-lg rounded-xl overflow-hidden select-none"
         role="presentation"
       >
         <div className="pb-[0.5em] border-b border-gray-500">

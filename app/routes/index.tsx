@@ -130,9 +130,9 @@ function PersistentCode({
 export function RankedRoutes({ mdt }: { mdt: Page }) {
   // let [, , prose] = mdt as [null, null, Prose];
   return (
-    <div className="max-w-5xl mx-auto my-32 md:my-72 lg:mb-80 lg:mt-96 md-down:container">
+    <div className="max-w-2xl mx-auto my-32 md:my-72 lg:mb-80 lg:max-w-6xl lg:mt-96 container">
       <h2 className="mb-4">Ranked Routes</h2>
-      <div className="md-down:space-y-6 lg:grid lg:grid-cols-[1fr,1.4fr] lg:gap-6">
+      <div className="md-down:space-y-6 lg:grid lg:grid-cols-[1fr,1.4fr] xl:grid-cols-[1fr,1.2fr] lg:gap-7 xl:gap-10">
         <div>
           <div>
             <p className="mb-4">
@@ -157,9 +157,30 @@ export function RankedRoutes({ mdt }: { mdt: Page }) {
           </div>
         </div>
         <div>
-          <div className="text-xs md:text-sm lg:text-base xl:text-lg overflow-hidden overflow-x-auto p-4 border rounded-lg bg-gray-950 border-gray-600">
+          <div className="text-sm md:text-base overflow-hidden overflow-x-auto p-4 border rounded-lg bg-gray-950 border-gray-600">
             <pre
-              className="overflow-x-auto"
+              className="overflow-x-auto sm:hidden"
+              data-line-numbers="true"
+              data-lang="tsx"
+              style={{
+                color: "var(--base05)",
+              }}
+              dangerouslySetInnerHTML={{
+                __html: `<code><span class="codeblock-line" data-line-number="1">&lt;<span style="color: var(--base0A)">Routes</span>&gt;
+</span><span class="codeblock-line" data-line-number="2">  &lt;<span style="color: var(--base0A)">Route</span>
+    <span style="color: var(--base0D)">path</span><span style="color: var(--base0E)">=</span>"<span style="color: var(--base0B)">teams/:teamId</span>"
+    <span style="color: var(--base0D)">element</span><span style="color: var(--base0E)">=</span><span style="color: var(--base0F)">{</span>&lt;<span style="color: var(--base0A)">Team</span> /&gt;<span style="color: var(--base0F)">}</span>
+  /&gt;</span>
+  <span class="codeblock-line" data-line-number="3">&lt;<span style="color: var(--base0A)">Route</span>
+    <span style="color: var(--base0D)">path</span><span style="color: var(--base0E)">=</span>"<span style="color: var(--base0B)">teams/new</span>"
+    <span style="color: var(--base0D)">element</span><span style="color: var(--base0E)">=</span><span style="color: var(--base0F)">{</span>&lt;<span style="color: var(--base0A)">NewTeam</span>/&gt;<span style="color: var(--base0F)">}</span>
+  /&gt;
+</span><span class="codeblock-line" data-line-number="4">&lt;/<span style="color: var(--base0A)">Routes</span>&gt;
+</span></code>`,
+              }}
+            />
+            <pre
+              className="hidden sm:block overflow-x-auto"
               data-line-numbers="true"
               data-lang="tsx"
               style={{
@@ -172,7 +193,7 @@ export function RankedRoutes({ mdt }: { mdt: Page }) {
 </span><span class="codeblock-line" data-line-number="4">&lt;/<span style="color: var(--base0A)">Routes</span>&gt;
 </span></code>`,
               }}
-            ></pre>
+            />
           </div>
         </div>
       </div>
