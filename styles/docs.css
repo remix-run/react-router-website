@@ -134,8 +134,23 @@ stylesheet targets.
 
   & > li > ul {
     height: 100%;
-    max-height: 50vh;
-    max-height: calc(50vh - env(safe-area-inset-bottom));
+    /*
+    Had to do some funky calculatin' here, but the gist is that this means the
+    little van box will max at 28rem at normal desktop screen heights, which is
+    ideal because none of the words should get cut off by the y-axis overflow.
+
+    It is *not* ideal when the browser height is small because scroll behavior
+    is a bit more confusing when the box, which itself has a vertical scrollbar,
+    extends beyond the bounds of the window, which also has a vertical
+    scrollbar. In that case we constrain it based on the screen size offset by
+    the other elements above and below it. The three declarations are for
+    progressive enhancement, as some versions of various browsers might not
+    support `min()` or `env(safe-area-inset-bottom)`
+    */
+    max-height: 28rem;
+    max-height: min(28rem, calc(100vh - 14.375rem));
+    max-height: min(28rem, calc(100vh - env(safe-area-inset-bottom) - 14.375rem));
+
     overflow-x: hidden;
     overflow-y: auto;
   }
