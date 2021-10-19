@@ -129,6 +129,13 @@ export async function findMatchingEntries(
         return;
       }
 
+      // ignore non-md files
+      if (!entry.path.endsWith(".md")) {
+        stream.resume();
+        stream.on("end", next);
+        return;
+      }
+
       try {
         const content = await bufferStream(stream);
 
