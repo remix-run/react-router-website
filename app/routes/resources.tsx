@@ -117,7 +117,7 @@ const ResourcesPage: RouteComponent = () => {
                     title: "Stack Overflow",
                     desc: "Get help from the Remix team on using React Router in your application.",
                     icon: <IconStackOverflow />,
-                    linkTo: "/",
+                    linkTo: "https://stackoverflow.com/questions/tagged/react-router",
                     linkLabel: "Visit Stack Overflow",
                   },
                 ].map(({ icon, title, desc, linkLabel, linkTo }) => {
