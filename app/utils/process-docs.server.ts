@@ -2,7 +2,7 @@ import parseAttributes from "gray-matter";
 import { processMarkdown } from "@ryanflorence/md";
 import type { Entry } from "./get-docs.server";
 
-export interface Attributes {
+interface Attributes {
   title: string;
   order?: number;
   disabled: boolean;
@@ -13,7 +13,7 @@ export interface Attributes {
   toc: boolean;
 }
 
-async function processDoc(entry: Entry): Promise<{
+interface ProcessedDoc {
   attributes: Attributes;
   html: string;
   title: string;
@@ -21,7 +21,9 @@ async function processDoc(entry: Entry): Promise<{
   md: string;
   lang: string;
   hasContent: boolean;
-}> {
+}
+
+async function processDoc(entry: Entry): Promise<ProcessedDoc> {
   let { data, content } = parseAttributes(entry.content!);
   let hasContent = content.trim() !== "";
 
@@ -34,6 +36,8 @@ async function processDoc(entry: Entry): Promise<{
   let langMatch = path.match(/^\/_i18n\/(?<lang>[a-z]{2})\//);
 
   let lang = langMatch?.groups?.lang ?? "en";
+
+  let filePath = path.replace(/^\/_i18n\/[a-z]{2}/, "");
 
   return {
     attributes: {
@@ -48,7 +52,7 @@ async function processDoc(entry: Entry): Promise<{
     },
     html: html.toString(),
     title,
-    path,
+    path: filePath,
     md: content,
     hasContent,
     lang,
@@ -59,4 +63,4 @@ async function processDocs(entries: Entry[]) {
   return Promise.all(entries.map((entry) => processDoc(entry)));
 }
 
-export { processDoc, processDocs };
+export { processDoc, processDocs, ProcessedDoc, Attributes };
