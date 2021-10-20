@@ -106,7 +106,7 @@ const SiteFooter: React.VFC<{ className?: string }> = ({ className }) => {
             </li>
             <li>
               <Link
-                to="https://twitter.com/remix-run"
+                to="https://twitter.com/remix_run"
                 className="block text-[color:var(--hue-0750)] hover:text-[color:var(--hue-1000)]"
               >
                 <span className="sr-only">Twitter</span>
