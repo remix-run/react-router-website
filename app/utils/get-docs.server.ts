@@ -179,9 +179,7 @@ export async function findMatchingEntries(
             data: {
               ...docToSave,
               githubRef: {
-                connect: {
-                  ref,
-                },
+                connect: { ref },
               },
             },
           });
