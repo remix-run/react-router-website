@@ -20,7 +20,7 @@ const refs = Prisma.validator<Prisma.GitHubRefArgs>()({
 type Ref = Prisma.GitHubRefGetPayload<typeof refs>;
 
 interface RouteData {
-  refs: (Ref & { versionOrBranch: string })[];
+  refs: (Ref & { versionOrBranch: string; docs: { count: number } })[];
   commit: string;
 }
 
@@ -30,6 +30,9 @@ const loader: LoaderFunction = async () => {
       ref: true,
       createdAt: true,
       updatedAt: true,
+      docs: {
+        select: { id: true },
+      },
     },
   });
 
@@ -38,6 +41,9 @@ const loader: LoaderFunction = async () => {
     refs: refs.map((ref) => ({
       ...ref,
       versionOrBranch: ref.ref.replace(/^refs\/(heads|tags)\//, ""),
+      docs: {
+        count: ref.docs.length,
+      },
     })),
   });
 };
@@ -57,6 +63,7 @@ const RefsPage: RouteComponent = () => {
           <li key={ref.ref}>
             <div>
               <Link to={`/docs/en/${ref.versionOrBranch}`}>{ref.ref}</Link>
+              <p>docs count: {ref.docs.count}</p>
               <p>createdAt: {ref.createdAt}</p>
               <p>updatedAt: {ref.updatedAt}</p>
             </div>
