@@ -1,4 +1,4 @@
-import { processMarkdown } from "@ryanflorence/md";
+import { reactRouterProcessMarkdown as processMarkdown } from "./process-markdown";
 
 import { prisma } from "../db.server";
 import { findMatchingEntries, getPackage } from "./get-docs.server";
@@ -34,7 +34,9 @@ async function saveDocs(ref: string, releaseNotes: string) {
     await prisma.gitHubRef.create({
       data: {
         ref,
-        releaseNotes: await processMarkdown(releaseNotes),
+        releaseNotes: await processMarkdown(releaseNotes, {
+          preserveLinks: true,
+        }),
       },
     });
   }

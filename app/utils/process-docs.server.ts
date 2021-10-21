@@ -1,5 +1,5 @@
 import parseAttributes from "gray-matter";
-import { processMarkdown } from "@ryanflorence/md";
+import { reactRouterProcessMarkdown as processMarkdown } from "./process-markdown";
 import type { Entry } from "./get-docs.server";
 
 interface Attributes {
@@ -29,15 +29,20 @@ async function processDoc(entry: Entry): Promise<ProcessedDoc> {
 
   let path = entry.path.replace(/^\/docs/, "");
   let title = data.title || path;
-  let html = hasContent
-    ? await processMarkdown(data.toc === false ? content : "## toc\n" + content)
-    : "";
-
   let langMatch = path.match(/^\/_i18n\/(?<lang>[a-z]{2})\//);
-
   let lang = langMatch?.groups?.lang ?? "en";
-
   let filePath = path.replace(/^\/_i18n\/[a-z]{2}/, "");
+
+  // TODO: Get actual version
+  let version = "v6";
+
+  let contentToProcess = data.toc === false ? content : "## toc\n" + content;
+
+  let html = hasContent
+    ? await processMarkdown(contentToProcess, {
+        linkOriginPath: path ? `docs/${lang}/${version}` + path : undefined,
+      })
+    : "";
 
   return {
     attributes: {
