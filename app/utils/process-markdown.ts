@@ -1,14 +1,18 @@
 import { processMarkdown, remarkCodeBlocksShiki } from "@ryanflorence/md";
 
-let baseUrl = process.env.SITE_URL;
-
-if (!baseUrl) {
+if (!process.env.SITE_URL) {
   throw Error(
     `The SITE_URL environment is not defined for the ${process.env.NODE_ENV} environment.`
   );
 }
 
-if (baseUrl.endsWith("/")) {
+let baseUrl: URL;
+try {
+  if (process.env.SITE_URL.endsWith("/")) {
+    throw Error();
+  }
+  baseUrl = new URL(process.env.SITE_URL);
+} catch (err) {
   throw Error(
     `Invalid SITE_URL environment defined for the ${process.env.NODE_ENV} environment. Ensure that its value is a valid URL without a trailing slash.`
   );
