@@ -2,7 +2,7 @@ import { processMarkdown, remarkCodeBlocksShiki } from "@ryanflorence/md";
 
 if (!process.env.SITE_URL) {
   throw Error(
-    `The SITE_URL environment is not defined for the ${process.env.NODE_ENV} environment.`
+    `The SITE_URL environment variable is not defined for the ${process.env.NODE_ENV || ""} environment.`
   );
 }
 
@@ -14,7 +14,7 @@ try {
   baseUrl = new URL(process.env.SITE_URL);
 } catch (err) {
   throw Error(
-    `Invalid SITE_URL environment defined for the ${process.env.NODE_ENV} environment. Ensure that its value is a valid URL without a trailing slash.`
+    `Invalid SITE_URL environment variable defined for the ${process.env.NODE_ENV || ""} environment. Ensure that its value is a valid URL without a trailing slash.`
   );
 }
 
@@ -84,7 +84,7 @@ export async function reactRouterProcessMarkdown(
         let to =
           href.startsWith("/") || currentUrlIsIndex ? href : `../${href}`;
         let resolved = resolveUrl(from, to);
-        return resolved.toString();
+        return resolved.pathname + resolved.search + resolved.hash;
       } catch (_) {
         // who knows 🤷‍♂️, do nothing and we'll just return what they gave us
       }
@@ -112,7 +112,7 @@ function getCurrentUrl(pathFromServer?: string | undefined) {
     )
   );
 
-  return new URL(resolveUrl(baseUrl.origin, toPath));
+  return resolveUrl(baseUrl.origin, toPath);
 }
 
 function isRelativeUrl(test: string) {
@@ -120,14 +120,14 @@ function isRelativeUrl(test: string) {
   return !regexp.test(test);
 }
 
-function resolveUrl(from: string, to: string): string {
+function resolveUrl(from: string, to: string): URL {
   try {
     let resolvedUrl = new URL(to, new URL(from, "resolve://"));
     if (resolvedUrl.protocol === "resolve:") {
       let { pathname, search, hash } = resolvedUrl;
-      return pathname + search + hash;
+      return new URL(pathname + search + hash);
     }
-    return resolvedUrl.toString();
+    return resolvedUrl;
   } catch (e) {
     if (
       e instanceof TypeError &&
