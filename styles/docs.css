@@ -133,7 +133,6 @@ stylesheet targets.
   @apply list-none py-3 px-0 rounded-lg border border-[color:var(--hue-0100)];
 
   & > li > ul {
-    height: 99%;
     height: 100%;
     /*
     Had to do some funky calculatin' here, but the gist is that this means the
@@ -150,7 +149,10 @@ stylesheet targets.
     */
     max-height: 28rem;
     max-height: min(28rem, calc(100vh - 14.375rem));
-    max-height: min(28rem, calc(100vh - env(safe-area-inset-bottom) - 14.375rem));
+    max-height: min(
+      28rem,
+      calc(100vh - env(safe-area-inset-bottom) - 14.375rem)
+    );
 
     overflow-x: hidden;
     overflow-y: auto;
