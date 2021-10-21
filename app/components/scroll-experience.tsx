@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { Page, Sequence } from "@ryanflorence/mdtut";
 import { Actor, useActor, ScrollStage, useStage } from "~/stage";
 
@@ -90,9 +91,15 @@ export function MdtScroller({ mdt }: { mdt: Page }) {
   );
 }
 
-export function ScrollLogger() {
+export function useScrollLogger() {
   let stage = useStage();
-  console.log(stage.progress);
+  React.useEffect(() => {
+    console.log(stage.progress);
+  }, [stage.progress]);
+}
+
+export function ScrollLogger() {
+  useScrollLogger();
   return null;
 }
 
