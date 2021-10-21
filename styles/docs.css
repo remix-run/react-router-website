@@ -133,6 +133,7 @@ stylesheet targets.
   @apply list-none py-3 px-0 rounded-lg border border-[color:var(--hue-0100)];
 
   & > li > ul {
+    height: 99%;
     height: 100%;
     /*
     Had to do some funky calculatin' here, but the gist is that this means the
