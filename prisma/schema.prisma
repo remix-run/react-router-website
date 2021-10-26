@@ -11,7 +11,7 @@ generator client {
 }
 
 model GitHubRef {
-  // fullVersionOrBranch v0.17.0, v6.0.1
+  // ref is the GitHub ref (e.g. refs/heads/main or refs/tags/v6.0.0)
   ref          String   @id
   // markdown process release notes
   releaseNotes String
