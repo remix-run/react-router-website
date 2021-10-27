@@ -22,6 +22,13 @@ function getReplayResponse(req, res, next) {
     return next();
   }
 
+  console.info(`Replaying:`, {
+    pathname: req.path,
+    method: req.method,
+    PRIMARY_REGION,
+    FLY_REGION,
+  });
+
   res.setHeader("fly-replay", `region=${PRIMARY_REGION}`);
   return res.sendStatus(409);
 }
