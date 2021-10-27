@@ -7,10 +7,16 @@ const REPO = process.env.REPO as string;
 const REPO_DOCS_PATH = process.env.REPO_DOCS_PATH as string;
 const REPO_LATEST_BRANCH = process.env.REPO_LATEST_BRANCH as string;
 
-if (!REPO || !REPO_DOCS_PATH || !REPO_LATEST_BRANCH) {
-  throw new Error(
-    "yo, you forgot something, missing one of the following: REPO, REPO_DOCS_PATH, REPO_LATEST_BRANCH"
-  );
+if (!REPO) {
+  throw new Error("yo, you forgot something, REPO is not set");
+}
+
+if (!REPO_DOCS_PATH) {
+  throw new Error("yo, you forgot something, REPO_DOCS_PATH is not set");
+}
+
+if (!REPO_LATEST_BRANCH) {
+  throw new Error("yo, you forgot something, REPO_LATEST_BRANCH is not set");
 }
 
 /**
