@@ -3,7 +3,7 @@ import path from "path";
 import * as semver from "semver";
 import type { Doc as PrismaDoc } from "@prisma/client";
 
-import { prisma } from "~/db.server";
+import { prismaRead as prisma } from "~/db.server";
 
 export interface VersionHead {
   /**
@@ -190,7 +190,7 @@ export async function getLatestRefFromParam(refParam: string): Promise<string> {
   invariant(latest, "No tag found");
 
   if (semver.major(latest) === semver.major(version)) {
-    return process.env.REPO_LATEST_BRANCH;
+    return process.env.REPO_LATEST_BRANCH!;
   }
 
   return latest;

@@ -1,6 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-let prisma = new PrismaClient();
+import { prismaRead as prisma } from "./db.server";
 
 async function go() {
   let refs = await prisma.gitHubRef.count();

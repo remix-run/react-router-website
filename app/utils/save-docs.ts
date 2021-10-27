@@ -1,6 +1,6 @@
 import { reactRouterProcessMarkdown as processMarkdown } from "./process-markdown";
 
-import { prisma } from "../db.server";
+import { prismaWrite as prisma } from "../db.server";
 import { findMatchingEntries, getPackage } from "./get-docs.server";
 
 const REPO = process.env.REPO as string;

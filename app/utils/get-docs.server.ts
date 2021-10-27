@@ -6,7 +6,7 @@ import tar, { Headers as TarHeaders } from "tar-stream";
 import { Prisma } from "@prisma/client";
 
 import { processDoc } from "./process-docs.server";
-import { prisma } from "../db.server";
+import { prismaWrite as prisma } from "../db.server";
 
 const githubUrl = "https://github.com";
 

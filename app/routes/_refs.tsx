@@ -7,7 +7,7 @@ import {
   Link,
 } from "remix";
 import { json } from "remix";
-import { prisma } from "~/db.server";
+import { prismaRead as prisma } from "~/db.server";
 
 const refs = Prisma.validator<Prisma.GitHubRefArgs>()({
   select: {

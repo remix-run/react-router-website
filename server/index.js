@@ -2,10 +2,14 @@ const path = require("path");
 const express = require("express");
 const { createRequestHandler } = require("@remix-run/express");
 
+const { getReplayResponse } = require("./fly");
+
 ////////////////////////////////////////////////////////////////////////////////
 let app = express();
 
 app.use(express.static("public", { immutable: true, maxAge: "1y" }));
+
+app.all("*", getReplayResponse);
 
 app.all(
   "*",
