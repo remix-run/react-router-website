@@ -1,19 +1,3 @@
-# DB Stuff
-
-- `:version`
-  - v6 -> main branch
-  - ref
-    - in the DB
-      - use it
-    - not in the DB
-      - go get it
-
-# Seed DB
-
-- Locally switch between file system and db
-- Wipe it out (prisma cli for that)
-- Seed it from GitHub
-
 # This is the website for React Router.
 
 ```js
@@ -65,20 +49,19 @@ cp .env.example .env
 npm run dev
 ```
 
-This will pull docs from the file system in dev, it expects the react router source directory to be sibling to this website's source directory. If you want to use the database file, you can start the dev server using `REMOTE_DOCS=true npm run dev`.
+We'll need postgresql to run the database, I recommend using a local database, I use https://postgresapp.com for this, but I won't stop you from setting up fly's vpn if you really want to...
 
 ````
 /wherever/your/code/is/reactrouter.com
 /wherever/your/code/is/react-router
 
-If you're actually writing docs, it's start up a live reload server from the Remix source repo:
+If you're actually writing docs, let's start up a watcher to automatically update the docs when the code changes.
 
 ```sh
-cd ../remix/docs
-livereload -e md
+ts-node scripts/watcher.ts
 ````
 
-Now any changes you make to the docs will cause a reload.
+Now any changes you make to the docs to update
 
 ## Deploying
 
