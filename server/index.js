@@ -37,7 +37,6 @@ function devHandler() {
     purgeAppRequireCache();
     return createRequestHandler({
       build: require("./build"),
-      getLoadContext,
     })(req, res, next);
   };
 }
@@ -45,19 +44,5 @@ function devHandler() {
 function prodHandler() {
   return createRequestHandler({
     build: require("./build"),
-    getLoadContext,
   });
-}
-
-function getLoadContext() {
-  return {
-    docs: {
-      owner: "remix-run",
-      repo: "react-router",
-      remotePath: "docs",
-      localPath: "../react-router/docs",
-      localLangDir: "_i18n",
-      versions: ">=6.0.0-beta.6",
-    },
-  };
 }

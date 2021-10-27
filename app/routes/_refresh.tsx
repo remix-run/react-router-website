@@ -1,53 +1,53 @@
 import { RouteComponent, ActionFunction, json } from "remix";
-import { getInstanceURLs } from "~/utils/get-fly-instance-urls.server";
 
-const action: ActionFunction = async ({ request }) => {
-  // verify post request and the token matches
+import { GitHubRelease } from "~/@types/github";
+
+import { saveDocs } from "~/utils/save-docs";
+
+let action: ActionFunction = async ({ request }) => {
+  const url = new URL(request.url);
+
   if (request.method !== "POST") {
-    return json({}, { status: 405 });
-  }
-  if (request.headers.get("Authorization") !== process.env.AUTH_TOKEN) {
-    return json({}, { status: 401 });
+    throw new Response("", { status: 405 });
   }
 
-  const { search, searchParams } = new URL(request.url);
+  if (
+    // verify post request and the token matches or doing it locally
+    request.headers.get("Authorization") !== process.env.AUTH_TOKEN ||
+    url.hostname !== "localhost"
+  ) {
+    throw new Response("", { status: 401 });
+  }
 
-  console.log(
-    `Refreshing docs for all instances for ref ${searchParams.get("ref")}`
-  );
+  const ref = url.searchParams.get("ref");
+
+  if (!ref) {
+    throw new Response("", { status: 400 });
+  }
+
+  console.log(`Refreshing docs for ref ${ref}`);
 
   try {
-    // get all app instances and refresh them
-    const instances = await getInstanceURLs();
+    let tag = ref.replace(/^refs\/tags\//, "");
 
-    for (const instance of instances) {
-      const url = new URL(instance);
-      url.pathname = "/_refreshlocal";
-      url.search = search;
-
-      console.log(`forwarding post to ${url.toString()}`);
-
-      // we purposefully don't await, we're just notifying everybody
-      fetch(url.toString(), {
-        method: "POST",
+    const releasePromise = await fetch(
+      `https://api.github.com/repos/${process.env.REPO}/releases/tags/${tag}`,
+      {
         headers: {
-          Authorization: process.env.AUTH_TOKEN!,
+          accept: "application/vnd.github.v3+json",
         },
-      });
-    }
+      }
+    );
 
-    console.log(instances);
+    const release = (await releasePromise.json()) as GitHubRelease;
 
-    return json({ instances });
+    await saveDocs(ref, release.body);
+
+    return json({ ok: true }, { status: 200 });
   } catch (error) {
     console.error(error);
-    return json({ ok: false }, { status: 500 });
+    return json({ ok: true }, { status: 500 });
   }
 };
 
-const RefreshAllInstancesDocsPage: RouteComponent = () => {
-  return <p>404</p>;
-};
-
-export default RefreshAllInstancesDocsPage;
 export { action };
