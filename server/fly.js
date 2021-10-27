@@ -22,7 +22,7 @@ function getReplayResponse(req, res, next) {
     return next();
   }
 
-  res.set("fly-replay", `region=${PRIMARY_REGION}`);
+  res.setHeader("fly-replay", `region=${PRIMARY_REGION}`);
   return res.sendStatus(409);
 }
 
