@@ -30,4 +30,8 @@ async function seed() {
   await Promise.all(promises);
 }
 
-export { seed };
+try {
+  seed();
+} catch (error) {
+  throw error;
+}

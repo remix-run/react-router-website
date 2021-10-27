@@ -16,6 +16,7 @@
     "deploy:localdb": "flyctl deploy --config fly.staging.toml --build-arg REMIX_TOKEN=${REMIX_TOKEN} --build-arg DATABASE_URL=file:./dev.db?connection_limit=1 --build-arg SKIP_RESET=1",
     "deploy:production:localdb": "flyctl deploy --config fly.production.toml --build-arg REMIX_TOKEN=${REMIX_TOKEN} --build-arg DATABASE_URL=file:./dev.db?connection_limit=1 --build-arg SKIP_RESET=1",
     "start": "NODE_ENV=production node --max-old-space-size=900 server/index.js",
+    "prestart": "npx ts-node -r dotenv/config --transpile-only app/seed.ts && npx ts-node -r dotenv/config --transpile-only app/verify-seed.ts",
     "postinstall": "remix setup && patch-package",
     "clean": "del app/styles .cache public/build server/build node_modules",
     "db:reset": "prisma migrate reset --force && ts-node app/verify-seed"
@@ -31,6 +32,7 @@
     "@ryanflorence/mdtut": "^1.2.1",
     "accept-language": "3.0.18",
     "clsx": "1.1.1",
+    "dotenv": "10.0.0",
     "follow-redirects": "1.14.4",
     "gray-matter": "4.0.3",
     "gunzip-maybe": "1.4.2",
@@ -62,7 +64,6 @@
     "chokidar": "3.5.2",
     "concurrently": "^6.3.0",
     "del-cli": "4.0.1",
-    "dotenv": "10.0.0",
     "npm-run-all": "4.1.5",
     "patch-package": "6.4.7",
     "pm2": "5.1.2",

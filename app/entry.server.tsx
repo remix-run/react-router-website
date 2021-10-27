@@ -2,8 +2,6 @@ import ReactDOMServer from "react-dom/server";
 import type { EntryContext } from "remix";
 import { RemixServer } from "remix";
 
-export { seed } from "./seed";
-
 export default function handleRequest(
   request: Request,
   responseStatusCode: number,

@@ -15,12 +15,6 @@ app.all(
 let port = process.env.PORT || 3000;
 
 app.listen(port, () => {
-  const build = require("./build");
-  try {
-    build.entry.module.seed();
-  } catch (error) {
-    throw error;
-  }
   console.log(`Express server started on http://localhost:${port}`);
 });
 
