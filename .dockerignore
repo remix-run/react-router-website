@@ -9,4 +9,4 @@ app/styles/tailwind.css
 pm2.config.js
 /public/build
 /server/build
-/scripts
+/scripts/watcher.ts
