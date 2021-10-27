@@ -1,4 +1,4 @@
-# fly.toml file generated for reactrouterdotcomstaging on 2021-10-26T21:31:18-04:00
+# fly.toml file generated for reactrouterdotcomstaging on 2021-10-26T23:52:43-04:00
 
 app = "reactrouterdotcomstaging"
 
@@ -7,13 +7,16 @@ kill_timeout = 5
 processes = []
 
 [env]
-  PRIMARY_REGION = "dfw"
   FLY = "true"
   PORT = "8080"
+  PRIMARY_REGION = "dfw"
 
 [experimental]
   allowed_public_ports = []
   auto_rollback = true
+  cmd = []
+  entrypoint = []
+  exec = []
 
 [[services]]
   http_checks = []
