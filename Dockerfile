@@ -28,13 +28,9 @@ ARG COMMIT_SHA
 ENV COMMIT_SHA=${COMMIT_SHA}
 ARG SITE_URL
 ENV SITE_URL=${SITE_URL}
-# Supplying SKIP_RESET=1 will skip the DB reset and seeding - WILL USE YOUR LOCAL DB
-ARG SKIP_RESET="0"
 WORKDIR /remixapp
 COPY . .
 COPY --from=deps /remixapp/node_modules ./node_modules
-# Reset and seed the database only if SKIP_RESET is not set
-RUN if [ "$SKIP_RESET" = "1" ]; then echo "SKIPPING DATABASE RESET AND SEED"; else npm run db:reset; fi
 
 RUN npm run build
 
