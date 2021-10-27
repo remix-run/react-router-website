@@ -1,17 +1,48 @@
 import invariant from "tiny-invariant";
 import * as React from "react";
-import { json, useLoaderData, Outlet } from "remix";
+import { json, useLoaderData, Outlet, redirect } from "remix";
 import type { LoaderFunction } from "remix";
 import { useLocation } from "react-router-dom";
 import cx from "clsx";
+import semver from "semver";
 
 import { getMenu, MenuNode } from "~/utils.server";
 import markdownStyles from "~/styles/docs.css";
 import { Menu } from "~/components/docs-menu";
+import { prismaRead } from "~/db.server";
 
 export let loader: LoaderFunction = async ({ params }) => {
   invariant(!!params.version, "Need a version param");
   invariant(!!params.lang, "Need a lang param");
+
+  let refs = await prismaRead.gitHubRef.findMany({
+    select: {
+      ref: true,
+    },
+    where: {
+      ref: {
+        startsWith: `refs/tags/`,
+      },
+    },
+  });
+
+  let validRefs = refs
+    .map((ref) => ref.ref.replace(/^refs\/tags\//, ""))
+    .filter((ref) => semver.valid(ref.replace(/^refs\/tags\//, "")));
+
+  let tags = validRefs.map((ref) => ref.replace(/^refs\/tags\//, ""));
+
+  let version = semver.maxSatisfying(tags, params.version, {
+    includePrerelease: true,
+  });
+
+  if (!version) {
+    throw new Response("Version not found", { status: 404 });
+  }
+
+  if (version !== params.version) {
+    return redirect(`/docs/${params.lang}/${version}`);
+  }
 
   let menu: MenuNode[] = await getMenu(params.version, params.lang);
   return json(menu);

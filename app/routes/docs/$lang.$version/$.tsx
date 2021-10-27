@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { LoaderFunction, RouteComponent } from "remix";
+import type { LoaderFunction, RouteComponent } from "remix";
 
 import { json } from "remix";
 

@@ -1,6 +1,6 @@
 import { RouteComponent, ActionFunction, json } from "remix";
 
-import { GitHubRelease } from "~/@types/github";
+import type { GitHubRelease } from "~/@types/github";
 
 import { saveDocs } from "~/utils/save-docs";
 
@@ -50,4 +50,7 @@ let action: ActionFunction = async ({ request }) => {
   }
 };
 
+const RefreshDocsPage: RouteComponent = () => null;
+
+export default RefreshDocsPage;
 export { action };
