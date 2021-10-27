@@ -30,8 +30,4 @@ async function seed() {
   await Promise.all(promises);
 }
 
-try {
-  seed();
-} catch (e) {
-  throw e;
-}
+export { seed };

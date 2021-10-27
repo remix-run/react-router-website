@@ -1,59 +1,66 @@
-# We have 3 stages to our dockerfile
-# one for installing dependencies, one for building (and seeding the db), and one for running
+# base node image
+FROM node:16-bullseye-slim as base
 
-# Install dependencies only when needed
-FROM node:16-alpine AS deps
 ARG REMIX_TOKEN
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
-# We're gonna need sqlite to use sqlite :)
-RUN apk add --no-cache sqlite
-WORKDIR /remixapp
-COPY .npmrc package.json package-lock.json ./
-RUN npm ci
+ENV REMIX_TOKEN=$REMIX_TOKEN
 
-################################################################
+RUN apt-get update && apt-get install -y openssl
 
-# Rebuild the source code only when needed
-FROM node:16-alpine AS builder
-ARG DATABASE_URL
-ENV DATABASE_URL=${DATABASE_URL}
-ARG REPO
-ENV REPO=${REPO}
-ARG REPO_DOCS_PATH
-ENV REPO_DOCS_PATH=${REPO_DOCS_PATH}
-ARG REPO_LATEST_BRANCH
-ENV REPO_LATEST_BRANCH=${REPO_LATEST_BRANCH}
+# install all node_modules, including dev
+FROM base as deps
+
+WORKDIR /remixapp/
+
+ADD package.json package-lock.json .npmrc ./
+RUN npm install --production=false
+
+# setup production node_modules
+FROM base as production-deps
+
+ARG REMIX_TOKEN
+ENV REMIX_TOKEN=$REMIX_TOKEN
+
+WORKDIR /remixapp/
+
+COPY --from=deps /remixapp/node_modules /remixapp/node_modules
+ADD package.json package-lock.json .npmrc /remixapp/
+RUN npm prune --production
+
+# build remixapp
+FROM base as build
+
+ARG REMIX_TOKEN
+ENV REMIX_TOKEN=$REMIX_TOKEN
 ARG COMMIT_SHA
-ENV COMMIT_SHA=${COMMIT_SHA}
-ARG SITE_URL
-ENV SITE_URL=${SITE_URL}
-WORKDIR /remixapp
-COPY . .
-COPY --from=deps /remixapp/node_modules ./node_modules
+ENV COMMIT_SHA=$COMMIT_SHA
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
 
+WORKDIR /remixapp/
+
+COPY --from=deps /remixapp/node_modules /remixapp/node_modules
+
+# schema doesn't change much so these will stay cached
+ADD prisma .
+RUN npx prisma migrate deploy
+RUN npx prisma generate
+
+# remixapp code changes all the time
+ADD . .
 RUN npm run build
 
-################################################################
+# build smaller image for running
+FROM base
 
-# Production image, copy all the files and run our server
-FROM node:16-alpine AS runner
-WORKDIR /remixapp
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
-COPY --from=builder /remixapp/public ./public
-COPY --from=builder /remixapp/server ./server
-COPY --from=builder /remixapp/node_modules ./node_modules
-COPY --from=builder /remixapp/package.json ./package.json
-COPY --from=builder /remixapp/prisma ./prisma
-COPY --from=builder /remixapp/md ./md
+WORKDIR /remixapp/
 
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S remix -u 1001
-RUN chown -R remix:nodejs /remixapp/server
-RUN chown -R remix:nodejs /remixapp/prisma
-USER remix
+COPY --from=production-deps /remixapp/node_modules /remixapp/node_modules
+COPY --from=build /remixapp/node_modules/.prisma /remixapp/node_modules/.prisma
+COPY --from=build /remixapp/public /remixapp/public
+COPY --from=build /remixapp/server /remixapp/server
+COPY --from=build /remixapp/prisma /remixapp/prisma
+ADD . .
 
-EXPOSE 3000
-
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
