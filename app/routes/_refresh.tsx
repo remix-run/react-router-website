@@ -13,7 +13,7 @@ let action: ActionFunction = async ({ request }) => {
 
   if (
     // verify post request and the token matches or doing it locally
-    request.headers.get("Authorization") !== process.env.AUTH_TOKEN ||
+    request.headers.get("Authorization") !== process.env.AUTH_TOKEN &&
     url.hostname !== "localhost"
   ) {
     throw new Response("", { status: 401 });
