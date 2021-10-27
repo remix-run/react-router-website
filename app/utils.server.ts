@@ -1,9 +1,9 @@
 import invariant from "tiny-invariant";
 import path from "path";
 import * as semver from "semver";
-import type { Doc as PrismaDoc } from "@prisma/client";
 
 import { prismaRead as prisma } from "~/db.server";
+import { Prisma } from "@prisma/client";
 
 export interface MenuNode {
   title: string;
@@ -103,17 +103,29 @@ export async function getMenu(
   return tree;
 }
 
+const slimDoc = Prisma.validator<Prisma.DocArgs>()({
+  select: {
+    html: true,
+    title: true,
+    description: true,
+    toc: true,
+  },
+});
+
+export type SlimDoc = Prisma.DocGetPayload<typeof slimDoc>;
+
 export async function getDoc(
   slug: string,
   paramRef: string,
   lang: string
-): Promise<PrismaDoc> {
+): Promise<SlimDoc> {
   let ref = await getLatestRefFromParam(paramRef);
 
-  let doc: PrismaDoc;
+  let doc: SlimDoc;
   let slugs = [path.join("/", `${slug}.md`), path.join("/", slug, "index.md")];
   try {
     doc = await prisma.doc.findFirst({
+      select: slimDoc.select,
       where: {
         OR: [
           {

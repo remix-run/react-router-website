@@ -1,11 +1,11 @@
 import * as React from "react";
-import { useCatch, useLoaderData } from "remix";
+import { useLoaderData } from "remix";
 import cx from "clsx";
 
 import { useDelegatedReactRouterLinks } from "~/hooks/delegate-links";
-import type { Doc as PrismaDoc } from "@prisma/client";
+import type { SlimDoc } from "~/utils.server";
 
-export let meta = ({ data: doc }: { data?: PrismaDoc }) => {
+export let meta = ({ data: doc }: { data?: SlimDoc }) => {
   if (!doc) {
     return { title: "Not Found" };
   }
@@ -17,7 +17,7 @@ export let meta = ({ data: doc }: { data?: PrismaDoc }) => {
 };
 
 const DocsPage: React.VFC = () => {
-  let doc = useLoaderData<PrismaDoc>();
+  let doc = useLoaderData<SlimDoc>();
   let ref = React.useRef<HTMLDivElement>(null);
   useDelegatedReactRouterLinks(ref);
 
