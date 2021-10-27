@@ -56,11 +56,11 @@ let prismaRead: PrismaClient;
 let prismaWrite: PrismaClient;
 
 if (process.env.NODE_ENV === "production") {
-  prismaRead = getClient(primaryDB, "read");
+  prismaRead = getClient(regionalDB, "read");
   prismaWrite = getClient(primaryDB, "write");
 } else {
   if (!global.readDB) {
-    global.readDB = getClient(primaryDB, "read");
+    global.readDB = getClient(regionalDB, "read");
   }
 
   if (!global.writeDB) {

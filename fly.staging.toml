@@ -1,12 +1,10 @@
-# fly.toml file generated for reactrouterdotcom on 2021-08-19T11:32:45-04:00
+# fly.toml file generated for reactrouterdotcomstaging on 2021-10-26T21:31:18-04:00
 
 app = "reactrouterdotcomstaging"
 
 kill_signal = "SIGINT"
 kill_timeout = 5
-
-[build]
-  builtin = "node"
+processes = []
 
 [env]
   PRIMARY_REGION = "dfw"
@@ -18,7 +16,8 @@ kill_timeout = 5
 
 [[services]]
   http_checks = []
-  internal_port = 3000
+  internal_port = 8080
+  processes = ["app"]
   protocol = "tcp"
   script_checks = []
 
@@ -38,5 +37,5 @@ kill_timeout = 5
   [[services.tcp_checks]]
     grace_period = "1s"
     interval = "15s"
-    restart_limit = 6
+    restart_limit = 0
     timeout = "2s"
