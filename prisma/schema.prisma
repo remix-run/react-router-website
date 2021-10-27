@@ -12,9 +12,9 @@ generator client {
 }
 
 model GitHubRef {
-  // fullVersionOrBranch v0.17.0, v6.0.1
+  // github ref refs/tags/v6.0.0 or refs/heads/main
   ref          String   @id
-  // markdown process release notes
+  // markdown processed release notes
   releaseNotes String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -47,8 +47,6 @@ model Doc {
   githubRef   GitHubRef @relation(fields: [githubRefId], references: [ref], onDelete: Cascade)
   githubRefId String
 
-  // unique filePath per fullVersionOrBranch and lang
-  // /installation/add-to-a-website.md in EN v6.0.0 ✅
-  // /installation/add-to-a-website.md in FR v6.0.0 ✅
+  // unique filePath per githubRefId and lang
   @@unique([filePath, githubRefId, lang])
 }
