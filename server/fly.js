@@ -25,3 +25,5 @@ function getReplayResponse(req, res, next) {
   res.set("fly-replay", `region=${PRIMARY_REGION}`);
   return res.sendStatus(409);
 }
+
+module.exports = { getReplayResponse };
