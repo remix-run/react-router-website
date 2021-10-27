@@ -9,6 +9,7 @@ processes = []
 [env]
   PRIMARY_REGION = "dfw"
   FLY = "true"
+  PORT = "8080"
 
 [experimental]
   allowed_public_ports = []
