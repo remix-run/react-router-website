@@ -8,10 +8,26 @@ import { processDoc, ProcessedDoc } from "../app/utils/process-docs.server";
 
 let prisma = new PrismaClient();
 
-if (!process.env.REPO_LATEST_BRANCH || !process.env.LOCAL_DOCS_PATH) {
-  throw new Error(
-    "yo, you forgot something, missing one of the following LOCAL_DOCS_PATH, REPO_LATEST_BRANCH"
-  );
+if (!process.env.DATABASE_URL) {
+  console.error("yo, you forgot something, DATABASE_URL is not set");
+  process.exit(1);
+}
+
+let dbURL = new URL(process.env.DATABASE_URL);
+
+if (dbURL.hostname !== "localhost") {
+  console.error("yo, you probably don't this on the live database...");
+  process.exit(1);
+}
+
+if (!process.env.REPO_LATEST_BRANCH) {
+  console.error("yo, you forgot something, REPO_LATEST_BRANCH is not set");
+  process.exit(1);
+}
+
+if (!process.env.LOCAL_DOCS_PATH) {
+  console.error("yo, you forgot something, LOCAL_DOCS_PATH is not set");
+  process.exit(1);
 }
 
 let DOCS_DIR = path.resolve(process.cwd(), process.env.LOCAL_DOCS_PATH);
