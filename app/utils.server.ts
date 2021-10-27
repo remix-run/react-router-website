@@ -5,23 +5,6 @@ import type { Doc as PrismaDoc } from "@prisma/client";
 
 import { prismaRead as prisma } from "~/db.server";
 
-export interface VersionHead {
-  /**
-   * like v2 or v0.4
-   */
-  head: string;
-
-  /**
-   * The full version like v2.1.1
-   */
-  version: string;
-
-  /**
-   * So we know to fetch from the ref or not
-   */
-  isLatest: boolean;
-}
-
 export interface MenuNode {
   title: string;
   slug: string;
@@ -205,50 +188,22 @@ export async function getLatestRefFromParam(refParam: string): Promise<string> {
   return ref;
 }
 
-export async function getVersions(): Promise<VersionHead[]> {
+export async function getVersions(): Promise<string[]> {
   let refs = await prisma.gitHubRef.findMany({
     select: { ref: true },
+    where: {
+      ref: {
+        startsWith: "refs/tags/",
+      },
+    },
   });
 
-  let sorted = refs
+  let tags = refs.map((ref) => ref.ref.replace(/^refs\/tags\//, ""));
+
+  let sorted = tags
     // we allow saving branches as versions, but we shouldn't show them
-    .filter(
-      (ref) =>
-        ref.ref.startsWith("refs/tags/") &&
-        semver.valid(ref.ref.replace(/^refs\/tags\//, ""))
-    )
-    .sort((a, b) =>
-      semver.compare(
-        b.ref.replace(/^refs\/tags\//, ""),
-        a.ref.replace(/^refs\/tags\//, "")
-      )
-    );
+    .filter((ref) => semver.valid(ref))
+    .sort((a, b) => semver.rcompare(a, b));
 
-  let versions = sorted.map((ref) => {
-    let version = ref.ref.replace(/^refs\/tags\//, "");
-    let tag = semver.coerce(version);
-
-    invariant(tag, "Invalid version");
-
-    let head =
-      tag.major > 0
-        ? `v${tag.major}`
-        : tag.minor > 0
-        ? `v0.${tag.minor}`
-        : `v0.0.${tag.patch}`;
-
-    return {
-      head,
-      version,
-      isLatest: false,
-    };
-  });
-
-  versions[0].isLatest = true;
-
-  return versions;
-}
-
-export function getVersion(head: string, versions: VersionHead[]) {
-  return versions.find((v) => v.head === head);
+  return sorted;
 }
