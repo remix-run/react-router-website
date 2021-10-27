@@ -189,7 +189,6 @@ export async function findMatchingEntries(
         docsSaved.push(doc.path);
         next();
       } catch (error) {
-        // @ts-ignore
         next(error);
       }
     })
