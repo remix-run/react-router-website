@@ -54,6 +54,9 @@ FROM base
 
 ENV NODE_ENV=production
 
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
 WORKDIR /remixapp/
 
 COPY --from=production-deps /remixapp/node_modules /remixapp/node_modules

@@ -9,6 +9,7 @@ kill_timeout = 5
   builtin = "node"
 
 [env]
+  PORT = "8080"
 
 [experimental]
   allowed_public_ports = []
@@ -16,7 +17,7 @@ kill_timeout = 5
 
 [[services]]
   http_checks = []
-  internal_port = 3000
+  internal_port = 8080
   protocol = "tcp"
   script_checks = []
 

@@ -14,7 +14,7 @@
     "dev": "pm2-dev pm2.config.js",
     "deploy": "flyctl deploy --config fly.staging.toml --build-arg DATABASE_URL=file:/remixapp/prisma/dev.db?connection_limit=1",
     "start": "NODE_ENV=production node --max-old-space-size=900 server/index.js",
-    "prestart": "npx ts-node -r dotenv/config --transpile-only app/seed.ts && npx ts-node -r dotenv/config --transpile-only app/verify-seed.ts",
+    "prestart": "node -r ts-node/register/transpile-only --max-old-space-size=900 -r dotenv/config  app/seed.ts && node -r ts-node/register/transpile-only --max-old-space-size=900 -r dotenv/config app/verify-seed.ts",
     "postinstall": "remix setup && patch-package",
     "clean": "del app/styles .cache public/build server/build node_modules",
     "db:reset": "prisma migrate reset --force && ts-node app/verify-seed"
