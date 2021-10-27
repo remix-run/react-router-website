@@ -2,7 +2,6 @@ import * as React from "react";
 import { useLocation, Outlet } from "react-router-dom";
 import type {
   ErrorBoundaryComponent,
-  LinkDescriptor,
   LinksFunction,
   MetaFunction,
   RouteComponent,
@@ -40,15 +39,16 @@ export let links: LinksFunction = () => {
   ];
 };
 
-function DocsLiveReload() {
-  if (process.env.NODE_ENV !== "development") return null;
-  return <script src="http://localhost:35729/livereload.js?snipver=1"></script>;
-}
-
-const Document: React.FC<{
+interface DocumentProps {
   forceDarkMode?: boolean;
   className?: string;
-}> = ({ children, className, forceDarkMode }) => {
+}
+
+const Document: React.FC<DocumentProps> = ({
+  children,
+  className,
+  forceDarkMode,
+}) => {
   return (
     <html lang="en" data-force-dark={forceDarkMode ? "" : undefined}>
       <head>
@@ -68,7 +68,6 @@ const Document: React.FC<{
         {children}
         <Scripts />
         <LiveReload />
-        {/* <DocsLiveReload /> */}
       </body>
     </html>
   );
@@ -91,13 +90,13 @@ export let App: RouteComponent = () => {
       <Document>
         <SkipNavLink />
         <div className="flex flex-col">
-          <DocsSiteHeader className="w-full flex-shrink-0" />
+          <DocsSiteHeader className="flex-shrink-0 w-full" />
           <div className="flex flex-col">
             <SkipNavContent ref={skipNavRef} tabIndex={-1} />
             <Outlet />
           </div>
         </div>
-        <DocsSiteFooter className="w-full flex-shrink-0" />
+        <DocsSiteFooter className="flex-shrink-0 w-full" />
       </Document>
     );
   }
@@ -148,18 +147,18 @@ export let CatchBoundary = () => {
 
   return (
     <Document forceDarkMode>
-      <div className="min-h-screen w-full flex flex-col">
+      <div className="flex flex-col w-full min-h-screen">
         <SkipNavLink />
         <SiteHeader />
         <div className="flex flex-col flex-grow">
           <SkipNavContent ref={skipNavRef} tabIndex={-1} />
           <div
-            className="flex-grow w-full container flex items-center justify-center"
+            className="container flex items-center justify-center flex-grow w-full"
             onPointerMove={changeColors}
             onFocus={changeColors}
             onBlur={changeColors}
           >
-            <div className="text-center pt-2 pb-7">
+            <div className="pt-2 text-center pb-7">
               <h1 className="remix-caught-status remix-text-glow">
                 {String(caught.status)
                   .split("")
@@ -181,7 +180,7 @@ export let CatchBoundary = () => {
                     </span>
                   ))}
               </h1>
-              <div className="text-base font-mono">{message}</div>
+              <div className="font-mono text-base">{message}</div>
             </div>
           </div>
         </div>
