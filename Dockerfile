@@ -3,7 +3,6 @@
 
 # Install dependencies only when needed
 FROM node:16-alpine AS deps
-ARG REMIX_TOKEN
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 # We're gonna need sqlite to use sqlite :)
@@ -16,25 +15,11 @@ RUN npm ci
 
 # Rebuild the source code only when needed
 FROM node:16-alpine AS builder
-ARG DATABASE_URL
-ENV DATABASE_URL=${DATABASE_URL}
-ARG REPO
-ENV REPO=${REPO}
-ARG REPO_DOCS_PATH
-ENV REPO_DOCS_PATH=${REPO_DOCS_PATH}
-ARG REPO_LATEST_BRANCH
-ENV REPO_LATEST_BRANCH=${REPO_LATEST_BRANCH}
 ARG COMMIT_SHA
 ENV COMMIT_SHA=${COMMIT_SHA}
-ARG SITE_URL
-ENV SITE_URL=${SITE_URL}
-# Supplying SKIP_RESET=1 will skip the DB reset and seeding - WILL USE YOUR LOCAL DB
-ARG SKIP_RESET="0"
 WORKDIR /remixapp
 COPY . .
 COPY --from=deps /remixapp/node_modules ./node_modules
-# Reset and seed the database only if SKIP_RESET is not set
-RUN if [ "$SKIP_RESET" = "1" ]; then echo "SKIPPING DATABASE RESET AND SEED"; else npm run db:reset; fi
 
 RUN npm run build
 
