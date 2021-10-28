@@ -4,6 +4,7 @@ import * as semver from "semver";
 import type { Doc as PrismaDoc } from "@prisma/client";
 
 import { prisma } from "~/db.server";
+import { getRefFromParam } from "./utils/get-ref-from-param";
 
 export interface VersionHead {
   /**
@@ -164,50 +165,25 @@ export async function getDoc(
 }
 
 export async function getLatestRefFromParam(refParam: string): Promise<string> {
-  let version = semver.valid(refParam)
-    ? refParam
-    : semver.valid(semver.coerce(refParam))
-    ? `v${semver.valid(semver.coerce(refParam))}`
-    : null;
-
-  let ref = version ? `refs/tags/${version}` : `refs/heads/${refParam}`;
-
-  if (!version) {
-    return ref;
-  }
-
   let refs = await prisma.gitHubRef.findMany({
     select: { ref: true },
-    where: {
-      ref: {
-        startsWith: "refs/tags/",
-      },
-    },
   });
 
-  let tags = refs
-    .filter((ref) => semver.valid(ref.ref.replace(/^refs\/tags\//, "")))
-    .map((ref) => ref.ref.replace(/^refs\/tags\//, ""));
-
-  let sorted = tags.sort((a, b) =>
-    semver.rcompare(a, b, { includePrerelease: true })
+  let refValues = refs.map((ref) =>
+    ref.ref.replace(/^refs\/(heads|tags)\//, "")
   );
 
-  let latest = sorted.at(0);
+  let version = getRefFromParam(
+    refParam,
+    refValues,
+    process.env.REPO_LATEST_BRANCH!
+  );
 
-  invariant(latest, "Expected to find a latest version");
+  console.log({ version });
 
-  if (tags.includes(version)) {
-    return ref;
-  }
+  invariant(version, "No valid version found");
 
-  let diff = semver.diff(latest, version, { includePrerelease: true });
-
-  if (diff && ["minor", "patch", "prerelease"].includes(diff)) {
-    return process.env.REPO_LATEST_BRANCH!;
-  }
-
-  return ref;
+  return version;
 }
 
 export async function getVersions(): Promise<VersionHead[]> {
