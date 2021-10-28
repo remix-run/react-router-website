@@ -709,10 +709,10 @@ stylesheet targets.
 }
 
 /* 🥚 */
-/* body::after {
+body::after {
   top: 150px;
-  right: 20px;
-  transform: translateX(2700px);
+  left: 0;
+  transform: translateX(3700px);
   z-index: 990;
   user-select: none;
   pointer-events: none;
@@ -725,4 +725,4 @@ stylesheet targets.
   background-position: bottom center;
   background-size: contain;
   background-repeat: no-repeat;
-} */
+}
