@@ -206,24 +206,22 @@ export async function getLatestRefFromParam(refParam: string): Promise<string> {
 export async function getVersions(): Promise<VersionHead[]> {
   let refs = await prisma.gitHubRef.findMany({
     select: { ref: true },
+    where: {
+      ref: {
+        startsWith: "refs/tags/",
+      },
+    },
   });
 
-  let sorted = refs
-    // we allow saving branches as versions, but we shouldn't show them
-    .filter(
-      (ref) =>
-        ref.ref.startsWith("refs/tags/") &&
-        semver.valid(ref.ref.replace(/^refs\/tags\//, ""))
-    )
-    .sort((a, b) =>
-      semver.compare(
-        b.ref.replace(/^refs\/tags\//, ""),
-        a.ref.replace(/^refs\/tags\//, "")
-      )
-    );
+  let validTags = refs.filter((ref) =>
+    semver.valid(ref.ref.replace(/^refs\/tags\//, ""))
+  );
 
-  let versions = sorted.map((ref) => {
-    let version = ref.ref.replace(/^refs\/tags\//, "");
+  let tags = validTags.map((ref) => ref.ref.replace(/^refs\/tags\//, ""));
+
+  let sorted = tags.sort((a, b) => semver.compare(b, a));
+
+  let versions = sorted.map((version) => {
     let tag = semver.coerce(version);
 
     invariant(tag, "Invalid version");
