@@ -26,7 +26,7 @@ function getRefFromParam(
     throw new Error("No latest ref found");
   }
 
-  if (semver.satisfies(latestTag, refParam)) {
+  if (semver.satisfies(latestTag, refParam, { includePrerelease: true })) {
     return latestBranch;
   }
 
