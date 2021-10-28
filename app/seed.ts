@@ -32,6 +32,6 @@ async function seed() {
 
 try {
   seed();
-} catch (e) {
-  throw e;
+} catch (error) {
+  throw error;
 }

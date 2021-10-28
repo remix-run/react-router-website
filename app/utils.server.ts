@@ -4,6 +4,7 @@ import * as semver from "semver";
 import type { Doc as PrismaDoc } from "@prisma/client";
 
 import { prisma } from "~/db.server";
+import { getRefFromParam } from "./utils/get-ref-from-param";
 
 export interface VersionHead {
   /**
@@ -127,36 +128,36 @@ export async function getDoc(
 ): Promise<PrismaDoc> {
   let ref = await getLatestRefFromParam(paramRef);
   let doc: PrismaDoc;
+  let slugs = [path.join("/", `${slug}.md`), path.join("/", slug, "index.md")];
   try {
-    // go for the language version
     doc = await prisma.doc.findFirst({
       where: {
         OR: [
           {
             githubRef: { ref },
-            filePath: "/" + slug + ".md",
             lang,
+            filePath: {
+              in: slugs,
+            },
           },
           {
             githubRef: { ref },
-            filePath: path.join("/", slug, "index.md"),
-            lang,
-          },
-          {
-            githubRef: { ref },
-            filePath: "/" + slug + ".md",
             lang: "en",
-          },
-          {
-            githubRef: { ref },
-            filePath: path.join("/", slug, "index.md"),
-            lang: "en",
+            filePath: {
+              in: slugs,
+            },
           },
         ],
       },
       rejectOnNotFound: true,
     });
   } catch (error: unknown) {
+    console.error(error);
+    console.error(
+      `Failed to find doc for the following slugs: ${slugs.join(
+        ", "
+      )} for ${ref}`
+    );
     throw new Response("", { status: 404, statusText: "Doc not found" });
   }
 
@@ -164,59 +165,45 @@ export async function getDoc(
 }
 
 export async function getLatestRefFromParam(refParam: string): Promise<string> {
-  let version = semver.valid(semver.coerce(refParam));
-
-  let ref = version ? `refs/tags/${version}` : `refs/heads/${refParam}`;
-
-  if (!version) return ref;
-
   let refs = await prisma.gitHubRef.findMany({
     select: { ref: true },
   });
 
-  let tags = refs
-    .filter(
-      (ref) =>
-        ref.ref.startsWith("refs/tags/") &&
-        semver.valid(ref.ref.replace(/^refs\/tags\//, ""))
-    )
-    .map((ref) => ref.ref.replace(/^refs\/tags\//, ""));
+  let refValues = refs.map((ref) =>
+    ref.ref.replace(/^refs\/(heads|tags)\//, "")
+  );
 
-  // TODO: remove includePrerelease after v6 release (or before v7 🤪)
-  let sorted = semver.sort(tags, { includePrerelease: true });
+  let version = getRefFromParam(
+    refParam,
+    refValues,
+    process.env.REPO_LATEST_BRANCH!
+  );
 
-  let latest = sorted.at(-1);
-
-  invariant(latest, "No tag found");
-
-  if (semver.major(latest) === semver.major(version)) {
-    return process.env.REPO_LATEST_BRANCH;
+  if (!version) {
+    throw new Response("", { status: 404 });
   }
 
-  return latest;
+  return version;
 }
 
 export async function getVersions(): Promise<VersionHead[]> {
   let refs = await prisma.gitHubRef.findMany({
     select: { ref: true },
+    where: {
+      ref: {
+        startsWith: "refs/tags/",
+      },
+    },
   });
 
-  let sorted = refs
-    // we allow saving branches as versions, but we shouldn't show them
-    .filter(
-      (ref) =>
-        ref.ref.startsWith("refs/tags/") &&
-        semver.valid(ref.ref.replace(/^refs\/tags\//, ""))
-    )
-    .sort((a, b) =>
-      semver.compare(
-        b.ref.replace(/^refs\/tags\//, ""),
-        a.ref.replace(/^refs\/tags\//, "")
-      )
-    );
+  let tags = refs.map((ref) => ref.ref.replace(/^refs\/tags\//, ""));
+  let validTags = tags.filter((ref) =>
+    semver.valid(ref.replace(/^refs\/tags\//, ""))
+  );
 
-  let versions = sorted.map((ref) => {
-    let version = ref.ref.replace(/^refs\/tags\//, "");
+  let sorted = validTags.sort((a, b) => semver.compare(b, a));
+
+  let versions = sorted.map((version) => {
     let tag = semver.coerce(version);
 
     invariant(tag, "Invalid version");

@@ -13,6 +13,7 @@ if (process.env.NODE_ENV === "production") {
     global.db = new PrismaClient();
   }
   prisma = global.db;
+  prisma.$connect();
 }
 
 export { prisma };
