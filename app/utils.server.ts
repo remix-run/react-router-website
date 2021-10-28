@@ -179,6 +179,8 @@ export async function getLatestRefFromParam(refParam: string): Promise<string> {
     process.env.REPO_LATEST_BRANCH!
   );
 
+  console.log({ version });
+
   if (!version) {
     throw new Response("", { status: 404 });
   }

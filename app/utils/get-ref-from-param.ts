@@ -9,39 +9,31 @@ function getRefFromParam(
     throw new Error("No refs found");
   }
 
-  let sortedValueTags = refs
+  if (refs.includes(refParam)) {
+    let validVersion = semver.valid(refParam);
+    return validVersion
+      ? `refs/tags/v${validVersion}`
+      : `refs/heads/${refParam}`;
+  }
+
+  let sortedValidTags = refs
     .filter((ref) => semver.valid(ref))
     .sort(semver.rcompare);
 
-  let latestTag = sortedValueTags.at(0);
+  let latestTag = sortedValidTags.at(0);
 
   if (!latestTag) {
     throw new Error("No latest ref found");
   }
 
-  if (refs.includes(refParam)) {
-    let valid = semver.valid(refParam);
-    return valid ? `refs/tags/v${valid}` : `refs/heads/${refParam}`;
-  }
-
-  let versionFromRef = semver.valid(semver.coerce(refParam));
-
-  if (!versionFromRef) {
-    throw new Error("No valid semver found");
-  }
-
-  let diff = semver.diff(versionFromRef, latestTag);
-
-  if (
-    `v${versionFromRef}` === latestTag ||
-    diff === "minor" ||
-    diff === "patch" ||
-    diff === "prerelease"
-  ) {
+  if (semver.satisfies(latestTag, refParam)) {
     return latestBranch;
   }
 
-  let maxSatisfying = semver.maxSatisfying(refs, refParam);
+  let maxSatisfying = semver.maxSatisfying(refs, refParam, {
+    includePrerelease: true,
+  });
+
   if (maxSatisfying) {
     return `refs/tags/${maxSatisfying}`;
   }
