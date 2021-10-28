@@ -58,30 +58,68 @@ export type Config = {
   versions: string;
 };
 
+function mergeDeep<T extends Record<string, any>>(
+  target: T,
+  ...sources: any[]
+): T {
+  if (!sources.length) return target;
+  const source = sources.shift();
+
+  if (target instanceof Object && source instanceof Object) {
+    for (const key in source) {
+      if (source[key] instanceof Object) {
+        if (!target[key]) Object.assign(target, { [key]: {} });
+        mergeDeep(target[key], source[key]);
+      } else {
+        Object.assign(target, { [key]: source[key] });
+      }
+    }
+  }
+
+  return mergeDeep(target, ...sources);
+}
+
 export async function getMenu(
   versionOrBranchParam: string,
   lang: string
 ): Promise<MenuNode[]> {
   let ref = await getLatestRefFromParam(versionOrBranchParam);
 
-  let docs = await prisma.doc.findMany({
-    where: {
-      lang,
-      githubRef: { ref },
-    },
-    select: {
-      filePath: true,
-      title: true,
-      order: true,
-      hidden: true,
-      hasContent: true,
-    },
-  });
+  let [localizedDocs, englishDocs] = await Promise.all([
+    prisma.doc.findMany({
+      where: {
+        lang,
+        githubRef: { ref },
+      },
+      select: {
+        filePath: true,
+        title: true,
+        order: true,
+        hidden: true,
+        hasContent: true,
+      },
+    }),
+    await prisma.doc.findMany({
+      where: {
+        lang: "en",
+        githubRef: { ref },
+      },
+      select: {
+        filePath: true,
+        title: true,
+        order: true,
+        hidden: true,
+        hasContent: true,
+      },
+    }),
+  ]);
+
+  let mergedDocs = mergeDeep(englishDocs, localizedDocs);
 
   let sluggedDocs = [];
 
   // first pass we figure out the slugs
-  for (let doc of docs) {
+  for (let doc of mergedDocs) {
     if (doc.hidden) continue;
     let slug = doc.filePath.replace(/\.md$/, "");
     let isIndex = slug.endsWith("/index");
