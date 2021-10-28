@@ -20,4 +20,4 @@ jobs:
       - uses: actions/checkout@v2
       - uses: superfly/flyctl-actions@1.1
         with:
-          args: "deploy --config ./fly.production.toml REMIX_TOKEN=${{ secrets.REMIX_TOKEN }} --build-arg DATABASE_URL=file:/remixapp/prisma/dev.db?connection_limit=1 --build-arg COMMIT_SHA=${{ github.sha }}"
+          args: "deploy --config ./fly.production.toml REMIX_TOKEN=${{ secrets.REMIX_TOKEN }} --build-arg DATABASE_URL=file:/remixapp/prisma/docs.db?connection_limit=1 --build-arg COMMIT_SHA=${{ github.sha }}"
