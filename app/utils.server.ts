@@ -164,9 +164,13 @@ export async function getDoc(
 }
 
 export async function getLatestRefFromParam(refParam: string): Promise<string> {
-  let version = semver.valid(semver.coerce(refParam));
+  let version = semver.valid(refParam)
+    ? refParam
+    : semver.valid(semver.coerce(refParam))
+    ? `v${semver.valid(semver.coerce(refParam))}`
+    : null;
 
-  let ref = version ? `refs/tags/v${version}` : `refs/heads/${refParam}`;
+  let ref = version ? `refs/tags/${version}` : `refs/heads/${refParam}`;
 
   if (!version) {
     return ref;
@@ -185,18 +189,21 @@ export async function getLatestRefFromParam(refParam: string): Promise<string> {
     .filter((ref) => semver.valid(ref.ref.replace(/^refs\/tags\//, "")))
     .map((ref) => ref.ref.replace(/^refs\/tags\//, ""));
 
-  // TODO: remove includePrerelease after v6 release (or before v7 🤪)
   let sorted = tags.sort((a, b) =>
     semver.rcompare(a, b, { includePrerelease: true })
   );
 
   let latest = sorted.at(0);
 
-  invariant(latest, "No tag found");
+  invariant(latest, "Expected to find a latest version");
 
-  // if the version requested is the latest we have, give them the REPO_LATEST_BRANCH version
-  let diff = semver.diff(version, latest);
-  if (diff && ["premajor", "preminor", "prepatch"].includes(diff) === false) {
+  if (tags.includes(version)) {
+    return ref;
+  }
+
+  let diff = semver.diff(latest, version, { includePrerelease: true });
+
+  if (diff && ["minor", "patch", "prerelease"].includes(diff)) {
     return process.env.REPO_LATEST_BRANCH!;
   }
 
@@ -213,13 +220,12 @@ export async function getVersions(): Promise<VersionHead[]> {
     },
   });
 
-  let validTags = refs.filter((ref) =>
-    semver.valid(ref.ref.replace(/^refs\/tags\//, ""))
+  let tags = refs.map((ref) => ref.ref.replace(/^refs\/tags\//, ""));
+  let validTags = tags.filter((ref) =>
+    semver.valid(ref.replace(/^refs\/tags\//, ""))
   );
 
-  let tags = validTags.map((ref) => ref.ref.replace(/^refs\/tags\//, ""));
-
-  let sorted = tags.sort((a, b) => semver.compare(b, a));
+  let sorted = validTags.sort((a, b) => semver.compare(b, a));
 
   let versions = sorted.map((version) => {
     let tag = semver.coerce(version);
