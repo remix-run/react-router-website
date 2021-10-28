@@ -57,8 +57,6 @@ npx prisma generate
 cp .env.example .env
 ```
 
-> **NOTE:** Installation will fail if `REMIX_TOKEN` is not defined in your shell environment.
-
 ## Development
 
 ```sh

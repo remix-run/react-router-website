@@ -1,9 +1,6 @@
 # base node image
 FROM node:16-bullseye-slim as base
 
-ARG REMIX_TOKEN
-ENV REMIX_TOKEN=$REMIX_TOKEN
-
 RUN apt-get update && apt-get install -y openssl
 
 # install all node_modules, including dev
@@ -17,9 +14,6 @@ RUN npm install --production=false
 # setup production node_modules
 FROM base as production-deps
 
-ARG REMIX_TOKEN
-ENV REMIX_TOKEN=$REMIX_TOKEN
-
 WORKDIR /remixapp/
 
 COPY --from=deps /remixapp/node_modules /remixapp/node_modules
@@ -29,8 +23,6 @@ RUN npm prune --production
 # build remixapp
 FROM base as build
 
-ARG REMIX_TOKEN
-ENV REMIX_TOKEN=$REMIX_TOKEN
 ARG COMMIT_SHA
 ENV COMMIT_SHA=$COMMIT_SHA
 ARG DATABASE_URL

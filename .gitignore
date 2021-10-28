@@ -7,7 +7,7 @@
 /public/build
 /server/build
 
-/prisma/dev.db-journal
-/prisma/dev.db
+/prisma/*.db-journal
+/prisma/*.db
 
 /app/styles
