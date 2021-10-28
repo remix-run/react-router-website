@@ -30,16 +30,13 @@ function getRefFromParam(
     throw new Error("No valid semver found");
   }
 
-  let diff = semver.cmp(latestTag, ">=", versionFromRef)
-    ? semver.diff(versionFromRef, latestTag)
-    : null;
+  let diff = semver.diff(versionFromRef, latestTag);
 
   if (
     `v${versionFromRef}` === latestTag ||
     diff === "minor" ||
     diff === "patch" ||
-    diff === "prerelease" ||
-    diff === null
+    diff === "prerelease"
   ) {
     return latestBranch;
   }
