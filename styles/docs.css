@@ -124,9 +124,15 @@ stylesheet targets.
 .md-toc-title,
 /* Targets the first link, which is the page title */
 .toc > li > p > a {
-  @apply font-display text-base mb-2 uppercase font-medium tracking-wide leading-squeezed;
+  @apply font-display text-base mb-2 font-medium tracking-wide leading-squeezed;
+  text-transform: uppercase;
   display: block;
   color: var(--hue-0750);
+
+  & code {
+    text-transform: initial;
+    font-size: 85%;
+  }
 }
 
 .toc {
@@ -186,6 +192,7 @@ stylesheet targets.
     background: inherit;
     padding: 0;
     line-height: inherit;
+    font-size: 90%;
   }
 }
 
@@ -504,13 +511,13 @@ stylesheet targets.
     border-radius: initial;
   }
 
-  & pre[data-line-numbers="true"]:not([data-lang="sh"]) {
+  & pre[data-line-numbers="true"]:not([data-lang="bash"], [data-lang="sh"]) {
     padding-left: 0rem;
     padding-right: 0rem;
   }
 
   &
-    pre[data-line-numbers="true"]:not([data-lang="sh"])
+    pre[data-line-numbers="true"]:not([data-lang="bash"], [data-lang="sh"])
     [data-line-number]::before {
     padding-left: 0rem;
     content: attr(data-line-number);
@@ -522,8 +529,8 @@ stylesheet targets.
   }
 
   &
-    pre[data-line-numbers="true"]:not([data-lang="sh"])
-    [data-line-number][data-highlight="true"]:before {
+    pre[data-line-numbers="true"]:not([data-lang="bash"], [data-lang="sh"])
+    [data-line-number][data-highlight="true"]::before {
     content: "+";
     color: var(--base0B);
   }
@@ -536,7 +543,7 @@ stylesheet targets.
   }
 
   &
-    pre[data-line-numbers="true"][data-bad]:not([data-lang="sh"])
+    pre[data-line-numbers="true"][data-bad]:not([data-lang="bash"], [data-lang="sh"])
     [data-line-number]::before {
     color: var(--color-red-700);
     @media (prefers-color-scheme: dark) {
