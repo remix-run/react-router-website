@@ -9,8 +9,11 @@
   font-style: normal;
 }
 
-body {
+html,
+body,
+.__r_e_m_i_x {
   overflow-x: hidden;
+  position: relative;
 }
 
 details summary {

@@ -709,20 +709,22 @@ stylesheet targets.
 }
 
 /* 🥚 */
-body::after {
-  top: 150px;
-  left: 0;
-  transform: translateX(3700px);
-  z-index: 990;
-  user-select: none;
-  pointer-events: none;
-  position: absolute;
-  content: "Whoa, what are you doing here?!";
-  font-weight: bold;
-  width: 174px;
-  height: 510px;
-  background-image: url("/whoa.png");
-  background-position: bottom center;
-  background-size: contain;
-  background-repeat: no-repeat;
+@media screen and (min-width: 3000px) {
+  .__r_e_m_i_x::after {
+    top: 150px;
+    left: 0;
+    transform: translateX(3700px);
+    z-index: 990;
+    user-select: none;
+    pointer-events: none;
+    position: absolute;
+    content: "Whoa, what are you doing here?!";
+    font-weight: bold;
+    width: 174px;
+    height: 510px;
+    background-image: url("/whoa.png");
+    background-position: bottom center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
 }
