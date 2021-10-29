@@ -65,19 +65,21 @@ export async function getMenu(
   let ref = await getLatestRefFromParam(versionOrBranchParam);
 
   let [localizedDocs, englishDocs] = await Promise.all([
-    prisma.doc.findMany({
-      where: {
-        lang,
-        githubRef: { ref },
-      },
-      select: {
-        filePath: true,
-        title: true,
-        order: true,
-        hidden: true,
-        hasContent: true,
-      },
-    }),
+    lang === "en"
+      ? []
+      : prisma.doc.findMany({
+          where: {
+            lang,
+            githubRef: { ref },
+          },
+          select: {
+            filePath: true,
+            title: true,
+            order: true,
+            hidden: true,
+            hasContent: true,
+          },
+        }),
     prisma.doc.findMany({
       where: {
         lang: "en",
