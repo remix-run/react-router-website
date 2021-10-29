@@ -1,14 +1,28 @@
-import type { HeadersFunction, LoaderFunction, RouteComponent } from "remix";
+import {
+  HeadersFunction,
+  LoaderFunction,
+  redirect,
+  RouteComponent,
+} from "remix";
 import { json } from "remix";
-import { getDoc } from "~/utils.server";
-import { DocsPage } from "~/components/doc";
 import invariant from "tiny-invariant";
+import locale from "locale-codes";
+
+import { getDoc, getVersions } from "~/utils.server";
+import { DocsPage } from "~/components/doc";
 
 // this and splat.tsx loader are identical except the "index" vs. params["*"]
 // part
 let loader: LoaderFunction = async ({ params }) => {
   invariant(!!params.version, "Expected version param");
   invariant(!!params.lang, "Expected language param");
+
+  let validLang = locale.getByTag(params.lang);
+
+  if (!validLang) {
+    let [latest] = await getVersions();
+    return redirect(`/docs/en/${latest.head}/${params.lang}/${params.version}`);
+  }
 
   let doc = await getDoc("index", params.version, params.lang);
   return json(doc);
