@@ -3,14 +3,8 @@ import { LoaderFunction, redirect } from "remix";
 import { prisma } from "~/db.server";
 import { getVersions } from "~/utils.server";
 
-export let loader: LoaderFunction = async ({ params, request }) => {
-  let lang = params.lang;
+export let loader: LoaderFunction = async ({ request }) => {
   let [latest] = await getVersions();
-
-  // 1. we have a language in the url
-  if (lang) {
-    return redirect(`/docs/${lang}/${latest.head}`);
-  }
 
   // 2. get the user's preferred language
   let langHeader = request.headers.get("accept-language");
