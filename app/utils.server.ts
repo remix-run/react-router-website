@@ -64,24 +64,47 @@ export async function getMenu(
 ): Promise<MenuNode[]> {
   let ref = await getLatestRefFromParam(versionOrBranchParam);
 
-  let localizedDocs = await prisma.doc.findMany({
-    where: {
-      lang,
-      githubRef: { ref },
-    },
-    select: {
-      filePath: true,
-      title: true,
-      order: true,
-      hidden: true,
-      hasContent: true,
-    },
+  let [localizedDocs, englishDocs] = await Promise.all([
+    prisma.doc.findMany({
+      where: {
+        lang,
+        githubRef: { ref },
+      },
+      select: {
+        filePath: true,
+        title: true,
+        order: true,
+        hidden: true,
+        hasContent: true,
+      },
+    }),
+    prisma.doc.findMany({
+      where: {
+        lang: "en",
+        githubRef: { ref },
+      },
+      select: {
+        filePath: true,
+        title: true,
+        order: true,
+        hidden: true,
+        hasContent: true,
+      },
+    }),
+  ]);
+
+  let mergedDocs = englishDocs.map((doc) => {
+    let localizedDoc = localizedDocs.find((ld) => ld.filePath === doc.filePath);
+    if (localizedDoc) {
+      return localizedDoc;
+    }
+    return doc;
   });
 
   let sluggedDocs = [];
 
   // first pass we figure out the slugs
-  for (let doc of localizedDocs) {
+  for (let doc of mergedDocs) {
     if (doc.hidden) continue;
     let slug = doc.filePath.replace(/\.md$/, "");
     let isIndex = slug.endsWith("/index");
