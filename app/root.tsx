@@ -65,7 +65,7 @@ const Document: React.FC<{
           "bg-[color:var(--hue-0000)] text-[color:var(--hue-1000)]"
         )}
       >
-        <div className="__r_e_m_i_x">{children}</div>
+        <div className="__r_e_m_i_x lg:h-screen flex flex-col">{children}</div>
         <Scripts />
         <LiveReload />
         {/* <DocsLiveReload /> */}
@@ -90,7 +90,7 @@ export let App: RouteComponent = () => {
     return (
       <Document>
         <SkipNavLink />
-        <div className="flex flex-col">
+        <div className="flex flex-col flex-1">
           <DocsSiteHeader className="w-full flex-shrink-0" />
           <div className="flex flex-col">
             <SkipNavContent ref={skipNavRef} tabIndex={-1} />
