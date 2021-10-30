@@ -88,7 +88,14 @@ let watcher = chokidar.watch(DOCS_FILES, {
 
 watcher
   .on("ready", async () => {
-    console.log("Syncing all local files with the DB");
+    console.log("Removing all previous local files from the DB");
+    await prisma.doc.deleteMany({
+      where: {
+        githubRefId: BRANCH,
+      },
+    });
+
+    console.log("Adding all local files to the DB");
     let entries = Object.entries(watcher.getWatched());
     let allFiles = entries.reduce<string[]>((acc, [dir, files]) => {
       let newPaths = files.map((file) => path.join(DOCS_DIR, dir, file));
@@ -115,7 +122,11 @@ watcher
 
     await Promise.all(promises);
 
-    console.log("Initial scan complete. Ready for changes");
+    console.log(
+      `Initial scan complete. Ready for changes, http://localhost:3000/docs/en/${
+        BRANCH.split("/").reverse()[0]
+      }`
+    );
   })
   .on("error", (error) => console.error(error))
   .on("add", async (filepath) => {
