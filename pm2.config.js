@@ -10,7 +10,7 @@ module.exports = {
   apps: [
     {
       name: "Remix",
-      script: "remix dev",
+      script: "remix watch",
       ignore_watch: ["."],
       env: {
         ...result.parsed,
