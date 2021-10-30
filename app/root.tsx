@@ -1,12 +1,13 @@
 import * as React from "react";
 import { useLocation, Outlet } from "react-router-dom";
+import { useCatch, useLoaderData } from "remix";
 import type {
   ErrorBoundaryComponent,
+  LoaderFunction,
   LinksFunction,
   MetaFunction,
   RouteComponent,
 } from "remix";
-import { useCatch } from "remix";
 import { Links, LiveReload, Meta, Scripts } from "remix";
 import cx from "clsx";
 import { SiteFooter } from "./components/site-footer";
@@ -19,17 +20,26 @@ import tailwind from "./styles/tailwind.css";
 import global from "./styles/global.css";
 import { SkipNavLink, SkipNavContent } from "@reach/skip-nav";
 import { useLogoAnimation } from "./hooks/logo-animation";
+import {
+  removeTrailingSlashes,
+  ensureSecure,
+  isProductionHost,
+} from "~/utils/http";
+
+export let loader: LoaderFunction = async ({ request }) => {
+  await ensureSecure(request);
+  await removeTrailingSlashes(request);
+  return { noIndex: !isProductionHost(request) };
+};
+
+export let unstable_shouldReload = () => false;
 
 let [seoMeta, seoLinks] = seo({
   description: "Declarative routing for React apps at any scale",
   openGraph: {},
 });
 
-export let meta: MetaFunction = () => {
-  return {
-    ...seoMeta,
-  };
-};
+export let meta: MetaFunction = () => seoMeta;
 
 export let links: LinksFunction = () => {
   return [
@@ -48,9 +58,11 @@ const Document: React.FC<{
   forceDarkMode?: boolean;
   className?: string;
 }> = ({ children, className, forceDarkMode }) => {
+  let { noIndex } = useLoaderData();
   return (
     <html lang="en" data-force-dark={forceDarkMode ? "" : undefined}>
       <head>
+        {noIndex && <meta name="robots" content="noindex" />}
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
@@ -73,7 +85,7 @@ const Document: React.FC<{
   );
 };
 
-export let App: RouteComponent = () => {
+let App: RouteComponent = () => {
   let location = useLocation();
   let pathname = location.pathname;
   let isDocsPage = React.useMemo(
