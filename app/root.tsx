@@ -57,8 +57,8 @@ function DocsLiveReload() {
 const Document: React.FC<{
   forceDarkMode?: boolean;
   className?: string;
-}> = ({ children, className, forceDarkMode }) => {
-  let { noIndex } = useLoaderData();
+  noIndex: boolean;
+}> = ({ children, className, forceDarkMode, noIndex }) => {
   return (
     <html lang="en" data-force-dark={forceDarkMode ? "" : undefined}>
       <head>
@@ -86,6 +86,7 @@ const Document: React.FC<{
 };
 
 let App: RouteComponent = () => {
+  let { noIndex } = useLoaderData();
   let location = useLocation();
   let pathname = location.pathname;
   let isDocsPage = React.useMemo(
@@ -99,7 +100,7 @@ let App: RouteComponent = () => {
 
   if (isDocsPage) {
     return (
-      <Document>
+      <Document noIndex={noIndex}>
         <SkipNavLink />
         <div className="flex flex-col flex-1">
           <DocsSiteHeader className="w-full flex-shrink-0" />
@@ -114,7 +115,7 @@ let App: RouteComponent = () => {
   }
 
   return (
-    <Document forceDarkMode>
+    <Document forceDarkMode noIndex={noIndex}>
       <SkipNavLink />
       <SiteHeader />
       <div className="flex flex-col min-h-screen">
@@ -133,7 +134,7 @@ export default App;
 export let ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   console.error(error);
   return (
-    <Document forceDarkMode>
+    <Document forceDarkMode noIndex={true}>
       <h1>App Error</h1>
       <pre>{error.message}</pre>
       <p>
@@ -158,7 +159,7 @@ export let CatchBoundary = () => {
   }
 
   return (
-    <Document forceDarkMode>
+    <Document forceDarkMode noIndex={true}>
       <div className="min-h-screen w-full flex flex-col">
         <SkipNavLink />
         <SiteHeader />
