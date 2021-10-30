@@ -16,10 +16,6 @@ export default function handleRequest(
 
   responseHeaders.set("Content-Type", "text/html");
   responseHeaders.set("X-Powered-By", "Remix");
-  responseHeaders.set(
-    "Content-Security-Policy",
-    "default-src 'self'; img-src *;"
-  );
   return new Response(streamString`<!DOCTYPE html>${markup}`, {
     status: responseStatusCode,
     headers: responseHeaders,
