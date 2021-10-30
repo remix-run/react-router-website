@@ -4,6 +4,7 @@ const { createRequestHandler } = require("@remix-run/express");
 
 ////////////////////////////////////////////////////////////////////////////////
 let app = express();
+app.disable("x-powered-by");
 
 app.use(express.static("public", { immutable: true, maxAge: "1y" }));
 

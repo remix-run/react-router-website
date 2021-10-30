@@ -2,13 +2,12 @@ import * as React from "react";
 import { useLocation, Outlet } from "react-router-dom";
 import type {
   ErrorBoundaryComponent,
-  LinkDescriptor,
   LinksFunction,
   MetaFunction,
   RouteComponent,
 } from "remix";
 import { useCatch } from "remix";
-import { Links, LiveReload, Meta, Scripts, json } from "remix";
+import { Links, LiveReload, Meta, Scripts } from "remix";
 import cx from "clsx";
 import { SiteFooter } from "./components/site-footer";
 import { SiteHeader } from "./components/site-header";
