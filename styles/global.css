@@ -9,10 +9,6 @@
   font-style: normal;
 }
 
-body {
-  overflow-x: hidden;
-}
-
 details summary {
   cursor: pointer;
 }
