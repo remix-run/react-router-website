@@ -64,7 +64,7 @@ const Document: React.FC<{
           "bg-[color:var(--hue-0000)] text-[color:var(--hue-1000)]"
         )}
       >
-        <div className="__r_e_m_i_x lg:h-screen flex flex-col">{children}</div>
+        <div className="min-h-screen flex flex-col">{children}</div>
         <Scripts />
         <LiveReload />
         {/* <DocsLiveReload /> */}
