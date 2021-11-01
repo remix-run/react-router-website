@@ -46,11 +46,11 @@ async function saveDocs(ref: string, releaseNotes: string) {
 
   let existingDocs = release?.docs.map((d) => d.filePath) || [];
 
-  let stream = await getPackage(process.env.REPO, ref);
+  let stream = await getPackage(process.env.REPO!, ref);
   await saveMatchingEntries(
     stream,
     ref,
-    path.resolve("/", process.env.REPO_DOCS_PATH),
+    path.resolve("/", process.env.REPO_DOCS_PATH!),
     existingDocs
   );
 }
