@@ -1,21 +1,18 @@
+import path from "path";
 import { reactRouterProcessMarkdown as processMarkdown } from "./process-markdown";
 
 import { prisma } from "../db.server";
-import { findMatchingEntries, getPackage } from "./get-docs.server";
+import { saveMatchingEntries, getPackage } from "./get-docs.server";
 
-const REPO = process.env.REPO as string;
-const REPO_DOCS_PATH = process.env.REPO_DOCS_PATH as string;
-const REPO_LATEST_BRANCH = process.env.REPO_LATEST_BRANCH as string;
-
-if (!REPO) {
+if (!process.env.REPO) {
   throw new Error("yo, you forgot something, REPO is not set");
 }
 
-if (!REPO_DOCS_PATH) {
+if (!process.env.REPO_DOCS_PATH) {
   throw new Error("yo, you forgot something, REPO_DOCS_PATH is not set");
 }
 
-if (!REPO_LATEST_BRANCH) {
+if (!process.env.REPO_LATEST_BRANCH) {
   throw new Error("yo, you forgot something, REPO_LATEST_BRANCH is not set");
 }
 
@@ -49,8 +46,13 @@ async function saveDocs(ref: string, releaseNotes: string) {
 
   let existingDocs = release?.docs.map((d) => d.filePath) || [];
 
-  let stream = await getPackage(REPO, ref);
-  await findMatchingEntries(stream, ref, "/docs", existingDocs);
+  let stream = await getPackage(process.env.REPO, ref);
+  await saveMatchingEntries(
+    stream,
+    ref,
+    path.resolve("/", process.env.REPO_DOCS_PATH),
+    existingDocs
+  );
 }
 
 export { saveDocs };

@@ -84,7 +84,7 @@ export type Entry =
       path: string;
     };
 
-export async function findMatchingEntries(
+export async function saveMatchingEntries(
   stream: NodeJS.ReadWriteStream,
   ref: string,
   filename: string,
@@ -107,6 +107,8 @@ export async function findMatchingEntries(
         path: header.name.replace(/^[^/]+\/?/, "/"),
         type: header.type,
       };
+
+      console.log(entry.path);
 
       // Dynamically create "directory" entries for all subdirectories
       // in this entry's path. Some tarballs omit directory entries for
