@@ -6,8 +6,20 @@ if (result.error) {
   throw result.error;
 }
 
+/**
+ * @typedef {{ apps: import('pm2').StartOptions[] }} PM2Config
+ */
+
+/**
+ * @type {PM2Config}
+ */
 module.exports = {
   apps: [
+    {
+      name: "Tailwind",
+      script: "npm run dev:css",
+      ignore_watch: ["."],
+    },
     {
       name: "Remix",
       script: "remix watch",
@@ -16,11 +28,6 @@ module.exports = {
         ...result.parsed,
         NODE_ENV: "development",
       },
-    },
-    {
-      name: "Tailwind",
-      script: "npm run dev:css",
-      ignore_watch: ["."],
     },
     {
       name: "Express",
