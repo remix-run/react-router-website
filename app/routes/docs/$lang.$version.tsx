@@ -1,35 +1,20 @@
-import path from "path";
-import invariant from "tiny-invariant";
 import * as React from "react";
-import { json, useLoaderData, Outlet, redirect } from "remix";
+import invariant from "tiny-invariant";
+import { json, useLoaderData, Outlet } from "remix";
 import type { LoaderFunction } from "remix";
 import { useLocation } from "react-router-dom";
 import cx from "clsx";
-import locale from "locale-codes";
 
-import { getMenu, getVersions, MenuNode } from "~/utils.server";
+import { getMenu, MenuNode } from "~/utils.server";
 import markdownStyles from "~/styles/docs.css";
 import { Menu } from "~/components/docs-menu";
+import { ensureLangAndVersion } from "~/lib/ensure-lang";
 
 export let loader: LoaderFunction = async ({ params }) => {
   invariant(!!params.version, "Need a version param");
   invariant(!!params.lang, "Need a lang param");
 
-  let validLang = locale.getByTag(params.lang);
-
-  if (!validLang) {
-    let [latest] = await getVersions();
-
-    let actualPath = path.resolve(
-      `/docs/en`,
-      latest.head,
-      params.lang, // not actually a lang, but a directory
-      params.version, // not actually a version, but a directory
-      params["*"] ?? ""
-    );
-
-    return redirect(actualPath);
-  }
+  await ensureLangAndVersion(params);
 
   let menu: MenuNode[] = await getMenu(params.version, params.lang);
   return json(menu);
