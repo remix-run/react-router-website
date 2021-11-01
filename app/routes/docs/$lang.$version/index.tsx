@@ -1,9 +1,5 @@
-import {
-  HeadersFunction,
-  LoaderFunction,
-  redirect,
-  RouteComponent,
-} from "remix";
+import path from "path";
+import { LoaderFunction, redirect, RouteComponent } from "remix";
 import { json } from "remix";
 import invariant from "tiny-invariant";
 import locale from "locale-codes";
@@ -17,23 +13,25 @@ let loader: LoaderFunction = async ({ params }) => {
   invariant(!!params.version, "Expected version param");
   invariant(!!params.lang, "Expected language param");
 
-  let validLang = locale.getByTag(params.lang);
+  let { lang, version } = params;
+  let validLang = locale.getByTag(lang);
 
   if (!validLang) {
+    console.log(`Invalid language: ${lang}`);
     let [latest] = await getVersions();
-    return redirect(`/docs/en/${latest.head}/${params.lang}/${params.version}`);
+
+    let actualPath = path.resolve(
+      `/docs/en`,
+      latest.head,
+      lang, // not actually a lang, but a directory
+      version // not actually a version, but a file
+    );
+
+    return redirect(actualPath);
   }
 
-  let doc = await getDoc("index", params.version, params.lang);
+  let doc = await getDoc("index", version, lang);
   return json(doc);
-};
-
-const headers: HeadersFunction = ({ loaderHeaders }) => {
-  return {
-    // so fresh!
-    "Cache-Control": "max-age=0",
-    "Server-Timing": loaderHeaders.get("Server-Timing") ?? "",
-  };
 };
 
 const VersionIndexPage: RouteComponent = () => {
@@ -41,5 +39,5 @@ const VersionIndexPage: RouteComponent = () => {
 };
 
 export default VersionIndexPage;
-export { headers, loader };
+export { loader };
 export { meta } from "~/components/doc";

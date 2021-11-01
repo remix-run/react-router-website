@@ -1,3 +1,4 @@
+import path from "path";
 import invariant from "tiny-invariant";
 import { LoaderFunction, redirect, RouteComponent } from "remix";
 import locale from "locale-codes";
@@ -16,10 +17,18 @@ let loader: LoaderFunction = async ({ params }) => {
   let validLang = locale.getByTag(lang);
 
   if (!validLang) {
+    console.log(`Invalid language: ${lang}`);
     let [latest] = await getVersions();
-    return redirect(
-      `/docs/en/${latest.head}/${params.lang}/${params.version}/${params["*"]}`
+
+    let actualPath = path.resolve(
+      `/docs/en`,
+      latest.head,
+      lang, // not actually a lang, but a directory
+      version, // not actually a version, but a directory
+      params["*"]
     );
+
+    return redirect(actualPath);
   }
 
   let doc = await getDoc(params["*"], version, lang);
