@@ -108,8 +108,6 @@ export async function saveMatchingEntries(
         type: header.type,
       };
 
-      console.log(entry.path);
-
       // Dynamically create "directory" entries for all subdirectories
       // in this entry's path. Some tarballs omit directory entries for
       // some reason, so this is the "brute force" method.
