@@ -17,7 +17,8 @@
     "prestart": "node -r ts-node/register/transpile-only --max-old-space-size=900 -r dotenv/config  app/seed.ts && node -r ts-node/register/transpile-only --max-old-space-size=900 -r dotenv/config app/verify-seed.ts",
     "postinstall": "remix setup && patch-package",
     "clean": "del app/styles .cache public/build server/build node_modules",
-    "db:reset": "prisma migrate reset --force && ts-node app/verify-seed"
+    "db:reset": "prisma migrate reset --force && ts-node app/verify-seed",
+    "test": "jest"
   },
   "dependencies": {
     "@prisma/client": "3.3.0",

@@ -8,7 +8,7 @@ import cx from "clsx";
 import { getMenu, MenuNode } from "~/utils.server";
 import markdownStyles from "~/styles/docs.css";
 import { Menu } from "~/components/docs-menu";
-import { ensureLangAndVersion } from "~/lib/ensure-lang";
+import { ensureLangAndVersion } from "~/lib/ensure-lang-version";
 
 export let loader: LoaderFunction = async ({ params }) => {
   invariant(!!params.version, "Need a version param");

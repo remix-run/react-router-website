@@ -4,7 +4,7 @@ import invariant from "tiny-invariant";
 
 import { getDoc } from "~/utils.server";
 import { DocsPage } from "~/components/doc";
-import { ensureLangAndVersion } from "~/lib/ensure-lang";
+import { ensureLangAndVersion } from "~/lib/ensure-lang-version";
 
 // this and splat.tsx loader are identical except the "index" vs. params["*"]
 // part

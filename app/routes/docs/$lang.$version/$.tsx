@@ -4,7 +4,7 @@ import { json } from "remix";
 
 import { getDoc } from "~/utils.server";
 import { DocsPage } from "~/components/doc";
-import { ensureLangAndVersion } from "~/lib/ensure-lang";
+import { ensureLangAndVersion } from "~/lib/ensure-lang-version";
 
 let loader: LoaderFunction = async ({ params }) => {
   invariant(!!params.version, "Expected version param");
