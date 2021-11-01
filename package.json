@@ -4,7 +4,7 @@
   "description": "",
   "license": "",
   "prisma": {
-    "seed": "ts-node app/seed.ts"
+    "seed": "ts-node --files app/seed.ts"
   },
   "scripts": {
     "build:css": "postcss styles --base styles --dir app/styles --env production",
@@ -17,7 +17,7 @@
     "prestart": "node -r ts-node/register/transpile-only --max-old-space-size=900 -r dotenv/config  app/seed.ts && node -r ts-node/register/transpile-only --max-old-space-size=900 -r dotenv/config app/verify-seed.ts",
     "postinstall": "remix setup && patch-package",
     "clean": "del app/styles .cache public/build server/build node_modules",
-    "db:reset": "prisma migrate reset --force && ts-node app/verify-seed"
+    "db:reset": "prisma migrate reset --force && ts-node --files app/verify-seed"
   },
   "dependencies": {
     "@prisma/client": "3.3.0",
