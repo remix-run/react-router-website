@@ -18,7 +18,6 @@ export let loader: LoaderFunction = async ({ params }) => {
   let validLang = locale.getByTag(params.lang);
 
   if (!validLang) {
-    console.log(`Invalid language: ${params.lang}`);
     let [latest] = await getVersions();
 
     let actualPath = path.resolve(
