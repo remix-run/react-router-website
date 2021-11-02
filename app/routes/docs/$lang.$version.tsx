@@ -8,13 +8,14 @@ import cx from "clsx";
 import { getMenu, MenuNode } from "~/utils.server";
 import markdownStyles from "~/styles/docs.css";
 import { Menu } from "~/components/docs-menu";
+import { CACHE_CONTROL } from "~/utils/http";
 
 export let loader: LoaderFunction = async ({ params }) => {
   invariant(!!params.version, "Need a version param");
   invariant(!!params.lang, "Need a lang param");
 
   let menu: MenuNode[] = await getMenu(params.version, params.lang);
-  return json(menu);
+  return json(menu, { headers: { "Cache-Control": CACHE_CONTROL } });
 };
 
 export function links() {

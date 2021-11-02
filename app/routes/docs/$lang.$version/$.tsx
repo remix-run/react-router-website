@@ -5,6 +5,7 @@ import { json } from "remix";
 
 import { getDoc } from "~/utils.server";
 import { DocsPage } from "~/components/doc";
+import { CACHE_CONTROL } from "~/utils/http";
 
 let loader: LoaderFunction = async ({ params }) => {
   invariant(!!params.version, "Expected version param");
@@ -15,7 +16,7 @@ let loader: LoaderFunction = async ({ params }) => {
 
   let doc = await getDoc(params["*"], version, lang);
 
-  return json(doc);
+  return json(doc, { headers: { "Cache-Control": CACHE_CONTROL } });
 };
 
 const SplatPage: RouteComponent = () => {

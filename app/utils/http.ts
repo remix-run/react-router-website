@@ -18,7 +18,7 @@ let redirects: null | Redirect[] = null;
 // TODO: add support with pathToRegexp to redirect with * and stuff
 export async function handleRedirects(request: Request) {
   if (redirects === null) {
-    let filePath = path.join(__dirname, "..", "_redirects");
+    let filePath = path.join(__dirname, "..", "..", "_redirects");
     redirects = (await fs.readFile(filePath))
       .toString()
       .split("\n")
@@ -67,3 +67,7 @@ export async function ensureSecure(request: Request) {
 export function isProductionHost(request: Request) {
   return "reactrouter.com" === request.headers.get("host");
 }
+
+// Add 5 minutes cache control to documents and json requests to speed up the
+// back button
+export const CACHE_CONTROL = "max-age=300";
