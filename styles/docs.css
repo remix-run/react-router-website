@@ -577,7 +577,7 @@ stylesheet targets.
     top: 0;
     width: 100%;
     background: var(--base0B);
-    opacity: 0.08;
+    opacity: 0.05;
   }
 
   & pre[data-bad] .codeblock-line[data-highlight="true"]::after {
