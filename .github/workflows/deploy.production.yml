@@ -2,8 +2,8 @@ name: Fly Deploy Production
 
 on:
   push:
-    branches:
-      - v6
+    tags:
+      - "*"
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
