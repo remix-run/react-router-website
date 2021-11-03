@@ -124,9 +124,15 @@ stylesheet targets.
 .md-toc-title,
 /* Targets the first link, which is the page title */
 .toc > li > p > a {
-  @apply font-display text-base mb-2 uppercase font-medium tracking-wide leading-squeezed;
+  @apply font-display text-base mb-2 font-medium tracking-wide leading-squeezed;
+  text-transform: uppercase;
   display: block;
   color: var(--hue-0750);
+
+  & code {
+    text-transform: initial;
+    font-size: 85%;
+  }
 }
 
 .toc {
@@ -136,9 +142,10 @@ stylesheet targets.
     height: 100%;
     /*
     Had to do some funky calculatin' here, but the gist is that this means the
-    little van box will max at 28rem at normal desktop screen heights, which is
-    ideal because none of the words should get cut off by the y-axis overflow.
-
+    little van box will max at 29rem at normal desktop screen heights, which is
+    ideal so that the words in the last line get cut off by the y-axis overflow,
+    helping users know that is a scrollable area.
+    
     It is *not* ideal when the browser height is small because scroll behavior
     is a bit more confusing when the box, which itself has a vertical scrollbar,
     extends beyond the bounds of the window, which also has a vertical
@@ -147,10 +154,10 @@ stylesheet targets.
     progressive enhancement, as some versions of various browsers might not
     support `min()` or `env(safe-area-inset-bottom)`
     */
-    max-height: 28rem;
-    max-height: min(28rem, calc(100vh - 14.375rem));
+    max-height: 29rem;
+    max-height: min(29rem, calc(100vh - 14.375rem));
     max-height: min(
-      28rem,
+      29rem,
       calc(100vh - env(safe-area-inset-bottom) - 14.375rem)
     );
 
@@ -186,6 +193,7 @@ stylesheet targets.
     background: inherit;
     padding: 0;
     line-height: inherit;
+    font-size: 90%;
   }
 }
 
@@ -504,13 +512,13 @@ stylesheet targets.
     border-radius: initial;
   }
 
-  & pre[data-line-numbers="true"]:not([data-lang="sh"]) {
+  & pre[data-line-numbers="true"]:not([data-lang="bash"], [data-lang="sh"]) {
     padding-left: 0rem;
     padding-right: 0rem;
   }
 
   &
-    pre[data-line-numbers="true"]:not([data-lang="sh"])
+    pre[data-line-numbers="true"]:not([data-lang="bash"], [data-lang="sh"])
     [data-line-number]::before {
     padding-left: 0rem;
     content: attr(data-line-number);
@@ -522,8 +530,8 @@ stylesheet targets.
   }
 
   &
-    pre[data-line-numbers="true"]:not([data-lang="sh"])
-    [data-line-number][data-highlight="true"]:before {
+    pre[data-line-numbers="true"]:not([data-lang="bash"], [data-lang="sh"])
+    [data-line-number][data-highlight="true"]::before {
     content: "+";
     color: var(--base0B);
   }
@@ -536,7 +544,7 @@ stylesheet targets.
   }
 
   &
-    pre[data-line-numbers="true"][data-bad]:not([data-lang="sh"])
+    pre[data-line-numbers="true"][data-bad]:not([data-lang="bash"], [data-lang="sh"])
     [data-line-number]::before {
     color: var(--color-red-700);
     @media (prefers-color-scheme: dark) {
@@ -569,7 +577,7 @@ stylesheet targets.
     top: 0;
     width: 100%;
     background: var(--base0B);
-    opacity: 0.08;
+    opacity: 0.05;
   }
 
   & pre[data-bad] .codeblock-line[data-highlight="true"]::after {
@@ -709,22 +717,20 @@ stylesheet targets.
 }
 
 /* 🥚 */
-@media screen and (min-width: 3000px) {
-  .__r_e_m_i_x::after {
-    top: 150px;
-    left: 0;
-    transform: translateX(3700px);
-    z-index: 990;
-    user-select: none;
-    pointer-events: none;
-    position: absolute;
-    content: "Whoa, what are you doing here?!";
-    font-weight: bold;
-    width: 174px;
-    height: 510px;
-    background-image: url("/whoa.png");
-    background-position: bottom center;
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
-}
+/* body::after {
+  top: 150px;
+  right: 20px;
+  transform: translateX(2700px);
+  z-index: 990;
+  user-select: none;
+  pointer-events: none;
+  position: absolute;
+  content: "Whoa, what are you doing here?!";
+  font-weight: bold;
+  width: 174px;
+  height: 510px;
+  background-image: url("/whoa.png");
+  background-position: bottom center;
+  background-size: contain;
+  background-repeat: no-repeat;
+} */

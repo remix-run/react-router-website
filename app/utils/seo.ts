@@ -20,14 +20,14 @@ export const seo = getSeo({
     description:
       "React Router v6 is here. React Router v6 takes the best features from previous versions—and its sister project, Reach Router—in our smallest and most powerful package yet.",
     image: {
-      url: "https://res.cloudinary.com/remix-run/image/upload/v1634323120/reactrouter.com/twitterimage_fbx9l8.jpg",
+      url: "/twitterimage.jpg",
       alt: "React Router logo",
     },
   },
   openGraph: {
     images: [
       {
-        url: "https://res.cloudinary.com/remix-run/image/upload/v1634323120/reactrouter.com/ogimage_uzcxl1.jpg",
+        url: "/ogimage.jpg",
         alt: "React Router v6 is here. React Router v6 takes the best features from previous versions—and its sister project, Reach Router—in our smallest and most powerful package yet.",
         height: 627,
         width: 1200,

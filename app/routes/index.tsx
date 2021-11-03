@@ -1,22 +1,19 @@
 import * as React from "react";
-import type { Page, PageNode, Prose, Sequence } from "@ryanflorence/mdtut";
-import { processMdt } from "~/utils/mdt";
+import type { Page, Sequence } from "@ryanflorence/mdtut";
 import cx from "clsx";
-import { Section, Heading } from "~/components/section-heading";
-import { ButtonLink /* , ButtonDiv */ } from "~/components/button";
-import { ArrowLink /* , Link */ } from "~/components/link";
+import { json } from "remix";
+import { CACHE_CONTROL } from "~/utils/http";
+import { processMdt } from "~/utils/mdt";
+import { Section } from "~/components/section-heading";
+import { ButtonLink } from "~/components/button";
 import indexStyles from "~/styles/index.css";
 import {
   IconAirbnb,
   IconApple,
   IconCoinbase,
   IconDiscord,
-  IconLayers,
   IconMicrosoft,
-  IconNavigation,
   IconNetflix,
-  // IconPlay,
-  IconProtection,
   IconTwitter,
   IconZoom,
 } from "~/components/icons";
@@ -26,7 +23,6 @@ import {
   LoaderFunction,
   ActionFunction,
   useLoaderData,
-  Link,
   LinksFunction,
 } from "remix";
 import {
@@ -35,13 +31,11 @@ import {
   FastbooksSales,
   FastbooksInvoices,
   FastbooksInvoice,
-  ScrollLogger,
 } from "../components/scroll-experience";
 import { Actor, ScrollStage, useStage } from "~/stage";
 import { SectionSignup, signupAction } from "~/components/section-signup";
 import { useMatchMedia } from "../hooks/match-media";
 import { seo } from "~/utils/seo";
-import { MdtScroller } from "~/components/scroll-experience";
 
 let [seoMeta, seoLinks] = seo({
   title: "Declarative routing for React apps at any scale",
@@ -518,7 +512,7 @@ interface IndexData {
 export let loader: LoaderFunction = async () => {
   let nestedRoutes = await processMdt("nested-routes-2.md");
   let data: IndexData = { mdt: { nestedRoutes } };
-  return data;
+  return json(data, { headers: { "Cache-Control": CACHE_CONTROL } });
 };
 
 export let action: ActionFunction = async (props) => {

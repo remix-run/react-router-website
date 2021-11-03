@@ -5,6 +5,8 @@ const { createRequestHandler } = require("@remix-run/express");
 ////////////////////////////////////////////////////////////////////////////////
 let app = express();
 
+app.disable("x-powered-by");
+
 app.use(express.static("public", { immutable: true, maxAge: "1y" }));
 
 app.all(
@@ -45,6 +47,8 @@ function prodHandler() {
   });
 }
 
+// TODO: We only use `versions` here, should probably change the way we get this
+// information to the loader since it's not really about load context anymore
 function getLoadContext() {
   return {
     docs: {

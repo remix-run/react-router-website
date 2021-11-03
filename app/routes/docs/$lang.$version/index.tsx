@@ -5,6 +5,7 @@ import invariant from "tiny-invariant";
 import { getDoc } from "~/utils.server";
 import { DocsPage } from "~/components/doc";
 import { ensureLangAndVersion } from "~/lib/ensure-lang-version";
+import { CACHE_CONTROL } from "~/utils/http";
 
 // this and splat.tsx loader are identical except the "index" vs. params["*"]
 // part
@@ -15,6 +16,11 @@ let loader: LoaderFunction = async ({ params }) => {
   let { lang, version } = params;
 
   await ensureLangAndVersion(params);
+  
+  let doc = await getDoc("index", params.version, params.lang);
+  
+  return json(doc, { headers: { "Cache-Control": CACHE_CONTROL } });
+};
 
   let doc = await getDoc("index", version, lang);
   return json(doc);

@@ -14,11 +14,9 @@ function SectionSignup() {
     <Section wrap className="section-signup relative my-36 md:my-64 lg:my-72">
       <div className="section-signup__image flex items-center justify-center overflow-hidden md:justify-end p-8 md:p-0 mb-6 md:mb-0 rounded-xl md:rounded-3xl md:absolute md:w-[1416px] md:h-[584px] md:right-[40rem] md:top-1/2 md:-translate-y-1/2">
         <img
-          src="https://res.cloudinary.com/remix-run/image/upload/q_auto/v1634272891/reactrouter.com/discord_muyfnl.png"
+          src="/discord.png"
           alt="Screenshot of the Remix Discord channel"
-          height="456"
-          width="630"
-          className="w-full h-auto md:w-[630px] md:h-[456px] md:mr-24"
+          className="w-full md:w-[630px] md:mr-24"
         />
       </div>
       <div className="md:max-w-xl md:mr-0 md:ml-auto md:py-40 relative">

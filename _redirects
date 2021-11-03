@@ -1,0 +1,3 @@
+# [source] [dest] [status?]
+# /foo     /bar
+# /foo     /bar     301

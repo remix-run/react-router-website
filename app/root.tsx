@@ -1,14 +1,14 @@
 import * as React from "react";
 import { useLocation, Outlet } from "react-router-dom";
+import { useCatch, useLoaderData } from "remix";
 import type {
   ErrorBoundaryComponent,
-  LinkDescriptor,
+  LoaderFunction,
   LinksFunction,
   MetaFunction,
   RouteComponent,
 } from "remix";
-import { useCatch } from "remix";
-import { Links, LiveReload, Meta, Scripts, json } from "remix";
+import { Links, LiveReload, Meta, Scripts } from "remix";
 import cx from "clsx";
 import { SiteFooter } from "./components/site-footer";
 import { SiteHeader } from "./components/site-header";
@@ -20,17 +20,26 @@ import tailwind from "./styles/tailwind.css";
 import global from "./styles/global.css";
 import { SkipNavLink, SkipNavContent } from "@reach/skip-nav";
 import { useLogoAnimation } from "./hooks/logo-animation";
+import {
+  removeTrailingSlashes,
+  ensureSecure,
+  isProductionHost,
+} from "~/utils/http";
+
+export let loader: LoaderFunction = async ({ request }) => {
+  await ensureSecure(request);
+  await removeTrailingSlashes(request);
+  return { noIndex: !isProductionHost(request) };
+};
+
+export let unstable_shouldReload = () => false;
 
 let [seoMeta, seoLinks] = seo({
   description: "Declarative routing for React apps at any scale",
   openGraph: {},
 });
 
-export let meta: MetaFunction = () => {
-  return {
-    ...seoMeta,
-  };
-};
+export let meta: MetaFunction = () => seoMeta;
 
 export let links: LinksFunction = () => {
   return [
@@ -48,10 +57,12 @@ function DocsLiveReload() {
 const Document: React.FC<{
   forceDarkMode?: boolean;
   className?: string;
-}> = ({ children, className, forceDarkMode }) => {
+  noIndex: boolean;
+}> = ({ children, className, forceDarkMode, noIndex }) => {
   return (
     <html lang="en" data-force-dark={forceDarkMode ? "" : undefined}>
       <head>
+        {noIndex && <meta name="robots" content="noindex" />}
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
@@ -65,7 +76,7 @@ const Document: React.FC<{
           "bg-[color:var(--hue-0000)] text-[color:var(--hue-1000)]"
         )}
       >
-        <div className="__r_e_m_i_x">{children}</div>
+        <div className="min-h-screen flex flex-col">{children}</div>
         <Scripts />
         <LiveReload />
         {/* <DocsLiveReload /> */}
@@ -74,7 +85,8 @@ const Document: React.FC<{
   );
 };
 
-export let App: RouteComponent = () => {
+let App: RouteComponent = () => {
+  let { noIndex } = useLoaderData();
   let location = useLocation();
   let pathname = location.pathname;
   let isDocsPage = React.useMemo(
@@ -88,9 +100,9 @@ export let App: RouteComponent = () => {
 
   if (isDocsPage) {
     return (
-      <Document>
+      <Document noIndex={noIndex}>
         <SkipNavLink />
-        <div className="flex flex-col">
+        <div className="flex flex-col flex-1">
           <DocsSiteHeader className="w-full flex-shrink-0" />
           <div className="flex flex-col">
             <SkipNavContent ref={skipNavRef} tabIndex={-1} />
@@ -103,7 +115,7 @@ export let App: RouteComponent = () => {
   }
 
   return (
-    <Document forceDarkMode>
+    <Document forceDarkMode noIndex={noIndex}>
       <SkipNavLink />
       <SiteHeader />
       <div className="flex flex-col min-h-screen">
@@ -122,7 +134,7 @@ export default App;
 export let ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   console.error(error);
   return (
-    <Document forceDarkMode>
+    <Document forceDarkMode noIndex={true}>
       <h1>App Error</h1>
       <pre>{error.message}</pre>
       <p>
@@ -147,7 +159,7 @@ export let CatchBoundary = () => {
   }
 
   return (
-    <Document forceDarkMode>
+    <Document forceDarkMode noIndex={true}>
       <div className="min-h-screen w-full flex flex-col">
         <SkipNavLink />
         <SiteHeader />

@@ -9,6 +9,7 @@ import { getMenu, MenuNode } from "~/utils.server";
 import markdownStyles from "~/styles/docs.css";
 import { Menu } from "~/components/docs-menu";
 import { ensureLangAndVersion } from "~/lib/ensure-lang-version";
+import { CACHE_CONTROL } from "~/utils/http";
 
 export let loader: LoaderFunction = async ({ params }) => {
   invariant(!!params.version, "Need a version param");
@@ -17,7 +18,7 @@ export let loader: LoaderFunction = async ({ params }) => {
   await ensureLangAndVersion(params);
 
   let menu: MenuNode[] = await getMenu(params.version, params.lang);
-  return json(menu);
+  return json(menu, { headers: { "Cache-Control": CACHE_CONTROL } });
 };
 
 export function links() {
