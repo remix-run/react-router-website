@@ -21,9 +21,9 @@ kill_timeout = 5
   script_checks = []
 
   [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
-    type = "connections"
+    hard_limit = 80
+    soft_limit = 100
+    type = "requests"
 
   [[services.ports]]
     handlers = ["http"]
