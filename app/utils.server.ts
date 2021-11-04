@@ -247,6 +247,8 @@ export async function getVersions(): Promise<VersionHead[]> {
     };
   });
 
+  invariant(versions.length > 0, "Expected at least one version");
+
   versions[0].isLatest = true;
 
   return versions;

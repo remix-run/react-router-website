@@ -26,13 +26,11 @@ function getRefFromParam(
     throw new Error("No latest ref found");
   }
 
-  if (semver.satisfies(latestTag, refParam, { includePrerelease: true })) {
+  if (semver.satisfies(latestTag, refParam)) {
     return latestBranch;
   }
 
-  let maxSatisfying = semver.maxSatisfying(refs, refParam, {
-    includePrerelease: true,
-  });
+  let maxSatisfying = semver.maxSatisfying(refs, refParam);
 
   if (maxSatisfying) {
     return `refs/tags/${maxSatisfying}`;

@@ -24,9 +24,6 @@ if (!REPO_LATEST_BRANCH) {
  * ref: refs/heads/dev
  */
 async function saveDocs(ref: string, releaseNotes: string) {
-  // sometimes I (Logan) still use a leading slash when github doesn't
-  ref = ref.startsWith("/") ? ref.slice(1) : ref;
-
   // check if we have this release already
   let release = await prisma.gitHubRef.findUnique({
     where: { ref },

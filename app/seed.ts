@@ -18,13 +18,13 @@ async function seed() {
   let releases = (await releasesPromise.json()) as GitHubRelease[];
 
   const releasesToUse = releases.filter((release: any) => {
-    return satisfies(release.tag_name, ">=6.0.0-beta.8");
+    return satisfies(release.tag_name, ">=6.0.0");
   });
 
   let promises: Promise<void>[] = [saveDocs("refs/heads/main", "")];
 
   for (let release of releasesToUse) {
-    promises.push(saveDocs(`/refs/tags/${release.tag_name}`, release.body));
+    promises.push(saveDocs(`refs/tags/${release.tag_name}`, release.body));
   }
 
   await Promise.all(promises);
