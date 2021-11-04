@@ -323,10 +323,11 @@ function Code({ html }: { html: string }) {
   }, [html]);
   return (
     <div
-      style={{
-        transition: "height 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-        height: height,
-      }}
+      // TODO: Looks janky on phones, find a better way
+      //   style={{
+      //     transition: "height 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+      //     height: height,
+      //   }}
       className="box-border -mb-2 mx-8 border-t border-l border-r rounded-lg bg-gray-950 border-gray-600"
     >
       <div
