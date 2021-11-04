@@ -121,10 +121,21 @@ function PersistentCode({
   return <Code html={slide.subject} />;
 }
 
-export function RankedRoutes({ mdt }: { mdt: Page }) {
+export function RankedRoutes({
+  className,
+  mdt,
+}: {
+  className?: string;
+  mdt: Page;
+}) {
   // let [, , prose] = mdt as [null, null, Prose];
   return (
-    <div className="max-w-2xl mx-auto my-32 md:my-72 lg:mb-80 lg:max-w-6xl lg:mt-96 container">
+    <div
+      className={cx(
+        className,
+        "max-w-2xl mx-auto my-32 md:my-72 lg:mb-80 lg:max-w-6xl lg:mt-96 container"
+      )}
+    >
       <h2 className="mb-4">Ranked Routes</h2>
       <div className="md-down:space-y-6 lg:grid lg:grid-cols-[1fr,1.4fr] xl:grid-cols-[1fr,1.2fr] lg:gap-7 xl:gap-10">
         <div>
@@ -196,12 +207,18 @@ export function RankedRoutes({ mdt }: { mdt: Page }) {
   );
 }
 
-export function NestedRoutes({ mdt }: { mdt: Page }) {
+export function NestedRoutes({
+  mdt,
+  className,
+}: {
+  mdt: Page;
+  className?: string;
+}) {
   let [, { slides }] = mdt as [null, Sequence];
   let frames = [0.39, 0.51, 0.66, 0.78, 0.93];
 
   return (
-    <div className="mt-32 pt-36 border-t border-gray-850">
+    <div className={cx(className, "px-8 mt-32 pt-36 border-t border-gray-850")}>
       <ScrollStage pages={5 * 0.25 + 1}>
         <div className="scrollxp-nested">
           {slides.map((slide, index) => (
@@ -424,9 +441,9 @@ const IndexPage: RouteComponent = () => {
         </div>
       </div>
 
-      <NestedRoutes mdt={mdt.nestedRoutes} />
+      <NestedRoutes className="index__nested-routes" mdt={mdt.nestedRoutes} />
 
-      <RankedRoutes mdt={mdt.nestedRoutes} />
+      <RankedRoutes className="index__ranked-routes" mdt={mdt.nestedRoutes} />
 
       <div className="index__stats">
         <div className="container">
