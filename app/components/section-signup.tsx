@@ -65,12 +65,12 @@ function SectionSignup() {
             {(() => {
               switch (actionData.subscription.state) {
                 case "inactive":
-                  return "Signup successful! Please check your email to confirm your subscription.";
+                  return "Almost done! Go check your email and confirm your subscription or else you won't get our email :)";
                 case "active":
                 // we shouldn't get here...
                 case "cancelled":
                 default:
-                  return "Signup successful! Keep an eye on your inbox for updates.";
+                  return "Almost done! Go check your email and confirm your subscription or else you won't get our email :)";
               }
             })()}
           </Status>
