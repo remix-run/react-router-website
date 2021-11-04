@@ -50,7 +50,10 @@ async function saveDocs(ref: string, releaseNotes: string) {
   let existingDocs = release?.docs.map((d) => d.filePath) || [];
 
   let stream = await getPackage(REPO, ref);
-  await findMatchingEntries(stream, ref, "/docs", existingDocs);
+  await Promise.all([
+    findMatchingEntries(stream, ref, "/docs", existingDocs),
+    findMatchingEntries(stream, ref, "/examples", existingDocs),
+  ]);
 }
 
 export { saveDocs };
