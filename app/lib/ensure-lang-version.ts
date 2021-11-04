@@ -21,7 +21,6 @@ async function ensureLangAndVersion(params: Params<"lang" | "version" | "*">) {
 
   if (!validLang) {
     let [latest] = await getVersions();
-
     let actualPath = path.resolve(
       `/docs/en`,
       latest.head,
@@ -34,4 +33,22 @@ async function ensureLangAndVersion(params: Params<"lang" | "version" | "*">) {
   }
 }
 
-export { ensureLangAndVersion };
+async function ensureLang(lang: string) {
+  let [latest] = await getVersions();
+
+  let validLang = locale.getByTag(lang);
+
+  // If it's not a valid tag, it's a shortcut to a doc
+  // "/docs/api" -> "/docs/en/v6/api"
+  if (!validLang) {
+    let [latest] = await getVersions();
+    let doc = lang;
+    let actualPath = `/docs/en/${latest.head}/${doc}`;
+    return redirect(actualPath);
+  }
+
+  // otherwise just go to "/docs/en/v6"
+  return redirect(`/docs/en/${latest.head}`);
+}
+
+export { ensureLangAndVersion, ensureLang };
