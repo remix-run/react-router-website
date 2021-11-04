@@ -145,7 +145,7 @@ stylesheet targets.
     little van box will max at 29rem at normal desktop screen heights, which is
     ideal so that the words in the last line get cut off by the y-axis overflow,
     helping users know that is a scrollable area.
-    
+
     It is *not* ideal when the browser height is small because scroll behavior
     is a bit more confusing when the box, which itself has a vertical scrollbar,
     extends beyond the bounds of the window, which also has a vertical
@@ -717,20 +717,32 @@ stylesheet targets.
 }
 
 /* 🥚 */
-/* body::after {
-  top: 150px;
-  right: 20px;
-  transform: translateX(2700px);
-  z-index: 990;
-  user-select: none;
-  pointer-events: none;
-  position: absolute;
-  content: "Whoa, what are you doing here?!";
-  font-weight: bold;
-  width: 174px;
-  height: 510px;
-  background-image: url("/whoa.png");
-  background-position: bottom center;
-  background-size: contain;
-  background-repeat: no-repeat;
-} */
+@media screen and (min-width: 3000px) {
+  html,
+  body {
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  body::after {
+    top: 150px;
+    left: 0;
+    transform: translateX(3700px);
+    z-index: 990;
+    user-select: none;
+    pointer-events: none;
+    position: absolute;
+    content: "Whoa, what are you doing here?!";
+    font-weight: bold;
+    width: 174px;
+    height: 510px;
+    background-image: url("/whoa.png");
+    background-position: bottom center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
