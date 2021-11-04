@@ -1,8 +1,10 @@
-import type { HeadersFunction, LoaderFunction, RouteComponent } from "remix";
+import { LoaderFunction, RouteComponent } from "remix";
 import { json } from "remix";
+import invariant from "tiny-invariant";
+
 import { getDoc } from "~/utils.server";
 import { DocsPage } from "~/components/doc";
-import invariant from "tiny-invariant";
+import { ensureLangAndVersion } from "~/lib/ensure-lang-version";
 import { CACHE_CONTROL } from "~/utils/http";
 
 // this and splat.tsx loader are identical except the "index" vs. params["*"]
@@ -11,16 +13,17 @@ let loader: LoaderFunction = async ({ params }) => {
   invariant(!!params.version, "Expected version param");
   invariant(!!params.lang, "Expected language param");
 
+  let { lang, version } = params;
+
+  await ensureLangAndVersion(params);
+  
   let doc = await getDoc("index", params.version, params.lang);
+  
   return json(doc, { headers: { "Cache-Control": CACHE_CONTROL } });
 };
 
-const headers: HeadersFunction = ({ loaderHeaders }) => {
-  return {
-    // so fresh!
-    "Cache-Control": "max-age=0",
-    "Server-Timing": loaderHeaders.get("Server-Timing") ?? "",
-  };
+  let doc = await getDoc("index", version, lang);
+  return json(doc);
 };
 
 const VersionIndexPage: RouteComponent = () => {
@@ -28,5 +31,5 @@ const VersionIndexPage: RouteComponent = () => {
 };
 
 export default VersionIndexPage;
-export { headers, loader };
+export { loader };
 export { meta } from "~/components/doc";
