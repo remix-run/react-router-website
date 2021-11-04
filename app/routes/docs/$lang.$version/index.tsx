@@ -13,17 +13,10 @@ let loader: LoaderFunction = async ({ params }) => {
   invariant(!!params.version, "Expected version param");
   invariant(!!params.lang, "Expected language param");
 
-  let { lang, version } = params;
-
   await ensureLangAndVersion(params);
-  
-  let doc = await getDoc("index", params.version, params.lang);
-  
-  return json(doc, { headers: { "Cache-Control": CACHE_CONTROL } });
-};
 
-  let doc = await getDoc("index", version, lang);
-  return json(doc);
+  let doc = await getDoc("index", params.version, params.lang);
+  return json(doc, { headers: { "Cache-Control": CACHE_CONTROL } });
 };
 
 const VersionIndexPage: RouteComponent = () => {
