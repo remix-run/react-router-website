@@ -2,6 +2,8 @@
 # /foo /bar
 # /foo /bar 301
 
+/docs/en/v6/getting-started/faq /docs/en/v6/faq
+
 /core https://v5.reactrouter.com/core
 /web https://v5.reactrouter.com/web
 /native https://v5.reactrouter.com/native
