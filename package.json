@@ -11,14 +11,17 @@
     "dev:css": "postcss styles --base styles --dir app/styles -w",
     "build:remix": "NODE_ENV=production remix build",
     "build": "run-s build:*",
+    "dev:docs": "node -r ts-node/register/transpile-only -r dotenv/config scripts/watcher.ts",
     "predev": "npm run build:css",
     "dev": "pm2-dev pm2.config.js",
     "deploy": "flyctl deploy --config fly.staging.toml --build-arg DATABASE_URL=file:/remixapp/prisma/dev.db?connection_limit=1",
+    "prestart": "npm run seed",
     "start": "NODE_ENV=production node --max-old-space-size=900 server/index.js",
-    "prestart": "node -r ts-node/register/transpile-only --max-old-space-size=900 -r dotenv/config  app/seed.ts && node -r ts-node/register/transpile-only --max-old-space-size=900 -r dotenv/config app/verify-seed.ts",
+    "seed": "node -r ts-node/register/transpile-only --max-old-space-size=900 -r dotenv/config app/seed.ts && node -r ts-node/register/transpile-only --max-old-space-size=900 -r dotenv/config app/verify-seed.ts",
     "postinstall": "remix setup && patch-package",
     "clean": "del app/styles .cache public/build server/build node_modules",
     "db:reset": "prisma migrate reset --force && ts-node app/verify-seed",
+    "db:reset:seedless": "prisma migrate reset --skip-seed --force",
     "test": "jest"
   },
   "dependencies": {

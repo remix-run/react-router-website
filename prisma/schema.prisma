@@ -24,14 +24,17 @@ model GitHubRef {
 }
 
 model Doc {
-  id         String   @id @default(cuid())
-  filePath   String
-  md         String
-  html       String
-  lang       String
-  hasContent Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id             String   @id @default(cuid())
+  filePath       String
+  // for the examples we fake the filePath, this lets us the source file
+  // example: "examples/auth/README.md" will be stored as "/examples/auth.md"
+  sourceFilePath String
+  md             String
+  html           String
+  lang           String
+  hasContent     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   // frontmatter attributes
   title        String

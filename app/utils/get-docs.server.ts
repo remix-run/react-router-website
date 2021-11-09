@@ -149,6 +149,7 @@ export async function findMatchingEntries(
 
         let docToSave: Prisma.DocCreateWithoutGithubRefInput = {
           filePath: doc.path,
+          sourceFilePath: doc.source,
           html: doc.html,
           lang: doc.lang,
           md: doc.md,
@@ -163,39 +164,41 @@ export async function findMatchingEntries(
           toc: doc.attributes.toc,
         };
 
-        if (existingDocs.find((d) => d === doc.path)) {
-          console.log(`> doc ${doc.path} already exists, updating`);
-          await prisma.doc.updateMany({
+        console.log(`> saving or updating ${doc.path} for ${ref}`);
+        try {
+          await prisma.doc.upsert({
             where: {
-              filePath: doc.path,
-              githubRef: { ref },
+              filePath_githubRefId_lang: {
+                filePath: doc.path,
+                githubRefId: ref,
+                lang: doc.lang,
+              },
             },
-            data: docToSave,
-          });
-          console.log(`> updated doc ${doc.path}`);
-        } else {
-          console.log(`> saving doc ${doc.path} for ${ref}`);
-          await prisma.doc.create({
-            data: {
+            create: {
               ...docToSave,
               githubRef: {
                 connect: { ref },
               },
             },
+            update: docToSave,
           });
-          console.log(`> saved doc ${doc.path} for ${ref}`);
+          console.log(`> saved or updated ${doc.path} for ${ref}`);
+        } catch (error) {
+          console.error(`> failed to save or update ${doc.path} for ${ref}`);
+          console.error(error);
         }
 
         docsSaved.push(doc.path);
         next();
       } catch (error) {
-        // @ts-ignore
         next(error);
       }
     })
     .on("finish", async () => {
-      console.log(`> saved ${docsSaved.length} docs for ${ref}`);
-      console.log("> checking for any deleted docs");
+      console.log(
+        `> saved ${docsSaved.length} entries in ${filename} for ${ref}`
+      );
+      console.log(`> checking for any deleted entries in ${filename}`);
       const deletedDocs = existingDocs.filter((d) => !docsSaved.includes(d));
       if (deletedDocs.length > 0) {
         let deleted = await prisma.doc.deleteMany({
@@ -206,9 +209,11 @@ export async function findMatchingEntries(
             githubRef: { ref },
           },
         });
-        console.log(`> deleted ${deleted.count} docs for ${ref}`);
+        console.log(
+          `> deleted ${deleted.count} entries in ${filename} for ${ref}`
+        );
       } else {
-        console.log("> no deleted docs");
+        console.log(`> no deleted entries in ${filename}`);
       }
 
       console.log(`> done with ${ref}`);

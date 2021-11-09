@@ -18,6 +18,7 @@ interface ProcessedDoc {
   html: string;
   title: string;
   path: string;
+  source: string;
   md: string;
   lang: string;
   hasContent: boolean;
@@ -31,7 +32,22 @@ async function processDoc(entry: Entry): Promise<ProcessedDoc> {
   let title = data.title || path;
   let langMatch = path.match(/^\/_i18n\/(?<lang>[a-z]{2})\//);
   let lang = langMatch?.groups?.lang ?? "en";
-  let filePath = path.replace(/^\/_i18n\/[a-z]{2}/, "");
+  let source = path.replace(/^\/_i18n\/[a-z]{2}/, "");
+
+  let examplesRegex = /^\/examples\/(?<exampleName>[^\/+]+)\/README.md/;
+  let isExample = source.match(examplesRegex);
+  let exampleName = isExample?.groups?.exampleName;
+  let isExampleRoot = source === "/examples/README.md";
+
+  if (isExample && !exampleName) {
+    throw new Error(`example name not found; path: "${entry.path}"`);
+  }
+
+  let filePath = isExample
+    ? source.replace(examplesRegex, `/examples/${exampleName}.md`)
+    : isExampleRoot
+    ? "/examples/index.md"
+    : source;
 
   // TODO: Get actual version
   let version = "v6";
@@ -58,6 +74,7 @@ async function processDoc(entry: Entry): Promise<ProcessedDoc> {
     html: html.toString(),
     title,
     path: filePath,
+    source: entry.path,
     md: content,
     hasContent,
     lang,

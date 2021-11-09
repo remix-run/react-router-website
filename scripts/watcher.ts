@@ -8,15 +8,27 @@ import { processDoc, ProcessedDoc } from "../app/utils/process-docs.server";
 
 let prisma = new PrismaClient();
 
-if (!process.env.REPO_LATEST_BRANCH || !process.env.LOCAL_DOCS_PATH) {
-  throw new Error(
-    "yo, you forgot something, missing one of the following LOCAL_DOCS_PATH, REPO_LATEST_BRANCH"
-  );
+if (!process.env.REPO_LATEST_BRANCH) {
+  throw new Error("yo, you forgot something, missing REPO_LATEST_BRANCH");
 }
+
+if (!process.env.LOCAL_DOCS_PATH) {
+  throw new Error("yo, you forgot something, missing LOCAL_DOCS_PATH");
+}
+
+if (!process.env.LOCAL_EXAMPLES_PATH) {
+  throw new Error("yo, you forgot something, missing LOCAL_EXAMPLES_PATH");
+}
+
+let BRANCH = process.env.REPO_LATEST_BRANCH;
 
 let DOCS_DIR = path.resolve(process.cwd(), process.env.LOCAL_DOCS_PATH);
 let DOCS_FILES = DOCS_DIR + "/**/*.md";
-let BRANCH = process.env.REPO_LATEST_BRANCH;
+
+let EXAMPLES_DIR = path.resolve(process.cwd(), process.env.LOCAL_EXAMPLES_PATH);
+let EXAMPLES_FILES = EXAMPLES_DIR + "/**/*.md";
+
+let WATCH = [DOCS_FILES, EXAMPLES_FILES];
 
 async function updateOrCreateDoc(processed: ProcessedDoc) {
   let exists = await prisma.doc.findFirst({
@@ -38,6 +50,7 @@ async function updateOrCreateDoc(processed: ProcessedDoc) {
         data: {
           ...processed.attributes,
           filePath: processed.path,
+          sourceFilePath: processed.source,
           md: processed.md,
           html: processed.html,
           lang: processed.lang,
@@ -55,6 +68,7 @@ async function updateOrCreateDoc(processed: ProcessedDoc) {
         data: {
           ...processed.attributes,
           filePath: processed.path,
+          sourceFilePath: processed.source,
           md: processed.md,
           html: processed.html,
           lang: processed.lang,
@@ -80,7 +94,7 @@ async function updateOrCreateDoc(processed: ProcessedDoc) {
   }
 }
 
-let watcher = chokidar.watch(DOCS_FILES, {
+let watcher = chokidar.watch(WATCH, {
   persistent: true,
   ignoreInitial: true,
   cwd: DOCS_DIR,
