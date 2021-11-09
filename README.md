@@ -17,7 +17,7 @@ npm run db:reset
 npm run dev
 ```
 
-If you're actually writing docs, let's start up a file watcher, the react-router docs folder location is defined by the `LOCAL_DOCS_PATH` environment variable, so if it's next to this project, the value should be `"../react-router/docs"`
+If you're actually writing docs, let's start up a file watcher, the react-router docs folder location is defined by the `LOCAL_DOCS_PATH` and `LOCAL_EXAMPLES_PATH` environment variable, so if it's next to this project, the value should be `"../react-router/docs"`
 
 ```sh
 /wherever/your/code/is/reactrouter.com
@@ -25,7 +25,7 @@ If you're actually writing docs, let's start up a file watcher, the react-router
 ```
 
 ```sh
-npx ts-node scripts/watcher.ts
+npm run dev:docs
 ```
 
 Now any changes you make to the docs will update your development database.
