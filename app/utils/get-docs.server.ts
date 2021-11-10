@@ -9,7 +9,7 @@ import { processDoc } from "./process-docs.server";
 import { prisma } from "../db.server";
 import { initializeSentry } from "../lib/sentry.server";
 
-const Sentry = initializeSentry("get-docs.server.ts");
+const Sentry = initializeSentry();
 
 const githubUrl = "https://github.com";
 

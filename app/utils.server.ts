@@ -7,7 +7,7 @@ import { prisma } from "~/db.server";
 import { getRefFromParam } from "./utils/get-ref-from-param";
 import { initializeSentry } from "./lib/sentry.server";
 
-const Sentry = initializeSentry("utils.server.ts");
+const Sentry = initializeSentry();
 
 export interface VersionHead {
   /**

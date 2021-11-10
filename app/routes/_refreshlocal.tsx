@@ -5,7 +5,7 @@ import type { GitHubRelease } from "~/@types/github";
 import { saveDocs } from "~/utils/save-docs";
 import { initializeSentry } from "~/lib/sentry.server";
 
-const Sentry = initializeSentry("_refreshlocal.tsx");
+const Sentry = initializeSentry();
 
 let action: ActionFunction = async ({ request }) => {
   const url = new URL(request.url);

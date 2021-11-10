@@ -3,7 +3,7 @@ import { RouteComponent, ActionFunction, json } from "remix";
 import { getInstanceURLs } from "~/utils/get-fly-instance-urls.server";
 import { initializeSentry } from "~/lib/sentry.server";
 
-const Sentry = initializeSentry("_refresh.tsx");
+const Sentry = initializeSentry();
 
 const action: ActionFunction = async ({ request }) => {
   // verify post request and the token matches

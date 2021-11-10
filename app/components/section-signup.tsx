@@ -8,14 +8,14 @@ import { Field } from "~/components/form";
 import { Button } from "~/components/button";
 import { initializeSentry } from "~/lib/sentry.server";
 
-const Sentry = initializeSentry("section-signup.tsx");
+const Sentry = initializeSentry();
 
 function SectionSignup() {
   let actionData = useActionData();
   let transition = useTransition();
 
   return (
-    <Section wrap className="section-signup relative my-36 md:my-64 lg:my-72">
+    <Section wrap className="relative section-signup my-36 md:my-64 lg:my-72">
       <div className="section-signup__image flex items-center justify-center overflow-hidden md:justify-end p-8 md:p-0 mb-6 md:mb-0 rounded-xl md:rounded-3xl md:absolute md:w-[1416px] md:h-[584px] md:right-[40rem] md:top-1/2 md:-translate-y-1/2">
         <img
           src="/discord.png"
@@ -23,9 +23,9 @@ function SectionSignup() {
           className="w-full md:w-[630px] md:mr-24"
         />
       </div>
-      <div className="md:max-w-xl md:mr-0 md:ml-auto md:py-40 relative">
+      <div className="relative md:max-w-xl md:mr-0 md:ml-auto md:py-40">
         <Heading className="mb-1">Stay Connected</Heading>
-        <p className="text-lg md:text-xl mb-6 opacity-80">
+        <p className="mb-6 text-lg md:text-xl opacity-80">
           React Router is developed by the <a href="https://remix.run">Remix</a>{" "}
           team. To get updates and special content on React Router (as well as
           our other projects), subscribe to the Remix newsletter or{" "}
@@ -60,12 +60,12 @@ function SectionSignup() {
             Subscribe
           </Button>
         </Form>
-        <p className="text-gray-300 text-sm mt-1">
+        <p className="mt-1 text-sm text-gray-300">
           We respect your privacy, unsubscribe at any time.
         </p>
         {/* TODO: Needs an aria live announcement */}
         {actionData?.subscription?.state ? (
-          <Status color="green" className="mt-4 w-full md:absolute md:left-0">
+          <Status color="green" className="w-full mt-4 md:absolute md:left-0">
             {(() => {
               switch (actionData.subscription.state) {
                 case "inactive":
