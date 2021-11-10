@@ -5,6 +5,9 @@ import type { Doc as PrismaDoc } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 import { getRefFromParam } from "./utils/get-ref-from-param";
+import { initializeSentry } from "./lib/sentry.server";
+
+const Sentry = initializeSentry("utils.server.ts");
 
 export interface VersionHead {
   /**
@@ -178,11 +181,14 @@ export async function getDoc(
     });
   } catch (error: unknown) {
     console.error(error);
-    console.error(
-      `Failed to find doc for the following slugs: ${slugs.join(
-        ", "
-      )} for ${ref}`
-    );
+
+    let failedToFindDoc = `
+      Failed to find doc for the following slugs: ${slugs.join(", ")} for ${ref}
+    `.trim();
+
+    console.error(failedToFindDoc);
+    Sentry.captureMessage(failedToFindDoc);
+
     throw new Response("", { status: 404, statusText: "Doc not found" });
   }
 

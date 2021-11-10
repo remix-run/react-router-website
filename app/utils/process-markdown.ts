@@ -2,7 +2,7 @@ import { processMarkdown, remarkCodeBlocksShiki } from "@ryanflorence/md";
 
 if (!process.env.SITE_URL) {
   throw Error(
-    `The SITE_URL environment variable is not defined for the ${process.env.NODE_ENV || ""} environment.`
+    `The SITE_URL environment variable is not defined for the ${process.env.NODE_ENV} environment.`
   );
 }
 
@@ -12,9 +12,9 @@ try {
     throw Error();
   }
   baseUrl = new URL(process.env.SITE_URL);
-} catch (err) {
+} catch (error) {
   throw Error(
-    `Invalid SITE_URL environment variable defined for the ${process.env.NODE_ENV || ""} environment. Ensure that its value is a valid URL without a trailing slash.`
+    `Invalid SITE_URL environment variable defined for the ${process.env.NODE_ENV} environment. Ensure that its value is a valid URL without a trailing slash.`
   );
 }
 
@@ -128,16 +128,16 @@ function resolveUrl(from: string, to: string): URL {
       return new URL(pathname + search + hash);
     }
     return resolvedUrl;
-  } catch (e) {
+  } catch (error) {
     if (
-      e instanceof TypeError &&
-      e.toString() === "TypeError: Failed to construct 'URL': Invalid URL"
+      error instanceof TypeError &&
+      error.toString() === "TypeError: Failed to construct 'URL': Invalid URL"
     ) {
       throw TypeError(
         "Failed to resolve URLs. The `from` argument is an invalid URL."
       );
     }
-    throw e;
+    throw error;
   }
 }
 

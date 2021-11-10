@@ -7,6 +7,9 @@ import { Prisma } from "@prisma/client";
 
 import { processDoc } from "./process-docs.server";
 import { prisma } from "../db.server";
+import { initializeSentry } from "../lib/sentry.server";
+
+const Sentry = initializeSentry("get-docs.server.ts");
 
 const githubUrl = "https://github.com";
 
@@ -185,12 +188,14 @@ export async function findMatchingEntries(
           console.log(`> saved or updated ${doc.path} for ${ref}`);
         } catch (error) {
           console.error(`> failed to save or update ${doc.path} for ${ref}`);
-          console.error(error);
+          Sentry.captureException(error);
         }
 
         docsSaved.push(doc.path);
         next();
       } catch (error) {
+        console.error(`> failed to process ${entry.path} for ${ref}`);
+        Sentry.captureException(error);
         next(error);
       }
     })

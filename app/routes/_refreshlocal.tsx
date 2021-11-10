@@ -1,12 +1,13 @@
 import { RouteComponent, ActionFunction, json } from "remix";
-
 import { satisfies } from "semver";
 
-import { GitHubRelease } from "~/@types/github";
-
+import type { GitHubRelease } from "~/@types/github";
 import { saveDocs } from "~/utils/save-docs";
+import { initializeSentry } from "~/lib/sentry.server";
 
-let action: ActionFunction = async ({ request, context }) => {
+const Sentry = initializeSentry("_refreshlocal.tsx");
+
+let action: ActionFunction = async ({ request }) => {
   const url = new URL(request.url);
 
   if (request.method !== "POST") {
@@ -71,6 +72,7 @@ let action: ActionFunction = async ({ request, context }) => {
     return json({ ok: true }, { status: 200 });
   } catch (error) {
     console.error(error);
+    Sentry.captureException(error);
     return json({ ok: true }, { status: 500 });
   }
 };

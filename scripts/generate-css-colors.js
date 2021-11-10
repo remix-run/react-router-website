@@ -10,10 +10,10 @@ async function main() {
       encoding: "utf8",
     });
     console.log("\x1b[32m", "✅ CSS file `colors.css` successfully written!");
-  } catch (err) {
+  } catch (error) {
     console.error("🙅‍♀️ There was an error writing the CSS file.");
     console.log("\n  ----------------------------------------------\n\n");
-    console.error(err);
+    console.error(error);
   }
 }
 

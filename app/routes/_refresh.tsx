@@ -1,5 +1,9 @@
 import { RouteComponent, ActionFunction, json } from "remix";
+
 import { getInstanceURLs } from "~/utils/get-fly-instance-urls.server";
+import { initializeSentry } from "~/lib/sentry.server";
+
+const Sentry = initializeSentry("_refresh.tsx");
 
 const action: ActionFunction = async ({ request }) => {
   // verify post request and the token matches
@@ -41,6 +45,7 @@ const action: ActionFunction = async ({ request }) => {
     return json({ instances });
   } catch (error) {
     console.error(error);
+    Sentry.captureException(error);
     return json({ ok: false }, { status: 500 });
   }
 };

@@ -2,9 +2,13 @@ import * as React from "react";
 import { Form, useActionData, useTransition } from "remix";
 import type { ActionFunction } from "remix";
 import cx from "clsx";
+
 import { Section, Heading } from "~/components/section-heading";
 import { Field } from "~/components/form";
 import { Button } from "~/components/button";
+import { initializeSentry } from "~/lib/sentry.server";
+
+const Sentry = initializeSentry("section-signup.tsx");
 
 function SectionSignup() {
   let actionData = useActionData();
@@ -117,8 +121,10 @@ const signupAction: ActionFunction = async ({ request }) => {
       },
     });
     return res;
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
+    Sentry.captureException(error);
+
     return new Response(null, {
       status: 500,
       statusText: `Egads! Something went wrong!`,

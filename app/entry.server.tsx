@@ -1,7 +1,7 @@
 import ReactDOMServer from "react-dom/server";
 import type { EntryContext } from "remix";
 import { RemixServer } from "remix";
-// @ts-expect-error
+// @ts-expect-error no available types
 import streamString from "node-stream-string";
 
 export default function handleRequest(
