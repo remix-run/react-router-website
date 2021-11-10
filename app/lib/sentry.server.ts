@@ -4,6 +4,7 @@ import * as Sentry from "@sentry/node";
 function initializeSentry() {
   Sentry.init({
     dsn: "https://b6cab3d1883b49cebeb91ed4ea0b5fa3@o74198.ingest.sentry.io/5985336",
+    enabled: process.env.NODE_ENV === "production",
 
     // Set tracesSampleRate to 1.0 to capture 100%
     // of transactions for performance monitoring.
