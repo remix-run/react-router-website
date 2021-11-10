@@ -199,7 +199,8 @@ export async function findMatchingEntries(
         `> saved ${docsSaved.length} entries in ${filename} for ${ref}`
       );
       console.log(`> checking for any deleted entries in ${filename}`);
-      const deletedDocs = existingDocs.filter((d) => !docsSaved.includes(d));
+      let deletedDocs = docsSaved.filter((d) => !existingDocs.includes(d));
+
       if (deletedDocs.length > 0) {
         let deleted = await prisma.doc.deleteMany({
           where: {
