@@ -8,6 +8,9 @@ import {
 } from "remix";
 import { json } from "remix";
 import { prisma } from "~/db.server";
+import { initializeSentry } from "~/lib/sentry.server";
+
+const Sentry = initializeSentry();
 
 const refs = Prisma.validator<Prisma.GitHubRefArgs>()({
   select: {
@@ -35,6 +38,10 @@ const loader: LoaderFunction = async () => {
       },
     },
   });
+
+  if (!refs.every((r) => r.docs.length > 0)) {
+    Sentry.captureException(new Error("The docs are broken!!!"));
+  }
 
   return json({
     commit: process.env.COMMIT_SHA,
