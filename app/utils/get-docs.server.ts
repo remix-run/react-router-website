@@ -198,24 +198,8 @@ export async function findMatchingEntries(
       console.log(
         `> saved ${docsSaved.length} entries in ${filename} for ${ref}`
       );
-      console.log(`> checking for any deleted entries in ${filename}`);
-      let deletedDocs = docsSaved.filter((d) => !existingDocs.includes(d));
 
-      if (deletedDocs.length > 0) {
-        let deleted = await prisma.doc.deleteMany({
-          where: {
-            filePath: {
-              in: deletedDocs,
-            },
-            githubRef: { ref },
-          },
-        });
-        console.log(
-          `> deleted ${deleted.count} entries in ${filename} for ${ref}`
-        );
-      } else {
-        console.log(`> no deleted entries in ${filename}`);
-      }
+      // TODO: remove docs that are no longer in the tarball
 
       console.log(`> done with ${ref}`);
     });
