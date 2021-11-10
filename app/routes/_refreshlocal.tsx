@@ -58,7 +58,7 @@ let action: ActionFunction = async ({ request, context }) => {
       const releases = (await releasesPromise.json()) as GitHubRelease[];
 
       const releasesToUse = releases.filter((release: any) => {
-        return satisfies(release.tag_name, context.docs.versions);
+        return satisfies(release.tag_name, ">=6.0.0");
       });
 
       await Promise.all(
