@@ -4,7 +4,7 @@
   "description": "",
   "license": "",
   "prisma": {
-    "seed": "ts-node app/seed.ts"
+    "seed": "npm run seed"
   },
   "scripts": {
     "build:css": "postcss styles --base styles --dir app/styles --env production",
@@ -25,13 +25,14 @@
     "test": "jest"
   },
   "dependencies": {
+    "@mcansh/undoc": "0.4.0",
     "@prisma/client": "3.3.0",
     "@reach/rect": "^0.16.0",
     "@reach/skip-nav": "0.16.0",
     "@remix-run/express": "0.20.1",
     "@remix-run/node": "0.20.1",
     "@remix-run/react": "0.20.1",
-    "@ryanflorence/md": "^6.2.0",
+    "@ryanflorence/md": "^7.0.1",
     "@ryanflorence/mdtut": "^1.2.1",
     "accept-language": "3.0.18",
     "clsx": "1.1.1",

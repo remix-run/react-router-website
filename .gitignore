@@ -11,3 +11,6 @@
 /prisma/*.db
 
 /app/styles
+
+yalc.lock
+.yalc
