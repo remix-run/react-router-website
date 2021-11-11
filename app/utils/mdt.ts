@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import { process } from "@ryanflorence/mdtut";
-import { remarkCodeBlocksShiki } from "./process-markdown";
+import { remarkCodeBlocksShiki } from "@ryanflorence/md";
 import remark from "remark";
 import html from "remark-html";
 

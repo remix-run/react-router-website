@@ -1,6 +1,11 @@
 import parseAttributes from "gray-matter";
-import { reactRouterProcessMarkdown as processMarkdown } from "./process-markdown";
-import type { Entry } from "./get-docs.server";
+import { File, processMarkdown } from "@mcansh/undoc";
+
+let SITE_URL = process.env.SITE_URL;
+
+if (!SITE_URL) {
+  throw new Error("SITE_URL env var not set");
+}
 
 interface Attributes {
   title: string;
@@ -24,30 +29,17 @@ interface ProcessedDoc {
   hasContent: boolean;
 }
 
+export interface Entry {
+  path: string;
+  content: string;
+  lang: string;
+}
+
 async function processDoc(entry: Entry): Promise<ProcessedDoc> {
   let { data, content } = parseAttributes(entry.content!);
   let hasContent = content.trim() !== "";
 
-  let path = entry.path.replace(/^\/docs/, "");
-  let title = data.title || path;
-  let langMatch = path.match(/^\/_i18n\/(?<lang>[a-z]{2})\//);
-  let lang = langMatch?.groups?.lang ?? "en";
-  let source = path.replace(/^\/_i18n\/[a-z]{2}/, "");
-
-  let examplesRegex = /^\/examples\/(?<exampleName>[^\/+]+)\/README.md/;
-  let isExample = source.match(examplesRegex);
-  let exampleName = isExample?.groups?.exampleName;
-  let isExampleRoot = source === "/examples/README.md";
-
-  if (isExample && !exampleName) {
-    throw new Error(`example name not found; path: "${entry.path}"`);
-  }
-
-  let filePath = isExample
-    ? source.replace(examplesRegex, `/examples/${exampleName}.md`)
-    : isExampleRoot
-    ? "/examples/index.md"
-    : source;
+  let title = data.title || entry.path;
 
   // TODO: Get actual version
   let version = "v6";
@@ -55,8 +47,8 @@ async function processDoc(entry: Entry): Promise<ProcessedDoc> {
   let contentToProcess = data.toc === false ? content : "## toc\n" + content;
 
   let html = hasContent
-    ? await processMarkdown(contentToProcess, {
-        linkOriginPath: path ? `docs/${lang}/${version}` + path : undefined,
+    ? await processMarkdown(new URL(SITE_URL), contentToProcess, {
+        linkOriginPath: `docs/${entry.lang}/${version}` + entry.path,
       })
     : "";
 
@@ -66,23 +58,19 @@ async function processDoc(entry: Entry): Promise<ProcessedDoc> {
       toc: data.toc,
       hidden: data.hidden ?? false,
       siblingLinks: data.siblingLinks ?? false,
-      title: title,
+      title: data.title,
       order: data.order,
       description: data.description,
       published: data.published,
     },
     html: html.toString(),
     title,
-    path: filePath,
+    path: entry.path,
     source: entry.path,
     md: content,
     hasContent,
-    lang,
+    lang: entry.lang,
   };
 }
 
-async function processDocs(entries: Entry[]) {
-  return Promise.all(entries.map((entry) => processDoc(entry)));
-}
-
-export { processDoc, processDocs, ProcessedDoc, Attributes };
+export { processDoc, ProcessedDoc, Attributes };
