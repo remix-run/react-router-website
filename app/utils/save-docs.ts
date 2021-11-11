@@ -151,24 +151,32 @@ async function saveDocs(ref: string, releaseNotes: string) {
     onDeletedEntries,
   });
 
-  await prisma.doc.deleteMany({
-    where: {
-      AND: [
-        {
-          filePath: {
-            in: docsToDelete,
+  if (docsToDelete.length > 0) {
+    // TODO: figure out how to tell the lang of the doc to delete so we don't have to delete all of them if one lang is missing.
+    console.log("> Deleted docs not in tarball");
+
+    await prisma.doc.deleteMany({
+      where: {
+        AND: [
+          {
+            filePath: {
+              in: docsToDelete,
+            },
           },
-        },
-        {
-          githubRef: {
-            ref,
+          {
+            githubRef: {
+              ref,
+            },
           },
-        },
-      ],
-    },
-  });
-  for (let entry of docsToDelete) {
-    console.log(`> Deleted ${entry} for ${ref}`);
+        ],
+      },
+    });
+
+    for (let entry of docsToDelete) {
+      console.log(`> Deleted ${entry} for ${ref}`);
+    }
+  } else {
+    console.log("> No docs to delete");
   }
 }
 
