@@ -1,7 +1,8 @@
 import { saveDocs } from "./utils/save-docs";
 import { installGlobals } from "@remix-run/node";
 import type { GitHubRelease } from "./@types/github";
-import { satisfies } from "semver";
+import { rcompare, satisfies } from "semver";
+import invariant from "tiny-invariant";
 
 installGlobals();
 
@@ -17,8 +18,14 @@ async function seed() {
 
   let releases = (await releasesPromise.json()) as GitHubRelease[];
 
-  const releasesToUse = releases.filter((release: any) => {
-    return satisfies(release.tag_name, ">=6.0.0");
+  let sorted = releases.sort((a, b) => rcompare(a.tag_name, b.tag_name));
+
+  let latest = sorted.at(0);
+
+  invariant(latest, "Could not determine latest release");
+
+  const releasesToUse = releases.filter((release) => {
+    return satisfies(release.tag_name, `>=${latest!.tag_name}`);
   });
 
   let promises: Promise<void>[] = [saveDocs("refs/heads/main", "")];
