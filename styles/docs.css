@@ -618,50 +618,19 @@ stylesheet targets.
     @apply mt-0 mb-3 relative rounded-lg block border-l-2 border-r-2 border-current py-2 px-4;
   }
 
-  & docs-info::before,
-  & docs-warning::before,
-  & docs-error::before {
-    @apply inset-0 content-[""] absolute opacity-10 pointer-events-none;
-  }
-
   & docs-warning {
-    color: var(--color-yellow-900);
-    @media (prefers-color-scheme: dark) {
-      color: var(--color-yellow-200);
-    }
-  }
-
-  & docs-warning::before {
-    background: var(--color-yellow-500);
-    opacity: 0.15;
+    @apply text-yellow-900 dark:text-yellow-200;
+    @apply bg-yellow-500 bg-opacity-[15%];
   }
 
   & docs-info {
-    color: var(--color-blue-700);
-    @media (prefers-color-scheme: dark) {
-      color: var(--color-blue-300);
-    }
-  }
-
-  & docs-info::before {
-    background: var(--color-blue-700);
-    @media (prefers-color-scheme: dark) {
-      background: var(--color-blue-300);
-    }
+    @apply text-blue-700 dark:text-blue-300;
+    @apply bg-blue-700 bg-opacity-10 dark:bg-blue-300 dark:bg-opacity-10;
   }
 
   & docs-error {
-    color: var(--color-red-700);
-    @media (prefers-color-scheme: dark) {
-      color: var(--color-red-400);
-    }
-  }
-
-  & docs-error::before {
-    background: var(--color-red-700);
-    @media (prefers-color-scheme: dark) {
-      background: var(--color-red-400);
-    }
+    @apply text-red-700 dark:text-red-400;
+    @apply bg-red-700 bg-opacity-10 dark:bg-red-400 dark:bg-opacity-10;
   }
 
   & docs-cards {
