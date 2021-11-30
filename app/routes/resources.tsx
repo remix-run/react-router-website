@@ -117,7 +117,8 @@ const ResourcesPage: RouteComponent = () => {
                     title: "Stack Overflow",
                     desc: "Get help from the Remix team on using React Router in your application.",
                     icon: <IconStackOverflow />,
-                    linkTo: "https://stackoverflow.com/questions/tagged/react-router",
+                    linkTo:
+                      "https://stackoverflow.com/questions/tagged/react-router",
                     linkLabel: "Visit Stack Overflow",
                   },
                 ].map(({ icon, title, desc, linkLabel, linkTo }) => {
@@ -219,10 +220,10 @@ const ResourcesPage: RouteComponent = () => {
                   // TODO: Get versions from releases
                   {
                     heading: "React Router v6",
-                    date: "September 2021",
+                    date: "November 2021",
                     docs: "/docs",
                     githubLink:
-                      "https://github.com/remix-run/react-router/releases/tag/v6.0.0-beta.6",
+                      "https://github.com/remix-run/react-router/releases/tag/v6.0.2",
                   },
                   {
                     heading: "React Router v5",
@@ -233,7 +234,7 @@ const ResourcesPage: RouteComponent = () => {
                   },
                   {
                     heading: "React Router v3",
-                    date: "February 2019",
+                    date: "March 2020",
                     docs: "https://github.com/remix-run/react-router/tree/v3.2.6/docs",
                     githubLink:
                       "https://github.com/remix-run/react-router/releases/tag/v3.2.6",
