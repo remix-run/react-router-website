@@ -1,10 +1,10 @@
-import { prisma } from "../db.server";
 import { findMatchingEntries, getPackage } from "@mcansh/undoc";
-import type { File } from "@mcansh/undoc";
 import invariant from "tiny-invariant";
 import { Entry, processDoc } from "./process-docs.server";
 import { processMarkdown } from "@ryanflorence/md";
 import type { Prisma } from "@prisma/client";
+
+import { prisma } from "../db.server";
 
 const REPO = process.env.REPO as string;
 const REPO_DOCS_PATH = process.env.REPO_DOCS_PATH as string;
@@ -53,13 +53,13 @@ async function saveDocs(ref: string, releaseNotes: string) {
     });
   }
 
-  let existingDocs = release.docs.map((d) => d.filePath);
+  let existingDocs = release.docs.map((doc) => doc.filePath);
 
   let existingDocsForRef = existingDocs.filter(
     (d) => !d.startsWith("/examples")
   );
-  let existingExamplesForRef = existingDocs.filter((e) =>
-    e.startsWith("/examples")
+  let existingExamplesForRef = existingDocs.filter((doc) =>
+    doc.startsWith("/examples")
   );
 
   let docsDir = REPO_DOCS_PATH.startsWith("/")
@@ -113,6 +113,7 @@ async function saveDocs(ref: string, releaseNotes: string) {
   }
 
   await findMatchingEntries(stream, docsDir, existingDocsForRef, {
+    onDeletedEntries,
     onEntry(entry) {
       let langMatch = entry.path.match(/^\/_i18n\/(?<lang>[a-z]{2})\//);
       let lang = langMatch?.groups?.lang ?? "en";
@@ -124,10 +125,10 @@ async function saveDocs(ref: string, releaseNotes: string) {
         lang,
       });
     },
-    onDeletedEntries,
   });
 
   await findMatchingEntries(stream, examplesDir, existingExamplesForRef, {
+    onDeletedEntries,
     onEntry(entry) {
       let examplesRegex = /^\/examples\/(?<exampleName>[^\/+]+)\/README.md/;
       let isExample = entry.path.match(examplesRegex);
@@ -148,7 +149,6 @@ async function saveDocs(ref: string, releaseNotes: string) {
         lang: "en",
       });
     },
-    onDeletedEntries,
   });
 
   if (docsToDelete.length > 0) {

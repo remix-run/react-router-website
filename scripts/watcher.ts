@@ -1,24 +1,42 @@
 import fsp from "fs/promises";
 import path from "path";
 
-import { PrismaClient } from "@prisma/client";
 import chokidar from "chokidar";
 
-import { processDoc, ProcessedDoc } from "../app/utils/process-docs.server";
+import {
+  Entry,
+  processDoc,
+  ProcessedDoc,
+} from "../app/utils/process-docs.server";
+import { prisma } from "../app/db.server";
+import invariant from "tiny-invariant";
+import { File } from "@mcansh/undoc";
+import { Prisma } from "@prisma/client";
 
-let prisma = new PrismaClient();
+invariant(
+  process.env.REPO_LATEST_BRANCH,
+  "yo, you forgot something, missing REPO_LATEST_BRANCH"
+);
 
-if (!process.env.REPO_LATEST_BRANCH) {
-  throw new Error("yo, you forgot something, missing REPO_LATEST_BRANCH");
-}
+invariant(
+  process.env.LOCAL_DOCS_PATH,
+  "yo, you forgot something, missing LOCAL_DOCS_PATH"
+);
 
-if (!process.env.LOCAL_DOCS_PATH) {
-  throw new Error("yo, you forgot something, missing LOCAL_DOCS_PATH");
-}
+invariant(
+  process.env.LOCAL_EXAMPLES_PATH,
+  "yo, you forgot something, missing LOCAL_EXAMPLES_PATH"
+);
 
-if (!process.env.LOCAL_EXAMPLES_PATH) {
-  throw new Error("yo, you forgot something, missing LOCAL_EXAMPLES_PATH");
-}
+invariant(
+  process.env.REPO_DOCS_PATH,
+  "yo, you forgot something, missing REPO_DOCS_PATH"
+);
+
+invariant(
+  process.env.REPO_EXAMPLES_PATH,
+  "yo, you forgot something, missing REPO_EXAMPLES_PATH"
+);
 
 let BRANCH = process.env.REPO_LATEST_BRANCH;
 
@@ -30,108 +48,120 @@ let EXAMPLES_FILES = EXAMPLES_DIR + "/**/*.md";
 
 let WATCH = [DOCS_FILES, EXAMPLES_FILES];
 
-async function updateOrCreateDoc(processed: ProcessedDoc) {
-  let exists = await prisma.doc.findFirst({
-    where: {
-      filePath: processed.path,
-      lang: processed.lang,
-      githubRef: { ref: BRANCH },
-    },
-  });
-
-  if (exists) {
-    try {
-      await prisma.doc.updateMany({
-        where: {
-          filePath: processed.path,
-          lang: processed.lang,
-          githubRef: { ref: BRANCH },
-        },
-        data: {
-          ...processed.attributes,
-          filePath: processed.path,
-          sourceFilePath: processed.source,
-          md: processed.md,
-          html: processed.html,
-          lang: processed.lang,
-          hasContent: processed.hasContent,
-          title: processed.title,
-        },
-      });
-      console.log(`updated doc ${processed.path}`);
-    } catch (error) {
-      console.error(`failed to update doc ${processed.path}`, error);
-    }
-  } else {
-    try {
-      await prisma.doc.create({
-        data: {
-          ...processed.attributes,
-          filePath: processed.path,
-          sourceFilePath: processed.source,
-          md: processed.md,
-          html: processed.html,
-          lang: processed.lang,
-          hasContent: processed.hasContent,
-          title: processed.title,
-          githubRef: {
-            connectOrCreate: {
-              where: {
-                ref: BRANCH,
-              },
-              create: {
-                ref: BRANCH,
-                releaseNotes: "",
-              },
-            },
-          },
-        },
-      });
-      console.log(`created doc ${processed.path}`);
-    } catch (error) {
-      console.error(`failed to create doc ${processed.path}`, error);
-    }
-  }
-}
-
 let watcher = chokidar.watch(WATCH, {
   persistent: true,
   ignoreInitial: true,
   cwd: DOCS_DIR,
 });
 
+let docsDir = process.env.REPO_DOCS_PATH.startsWith("/")
+  ? process.env.REPO_DOCS_PATH
+  : `/${process.env.REPO_DOCS_PATH}`;
+let examplesDir = process.env.REPO_EXAMPLES_PATH.startsWith("/")
+  ? process.env.REPO_EXAMPLES_PATH
+  : `/${process.env.REPO_EXAMPLES_PATH}`;
+
+async function onEntry(entry: Entry) {
+  let doc = await processDoc(entry);
+
+  let docToSave: Prisma.DocCreateWithoutGithubRefInput = {
+    ...doc.attributes,
+    filePath: doc.path,
+    sourceFilePath: doc.source,
+    md: doc.md,
+    html: doc.html,
+    hasContent: doc.hasContent,
+    title: doc.title,
+    lang: doc.lang,
+  };
+
+  await prisma.doc.upsert({
+    where: {
+      filePath_githubRefId_lang: {
+        filePath: doc.path,
+        githubRefId: BRANCH,
+        lang: doc.lang,
+      },
+    },
+    create: {
+      ...docToSave,
+      githubRef: {
+        connect: { ref: BRANCH },
+      },
+    },
+    update: docToSave,
+  });
+
+  console.log(`> Saved ${doc.path} for ${BRANCH}`);
+}
+
+async function saveExamples(entry: File) {
+  let examplesRegex = /^\/examples\/(?<exampleName>[^\/+]+)\/README.md/;
+  let isExample = entry.path.match(examplesRegex);
+  let exampleName = isExample?.groups?.exampleName;
+  let isExampleRoot = entry.path === `${examplesDir}/README.md`;
+
+  if (isExample && !exampleName) {
+    throw new Error(`Example name not found; path: "${entry.path}"`);
+  }
+
+  let filePath = isExampleRoot
+    ? `${examplesDir}/index.md`
+    : entry.path.replace(examplesRegex, `${examplesDir}/${exampleName}.md`);
+
+  return onEntry({
+    path: filePath,
+    content: entry.content,
+    lang: "en",
+  });
+}
+
+async function saveDocs(entry: File) {
+  let langMatch = entry.path.match(/^\/_i18n\/(?<lang>[a-z]{2})\//);
+  let lang = langMatch?.groups?.lang ?? "en";
+  let source = entry.path.replace(/^\/_i18n\/[a-z]{2}/, "");
+
+  return onEntry({
+    path: source,
+    content: entry.content,
+    lang,
+  });
+}
+
 watcher
   .on("ready", async () => {
     console.log("Removing all previous local files from the DB");
     await prisma.doc.deleteMany({
-      where: {
-        githubRefId: BRANCH,
-      },
+      where: { githubRefId: BRANCH },
     });
 
     console.log("Adding all local files to the DB");
     let entries = Object.entries(watcher.getWatched());
+
     let allFiles = entries.reduce<string[]>((acc, [dir, files]) => {
       let newPaths = files.map((file) => path.join(DOCS_DIR, dir, file));
       return [...acc, ...newPaths];
     }, []);
 
     let promises = [];
-
-    for (let filepath of allFiles) {
-      let content = await fsp.readFile(filepath, "utf8");
+    for (let filePath of allFiles) {
+      let content = await fsp.readFile(filePath, "utf8");
       let actualFilePath = path.join(
-        "/docs",
-        path.relative(DOCS_DIR, filepath)
+        docsDir,
+        path.relative(DOCS_DIR, filePath)
       );
 
-      let processed = await processDoc({
-        type: "file",
-        content,
-        path: actualFilePath,
-      });
-
-      promises.push(updateOrCreateDoc(processed));
+      if (actualFilePath.startsWith(examplesDir)) {
+        let opts: File = { content, path: actualFilePath, type: "file" };
+        promises.push(saveExamples(opts));
+      } else {
+        let opts: File = {
+          content,
+          path: actualFilePath.replace(/^\/docs\//, "/"),
+          type: "file",
+        };
+        promises.push(saveDocs(opts));
+      }
     }
 
     await Promise.all(promises);
@@ -146,28 +176,10 @@ watcher
   .on("add", async (filepath) => {
     let actualFilePath = path.join("/docs", filepath);
     console.log(`File ${actualFilePath} has been added`);
-    let absolutePath = path.join(DOCS_DIR, filepath);
-    let content = await fsp.readFile(absolutePath, "utf8");
-    let processed = await processDoc({
-      type: "file",
-      content,
-      path: actualFilePath,
-    });
-
-    await updateOrCreateDoc(processed);
   })
   .on("change", async (filepath) => {
     let actualFilePath = path.join("/docs", filepath);
     console.log(`File ${actualFilePath} has been changed`);
-    let absolutePath = path.join(DOCS_DIR, filepath);
-    let content = await fsp.readFile(absolutePath, "utf8");
-    let processed = await processDoc({
-      type: "file",
-      content,
-      path: actualFilePath,
-    });
-
-    await updateOrCreateDoc(processed);
   })
   .on("unlink", async (filepath) => {
     let actualFilePath = path.join("/docs", filepath);
