@@ -30,6 +30,7 @@ interface ProcessedDoc {
 }
 
 export interface Entry {
+  source: string;
   path: string;
   content: string;
   lang: string;
@@ -66,7 +67,7 @@ async function processDoc(entry: Entry): Promise<ProcessedDoc> {
     html: html.toString(),
     title,
     path: entry.path,
-    source: entry.path,
+    source: entry.source,
     md: content,
     hasContent,
     lang: entry.lang,

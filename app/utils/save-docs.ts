@@ -123,6 +123,7 @@ async function saveDocs(ref: string, releaseNotes: string) {
         path: source,
         content: entry.content,
         lang,
+        source: entry.path,
       });
     },
   });
@@ -130,10 +131,10 @@ async function saveDocs(ref: string, releaseNotes: string) {
   await findMatchingEntries(stream, examplesDir, existingExamplesForRef, {
     onDeletedEntries,
     onEntry(entry) {
-      let examplesRegex = /^\/examples\/(?<exampleName>[^\/+]+)\/README.md/;
+      let examplesRegex = /^\/(?<exampleName>[^\/+]+)\/README.md/;
       let isExample = entry.path.match(examplesRegex);
       let exampleName = isExample?.groups?.exampleName;
-      let isExampleRoot = entry.path === "/examples/README.md";
+      let isExampleRoot = entry.path === "/README.md";
 
       if (isExample && !exampleName) {
         throw new Error(`example name not found; path: "${entry.path}"`);
@@ -147,6 +148,7 @@ async function saveDocs(ref: string, releaseNotes: string) {
         path: filePath,
         content: entry.content,
         lang: "en",
+        source: entry.path,
       });
     },
   });
