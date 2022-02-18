@@ -90,11 +90,20 @@ const ResourcesPage: RouteComponent = () => {
                 }
                 className="mb-10 md:mb-14"
               /> */}
-              <dl className="grid grid-cols-1 grid-flow-row sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <dl className="grid grid-cols-1 grid-flow-row sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-18 xl:gap-28 2xl:gap-36">
                 {[
                   {
                     title: "GitHub",
-                    desc: "Join the React Router GitHub repo to get news on the latest updates.",
+                    desc: (
+                      <>
+                        Visit the repo to browse the React Router codebase and
+                        ask (or answer!) questions in{" "}
+                        <a href="https://github.com/remix-run/react-router/discussions">
+                          Discussions
+                        </a>
+                        .
+                      </>
+                    ),
                     icon: <IconGithub />,
                     linkTo: "https://github.com/remix-run/react-router",
                     linkLabel: "Visit GitHub",
@@ -113,23 +122,23 @@ const ResourcesPage: RouteComponent = () => {
                     linkTo: "https://www.youtube.com/remix_run",
                     linkLabel: "Visit YouTube",
                   },
-                  {
-                    title: "Stack Overflow",
-                    desc: "Get help from the Remix team on using React Router in your application.",
-                    icon: <IconStackOverflow />,
-                    linkTo:
-                      "https://stackoverflow.com/questions/tagged/react-router",
-                    linkLabel: "Visit Stack Overflow",
-                  },
+                  //   {
+                  //     title: "Stack Overflow",
+                  //     desc: "Get help from the Remix team on using React Router in your application.",
+                  //     icon: <IconStackOverflow />,
+                  //     linkTo:
+                  //       "https://stackoverflow.com/questions/tagged/react-router",
+                  //     linkLabel: "Visit Stack Overflow",
+                  //   },
                 ].map(({ icon, title, desc, linkLabel, linkTo }) => {
                   return (
-                    <div key={title}>
+                    <div key={title} className="sm:flex sm:flex-col">
                       <IconBox
                         icon={icon}
                         className="bg-[color:var(--hue-1000)] text-[color:var(--hue-0000)] mb-6"
                       />
                       <dt className="h3">{title}</dt>
-                      <dd>
+                      <dd className="flex-grow sm:flex sm:flex-col sm:justify-between">
                         <div className="opacity-80">{desc}</div>
                         <div className="mt-3">
                           <ArrowLink
@@ -220,7 +229,7 @@ const ResourcesPage: RouteComponent = () => {
                   // TODO: Get versions from releases
                   {
                     heading: "React Router v6",
-                    date: "November 2021",
+                    date: "December 2021",
                     docs: "/docs",
                     githubLink:
                       "https://github.com/remix-run/react-router/releases/tag/v6.0.2",
