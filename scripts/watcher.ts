@@ -3,11 +3,7 @@ import path from "path";
 
 import chokidar from "chokidar";
 
-import {
-  Entry,
-  processDoc,
-  ProcessedDoc,
-} from "../app/utils/process-docs.server";
+import { Entry, processDoc } from "../app/utils/process-docs.server";
 import { prisma } from "../app/db.server";
 import invariant from "tiny-invariant";
 import { File } from "@mcansh/undoc";
@@ -52,6 +48,7 @@ let watcher = chokidar.watch(WATCH, {
   persistent: true,
   ignoreInitial: true,
   cwd: DOCS_DIR,
+  ignored: /node_modules/,
 });
 
 let docsDir = process.env.REPO_DOCS_PATH.startsWith("/")
