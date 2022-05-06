@@ -114,7 +114,7 @@ async function saveExamples(entry: File) {
   });
 }
 
-async function saveDocs(entry: File) {
+async function saveDoc(entry: File) {
   let langMatch = entry.path.match(/^\/_i18n\/(?<lang>[a-z]{2})\//);
   let lang = langMatch?.groups?.lang ?? "en";
   let filePath = entry.path.replace(/^\/_i18n\/[a-z]{2}/, "");
@@ -159,7 +159,7 @@ watcher
           path: actualFilePath.replace(/^\/docs\//, "/"),
           type: "file",
         };
-        promises.push(saveDocs(opts));
+        promises.push(saveDoc(opts));
       }
     }
 
@@ -175,10 +175,30 @@ watcher
   .on("add", async (filepath) => {
     let actualFilePath = path.join("/docs", filepath);
     console.log(`File ${actualFilePath} has been added`);
+
+    let content = await fsp.readFile(path.join(DOCS_DIR, filepath), "utf8");
+
+    let opts: File = {
+      content,
+      path: actualFilePath.replace(/^\/docs\//, "/"),
+      type: "file",
+    };
+
+    await saveDoc(opts);
   })
   .on("change", async (filepath) => {
     let actualFilePath = path.join("/docs", filepath);
     console.log(`File ${actualFilePath} has been changed`);
+
+    let content = await fsp.readFile(path.join(DOCS_DIR, filepath), "utf8");
+
+    let opts: File = {
+      content,
+      path: actualFilePath.replace(/^\/docs\//, "/"),
+      type: "file",
+    };
+
+    await saveDoc(opts);
   })
   .on("unlink", async (filepath) => {
     let actualFilePath = path.join("/docs", filepath);
