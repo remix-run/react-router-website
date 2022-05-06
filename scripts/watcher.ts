@@ -113,18 +113,20 @@ async function saveExamples(entry: File) {
     path: filePath,
     content: entry.content,
     lang: "en",
+    source: entry.path,
   });
 }
 
 async function saveDocs(entry: File) {
   let langMatch = entry.path.match(/^\/_i18n\/(?<lang>[a-z]{2})\//);
   let lang = langMatch?.groups?.lang ?? "en";
-  let source = entry.path.replace(/^\/_i18n\/[a-z]{2}/, "");
+  let filePath = entry.path.replace(/^\/_i18n\/[a-z]{2}/, "");
 
   return onEntry({
-    path: source,
+    path: filePath,
     content: entry.content,
     lang,
+    source: entry.path,
   });
 }
 
