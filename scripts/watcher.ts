@@ -11,17 +11,23 @@ import { Prisma } from "@prisma/client";
 
 invariant(
   process.env.REPO_LATEST_BRANCH,
-  "🚨 you forgot to set REPO_LATEST_BRANCH"
+  "yo, you forgot something, missing REPO_LATEST_BRANCH"
 );
 
-invariant(process.env.LOCAL_DOCS_PATH, "🚨 you forgot to set LOCAL_DOCS_PATH");
+invariant(
+  process.env.LOCAL_DOCS_PATH,
+  "yo, you forgot something, missing LOCAL_DOCS_PATH"
+);
 
 invariant(
   process.env.LOCAL_EXAMPLES_PATH,
-  "🚨 you forgot to set LOCAL_EXAMPLES_PATH"
+  "yo, you forgot something, missing LOCAL_EXAMPLES_PATH"
 );
 
-invariant(process.env.REPO_DOCS_PATH, "🚨 you forgot to set REPO_DOCS_PATH");
+invariant(
+  process.env.REPO_DOCS_PATH,
+  "yo, you forgot something, missing REPO_DOCS_PATH"
+);
 
 invariant(
   process.env.REPO_EXAMPLES_PATH,
@@ -83,7 +89,7 @@ async function onEntry(entry: Entry) {
     update: docToSave,
   });
 
-  console.log(`💿 Saved ${doc.path} for ${BRANCH}`);
+  console.log(`> Saved ${doc.path} for ${BRANCH}`);
 }
 
 async function saveExamples(entry: File) {
@@ -93,7 +99,7 @@ async function saveExamples(entry: File) {
   let isExampleRoot = entry.path === `${examplesDir}/README.md`;
 
   if (isExample && !exampleName) {
-    throw new Error(`🚨 Example name not found; path: "${entry.path}"`);
+    throw new Error(`Example name not found; path: "${entry.path}"`);
   }
 
   let filePath = isExampleRoot
@@ -106,17 +112,6 @@ async function saveExamples(entry: File) {
     lang: "en",
     source: entry.path,
   });
-}
-
-async function createFile(filepath: string): Promise<File> {
-  let docUrl = path.join(docsDir, filepath);
-  let content = await fsp.readFile(path.join(DOCS_DIR, filepath), "utf8");
-
-  return {
-    content,
-    path: withLeadingSlash(docUrl),
-    type: "file",
-  };
 }
 
 async function saveDoc(entry: File) {
@@ -134,12 +129,12 @@ async function saveDoc(entry: File) {
 
 watcher
   .on("ready", async () => {
-    console.log("🗑  Removing all previous local files from the DB");
+    console.log("Removing all previous local files from the DB");
     await prisma.doc.deleteMany({
       where: { githubRefId: BRANCH },
     });
 
-    console.log("🛟 Adding all local files to the DB");
+    console.log("Adding all local files to the DB");
     let entries = Object.entries(watcher.getWatched());
 
     let allFiles = entries.reduce<string[]>((acc, [dir, files]) => {
@@ -150,15 +145,18 @@ watcher
     let promises = [];
     for (let filePath of allFiles) {
       let content = await fsp.readFile(filePath, "utf8");
-      let docUrl = path.join(docsDir, path.relative(DOCS_DIR, filePath));
+      let actualFilePath = path.join(
+        docsDir,
+        path.relative(DOCS_DIR, filePath)
+      );
 
-      if (docUrl.startsWith(examplesDir)) {
-        let opts: File = { content, path: docUrl, type: "file" };
+      if (actualFilePath.startsWith(examplesDir)) {
+        let opts: File = { content, path: actualFilePath, type: "file" };
         promises.push(saveExamples(opts));
       } else {
         let opts: File = {
           content,
-          path: withLeadingSlash(docUrl),
+          path: actualFilePath.replace(/^\/docs\//, "/"),
           type: "file",
         };
         promises.push(saveDoc(opts));
@@ -168,27 +166,43 @@ watcher
     await Promise.all(promises);
 
     console.log(
-      `✅ Initial scan complete. Ready for changes, http://localhost:3000/docs/en/${
+      `Initial scan complete. Ready for changes, http://localhost:3000/docs/en/${
         BRANCH.split("/").reverse()[0]
       }`
     );
   })
-  .on("error", (error) => {
-    console.error(error);
-  })
+  .on("error", (error) => console.error(error))
   .on("add", async (filepath) => {
-    console.log(`➕ File ${filepath} has been added`);
-    let entry = await createFile(filepath);
-    await saveDoc(entry);
+    let actualFilePath = path.join("/docs", filepath);
+    console.log(`File ${actualFilePath} has been added`);
+
+    let content = await fsp.readFile(path.join(DOCS_DIR, filepath), "utf8");
+
+    let opts: File = {
+      content,
+      path: actualFilePath.replace(/^\/docs\//, "/"),
+      type: "file",
+    };
+
+    await saveDoc(opts);
   })
   .on("change", async (filepath) => {
-    console.log(`✍️  File ${filepath} has been changed`);
-    let entry = await createFile(filepath);
-    await saveDoc(entry);
+    let actualFilePath = path.join("/docs", filepath);
+    console.log(`File ${actualFilePath} has been changed`);
+
+    let content = await fsp.readFile(path.join(DOCS_DIR, filepath), "utf8");
+
+    let opts: File = {
+      content,
+      path: actualFilePath.replace(/^\/docs\//, "/"),
+      type: "file",
+    };
+
+    await saveDoc(opts);
   })
   .on("unlink", async (filepath) => {
-    let actualFilePath = path.join(docsDir, filepath);
-    console.log(`➖ File ${actualFilePath} has been removed`);
+    let actualFilePath = path.join("/docs", filepath);
+    console.log(`File ${actualFilePath} has been removed`);
     let langMatch = actualFilePath.match(/^\/docs\/_i18n\/(?<lang>[a-z]{2})\//);
 
     let lang = langMatch?.groups?.lang ?? "en";
@@ -205,7 +219,3 @@ watcher
       },
     });
   });
-
-function withLeadingSlash(filepath: string) {
-  return filepath.startsWith("/") ? filepath : `/${filepath}`;
-}
