@@ -38,9 +38,9 @@ export async function handleRedirects(request: Request) {
       }, [] as Redirect[]);
   }
 
+  let url = new URL(request.url);
   for (let r of redirects) {
     let [from, location, status] = r;
-    let url = new URL(request.url);
     if (url.pathname === from) {
       throw redirect(location, { status });
     }

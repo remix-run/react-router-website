@@ -2,10 +2,9 @@
 # /foo /bar
 # /foo /bar 301
 
+/api /docs/en/v6
 /docs/api /docs/en/v6
-/docs/en/v6/getting-started/faq /docs/en/v6/faq
-
-# v5 routes
+/docs/en/v6/api /docs/en/v6
 /core https://v5.reactrouter.com/core
 /web https://v5.reactrouter.com/web
 /native https://v5.reactrouter.com/native

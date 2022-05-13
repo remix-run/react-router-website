@@ -5,6 +5,7 @@ import type { Doc as PrismaDoc } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 import { getRefFromParam } from "./utils/get-ref-from-param";
+import { handleRedirects } from "./utils/http";
 
 export interface VersionHead {
   /**
@@ -60,7 +61,7 @@ export type Config = {
 
 export async function getMenu(
   versionOrBranchParam: string,
-  lang: string
+  lang: string,
 ): Promise<MenuNode[]> {
   let ref = await getLatestRefFromParam(versionOrBranchParam);
 
@@ -95,8 +96,8 @@ export async function getMenu(
     }),
   ]);
 
-  let mergedDocs = englishDocs.map((doc) => {
-    let localizedDoc = localizedDocs.find((ld) => ld.filePath === doc.filePath);
+  let mergedDocs = englishDocs.map(doc => {
+    let localizedDoc = localizedDocs.find(ld => ld.filePath === doc.filePath);
     if (localizedDoc) {
       return localizedDoc;
     }
@@ -149,7 +150,7 @@ export async function getMenu(
 export async function getDoc(
   slug: string,
   paramRef: string,
-  lang: string
+  lang: string,
 ): Promise<PrismaDoc> {
   let ref = await getLatestRefFromParam(paramRef);
   let doc: PrismaDoc;
@@ -180,8 +181,8 @@ export async function getDoc(
     console.error(error);
     console.error(
       `Failed to find doc for the following slugs: ${slugs.join(
-        ", "
-      )} for ${ref}`
+        ", ",
+      )} for ${ref}`,
     );
     throw new Response("", { status: 404, statusText: "Doc not found" });
   }
@@ -194,14 +195,12 @@ export async function getLatestRefFromParam(refParam: string): Promise<string> {
     select: { ref: true },
   });
 
-  let refValues = refs.map((ref) =>
-    ref.ref.replace(/^refs\/(heads|tags)\//, "")
-  );
+  let refValues = refs.map(ref => ref.ref.replace(/^refs\/(heads|tags)\//, ""));
 
   let version = getRefFromParam(
     refParam,
     refValues,
-    process.env.REPO_LATEST_BRANCH!
+    process.env.REPO_LATEST_BRANCH!,
   );
 
   if (!version) {
@@ -221,14 +220,14 @@ export async function getVersions(): Promise<VersionHead[]> {
     },
   });
 
-  let tags = refs.map((ref) => ref.ref.replace(/^refs\/tags\//, ""));
-  let validTags = tags.filter((ref) =>
-    semver.valid(ref.replace(/^refs\/tags\//, ""))
+  let tags = refs.map(ref => ref.ref.replace(/^refs\/tags\//, ""));
+  let validTags = tags.filter(ref =>
+    semver.valid(ref.replace(/^refs\/tags\//, "")),
   );
 
   let sorted = validTags.sort((a, b) => semver.compare(b, a));
 
-  let versions = sorted.map((version) => {
+  let versions = sorted.map(version => {
     let tag = semver.coerce(version);
 
     invariant(tag, "Invalid version");
@@ -255,5 +254,5 @@ export async function getVersions(): Promise<VersionHead[]> {
 }
 
 export function getVersion(head: string, versions: VersionHead[]) {
-  return versions.find((v) => v.head === head);
+  return versions.find(v => v.head === head);
 }

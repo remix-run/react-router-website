@@ -5,9 +5,9 @@ import { json } from "remix";
 import { getDoc } from "~/utils.server";
 import { DocsPage } from "~/components/doc";
 import { ensureLangAndVersion } from "~/lib/ensure-lang-version";
-import { CACHE_CONTROL } from "~/utils/http";
+import { CACHE_CONTROL, handleRedirects } from "~/utils/http";
 
-let loader: LoaderFunction = async ({ params }) => {
+let loader: LoaderFunction = async ({ request, params }) => {
   invariant(!!params.version, "Expected version param");
   invariant(!!params.lang, "Expected language param");
   invariant(!!params["*"], "Expected file path");
@@ -15,6 +15,7 @@ let loader: LoaderFunction = async ({ params }) => {
   let { lang, version } = params;
 
   await ensureLangAndVersion(params);
+  await handleRedirects(request);
 
   let doc = await getDoc(params["*"], version, lang);
 
