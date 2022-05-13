@@ -1,61 +1,52 @@
 # base node image
 FROM node:16-bullseye-slim as base
 
-RUN apt-get update && apt-get install -y openssl
+# set for base and all layer that inherit from it
+ENV NODE_ENV production
 
-# install all node_modules, including dev
+# Install all node_modules, including dev dependencies
 FROM base as deps
 
-WORKDIR /remixapp/
+WORKDIR /myapp
 
-ADD package.json package-lock.json .npmrc ./
+ADD package.json package-lock.json ./
 RUN npm install --production=false
 
-# setup production node_modules
+# Setup production node_modules
 FROM base as production-deps
 
-WORKDIR /remixapp/
+WORKDIR /myapp
 
-COPY --from=deps /remixapp/node_modules /remixapp/node_modules
-ADD package.json package-lock.json .npmrc /remixapp/
+COPY --from=deps /myapp/node_modules /myapp/node_modules
+ADD package.json package-lock.json ./
 RUN npm prune --production
 
-# build remixapp
+# Build the app
 FROM base as build
 
-ARG COMMIT_SHA
-ENV COMMIT_SHA=$COMMIT_SHA
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
+WORKDIR /myapp
 
-WORKDIR /remixapp/
+COPY --from=deps /myapp/node_modules /myapp/node_modules
 
-COPY --from=deps /remixapp/node_modules /remixapp/node_modules
-
-# schema doesn't change much so these will stay cached
-ADD prisma .
-RUN npx prisma migrate reset --force --skip-seed
-RUN npx prisma generate
-
-# remixapp code changes all the time
 ADD . .
 RUN npm run build
 
-# build smaller image for running
+# Finally, build the production image with minimal footprint
 FROM base
 
-ENV NODE_ENV=production
+ENV DATABASE_URL=file:/data/sqlite.db
+ENV PORT="8080"
+ENV NODE_ENV="production"
 
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
+# add shortcut for connecting to database CLI
+RUN echo "#!/bin/sh\nset -x\nsqlite3 \$DATABASE_URL" > /usr/local/bin/database-cli && chmod +x /usr/local/bin/database-cli
 
-WORKDIR /remixapp/
+WORKDIR /myapp
 
-COPY --from=production-deps /remixapp/node_modules /remixapp/node_modules
-COPY --from=build /remixapp/node_modules/.prisma /remixapp/node_modules/.prisma
-COPY --from=build /remixapp/public /remixapp/public
-COPY --from=build /remixapp/server /remixapp/server
-COPY --from=build /remixapp/prisma /remixapp/prisma
+COPY --from=production-deps /myapp/node_modules /myapp/node_modules
+
+COPY --from=build /myapp/build /myapp/build
+COPY --from=build /myapp/public /myapp/public
 ADD . .
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "start"]

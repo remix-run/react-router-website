@@ -1,7 +1,14 @@
+// const { flatRoutes } = require("remix-flat-routes");
+
+/**
+ * @type {import('@remix-run/dev').AppConfig}
+ */
 module.exports = {
-  appDirectory: "app",
-  browserBuildDirectory: "public/build",
-  publicPath: "/build/",
-  serverBuildDirectory: "server/build",
-  devServerPort: 8002,
+  cacheDirectory: "./node_modules/.cache/remix",
+  devServerBroadcastDelay: 500,
+  // ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
+  // ignoredRouteFiles: ["**/*"],
+  // routes: async (defineRoutes) => {
+  //   return flatRoutes("flatroutes", defineRoutes);
+  // },
 };
