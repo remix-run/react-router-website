@@ -222,6 +222,13 @@ stylesheet targets.
     @apply mt-0 mb-4;
   }
 
+  & p,
+  & ul,
+  & ol,
+  & blockquote {
+    @apply max-w-[60ch];
+  }
+
   & strong {
     @apply font-semibold;
   }
@@ -285,6 +292,7 @@ stylesheet targets.
 
   & li {
     word-wrap: break-all;
+    @apply my-2;
 
     & > p {
       @apply m-0;
