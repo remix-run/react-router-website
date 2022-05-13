@@ -32,8 +32,13 @@ Now any changes you make to the docs will update your development database.
 
 ## Deploying
 
-```
-build: "remix build"
-watch: "remix watch"
-dev: "remix dev"
+Push to `main` and it'll deploy to production. Tag a commit with `staging` and it'll deploy to staging:
+
+```sh
+# production
+git push origin main
+
+# staging
+git tag -f staging
+git push origin staging
 ```
