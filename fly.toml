@@ -9,10 +9,6 @@ auto_rollback = true
 cmd = "start.sh"
 entrypoint = "sh"
 
-[mounts]
-source = "data"
-destination = "/data"
-
 [[services]]
 internal_port = 8_080
 processes = [ "app" ]
