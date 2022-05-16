@@ -1,5 +1,10 @@
 import { createCookie } from "@remix-run/node";
 
+import { ensureSecure } from "~/http-utils/ensure-secure";
+import { handleRedirects } from "~/http-utils/redirects-file";
+import { removeTrailingSlashes } from "~/http-utils/remove-slashes";
+import { isHost } from "~/http-utils/is-host";
+
 export const CACHE_CONTROL = {
   /**
    * Keep it in the browser (and CDN) for 5 minutes so when they click
@@ -22,5 +27,13 @@ export function serializePrefs(vals: any) {
 }
 
 export function isProductionHost(request: Request) {
-  return "reactrouter.com" === request.headers.get("host");
+  return isHost(request, "reactrouter.com");
+}
+
+export async function whyDoWeNotHaveGoodMiddleWareYetRyan(
+  request: Request
+): Promise<void> {
+  await ensureSecure(request);
+  await removeTrailingSlashes(request);
+  await handleRedirects(request);
 }

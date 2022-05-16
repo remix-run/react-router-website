@@ -14,20 +14,27 @@ export async function getRepoContent(
   repoPair: string,
   ref: string,
   filepath: string
-): Promise<string> {
+): Promise<string | null> {
   if (ref === "local") return getLocalContent(filepath);
   let [owner, repo] = repoPair.split("/");
-  const { data } = await octokit.rest.repos.getContent({
-    mediaType: { format: "raw" },
-    owner,
-    repo,
-    path: filepath,
-    ref,
-  });
+  try {
+    const { data } = await octokit.rest.repos.getContent({
+      mediaType: { format: "raw" },
+      owner,
+      repo,
+      path: filepath,
+      ref,
+    });
 
-  // @ts-expect-error - `format: raw` returns a string but the type doesn't know
-  // that.
-  return data;
+    // @ts-expect-error - `format: raw` returns a string but the type doesn't know
+    // that.
+    return data;
+  } catch (e: any) {
+    if (e.status === 404) {
+      return null;
+    }
+    throw e;
+  }
 }
 
 /**

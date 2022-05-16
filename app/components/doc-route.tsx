@@ -1,15 +1,21 @@
 import type { LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, Response } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import type { Doc } from "~/gh-docs";
 import { getRepoDoc } from "~/gh-docs";
-import { CACHE_CONTROL, isProductionHost } from "~/http";
+import {
+  CACHE_CONTROL,
+  isProductionHost,
+  whyDoWeNotHaveGoodMiddleWareYetRyan,
+} from "~/http";
 import { seo } from "~/seo";
 
 type LoaderData = { doc: Doc; isProductionApp: boolean };
 
 export let loader: LoaderFunction = async ({ params, request }) => {
+  await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
+
   invariant(params.ref, "expected `ref` params");
 
   let doc = await getRepoDoc(params.ref, params["*"] || "index");
@@ -23,9 +29,7 @@ export let loader: LoaderFunction = async ({ params, request }) => {
 
   return json<LoaderData>(
     { doc, isProductionApp },
-    {
-      headers: { "Cache-Control": CACHE_CONTROL.doc },
-    }
+    { headers: { "Cache-Control": CACHE_CONTROL.doc } }
   );
 };
 

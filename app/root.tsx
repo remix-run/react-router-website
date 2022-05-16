@@ -12,7 +12,11 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import { json } from "@remix-run/node";
-import { CACHE_CONTROL, getPrefs } from "./http";
+import {
+  CACHE_CONTROL,
+  getPrefs,
+  whyDoWeNotHaveGoodMiddleWareYetRyan,
+} from "./http";
 
 import tailwindStylesheetUrl from "./styles.processed.css";
 import { useOptimisticColorScheme } from "./components/color-scheme";
@@ -30,6 +34,7 @@ type LoaderData = {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
+  await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
   let prefs = await getPrefs(request);
   return json<LoaderData>(
     {

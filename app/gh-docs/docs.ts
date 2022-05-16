@@ -24,7 +24,7 @@ export interface Doc extends Omit<MenuDoc, "hasContent"> {
 
 declare global {
   var menuCache: LRUCache<string, MenuDoc[]>;
-  var docCache: LRUCache<string, Doc>;
+  var docCache: LRUCache<string, Doc | undefined>;
 }
 
 let menuCache =
@@ -75,7 +75,7 @@ function parseAttrs(
 let docCache =
   // we need a better hot reload story here
   global.docCache ||
-  (global.docCache = new LRUCache<string, Doc>({
+  (global.docCache = new LRUCache<string, Doc | undefined>({
     max: 300,
     ttl: 300000,
     fetchMethod: async (key) => {
@@ -83,6 +83,7 @@ let docCache =
       let [repo, ref, slug] = key.split(":");
       let filename = `docs/${slug}.md`;
       let md = await getRepoContent(repo, ref, filename);
+      if (md === null) return undefined;
       let { content, attrs } = parseAttrs(md, filename);
       let html = await processMarkdown(content);
       return { attrs, filename, html, slug, children: [] };

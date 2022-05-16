@@ -2,7 +2,7 @@ import type { LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { getLatestRepoTag } from "~/gh-docs";
 
-export let loader: LoaderFunction = async ({ params, request }) => {
+export let loader: LoaderFunction = async () => {
   let tag = await getLatestRepoTag();
 
   if (!tag) {
