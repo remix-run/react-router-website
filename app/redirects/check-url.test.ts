@@ -27,7 +27,7 @@ describe("handleRedirects", () => {
     expect(response?.headers.get("location")).toBe("/one/two/three");
   });
 
-  it.only("redirects to root", async () => {
+  it("redirects to root", async () => {
     let response = await checkUrl("/docs", redirects);
     expect(response?.headers.get("location")).toBe("/");
   });
