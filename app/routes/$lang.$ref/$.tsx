@@ -1,1 +1,7 @@
-export { headers, loader, default, meta } from "~/components/doc-route";
+export {
+  headers,
+  loader,
+  default,
+  meta,
+  CatchBoundary,
+} from "~/components/doc-route";

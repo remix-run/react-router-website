@@ -1,7 +1,6 @@
 import fsp from "fs/promises";
 import invariant from "tiny-invariant";
 import path from "path";
-import { octokit } from "./github";
 
 /**
  * Fetches the contents of a file in a repository or from your local disk.
@@ -17,24 +16,13 @@ export async function getRepoContent(
 ): Promise<string | null> {
   if (ref === "local") return getLocalContent(filepath);
   let [owner, repo] = repoPair.split("/");
-  try {
-    const { data } = await octokit.rest.repos.getContent({
-      mediaType: { format: "raw" },
-      owner,
-      repo,
-      path: filepath,
-      ref,
-    });
-
-    // @ts-expect-error - `format: raw` returns a string but the type doesn't know
-    // that.
-    return data;
-  } catch (e: any) {
-    if (e.status === 404) {
-      return null;
-    }
-    throw e;
-  }
+  let pathname = `/${owner}/${repo}/${ref}/${filepath}`;
+  let response = await fetch(
+    new URL(pathname, "https://raw.githubusercontent.com/").href,
+    { headers: { "User-Agent": `docs:${owner}/${repo}` } }
+  );
+  if (!response.ok) return null;
+  return response.text();
 }
 
 /**

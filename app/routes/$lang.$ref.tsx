@@ -13,7 +13,7 @@ import {
 import invariant from "tiny-invariant";
 import { matchPath, useResolvedPath } from "react-router-dom";
 import classNames from "classnames";
-import { getRepoDocsMenu, getRepoTags, validateParams } from "~/gh-docs";
+import { Doc, getRepoDocsMenu, getRepoTags, validateParams } from "~/gh-docs";
 import type { MenuDoc } from "~/gh-docs";
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/components/details-menu";
@@ -205,9 +205,9 @@ function NavMenuDesktop() {
   );
 }
 
-function useDoc() {
+function useDoc(): Doc | null {
   let data = useMatches().slice(-1)[0].data;
-  invariant(data, "expected child match for the doc");
+  if (!data) return null;
   return data.doc;
 }
 
@@ -228,7 +228,9 @@ function NavMenuMobile() {
             <use href={`${iconsHref}#chevron-d`} />
           </svg>
         </div>
-        <div className="whitespace-nowrap font-bold">{doc.attrs.title}</div>
+        <div className="whitespace-nowrap font-bold">
+          {doc ? doc.attrs.title : "Navigation"}
+        </div>
       </summary>
       <div className="absolute h-[66vh] w-full overflow-auto overscroll-contain border-b bg-white p-3 shadow-lg">
         <Menu />
@@ -354,7 +356,7 @@ function Menu() {
 function Footer() {
   let doc = useDoc();
   let repoUrl = "https://github.com/remix-run/react-router";
-  let editUrl = `${repoUrl}/edit/main/docs/${doc.slug}.md`;
+  let editUrl = doc ? `${repoUrl}/edit/main/docs/${doc.slug}.md` : null;
   return (
     <div className="mt-16 flex justify-between border-t pt-4 text-sm text-gray-500 dark:border-gray-600">
       <div className="lg:flex lg:items-center">
@@ -376,12 +378,14 @@ function Footer() {
         </div>
       </div>
       <div>
-        <a className="flex items-center gap-1 hover:underline" href={editUrl}>
-          Edit
-          <svg aria-hidden className="h-4 w-4">
-            <use href={`${iconsHref}#edit`} />
-          </svg>
-        </a>
+        {editUrl && (
+          <a className="flex items-center gap-1 hover:underline" href={editUrl}>
+            Edit
+            <svg aria-hidden className="h-4 w-4">
+              <use href={`${iconsHref}#edit`} />
+            </svg>
+          </a>
+        )}
       </div>
     </div>
   );

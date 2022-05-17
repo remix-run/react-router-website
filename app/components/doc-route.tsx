@@ -1,6 +1,6 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json, Response } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useParams } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import type { Doc } from "~/gh-docs";
 import { getRepoDoc } from "~/gh-docs";
@@ -19,7 +19,9 @@ export let loader: LoaderFunction = async ({ params, request }) => {
   invariant(params.ref, "expected `ref` params");
 
   let doc = await getRepoDoc(params.ref, params["*"] || "index");
-  if (!doc) throw new Response("", { status: 404 });
+  if (!doc) {
+    throw new Response("", { status: 404 });
+  }
 
   // Would rather do this once in root.tsx but `seo` is kinda funny, need to
   // think about it a bit, but I'm thinking it shouldn't automatically add
@@ -41,7 +43,7 @@ export function headers() {
 }
 
 export function meta({ data }: { data?: LoaderData }) {
-  invariant(data, `expected loader data for meta tags`);
+  if (!data) return { title: "Not Found" };
   let { doc, isProductionApp } = data;
   let title = doc.attrs.title + " | React Router";
   let [meta] = seo({
@@ -57,5 +59,17 @@ export default function DocPage() {
   let { doc } = useLoaderData<LoaderData>();
   return (
     <div className="markdown" dangerouslySetInnerHTML={{ __html: doc.html }} />
+  );
+}
+
+export function CatchBoundary() {
+  let params = useParams();
+  return (
+    <div className="flex h-[50vh] flex-col items-center justify-center">
+      <h1 className="text-9xl font-bold">404</h1>
+      <p className="text-lg">
+        There is no doc for <i className="text-gray-500">{params["*"]}</i>
+      </p>
+    </div>
   );
 }
