@@ -1,7 +1,7 @@
 import { createCookie } from "@remix-run/node";
 
 import { ensureSecure } from "~/http-utils/ensure-secure";
-import { handleRedirects } from "~/http-utils/redirects-file";
+import { handleRedirects } from "~/redirects";
 import { removeTrailingSlashes } from "~/http-utils/remove-slashes";
 import { isHost } from "~/http-utils/is-host";
 

@@ -1,0 +1,8 @@
+# ignore this
+
+/hamburger /taco
+/beef/* /cheese/*
+
+# Ignore this
+
+/docs/* /*
