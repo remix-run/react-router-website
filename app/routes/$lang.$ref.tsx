@@ -23,6 +23,8 @@ import { useOptimisticColorScheme } from "~/components/color-scheme";
 type LoaderData = {
   menu: MenuDoc[];
   versions: string[];
+  latestVersion: string;
+  releaseBranch: string;
   branches: string[];
   lang: string;
   currentGitHubRef: string;
@@ -65,6 +67,8 @@ export let loader: LoaderFunction = async ({ params, request }) => {
   return json<LoaderData>({
     menu,
     versions: tags.slice(0, 1),
+    latestVersion: tags.slice(0, 1)[0],
+    releaseBranch: "main",
     branches,
     currentGitHubRef: ref,
     lang,
@@ -240,8 +244,14 @@ function NavMenuMobile() {
 }
 
 function VersionSelect() {
-  let { versions, branches, currentGitHubRef, lang } =
-    useLoaderData<LoaderData>();
+  let {
+    versions,
+    latestVersion,
+    releaseBranch,
+    branches,
+    currentGitHubRef,
+    lang,
+  } = useLoaderData<LoaderData>();
 
   return (
     <DetailsMenu>
@@ -257,7 +267,7 @@ function VersionSelect() {
             <VersionsLabel label="Branches" />
             {branches.map((branch) => (
               <VersionLink key={branch} to={`/${lang}/${branch}`}>
-                {branch}
+                {releaseBranch === branch ? `main (${latestVersion})` : branch}
               </VersionLink>
             ))}
           </div>
