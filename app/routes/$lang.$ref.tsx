@@ -13,8 +13,8 @@ import {
 import invariant from "tiny-invariant";
 import { matchPath, useResolvedPath } from "react-router-dom";
 import classNames from "classnames";
-import { Doc, getRepoDocsMenu, getRepoTags, validateParams } from "~/gh-docs";
-import type { MenuDoc } from "~/gh-docs";
+import { getRepoDocsMenu, getRepoTags, validateParams } from "~/gh-docs";
+import type { Doc, MenuDoc } from "~/gh-docs";
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/components/details-menu";
 import { getPrefs, serializePrefs } from "~/http";
@@ -301,7 +301,7 @@ function VersionLink({
   );
 }
 
-function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
+function useIsActivePath(to: string) {
   let { pathname } = useResolvedPath(to);
   let navigation = useTransition();
   let currentLocation = useLocation();
@@ -310,6 +310,42 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
       ? navigation.location
       : currentLocation;
   let match = matchPath(pathname, location.pathname);
+  return Boolean(match);
+}
+
+function MenuCategoryLink({
+  to,
+  children,
+}: {
+  to: string;
+  children: React.ReactNode;
+}) {
+  let isActive = useIsActivePath(to);
+
+  return (
+    <Link
+      prefetch="intent"
+      to={to}
+      className={classNames(
+        // link styles
+        "group -mx-4 flex items-center py-2 lg:text-sm",
+        isActive
+          ? "font-bold text-red-brand"
+          : "text-gray-600 dark:text-gray-300",
+
+        // active pill styles
+        "before:mr-2 before:block before:h-1 before:w-2 before:rounded-full before:content-['']",
+        isActive
+          ? "before:bg-red-brand"
+          : "before:bg-transparent before:hover:bg-gray-200 dark:before:hover:bg-gray-300"
+      )}
+      children={children}
+    />
+  );
+}
+
+function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
+  let isActive = useIsActivePath(to);
 
   return (
     <Link
@@ -318,11 +354,13 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
       className={classNames(
         // link styles
         "group flex items-center py-2 lg:text-sm",
-        match ? "font-bold text-red-brand" : "text-gray-600 dark:text-gray-300",
+        isActive
+          ? "font-bold text-red-brand"
+          : "text-gray-600 dark:text-gray-300",
 
         // active pill styles
         "before:mr-2 before:block before:h-1 before:w-2 before:rounded-full before:content-['']",
-        match
+        isActive
           ? "before:bg-red-brand"
           : "before:bg-transparent before:hover:bg-gray-200 dark:before:hover:bg-gray-300"
       )}
@@ -338,9 +376,15 @@ function Menu() {
       <ul>
         {menu.map((category) => (
           <li key={category.attrs.title} className="mb-6">
-            <div className="block py-2 text-sm font-bold uppercase text-black dark:text-white lg:text-xs">
-              {category.attrs.title}
-            </div>
+            {category.hasContent ? (
+              <MenuCategoryLink to={category.slug}>
+                {category.attrs.title}
+              </MenuCategoryLink>
+            ) : (
+              <div className="block py-2 text-sm font-bold uppercase text-black dark:text-white lg:text-xs">
+                {category.attrs.title}
+              </div>
+            )}
             {category.children.map((doc) => (
               <MenuLink key={doc.slug} to={doc.slug}>
                 {doc.attrs.title}

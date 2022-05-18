@@ -4,6 +4,7 @@ import type {
   MetaFunction,
 } from "@remix-run/node";
 import {
+  Link,
   Links,
   LiveReload,
   Meta,
@@ -77,11 +78,19 @@ export function ErrorBoundary({ error }: { error: Error }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Meta />
+        <title>Oops | React Router</title>
         <Links />
       </head>
-      <body className="bg-white text-black dark:bg-gray-900 dark:text-white">
-        <div>{error.message}</div>
+      <body className="flex bg-white text-black dark:bg-gray-900 dark:text-white">
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <div className="flex gap-4">
+            <div className="border-r pr-4 font-bold">Oops</div>
+            <div>This is embarassing, our site is broken.</div>
+          </div>
+          <Link to="/" className="mt-8 underline">
+            Go Home
+          </Link>
+        </div>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
