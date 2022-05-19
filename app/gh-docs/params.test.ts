@@ -40,6 +40,11 @@ describe("validateParams", () => {
           `en/${LATEST_V1_MINOR_TAG}`
         );
       });
+      it("expands the major shorthand, preserves splat", () => {
+        expect(
+          validate(TAGS, BRANCHES, { lang: "en", ref: "v1", "*": "beef/taco" })
+        ).toBe(`en/${LATEST_V1_MAJOR_TAG}/beef/taco`);
+      });
     });
 
     describe("and a valid branch in the second position", () => {

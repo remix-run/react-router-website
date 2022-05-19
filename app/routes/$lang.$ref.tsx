@@ -47,7 +47,7 @@ export let action: ActionFunction = async ({ params, request }) => {
 };
 
 export let loader: LoaderFunction = async ({ params, request }) => {
-  let { lang, ref } = params;
+  let { lang, ref, "*": splat } = params;
   invariant(lang, "expected `params.lang`");
   invariant(ref, "expected `params.ref`");
 
@@ -60,7 +60,7 @@ export let loader: LoaderFunction = async ({ params, request }) => {
     branches.push("local");
   }
 
-  let betterUrl = validateParams(tags, branches, { lang, ref });
+  let betterUrl = validateParams(tags, branches, { lang, ref, "*": splat });
   if (betterUrl) throw redirect("/" + betterUrl);
 
   let menu = await getRepoDocsMenu(ref, lang);
