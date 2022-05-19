@@ -1,4 +1,5 @@
 import type { LoaderFunction } from "@remix-run/node";
+import * as React from "react";
 import { json, Response } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
 import invariant from "tiny-invariant";
@@ -10,6 +11,7 @@ import {
   whyDoWeNotHaveGoodMiddleWareYetRyan,
 } from "~/http";
 import { seo } from "~/seo";
+import { useDelegatedReactRouterLinks } from "./delegate-markdown-links";
 
 type LoaderData = { doc: Doc; isProductionApp: boolean };
 
@@ -57,8 +59,14 @@ export function meta({ data }: { data?: LoaderData }) {
 
 export default function DocPage() {
   let { doc } = useLoaderData<LoaderData>();
+  let ref = React.useRef<HTMLDivElement>(null);
+  useDelegatedReactRouterLinks(ref);
   return (
-    <div className="markdown" dangerouslySetInnerHTML={{ __html: doc.html }} />
+    <div
+      ref={ref}
+      className="markdown"
+      dangerouslySetInnerHTML={{ __html: doc.html }}
+    />
   );
 }
 
