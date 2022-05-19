@@ -13,7 +13,12 @@ import {
 import invariant from "tiny-invariant";
 import { matchPath, useResolvedPath } from "react-router-dom";
 import classNames from "classnames";
-import { getRepoDocsMenu, getRepoTags, validateParams } from "~/gh-docs";
+import {
+  getRepoBranches,
+  getRepoDocsMenu,
+  getRepoTags,
+  validateParams,
+} from "~/gh-docs";
 import type { Doc, MenuDoc } from "~/gh-docs";
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/components/details-menu";
@@ -30,7 +35,7 @@ type LoaderData = {
   currentGitHubRef: string;
 };
 
-export let action: ActionFunction = async ({ params, request }) => {
+export let action: ActionFunction = async ({ request }) => {
   let prefs = await getPrefs(request);
   let data = await request.formData();
   let colorScheme = data.get("colorScheme");
@@ -51,10 +56,10 @@ export let loader: LoaderFunction = async ({ params, request }) => {
   invariant(lang, "expected `params.lang`");
   invariant(ref, "expected `params.ref`");
 
-  let tags = await getRepoTags();
-  if (!tags) throw new Response("Cannot reach GitHub", { status: 503 });
-
-  let branches = ["main", "dev"];
+  let branchesInMenu = ["main", "dev"];
+  let [tags, branches] = await Promise.all([getRepoTags(), getRepoBranches()]);
+  if (!tags || !branches)
+    throw new Response("Cannot reach GitHub", { status: 503 });
 
   if (process.env.NODE_ENV === "development") {
     branches.push("local");
@@ -69,7 +74,7 @@ export let loader: LoaderFunction = async ({ params, request }) => {
     versions: tags.slice(0, 1),
     latestVersion: tags.slice(0, 1)[0],
     releaseBranch: "main",
-    branches,
+    branches: branchesInMenu,
     currentGitHubRef: ref,
     lang,
   });
@@ -219,7 +224,7 @@ function NavMenuMobile() {
   let doc = useDoc();
 
   return (
-    <DetailsMenu open className="group relative flex h-full flex-col lg:hidden">
+    <DetailsMenu className="group relative flex h-full flex-col lg:hidden">
       <summary
         tabIndex={0}
         className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-200 bg-white bg-opacity-75 px-2  py-3 text-sm font-medium backdrop-blur hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:bg-opacity-50 dark:hover:bg-gray-800 dark:active:bg-gray-700"

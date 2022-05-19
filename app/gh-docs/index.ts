@@ -1,5 +1,6 @@
-import { getTags } from "./tags";
 import { getDoc, getMenu } from "./docs";
+import { getBranches } from "./branches";
+import { getTags } from "./tags";
 
 export { validateParams } from "./params";
 export { getRepoTarballStream } from "./repo-tarball";
@@ -11,6 +12,10 @@ if (!REPO) throw new Error("Missing process.env.SOURCE_REPO");
 
 export function getRepoTags() {
   return getTags(REPO);
+}
+
+export function getRepoBranches() {
+  return getBranches(REPO);
 }
 
 export async function getLatestRepoTag() {
