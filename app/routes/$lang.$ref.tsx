@@ -219,7 +219,7 @@ function NavMenuMobile() {
   let doc = useDoc();
 
   return (
-    <DetailsMenu className="group relative flex h-full flex-col lg:hidden">
+    <DetailsMenu open className="group relative flex h-full flex-col lg:hidden">
       <summary
         tabIndex={0}
         className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-200 bg-white bg-opacity-75 px-2  py-3 text-sm font-medium backdrop-blur hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:bg-opacity-50 dark:hover:bg-gray-800 dark:active:bg-gray-700"
@@ -236,7 +236,7 @@ function NavMenuMobile() {
           {doc ? doc.attrs.title : "Navigation"}
         </div>
       </summary>
-      <div className="absolute h-[66vh] w-full overflow-auto overscroll-contain border-b bg-white p-3 shadow-lg">
+      <div className="absolute h-[66vh] w-full overflow-auto overscroll-contain border-b bg-white p-3 shadow-2xl dark:border-gray-700 dark:bg-gray-900 dark:shadow-black">
         <Menu />
       </div>
     </DetailsMenu>
