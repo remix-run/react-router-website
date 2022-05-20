@@ -47,7 +47,7 @@ export function headers() {
 export function meta({ data }: { data?: LoaderData }) {
   if (!data) return { title: "Not Found" };
   let { doc, isProductionApp } = data;
-  let title = doc.attrs.title + " | React Router";
+  let title = doc.attrs.title;
   let [meta] = seo({
     title: title,
     twitter: { title },
@@ -64,7 +64,7 @@ export default function DocPage() {
   return (
     <div
       ref={ref}
-      className="markdown"
+      className="markdown pb-[33vh]"
       dangerouslySetInnerHTML={{ __html: doc.html }}
     />
   );

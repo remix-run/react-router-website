@@ -185,15 +185,22 @@ html.dark {
   /*****************************************************************************/
   /* headings */
   & :is(h1, h2, h3, h4, h5, h6) {
-    @apply m-0 mt-8 mb-4;
+    @apply mx-0 my-4;
   }
 
   & h1 {
-    @apply my-10 text-m-h1 font-black dark:text-white md:text-d-h1;
+    @apply my-24 mb-10 text-m-h1 font-black dark:text-white md:text-d-h1;
+    &:first-child {
+      @apply mt-0;
+    }
   }
 
   & h2 {
-    @apply text-m-h2 font-bold text-gray-600 dark:text-gray-50 md:text-d-h2;
+    @apply mt-24 text-m-h2 font-bold text-gray-600 dark:text-gray-50 md:text-d-h2;
+  }
+
+  & h1 + h2 {
+    @apply mt-8;
   }
 
   & h3 {
@@ -274,7 +281,7 @@ html.dark {
   }
 
   & pre {
-    @apply my-8 bg-[color:var(--base00)] leading-relaxed dark:border-gray-700;
+    @apply my-4 bg-[color:var(--base00)] leading-relaxed dark:border-gray-700;
   }
 
   & code,
@@ -407,46 +414,23 @@ html.dark {
   & docs-success,
   & docs-warning,
   & docs-error {
-    @apply relative my-8 block rounded-lg border-l-2 border-r-2 border-current px-4 py-2;
-  }
-
-  & docs-info::before,
-  & docs-success::before,
-  & docs-warning::before,
-  & docs-error::before {
-    @apply pointer-events-none absolute inset-0 opacity-10 content-[""];
+    @apply my-8 block border-l-4 px-4 py-0 font-light text-gray-500 dark:text-gray-400;
   }
 
   & docs-warning {
-    @apply text-yellow-900 dark:text-yellow-100;
-  }
-
-  & docs-warning::before {
-    @apply bg-yellow-500 opacity-[0.15];
+    @apply border-orange-600 dark:border-orange-400;
   }
 
   & docs-info {
-    @apply text-blue-brand dark:text-blue-300;
-  }
-
-  & docs-info::before {
-    @apply bg-blue-brand;
+    @apply border-blue-brand dark:border-blue-300;
   }
 
   & docs-error {
-    @apply text-red-700 dark:text-red-300;
-  }
-
-  & docs-error::before {
-    @apply bg-red-700 dark:bg-red-300;
+    @apply border-red-700 dark:border-red-300;
   }
 
   & docs-success {
-    @apply text-green-600 dark:text-green-300;
-  }
-
-  & docs-success::before {
-    @apply bg-green-brand;
+    @apply border-green-600 dark:border-green-300;
   }
 
   & docs-cards {

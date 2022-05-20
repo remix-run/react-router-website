@@ -10,6 +10,7 @@ export interface MenuDoc {
   attrs: {
     title: string;
     order?: number;
+    new?: boolean;
     [key: string]: any;
   };
   children: MenuDoc[];
@@ -27,11 +28,13 @@ declare global {
   var docCache: LRUCache<string, Doc | undefined>;
 }
 
+let NO_CACHE = process.env.NO_CACHE;
+
 let menuCache =
   global.menuCache ||
   (global.menuCache = new LRUCache<string, MenuDoc[]>({
     max: 30,
-    ttl: 300000, // 5 minutes
+    ttl: NO_CACHE ? 1 : 300000, // 5 minutes
   }));
 
 export async function getMenu(
@@ -77,7 +80,7 @@ let docCache =
   global.docCache ||
   (global.docCache = new LRUCache<string, Doc | undefined>({
     max: 300,
-    ttl: 300000,
+    ttl: NO_CACHE ? 1 : 300000,
     fetchMethod: async (key) => {
       console.log("Fetching fresh doc", key);
       let [repo, ref, slug] = key.split(":");

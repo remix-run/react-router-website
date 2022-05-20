@@ -63,6 +63,7 @@ export let loader: LoaderFunction = async ({ params, request }) => {
 
   if (process.env.NODE_ENV === "development") {
     branches.push("local");
+    branchesInMenu.push("local");
   }
 
   let betterUrl = validateParams(tags, branches, { lang, ref, "*": splat });
@@ -122,7 +123,7 @@ function Header() {
             <use href={`${iconsHref}#logo`} />
           </svg>
           <div className="hidden md:block">
-            <svg aria-label="React Router" className="w-40">
+            <svg aria-label="React Router" className="h-6 w-40">
               <use href={`${iconsHref}#logotype`} />
             </svg>
           </div>
@@ -402,7 +403,7 @@ function Menu() {
             )}
             {category.children.map((doc) => (
               <MenuLink key={doc.slug} to={doc.slug}>
-                {doc.attrs.title}
+                {doc.attrs.title} {doc.attrs.new && "🆕"}
               </MenuLink>
             ))}
           </li>
