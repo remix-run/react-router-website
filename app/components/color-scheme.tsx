@@ -5,5 +5,5 @@ export function useOptimisticColorScheme() {
   let transition = useTransition();
   let optimisticColorScheme =
     transition.submission?.formData.get("colorScheme");
-  return optimisticColorScheme || rootLoaderData.colorScheme;
+  return optimisticColorScheme || rootLoaderData?.colorScheme || "light";
 }
