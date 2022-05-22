@@ -418,7 +418,7 @@ html.dark {
   }
 
   & docs-warning {
-    @apply border-orange-600 dark:border-orange-400;
+    @apply border-orange-400;
   }
 
   & docs-info {
