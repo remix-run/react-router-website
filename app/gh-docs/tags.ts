@@ -1,4 +1,5 @@
 import LRUCache from "lru-cache";
+import semver from "semver";
 import { octokit } from "./github";
 
 /**
@@ -6,6 +7,12 @@ import { octokit } from "./github";
  */
 export async function getTags(repo: string) {
   return tagsCache.fetch(repo);
+}
+
+export function getLatestVersion(tags: string[]) {
+  return tags.filter((tag) =>
+    semver.satisfies(tag, "*", { includePrerelease: false })
+  )[0];
 }
 
 declare global {

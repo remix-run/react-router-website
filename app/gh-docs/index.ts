@@ -1,6 +1,7 @@
 import { getDoc, getMenu } from "./docs";
 import { getBranches } from "./branches";
-import { getTags } from "./tags";
+import { getLatestVersion, getTags } from "./tags";
+import invariant from "tiny-invariant";
 
 export { validateParams } from "./params";
 export { getRepoTarballStream } from "./repo-tarball";
@@ -18,10 +19,10 @@ export function getRepoBranches() {
   return getBranches(REPO);
 }
 
-export async function getLatestRepoTag() {
+export async function getLatestRepoTag(): Promise<string> {
   let tags = await getTags(REPO);
-  if (!tags) return null;
-  return tags.slice(0, 1)[0];
+  invariant(tags, "Expected tags in getLatestRepoTag");
+  return getLatestVersion(tags);
 }
 
 export function getRepoDocsMenu(ref: string, lang: string) {

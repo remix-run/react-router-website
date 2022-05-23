@@ -24,6 +24,7 @@ import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/components/details-menu";
 import { getPrefs, serializePrefs } from "~/http";
 import { useOptimisticColorScheme } from "~/components/color-scheme";
+import { getLatestVersion } from "~/gh-docs/tags";
 
 type LoaderData = {
   menu: MenuDoc[];
@@ -72,8 +73,9 @@ export let loader: LoaderFunction = async ({ params, request }) => {
   let menu = await getRepoDocsMenu(ref, lang);
   return json<LoaderData>({
     menu,
-    versions: tags.slice(0, 1),
-    latestVersion: tags.slice(0, 1)[0],
+    // TODO: after updating v3/v5 docs, include them here too
+    versions: [getLatestVersion(tags)],
+    latestVersion: getLatestVersion(tags),
     releaseBranch: "main",
     branches: branchesInMenu,
     currentGitHubRef: ref,

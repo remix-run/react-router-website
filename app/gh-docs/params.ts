@@ -17,11 +17,15 @@ export function validateParams(
 
   if (firstIsLang) {
     if (!second) {
-      return `${first}/${semver.maxSatisfying(tags, "*")}`;
+      return `${first}/${semver.maxSatisfying(tags, "*", {
+        includePrerelease: false,
+      })}`;
     }
 
     if (!secondIsRef) {
-      let expandedRef = semver.maxSatisfying(tags, second);
+      let expandedRef = semver.maxSatisfying(tags, second, {
+        includePrerelease: false,
+      });
       let latest = semver.maxSatisfying(tags, "*");
       let path = [first];
 
@@ -36,7 +40,7 @@ export function validateParams(
   let ref =
     tags.includes(first) || branches.includes(first)
       ? first
-      : semver.maxSatisfying(tags, first);
+      : semver.maxSatisfying(tags, first, { includePrerelease: false });
   if (ref) {
     let path = [lang, ref];
     if (second) path.push(second);
@@ -45,7 +49,11 @@ export function validateParams(
   }
 
   if (!firstIsLang && !ref) {
-    let path = [lang, semver.maxSatisfying(tags, "*"), first];
+    let path = [
+      lang,
+      semver.maxSatisfying(tags, "*", { includePrerelease: false }),
+      first,
+    ];
     if (second) path.push(second);
     if (splat) path.push(splat);
     return path.join("/");
