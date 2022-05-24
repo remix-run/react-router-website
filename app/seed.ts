@@ -18,7 +18,7 @@ async function seed() {
 
   let promises: Promise<void>[] = [
     saveDocs("refs/heads/main", ""),
-    saveDocs("refs/heads/v6.3.0", "")
+    saveDocs("refs/tags/v6.3.0", "")
   ];
 
   await Promise.all(promises);
