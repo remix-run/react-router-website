@@ -186,6 +186,14 @@ html.dark {
   /* headings */
   & :is(h1, h2, h3, h4, h5, h6) {
     @apply mx-0 my-4 text-gray-900 dark:text-white;
+
+    &:target {
+      @apply text-red-brand;
+
+      .icon-link::before {
+        visibility: visible;
+      }
+    }
   }
 
   & h1 {
@@ -337,7 +345,7 @@ html.dark {
     pre[data-line-numbers="true"]:not([data-lang="bash"], [data-lang="sh"])
     [data-line-number]::before {
     content: attr(data-line-number);
-    @apply mr-6 inline-block w-10 bg-gray-50 pl-0 pr-2 text-right text-gray-300 dark:text-gray-600;
+    @apply mr-6 inline-block w-10 bg-gray-50 pl-0 pr-2 text-right text-gray-300 dark:bg-gray-800 dark:text-gray-600;
     position: sticky;
     left: 0;
   }

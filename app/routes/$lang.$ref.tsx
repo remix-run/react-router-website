@@ -114,8 +114,10 @@ export default function DocsLayout() {
 }
 
 function Header() {
+  const iconClasses =
+    "hidden md:block text-gray-800 hover:text-gray-900 dark:text-gray-100 dark:hover:text-gray-50";
   return (
-    <div className="relative z-20 flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white bg-opacity-80 px-4 py-3 text-gray-900 backdrop-blur dark:border-gray-700 dark:bg-gray-900 dark:bg-opacity-50 dark:text-gray-100 lg:px-8">
+    <div className="relative z-20 flex h-16 w-full items-center justify-between border-b border-gray-50 bg-white bg-opacity-90 px-4 py-3 text-gray-900 backdrop-blur-md dark:border-gray-800 dark:bg-gray-900 dark:bg-opacity-50 dark:text-gray-100 lg:px-8">
       <div className="flex items-center gap-4">
         <Link to="." className="flex items-center gap-1">
           <svg
@@ -130,28 +132,32 @@ function Header() {
             </svg>
           </div>
         </Link>
-        <VersionSelect />
-        <ColorSchemeToggle />
-      </div>
-      <div className="flex items-center gap-4">
-        <HeaderLink
-          className="hidden md:block"
-          href="https://github.com/remix-run/react-router"
-        >
-          GitHub
-        </HeaderLink>{" "}
-        <HeaderLink className="hidden md:block" href="https://rmx.as/discord">
-          Discord
-        </HeaderLink>
-        <HeaderLink
+        <a
           href="https://remix.run"
-          className="flex items-center gap-1 border-l border-gray-600 pl-2 dark:border-gray-500"
+          className="relative top-[4px] flex items-center gap-1 text-sm text-gray-400 dark:text-gray-400"
         >
-          By{" "}
+          Made by{" "}
           <svg aria-hidden className="h-3 w-3">
             <use href={`${iconsHref}#remix-r`} />
           </svg>{" "}
           ↗
+        </a>
+      </div>
+      <div className="flex items-center gap-2">
+        <VersionSelect />
+        <ColorSchemeToggle />
+        <HeaderLink
+          className={`ml-2 pl-2 dark:border-gray-800 ${iconClasses}`}
+          href="https://github.com/remix-run/react-router"
+        >
+          <svg aria-label="Github" className="h-[40px] w-[40px]">
+            <use href={`${iconsHref}#github`} />
+          </svg>
+        </HeaderLink>{" "}
+        <HeaderLink className={iconClasses} href="https://rmx.as/discord">
+          <svg aria-label="Discord" className="h-[40px] w-[40px]">
+            <use href={`${iconsHref}#discord`} />
+          </svg>
         </HeaderLink>
       </div>
     </div>
@@ -172,14 +178,15 @@ function ColorSchemeToggle() {
       <button
         name="colorScheme"
         value={colorScheme === "dark" ? "light" : "dark"}
-        className="rounded-full p-2 hover:bg-gray-900 hover:text-white active:bg-gray-600 active:text-white dark:text-gray-300 dark:hover:bg-gray-100 dark:hover:text-gray-900 dark:active:bg-white dark:active:text-gray-900"
+        className={`flex h-[40px] w-[40px] items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 focus:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700`}
+        title={`Switch to ${colorScheme === "light" ? "dark" : "light"} mode`}
       >
         {colorScheme === "light" ? (
-          <svg aria-label="Switch dark mode" className="h-5 w-5">
+          <svg aria-label="Switch to dark mode" className="h-[18px] w-[18px]">
             <use href={`${iconsHref}#moon`} />
           </svg>
         ) : (
-          <svg aria-label="Switch light mode" className="h-5 w-5">
+          <svg aria-label="Switch to light mode" className="h-[23px] w-[22px]">
             <use href={`${iconsHref}#sun`} />
           </svg>
         )}
@@ -200,10 +207,7 @@ function HeaderLink({
   return (
     <a
       href={href}
-      className={classNames(
-        "text-sm font-medium text-gray-800 dark:text-gray-200",
-        className
-      )}
+      className={classNames(`text-sm font-medium`, className)}
       children={children}
     />
   );
@@ -230,7 +234,7 @@ function NavMenuMobile() {
     <DetailsMenu className="group relative flex h-full flex-col lg:hidden">
       <summary
         tabIndex={0}
-        className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-200 bg-white bg-opacity-75 px-2  py-3 text-sm font-medium backdrop-blur hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:bg-opacity-50 dark:hover:bg-gray-800 dark:active:bg-gray-700"
+        className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-200 bg-white bg-opacity-75 px-2 py-3 text-sm font-medium backdrop-blur-md hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:bg-opacity-50 dark:hover:bg-gray-800 dark:active:bg-gray-700"
       >
         <div className="flex items-center gap-2">
           <svg aria-hidden className="h-5 w-5 group-open:hidden">
@@ -262,15 +266,15 @@ function VersionSelect() {
   } = useLoaderData<LoaderData>();
 
   return (
-    <DetailsMenu>
-      <summary className="_no-triangle relative flex cursor-pointer list-none items-center justify-center gap-1 rounded-full bg-gray-100 px-3 py-2 text-center text-xs font-medium text-gray-600 hover:bg-gray-200 active:bg-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:active:bg-gray-600">
+    <DetailsMenu className="relative">
+      <summary className="_no-triangle relative flex h-[40px] cursor-pointer list-none items-center justify-center gap-1 gap-3 rounded-full border border-transparent bg-gray-100 px-3 hover:bg-gray-200 focus:border focus:border-gray-100 focus:bg-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700">
         <div>{currentGitHubRef}</div>
-        <svg aria-hidden className="h-3 w-3 text-gray-400">
-          <use href={`${iconsHref}#triangle-d`} />
+        <svg aria-hidden className="h-[18px] w-[18px] text-gray-400">
+          <use href={`${iconsHref}#dropdown-arrows`} />
         </svg>
       </summary>
-      <div className="absolute z-20">
-        <div className="relative top-1 flex items-stretch gap-6 rounded-lg border bg-white p-4 shadow dark:border-gray-600 dark:bg-gray-700">
+      <div className="absolute right-0 z-20">
+        <div className="relative top-1 flex items-stretch gap-6 rounded-lg bg-white p-4 shadow dark:bg-gray-800">
           <div className="leading-loose">
             <VersionsLabel label="Branches" />
             {branches.map((branch) => (
@@ -280,7 +284,7 @@ function VersionSelect() {
             ))}
           </div>
 
-          <div className="w-0 border-r border-gray-200 dark:border-gray-600" />
+          <div className="w-0 border-r border-gray-50 dark:border-gray-700" />
 
           <div>
             <VersionsLabel label="Versions" />
