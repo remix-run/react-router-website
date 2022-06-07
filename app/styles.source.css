@@ -56,7 +56,7 @@ html.dark {
 .md-prose {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
-  @apply break-words text-d-p-sm leading-normal text-gray-700 dark:text-gray-300;
+  @apply break-words text-d-p-sm leading-normal text-gray-800 dark:text-gray-200;
 
   & > :first-child {
     @apply mt-0;
@@ -185,18 +185,18 @@ html.dark {
   /*****************************************************************************/
   /* headings */
   & :is(h1, h2, h3, h4, h5, h6) {
-    @apply mx-0 my-4;
+    @apply mx-0 my-4 text-gray-900 dark:text-white;
   }
 
   & h1 {
-    @apply my-24 mb-10 text-m-h1 font-black dark:text-white md:text-d-h1;
+    @apply my-4 text-3xl font-black;
     &:first-child {
       @apply mt-0;
     }
   }
 
   & h2 {
-    @apply mt-24 text-m-h2 font-bold text-gray-600 dark:text-gray-50 md:text-d-h2;
+    @apply mt-10 text-2xl font-bold;
   }
 
   & h1 + h2 {
@@ -277,26 +277,21 @@ html.dark {
   & kbd,
   & pre {
     word-wrap: normal;
-    @apply overflow-auto rounded-lg border border-gray-100 p-3 text-m-p-sm leading-none dark:border-gray-900 md:p-4;
+    @apply overflow-auto rounded-lg p-3 text-m-p-sm leading-none md:p-4;
   }
 
   & pre {
-    @apply my-4 bg-[color:var(--base00)] leading-relaxed dark:border-gray-700;
-  }
-
-  & code,
-  & kbd {
-    @apply text-gray-700 dark:text-gray-300;
+    @apply my-4 bg-[color:var(--base00)] leading-relaxed;
   }
 
   /* TODO */
   & kbd {
-    @apply inline-block rounded border border-gray-200 bg-gray-100 align-middle font-mono leading-[10px] dark:border-gray-800 dark:bg-gray-900;
+    @apply inline-block rounded bg-gray-100 align-middle font-mono leading-[10px] dark:bg-gray-900;
     box-shadow: inset 0 -1px 0 hsl(0, 0%, 0%, 0.5);
   }
 
   & pre > code {
-    @apply m-0 whitespace-pre break-normal border-0 bg-transparent p-0;
+    @apply m-0 whitespace-pre break-normal bg-transparent p-0;
   }
 
   & .codeblock-line {
@@ -342,7 +337,9 @@ html.dark {
     pre[data-line-numbers="true"]:not([data-lang="bash"], [data-lang="sh"])
     [data-line-number]::before {
     content: attr(data-line-number);
-    @apply mr-6 inline-block w-8 pl-0 text-right text-gray-300 dark:text-gray-600;
+    @apply mr-6 inline-block w-10 bg-gray-50 pl-0 pr-2 text-right text-gray-300 dark:text-gray-600;
+    position: sticky;
+    left: 0;
   }
 
   & pre[data-good] {
