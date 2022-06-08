@@ -53,6 +53,10 @@ html.dark {
   }
 }
 
+:focus {
+  @apply outline-red-brand;
+}
+
 .md-prose {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
@@ -190,8 +194,25 @@ html.dark {
     &:target {
       @apply text-red-brand;
 
-      .icon-link::before {
-        visibility: visible;
+      &:before {
+        content: "";
+        @apply absolute -left-5 top-3 h-2 w-2 rounded-full bg-red-brand;
+        /* position: absolute;
+        left: -19px;
+        width: 8px;
+        height: 8px;
+        background-color: #f44250;
+        border-radius: 50%;
+        top: 12px; */
+      }
+
+      &:hover {
+        &:before {
+          display: none;
+        }
+        .icon-link::before {
+          visibility: visible;
+        }
       }
     }
   }

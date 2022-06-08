@@ -98,7 +98,7 @@ export default function DocsLayout() {
         <NavMenuMobile />
       </div>
       <NavMenuDesktop />
-      <div className="px-4 py-8 lg:ml-72 lg:px-8">
+      <div className="px-4 py-8 lg:ml-80 lg:px-8">
         <div
           className={classNames(
             "min-h-[80vh]",
@@ -114,8 +114,6 @@ export default function DocsLayout() {
 }
 
 function Header() {
-  const iconClasses =
-    "hidden md:block text-gray-800 hover:text-gray-900 dark:text-gray-100 dark:hover:text-gray-50";
   return (
     <div className="relative z-20 flex h-16 w-full items-center justify-between border-b border-gray-50 bg-white bg-opacity-90 px-4 py-3 text-gray-900 backdrop-blur-md dark:border-gray-800 dark:bg-gray-900 dark:bg-opacity-50 dark:text-gray-100 lg:px-8">
       <div className="flex items-center gap-4">
@@ -132,33 +130,29 @@ function Header() {
             </svg>
           </div>
         </Link>
-        <a
-          href="https://remix.run"
-          className="relative top-[4px] flex items-center gap-1 text-sm text-gray-400 dark:text-gray-400"
-        >
-          Made by{" "}
-          <svg aria-hidden className="h-3 w-3">
-            <use href={`${iconsHref}#remix-r`} />
-          </svg>{" "}
-          ↗
-        </a>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-4">
         <VersionSelect />
         <ColorSchemeToggle />
         <HeaderLink
-          className={`ml-2 pl-2 dark:border-gray-800 ${iconClasses}`}
+          className="border-l border-gray-50 pl-4 dark:border-gray-800"
           href="https://github.com/remix-run/react-router"
-        >
-          <svg aria-label="Github" className="h-[40px] w-[40px]">
-            <use href={`${iconsHref}#github`} />
-          </svg>
-        </HeaderLink>{" "}
-        <HeaderLink className={iconClasses} href="https://rmx.as/discord">
-          <svg aria-label="Discord" className="h-[40px] w-[40px]">
-            <use href={`${iconsHref}#discord`} />
-          </svg>
-        </HeaderLink>
+          svgId="github"
+          svgLabel="GitHub octocat logo in a circle"
+          title="View code on GitHub"
+        />
+        <HeaderLink
+          href="https://rmx.as/discord"
+          svgId="discord"
+          svgLabel="Discord logo in a circle"
+          title="Chat on Discord"
+        />
+        <HeaderLink
+          href="https://remix.run"
+          svgId="remix"
+          svgLabel="Remix logo in a circle"
+          title="Made by Remix"
+        />
       </div>
     </div>
   );
@@ -196,26 +190,37 @@ function ColorSchemeToggle() {
 }
 
 function HeaderLink({
-  href,
   className = "",
-  children,
+  href,
+  svgId,
+  svgLabel,
+  title,
 }: {
-  href: string;
   className?: string;
-  children: React.ReactNode;
+  href: string;
+  svgId: string;
+  svgLabel: string;
+  title: string;
 }) {
   return (
     <a
       href={href}
-      className={classNames(`text-sm font-medium`, className)}
-      children={children}
-    />
+      className={classNames(
+        `hidden text-gray-800 hover:text-gray-900 dark:text-gray-100 dark:hover:text-gray-50 md:block`,
+        className
+      )}
+      title={title}
+    >
+      <svg arai-label={svgLabel} className="h-[40px] w-[40px]">
+        <use href={`${iconsHref}#${svgId}`} />
+      </svg>
+    </a>
   );
 }
 
 function NavMenuDesktop() {
   return (
-    <div className="fixed top-16 bottom-0 hidden w-72 overflow-auto p-8 lg:block">
+    <div className="fixed top-16 bottom-0 hidden w-80 overflow-auto p-8 lg:block">
       <Menu />
     </div>
   );
@@ -234,7 +239,7 @@ function NavMenuMobile() {
     <DetailsMenu className="group relative flex h-full flex-col lg:hidden">
       <summary
         tabIndex={0}
-        className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-200 bg-white bg-opacity-75 px-2 py-3 text-sm font-medium backdrop-blur-md hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:bg-opacity-50 dark:hover:bg-gray-800 dark:active:bg-gray-700"
+        className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-50 bg-white bg-opacity-75 px-2 py-3 text-sm font-medium backdrop-blur-md hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:bg-opacity-50 dark:hover:bg-gray-800 dark:active:bg-gray-700"
       >
         <div className="flex items-center gap-2">
           <svg aria-hidden className="h-5 w-5 group-open:hidden">
@@ -264,9 +269,11 @@ function VersionSelect() {
     currentGitHubRef,
     lang,
   } = useLoaderData<LoaderData>();
+  let navigation = useTransition();
+  let navigating = navigation.location && !navigation.submission;
 
   return (
-    <DetailsMenu className="relative">
+    <DetailsMenu className="relative" open={true}>
       <summary className="_no-triangle relative flex h-[40px] cursor-pointer list-none items-center justify-center gap-1 gap-3 rounded-full border border-transparent bg-gray-100 px-3 hover:bg-gray-200 focus:border focus:border-gray-100 focus:bg-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700">
         <div>{currentGitHubRef}</div>
         <svg aria-hidden className="h-[18px] w-[18px] text-gray-400">
@@ -274,26 +281,26 @@ function VersionSelect() {
         </svg>
       </summary>
       <div className="absolute right-0 z-20">
-        <div className="relative top-1 flex items-stretch gap-6 rounded-lg bg-white p-4 shadow dark:bg-gray-800">
-          <div className="leading-loose">
-            <VersionsLabel label="Branches" />
-            {branches.map((branch) => (
-              <VersionLink key={branch} to={`/${lang}/${branch}`}>
-                {releaseBranch === branch ? `main (${latestVersion})` : branch}
-              </VersionLink>
-            ))}
-          </div>
+        <div className="relative top-1 w-48 rounded-lg bg-white p-4 shadow dark:bg-gray-800">
+          <VersionsLabel label="Branches" />
+          {branches.map((branch) => (
+            <VersionLink
+              key={branch}
+              to={currentGitHubRef === branch ? "" : `/${lang}/${branch}`}
+            >
+              {releaseBranch === branch ? `main (${latestVersion})` : branch}
+            </VersionLink>
+          ))}
 
-          <div className="w-0 border-r border-gray-50 dark:border-gray-700" />
-
-          <div>
-            <VersionsLabel label="Versions" />
-            {versions.map((version) => (
-              <VersionLink key={version} to={`/${lang}/${version}`}>
-                {version}
-              </VersionLink>
-            ))}
-          </div>
+          <VersionsLabel label="Versions" />
+          {versions.map((version) => (
+            <VersionLink
+              key={version}
+              to={currentGitHubRef === version ? "" : `/${lang}/${version}`}
+            >
+              {version}
+            </VersionLink>
+          ))}
         </div>
       </div>
     </DetailsMenu>
@@ -302,7 +309,7 @@ function VersionSelect() {
 
 function VersionsLabel({ label }: { label: string }) {
   return (
-    <div className="mb-2 text-xs font-bold uppercase text-gray-400 dark:text-gray-300">
+    <div className="pt-2 pb-2 text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-300">
       {label}
     </div>
   );
@@ -314,12 +321,20 @@ function VersionLink({
   to: string;
   children: React.ReactNode;
 }) {
-  return (
+  const sharedClasses =
+    "group flex items-center block pl-1 py-1 before:mr-2 before:block before:h-1.5 before:w-1.5 before:rounded-full before:content-['']";
+
+  return to ? (
     <Link
-      className="block text-gray-800 hover:underline dark:text-gray-100"
+      className={`${sharedClasses} text-gray-800 before:bg-transparent before:hover:bg-gray-200 dark:text-gray-100 dark:before:hover:bg-gray-300`}
       to={to}
-      children={children}
-    />
+    >
+      {children}
+    </Link>
+  ) : (
+    <span className={`${sharedClasses} text-red-brand before:bg-red-brand`}>
+      {children}
+    </span>
   );
 }
 
@@ -356,7 +371,7 @@ function MenuCategoryLink({
           : "text-gray-600 dark:text-gray-300",
 
         // active pill styles
-        "before:mr-2 before:block before:h-1 before:w-2 before:rounded-full before:content-['']",
+        "before:mr-2 before:block before:h-2 before:w-2 before:rounded-full before:content-['']",
         isActive
           ? "before:bg-red-brand"
           : "before:bg-transparent before:hover:bg-gray-200 dark:before:hover:bg-gray-300"
@@ -375,16 +390,14 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
       to={to}
       className={classNames(
         // link styles
-        "group flex items-center py-2 lg:text-sm",
-        isActive
-          ? "font-bold text-red-brand"
-          : "text-gray-600 dark:text-gray-300",
+        "group flex items-center py-1",
+        isActive ? "font-bold text-red-brand" : "",
 
         // active pill styles
-        "before:mr-2 before:block before:h-1 before:w-2 before:rounded-full before:content-['']",
+        "before:mr-4 before:block before:h-2 before:w-2 before:rounded-full before:content-['']",
         isActive
           ? "before:bg-red-brand"
-          : "before:bg-transparent before:hover:bg-gray-200 dark:before:hover:bg-gray-300"
+          : "before:bg-transparent before:hover:bg-gray-200 dark:before:hover:bg-gray-600"
       )}
       children={children}
     />
@@ -403,7 +416,7 @@ function Menu() {
                 {category.attrs.title}
               </MenuCategoryLink>
             ) : (
-              <div className="block py-2 text-sm font-bold uppercase text-black dark:text-white lg:text-xs">
+              <div className="mb-2 block text-sm font-bold uppercase tracking-wider text-gray-400">
                 {category.attrs.title}
               </div>
             )}
