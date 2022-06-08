@@ -229,7 +229,10 @@ function HeaderLink({
       )}
       title={title}
     >
-      <svg aria-label={svgLabel} style={{ width, height }}>
+      <svg
+        aria-label={svgLabel}
+        style={{ width: `${width}px`, height: `${height}px` }}
+      >
         <use href={`${iconsHref}#${svgId}`} />
       </svg>
     </a>
