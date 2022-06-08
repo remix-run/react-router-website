@@ -132,7 +132,7 @@ function Header() {
         <Link to="." className="flex items-center gap-1">
           <svg
             aria-label="React Router logo, nine dots in an upward triangle (one on top, two in the middle, three on the bottom) with a path of three highlighted and connected from top to bottom"
-            className="h-10 w-10 md:h-12 md:w-12"
+            className="h-14 w-14 md:h-12 md:w-12"
           >
             <use href={`${iconsHref}#logo`} />
           </svg>
