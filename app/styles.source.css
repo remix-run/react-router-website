@@ -173,12 +173,12 @@ html.dark {
 
   /*****************************************************************************/
   /* links */
-  & a {
-    @apply text-blue-brand no-underline;
-  }
+  & :not(h1, h2, h3, h4, h5) a {
+    @apply font-medium text-gray-900 no-underline shadow-[0_1px_0px] shadow-gray-800 dark:text-gray-50 dark:shadow-gray-100;
 
-  & a:hover {
-    @apply underline;
+    &:hover {
+      @apply text-red-brand shadow-red-brand;
+    }
   }
 
   & a:not([href]) {
