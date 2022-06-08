@@ -140,18 +140,20 @@ function Header() {
           svgId="github"
           svgLabel="GitHub octocat logo in a circle"
           title="View code on GitHub"
+          svgSize="40x40"
         />
         <HeaderLink
           href="https://rmx.as/discord"
           svgId="discord"
           svgLabel="Discord logo in a circle"
           title="Chat on Discord"
+          svgSize="40x40"
         />
         <HeaderLink
           href="https://remix.run"
           svgId="remix"
-          svgLabel="Remix logo in a circle"
-          title="Made by Remix"
+          svgLabel="Stylized text saying “Made by Remix” with an right pointing arrow."
+          svgSize="122x17"
         />
       </div>
     </div>
@@ -194,14 +196,18 @@ function HeaderLink({
   href,
   svgId,
   svgLabel,
+  svgSize,
   title,
 }: {
   className?: string;
   href: string;
   svgId: string;
   svgLabel: string;
-  title: string;
+  svgSize: string;
+  title?: string;
 }) {
+  const [width, height] = svgSize.split("x");
+
   return (
     <a
       href={href}
@@ -211,7 +217,7 @@ function HeaderLink({
       )}
       title={title}
     >
-      <svg arai-label={svgLabel} className="h-[40px] w-[40px]">
+      <svg aria-label={svgLabel} style={{ width, height }}>
         <use href={`${iconsHref}#${svgId}`} />
       </svg>
     </a>
