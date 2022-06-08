@@ -11,7 +11,7 @@ import {
   useTransition,
 } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { matchPath, useResolvedPath } from "react-router-dom";
+import { matchPath, useParams, useResolvedPath } from "react-router-dom";
 import classNames from "classnames";
 import {
   getRepoBranches,
@@ -90,6 +90,11 @@ export function headers() {
 export default function DocsLayout() {
   let navigation = useTransition();
   let navigating = navigation.location && !navigation.submission;
+  let params = useParams();
+  let changingVersions =
+    navigation.location &&
+    params.ref &&
+    !navigation.location.pathname.match(params.ref);
 
   return (
     <div className="lg:m-auto lg:max-w-6xl">
@@ -97,17 +102,24 @@ export default function DocsLayout() {
         <Header />
         <NavMenuMobile />
       </div>
-      <NavMenuDesktop />
-      <div className="px-4 py-8 lg:ml-80 lg:px-8">
-        <div
-          className={classNames(
-            "min-h-[80vh]",
-            navigating ? "opacity-25 transition-opacity delay-300" : ""
-          )}
-        >
-          <Outlet />
+      <div
+        className={
+          changingVersions ? "opacity-25 transition-opacity delay-300" : ""
+        }
+      >
+        <NavMenuDesktop />
+        <div className="px-4 py-8 lg:ml-80 lg:px-8">
+          <div
+            className={classNames(
+              "min-h-[80vh]",
+              !changingVersions && navigating
+                ? "opacity-25 transition-opacity delay-300"
+                : ""
+            )}
+          >
+            <Outlet />
+          </div>
         </div>
-        <Footer />
       </div>
     </div>
   );
@@ -319,18 +331,27 @@ function VersionLink({
   to: string;
   children: React.ReactNode;
 }) {
-  const sharedClasses =
-    "group flex items-center block pl-1 py-1 before:mr-2 before:block before:h-1.5 before:w-1.5 before:rounded-full before:content-['']";
+  let isActive = useIsActivePath(to);
+  let className =
+    "group items-center flex pl-1 py-1 before:mr-2 before:block before:h-1.5 before:w-1.5 before:rounded-full before:content-['']";
 
   return to ? (
     <Link
-      className={`${sharedClasses} text-gray-800 before:bg-transparent before:hover:bg-gray-200 dark:text-gray-100 dark:before:hover:bg-gray-300`}
+      className={classNames(
+        className,
+        "before:bg-transparent before:hover:bg-gray-200 dark:before:hover:bg-gray-300",
+        isActive
+          ? "text-red-brand"
+          : "text-gray-800 active:text-red-brand dark:text-gray-100"
+      )}
       to={to}
     >
       {children}
     </Link>
   ) : (
-    <span className={`${sharedClasses} text-red-brand before:bg-red-brand`}>
+    <span
+      className={classNames(className, "text-red-brand before:bg-red-brand")}
+    >
       {children}
     </span>
   );
@@ -344,7 +365,7 @@ function useIsActivePath(to: string) {
     navigation.location && !navigation.submission
       ? navigation.location
       : currentLocation;
-  let match = matchPath(pathname, location.pathname);
+  let match = matchPath(pathname + "/*", location.pathname);
   return Boolean(match);
 }
 
