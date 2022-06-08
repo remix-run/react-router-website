@@ -396,13 +396,13 @@ function MenuCategoryLink({
         "group -mx-4 flex items-center py-2 lg:text-sm",
         isActive
           ? "font-bold text-red-brand"
-          : "text-gray-600 dark:text-gray-300",
+          : "text-gray-600 hover:text-gray-900 dark:text-gray-300 hover:dark:text-gray-100",
 
         // active pill styles
         "before:mr-2 before:block before:h-2 before:w-2 before:rounded-full before:content-['']",
         isActive
           ? "before:bg-red-brand"
-          : "before:bg-transparent before:hover:bg-gray-200 dark:before:hover:bg-gray-300"
+          : "before:bg-transparent before:hover:bg-gray-200 dark:before:hover:bg-gray-600"
       )}
       children={children}
     />
@@ -419,7 +419,9 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
       className={classNames(
         // link styles
         "group flex items-center py-1",
-        isActive ? "font-bold text-red-brand" : "",
+        isActive
+          ? "font-bold text-red-brand"
+          : "text-gray-600 hover:text-gray-900 dark:text-gray-300 hover:dark:text-gray-100",
 
         // active pill styles
         "before:mr-4 before:block before:h-2 before:w-2 before:rounded-full before:content-['']",
@@ -444,7 +446,7 @@ function Menu() {
                 {category.attrs.title}
               </MenuCategoryLink>
             ) : (
-              <div className="mb-2 block text-sm font-bold uppercase tracking-wider text-gray-400">
+              <div className="mb-2 block text-sm font-bold uppercase tracking-wider dark:text-gray-50">
                 {category.attrs.title}
               </div>
             )}
