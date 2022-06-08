@@ -269,11 +269,9 @@ function VersionSelect() {
     currentGitHubRef,
     lang,
   } = useLoaderData<LoaderData>();
-  let navigation = useTransition();
-  let navigating = navigation.location && !navigation.submission;
 
   return (
-    <DetailsMenu className="relative" open={true}>
+    <DetailsMenu className="relative">
       <summary className="_no-triangle relative flex h-[40px] cursor-pointer list-none items-center justify-center gap-1 gap-3 rounded-full border border-transparent bg-gray-100 px-3 hover:bg-gray-200 focus:border focus:border-gray-100 focus:bg-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700">
         <div>{currentGitHubRef}</div>
         <svg aria-hidden className="h-[18px] w-[18px] text-gray-400">
