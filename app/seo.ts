@@ -1,4 +1,4 @@
-import { getSeo } from "./remix-seo";
+import { getSeo } from "./modules/remix-seo";
 
 export const seo = getSeo({
   host: "https://reactrouter.com",

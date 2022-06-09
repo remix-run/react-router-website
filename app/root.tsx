@@ -16,8 +16,11 @@ import { json } from "@remix-run/node";
 import { CACHE_CONTROL, whyDoWeNotHaveGoodMiddleWareYetRyan } from "./http";
 
 import tailwindStylesheetUrl from "./styles.processed.css";
-import { parseColorScheme } from "./color-scheme/server";
-import { ColorSchemeScript, useColorScheme } from "./color-scheme/components";
+import { parseColorScheme } from "./modules/color-scheme/server";
+import {
+  ColorSchemeScript,
+  useColorScheme,
+} from "./modules/color-scheme/components";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];

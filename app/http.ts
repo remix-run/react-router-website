@@ -1,7 +1,7 @@
-import { ensureSecure } from "~/http-utils/ensure-secure";
-import { handleRedirects } from "~/redirects";
-import { removeTrailingSlashes } from "~/http-utils/remove-slashes";
-import { isHost } from "~/http-utils/is-host";
+import { ensureSecure } from "~/modules/http-utils/ensure-secure";
+import { handleRedirects } from "~/modules/redirects";
+import { removeTrailingSlashes } from "~/modules/http-utils/remove-slashes";
+import { isHost } from "~/modules/http-utils/is-host";
 
 export const CACHE_CONTROL = {
   /**

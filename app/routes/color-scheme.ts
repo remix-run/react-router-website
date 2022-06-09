@@ -1,1 +1,1 @@
-export { action } from "~/color-scheme";
+export { action } from "~/modules/color-scheme";

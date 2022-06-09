@@ -23,12 +23,12 @@ import {
   getRepoDocsMenu,
   getRepoTags,
   validateParams,
-} from "~/gh-docs";
-import type { Doc, MenuDoc } from "~/gh-docs";
+} from "~/modules/gh-docs";
+import type { Doc, MenuDoc } from "~/modules/gh-docs";
 import iconsHref from "~/icons.svg";
-import { DetailsMenu } from "~/components/details-menu";
-import { getLatestVersion } from "~/gh-docs/tags";
-import { useColorScheme } from "~/color-scheme/components";
+import { DetailsMenu } from "~/modules/details-menu";
+import { getLatestVersion } from "~/modules/gh-docs/tags";
+import { useColorScheme } from "~/modules/color-scheme/components";
 
 type LoaderData = {
   menu: MenuDoc[];

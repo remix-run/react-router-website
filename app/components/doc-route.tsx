@@ -3,8 +3,8 @@ import * as React from "react";
 import { json, Response } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import type { Doc } from "~/gh-docs";
-import { getRepoDoc } from "~/gh-docs";
+import type { Doc } from "~/modules/gh-docs";
+import { getRepoDoc } from "~/modules/gh-docs";
 import {
   CACHE_CONTROL,
   isProductionHost,
