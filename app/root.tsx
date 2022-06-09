@@ -13,14 +13,11 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import { json } from "@remix-run/node";
-import {
-  CACHE_CONTROL,
-  getPrefs,
-  whyDoWeNotHaveGoodMiddleWareYetRyan,
-} from "./http";
+import { CACHE_CONTROL, whyDoWeNotHaveGoodMiddleWareYetRyan } from "./http";
 
 import tailwindStylesheetUrl from "./styles.processed.css";
-import { useOptimisticColorScheme } from "./components/color-scheme";
+import { parseColorScheme } from "./color-scheme/server";
+import { ColorSchemeScript, useColorScheme } from "./color-scheme/components";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
@@ -31,16 +28,14 @@ export const meta: MetaFunction = () => ({
 });
 
 type LoaderData = {
-  colorScheme: "light" | "dark";
+  colorScheme: "light" | "dark" | "system";
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
   await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
-  let prefs = await getPrefs(request);
+  let colorScheme = await parseColorScheme(request);
   return json<LoaderData>(
-    {
-      colorScheme: prefs.colorScheme === "dark" ? "dark" : "light",
-    },
+    { colorScheme },
     {
       headers: {
         "Cache-Control": CACHE_CONTROL.doc,
@@ -51,11 +46,12 @@ export let loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function App() {
-  let colorScheme = useOptimisticColorScheme();
+  let colorScheme = useColorScheme();
 
   return (
-    <html lang="en" className={colorScheme === "dark" ? "dark" : ""}>
+    <html lang="en" className={colorScheme} suppressHydrationWarning>
       <head>
+        <ColorSchemeScript />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />

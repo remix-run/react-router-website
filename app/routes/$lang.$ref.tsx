@@ -1,5 +1,5 @@
 import { json, redirect } from "@remix-run/node";
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction } from "@remix-run/node";
 import * as React from "react";
 import {
   Form,
@@ -11,7 +11,12 @@ import {
   useTransition,
 } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { matchPath, useParams, useResolvedPath } from "react-router-dom";
+import {
+  matchPath,
+  useParams,
+  useResolvedPath,
+  useSearchParams,
+} from "react-router-dom";
 import classNames from "classnames";
 import {
   getRepoBranches,
@@ -22,9 +27,8 @@ import {
 import type { Doc, MenuDoc } from "~/gh-docs";
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/components/details-menu";
-import { getPrefs, serializePrefs } from "~/http";
-import { useOptimisticColorScheme } from "~/components/color-scheme";
 import { getLatestVersion } from "~/gh-docs/tags";
+import { useColorScheme } from "~/color-scheme/components";
 
 type LoaderData = {
   menu: MenuDoc[];
@@ -34,22 +38,6 @@ type LoaderData = {
   branches: string[];
   lang: string;
   currentGitHubRef: string;
-};
-
-export let action: ActionFunction = async ({ request }) => {
-  let prefs = await getPrefs(request);
-  let data = await request.formData();
-  let colorScheme = data.get("colorScheme");
-  let returnTo = data.get("returnTo");
-
-  if (typeof colorScheme !== "string" || typeof returnTo !== "string") {
-    throw new Response("Bad Request", { status: 400 });
-  }
-
-  prefs.colorScheme = colorScheme;
-  return redirect(returnTo, {
-    headers: { "Set-Cookie": await serializePrefs(prefs) },
-  });
 };
 
 export let loader: LoaderFunction = async ({ params, request }) => {
@@ -87,13 +75,17 @@ export function headers() {
   return { "Cache-Control": "max-age=300" };
 }
 
+export let unstable_shouldReload = () => false;
+
 export default function DocsLayout() {
   let navigation = useTransition();
   let navigating = navigation.location && !navigation.submission;
   let params = useParams();
   let changingVersions =
+    !navigation.submission &&
     navigation.location &&
     params.ref &&
+    // TODO: we should have `transition.params`
     !navigation.location.pathname.match(params.ref);
 
   return (
@@ -174,34 +166,71 @@ function Header() {
 
 function ColorSchemeToggle() {
   let location = useLocation();
-  let colorScheme = useOptimisticColorScheme();
-
   return (
-    <Form replace={true} method="post" className="flex items-center">
-      <input
-        type="hidden"
-        name="returnTo"
-        value={location.pathname + location.search}
-      />
-      <button
-        name="colorScheme"
-        value={colorScheme === "dark" ? "light" : "dark"}
-        className={`flex h-[40px] w-[40px] items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 focus:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700`}
-        title={`Switch to ${colorScheme === "light" ? "dark" : "light"} mode`}
-      >
-        {colorScheme === "light" ? (
-          <svg aria-label="Switch to dark mode" className="h-[18px] w-[18px]">
-            <use href={`${iconsHref}#moon`} />
-          </svg>
-        ) : (
-          <svg aria-label="Switch to light mode" className="h-[23px] w-[22px]">
-            <use href={`${iconsHref}#sun`} />
-          </svg>
-        )}
-      </button>
-    </Form>
+    <DetailsMenu closeOnSubmission className="relative cursor-pointer">
+      <summary className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 focus:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+        <svg className="hidden h-[18px] w-[18px] dark:inline">
+          <use href={`${iconsHref}#moon`} />
+        </svg>
+        <svg className="h-[18px] w-[18px] dark:hidden">
+          <use href={`${iconsHref}#sun`} />
+        </svg>
+      </summary>
+      <DetailsPopup>
+        <div className="py-2">
+          <Form replace action="/color-scheme" method="post">
+            <input
+              type="hidden"
+              name="returnTo"
+              value={location.pathname + location.search}
+            />
+            <ColorSchemeButton
+              svgId="sun"
+              label="Light"
+              value="light"
+              name="colorScheme"
+            />
+            <ColorSchemeButton
+              svgId="moon"
+              label="Dark"
+              value="dark"
+              name="colorScheme"
+            />
+            <ColorSchemeButton
+              svgId="computer"
+              label="System"
+              value="system"
+              name="colorScheme"
+            />
+          </Form>
+        </div>
+      </DetailsPopup>
+    </DetailsMenu>
   );
 }
+
+let ColorSchemeButton = React.forwardRef<
+  HTMLButtonElement,
+  React.ComponentPropsWithRef<"button"> & { svgId: string; label: string }
+>(({ svgId, label, ...props }, forwardedRef) => {
+  let colorScheme = useColorScheme();
+  return (
+    <button
+      {...props}
+      ref={forwardedRef}
+      disabled={colorScheme === props.value}
+      className={classNames(
+        "flex w-full items-center gap-4 py-1 px-4",
+        colorScheme === props.value ? "text-red-brand" : "hover:bg-gray-50"
+      )}
+    >
+      <svg className="h-[18px] w-[18px]">
+        <use href={`${iconsHref}#${svgId}`} />
+      </svg>{" "}
+      {label}
+    </button>
+  );
+});
 
 function HeaderLink({
   className = "",
@@ -281,6 +310,16 @@ function NavMenuMobile() {
   );
 }
 
+function DetailsPopup({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="absolute right-0 z-20">
+      <div className="relative top-1 w-40 rounded-lg border bg-white shadow-lg dark:bg-gray-800">
+        {children}
+      </div>
+    </div>
+  );
+}
+
 function VersionSelect() {
   let {
     versions,
@@ -293,14 +332,14 @@ function VersionSelect() {
 
   return (
     <DetailsMenu className="relative">
-      <summary className="_no-triangle relative flex h-[40px] cursor-pointer list-none items-center justify-center gap-1 gap-3 rounded-full border border-transparent bg-gray-100 px-3 hover:bg-gray-200 focus:border focus:border-gray-100 focus:bg-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+      <summary className="_no-triangle relative flex h-[40px] cursor-pointer list-none items-center justify-center gap-3 rounded-full border border-transparent bg-gray-100 px-3 hover:bg-gray-200 focus:border focus:border-gray-100 focus:bg-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700">
         <div>{currentGitHubRef}</div>
         <svg aria-hidden className="h-[18px] w-[18px] text-gray-400">
           <use href={`${iconsHref}#dropdown-arrows`} />
         </svg>
       </summary>
-      <div className="absolute right-0 z-20">
-        <div className="relative top-1 w-48 rounded-lg bg-white p-4 shadow dark:bg-gray-800">
+      <DetailsPopup>
+        <div className="p-4">
           <VersionsLabel label="Branches" />
           {branches.map((branch) => (
             <VersionLink
@@ -321,7 +360,7 @@ function VersionSelect() {
             </VersionLink>
           ))}
         </div>
-      </div>
+      </DetailsPopup>
     </DetailsMenu>
   );
 }
