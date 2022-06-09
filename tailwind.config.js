@@ -62,7 +62,7 @@ module.exports = {
           300: "#fea3aa",
           400: "#fc6d78",
           500: "#f44250",
-          brand: "#f44250",
+          brand: "#f44250", // hard-coded in embedded SVG for <docs-*> elements
           600: "#e12130",
           700: "#bd1825",
           800: "#9d1722",
@@ -74,9 +74,9 @@ module.exports = {
           200: "#fff087",
           300: "#ffde44",
           400: "#fecc1b",
-          brand: "#fecc1b",
+          brand: "#fecc1b", // hard-coded in embedded SVG for <docs-*> elements
           500: "#eeb004",
-          600: "#cd8701",
+          600: "#cd8701", // hard-coded in embedded SVG for <docs-*> elements
           700: "#a45f04",
           800: "#874b0c",
           900: "#733d10",
@@ -114,7 +114,7 @@ module.exports = {
           300: "#8ecdff",
           400: "#59b0ff",
           500: "#3992ff",
-          brand: "#3992ff",
+          brand: "#3992ff", // hard-coded in embedded SVG for <docs-*> elements
           600: "#1b6ef5",
           700: "#1458e1",
           800: "#1747b6",
