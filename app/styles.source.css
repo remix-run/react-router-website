@@ -447,6 +447,11 @@ html.dark {
       @apply block bg-no-repeat pl-6 text-sm font-medium uppercase tracking-widest;
       background-position: 0 1px;
     }
+
+    /* It's possible these could have an image embedded in them */
+    img {
+      @apply mt-4;
+    }
   }
 
   & docs-info {
