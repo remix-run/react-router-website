@@ -8,7 +8,7 @@ describe("handleRedirects", () => {
 
   beforeAll(async () => {
     redirects = await readRedirectsFile(
-      path.join("app", "redirects", "__fixtures__", "_redirects")
+      path.join("app", "modules", "redirects", "__fixtures__", "_redirects")
     );
   });
 

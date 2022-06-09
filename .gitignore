@@ -11,5 +11,5 @@ node_modules
 
 /app/styles.processed.css
 /.local.tgz
-/app/gh-docs/__fixture__/tar.tgz
+/app/modules/gh-docs/__fixture__/tar.tgz
 
