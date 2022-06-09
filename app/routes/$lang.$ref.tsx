@@ -348,10 +348,10 @@ function VersionLink({
     <Link
       className={classNames(
         className,
-        "before:bg-transparent before:hover:bg-gray-200 dark:before:hover:bg-gray-300",
+        "before:bg-transparent",
         isActive
           ? "text-red-brand"
-          : "text-gray-800 active:text-red-brand dark:text-gray-100"
+          : "text-gray-600 hover:text-gray-900 active:text-red-brand dark:text-gray-200 dark:hover:text-gray-50 dark:active:text-red-brand"
       )}
       to={to}
     >
@@ -359,7 +359,10 @@ function VersionLink({
     </Link>
   ) : (
     <span
-      className={classNames(className, "text-red-brand before:bg-red-brand")}
+      className={classNames(
+        className,
+        "font-bold text-red-brand before:bg-red-brand"
+      )}
     >
       {children}
     </span>
@@ -396,13 +399,11 @@ function MenuCategoryLink({
         "group -mx-4 flex items-center py-2",
         isActive
           ? "font-bold text-red-brand"
-          : "text-gray-600 hover:text-red-brand dark:text-gray-300 hover:dark:text-red-brand",
+          : "text-gray-500 hover:text-gray-900 active:text-red-brand dark:text-gray-300 dark:hover:text-gray-100 dark:active:text-red-brand",
 
         // active pill styles
         "before:mr-2 before:block before:h-2 before:w-2 before:rounded-full before:content-['']",
-        isActive
-          ? "before:bg-red-brand"
-          : "before:bg-transparent before:hover:bg-red-brand before:hover:bg-opacity-50"
+        isActive ? "before:bg-red-brand" : "before:bg-transparent"
       )}
       children={children}
     />
@@ -421,13 +422,11 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
         "group flex items-center py-1",
         isActive
           ? "font-bold text-red-brand"
-          : "text-gray-600 hover:text-red-brand dark:text-gray-300 hover:dark:text-red-brand",
+          : "text-gray-500 hover:text-gray-900 active:text-red-brand dark:text-gray-300 dark:hover:text-gray-100 dark:active:text-red-brand",
 
         // active pill styles
         "before:mr-4 before:block before:h-2 before:w-2 before:rounded-full before:content-['']",
-        isActive
-          ? "before:bg-red-brand"
-          : "before:bg-transparent before:hover:bg-red-brand before:hover:bg-opacity-50"
+        isActive ? "before:bg-red-brand" : "before:bg-transparent"
       )}
       children={children}
     />
@@ -446,7 +445,7 @@ function Menu() {
                 {category.attrs.title}
               </MenuCategoryLink>
             ) : (
-              <div className="mb-2 block text-sm font-bold uppercase tracking-wider dark:text-gray-50">
+              <div className="mb-2 block text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-300">
                 {category.attrs.title}
               </div>
             )}
