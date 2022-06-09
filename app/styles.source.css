@@ -60,7 +60,7 @@ html.dark {
 .md-prose {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
-  @apply break-words text-d-p-sm leading-normal text-gray-800 dark:text-gray-200;
+  @apply break-words text-d-p-sm leading-normal text-gray-700 dark:text-gray-200;
 
   & > :first-child {
     @apply mt-0;
@@ -174,7 +174,7 @@ html.dark {
   /*****************************************************************************/
   /* links */
   & :not(h1, h2, h3, h4, h5) a {
-    @apply font-medium text-gray-900 no-underline shadow-[0_1px_0px] shadow-gray-800 dark:text-gray-50 dark:shadow-gray-100;
+    @apply text-gray-900 no-underline shadow-[0_1px_0px] shadow-gray-800 dark:text-gray-50 dark:shadow-gray-100;
 
     &:hover {
       @apply shadow-[0_2px_0px] shadow-red-brand dark:text-white;
@@ -331,20 +331,18 @@ html.dark {
   }
 
   & code {
-    @apply rounded bg-gray-50 py-[2px] px-1 text-[color:inherit] dark:bg-gray-800;
+    /* @apply rounded bg-gray-50 py-[2px] px-1 text-[color:inherit] dark:bg-gray-800; */
+    @apply p-0 text-gray-900 dark:text-white;
+    font-size: 100%;
+    /* &:before,
+    &:after {
+      content: "`";
+    } */
   }
 
   & :is(a, h1, h2, h3, h4, h5, h6) code,
   & :is(a, h1, h2, h3, h4, h5, h6) kbd {
     @apply text-[color:inherit];
-  }
-
-  & :is(h1, h2, h3, h4, h5, h6) code {
-    font-size: 90%;
-    padding-top: max(0.125rem, 0.125em);
-    padding-bottom: max(0.125rem, 0.125em);
-    padding-right: max(0.25rem, 0.25em);
-    padding-left: max(0.25rem, 0.25em);
   }
 
   & pre code {
