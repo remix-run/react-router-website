@@ -106,6 +106,7 @@ export default function DocsLayout() {
           >
             <Outlet />
           </div>
+          <Footer />
         </div>
       </div>
     </div>
