@@ -37,6 +37,7 @@ type LoaderData = {
 export let loader: LoaderFunction = async ({ request }) => {
   await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
   let colorScheme = await parseColorScheme(request);
+  console.log(Object.fromEntries(request.headers));
   return json<LoaderData>(
     { colorScheme },
     {
