@@ -367,6 +367,15 @@ function VersionSelect() {
             {version}
           </VersionLink>
         ))}
+        <VersionLink key={"4/5.x"} to="https://v5.reactrouter.com/">
+          v4/5.x
+        </VersionLink>
+        <VersionLink
+          key={"3.x"}
+          to="https://github.com/remix-run/react-router/tree/v3.2.6/docs"
+        >
+          v3.x
+        </VersionLink>
       </DetailsPopup>
     </DetailsMenu>
   );
@@ -386,9 +395,26 @@ function VersionLink({
   to: string;
   children: React.ReactNode;
 }) {
+  let isExternal = to.startsWith("http");
   let isActive = useIsActivePath(to);
   let className =
-    "pl-4 group items-center flex py-1 before:mr-4 before:relative before:top-[1px] before:block before:h-1.5 before:w-1.5 before:rounded-full before:content-['']";
+    "relative pl-4 group items-center flex py-1 before:mr-4 before:relative before:top-px before:block before:h-1.5 before:w-1.5 before:rounded-full before:content-['']";
+
+  if (isExternal) {
+    return (
+      <a
+        href={to}
+        className={classNames(
+          className,
+          "after:absolute after:right-4 after:top-1 after:block after:-rotate-45 after:opacity-50 after:content-['→']",
+          // Same as !isActive styles on <Link> below
+          "hover:bg-gray-50 active:text-red-brand dark:text-gray-200 dark:hover:bg-gray-700 dark:active:text-red-brand"
+        )}
+      >
+        {children}
+      </a>
+    );
+  }
 
   return to ? (
     <Link
