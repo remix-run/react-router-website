@@ -5,10 +5,7 @@ describe("getSeo", () => {
     let seo = getSeo({});
     expect(seo({})).toMatchInlineSnapshot(`
       [
-        {
-          "googlebot": "index,follow,",
-          "robots": "index,follow,",
-        },
+        {},
         [],
       ]
     `);
@@ -19,8 +16,6 @@ describe("getSeo", () => {
     expect(seo({})).toMatchInlineSnapshot(`
       [
         {
-          "googlebot": "index,follow,",
-          "robots": "index,follow,",
           "title": "Test default title",
         },
         [],
@@ -42,9 +37,7 @@ describe("getSeo", () => {
     expect(meta).toMatchInlineSnapshot(`
       {
         "description": "Heyooo",
-        "googlebot": "index,follow,",
         "og:description": "Heyooo",
-        "robots": "index,follow,",
       }
     `);
   });
@@ -57,28 +50,11 @@ describe("getSeo", () => {
     });
     expect(meta).toMatchInlineSnapshot(`
       {
-        "googlebot": "index,follow,",
         "og:image": "test://example.com/beef.jpg",
         "og:image:alt": "beef!",
-        "robots": "index,follow,",
         "twitter:card": "summary",
         "twitter:image": "test://example.com/beef.jpg",
         "twitter:image:alt": "beef!",
-      }
-    `);
-  });
-
-  it("tells bots not to index", () => {
-    let seo = getSeo({
-      robots: {
-        noindex: true,
-      },
-    });
-    let [meta] = seo({});
-    expect(meta).toMatchInlineSnapshot(`
-      {
-        "googlebot": "noindex,follow,",
-        "robots": "noindex,follow,",
       }
     `);
   });

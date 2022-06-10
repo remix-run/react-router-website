@@ -11,6 +11,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { CACHE_CONTROL, whyDoWeNotHaveGoodMiddleWareYetRyan } from "./http";
@@ -32,14 +33,19 @@ export const meta: MetaFunction = () => ({
 
 type LoaderData = {
   colorScheme: "light" | "dark" | "system";
+  host: string;
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
   await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
   let colorScheme = await parseColorScheme(request);
-  console.log(Object.fromEntries(request.headers));
+  let host =
+    request.headers.get("X-Forwarded-Host") ??
+    request.headers.get("host") ??
+    "";
+
   return json<LoaderData>(
-    { colorScheme },
+    { colorScheme, host },
     {
       headers: {
         "Cache-Control": CACHE_CONTROL.doc,
@@ -51,11 +57,24 @@ export let loader: LoaderFunction = async ({ request }) => {
 
 export default function App() {
   let colorScheme = useColorScheme();
+  let { host } = useLoaderData();
+  let isProductionHost = host === "reactrouter.com";
 
   return (
     <html lang="en" className={colorScheme} suppressHydrationWarning>
       <head>
         <ColorSchemeScript />
+        {isProductionHost ? (
+          <>
+            <meta content="index,follow" name="robots" />
+            <meta content="index,follow" name="googlebot" />
+          </>
+        ) : (
+          <>
+            <meta content="noindex,nofollow" name="robots" />
+            <meta content="noindex,nofollow" name="googlebot" />
+          </>
+        )}
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <link

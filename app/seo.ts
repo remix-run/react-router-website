@@ -2,7 +2,6 @@ import { getSeo } from "./modules/remix-seo";
 
 export const seo = getSeo({
   host: "https://reactrouter.com",
-  robots: { noindex: true },
   titleTemplate: "%s | React Router",
   defaultTitle: "React Router",
   twitter: {

@@ -11,12 +11,7 @@ import {
   useTransition,
 } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import {
-  matchPath,
-  useParams,
-  useResolvedPath,
-  useSearchParams,
-} from "react-router-dom";
+import { matchPath, useParams, useResolvedPath } from "react-router-dom";
 import classNames from "classnames";
 import {
   getRepoBranches,

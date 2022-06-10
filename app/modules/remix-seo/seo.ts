@@ -22,10 +22,6 @@ export function getSeo(defaultConfig: SeoProps) {
     let meta: Meta = title ? { title } : {};
     let links: Links = [];
 
-    let noindex = config.robots?.noindex || false;
-    let nofollow = config.robots?.nofollow || false;
-    let disableGoogleBot = config.disableGoogleBot || false;
-
     let robotsParams: string[] = [];
     if (config.robots) {
       let {
@@ -69,25 +65,6 @@ export function getSeo(defaultConfig: SeoProps) {
 
       if (notranslate) {
         robotsParams.push(`notranslate`);
-      }
-    }
-
-    let robotsParamStr = robotsParams.join(",");
-
-    if (noindex || nofollow) {
-      meta.robots = `${noindex ? "noindex" : "index"},${
-        nofollow ? "nofollow" : "follow"
-      },${robotsParamStr}`;
-
-      if (!disableGoogleBot) {
-        meta.googlebot = `${noindex ? "noindex" : "index"},${
-          nofollow ? "nofollow" : "follow"
-        },${robotsParamStr}`;
-      }
-    } else {
-      meta.robots = `index,follow,${robotsParamStr}`;
-      if (!disableGoogleBot) {
-        meta.googlebot = `index,follow,${robotsParamStr}`;
       }
     }
 
