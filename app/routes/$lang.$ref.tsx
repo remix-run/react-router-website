@@ -161,44 +161,49 @@ function Header() {
 
 function ColorSchemeToggle() {
   let location = useLocation();
+
+  // This is the same default, hover, focus style as the VersionSelect
+  const className =
+    "border border-transparent bg-gray-100 hover:bg-gray-200 focus:border focus:border-gray-100 focus:bg-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:border-gray-400 dark:focus:bg-gray-700";
+
   return (
     <DetailsMenu closeOnSubmission className="relative cursor-pointer">
-      <summary className="_no-triangle flex h-[40px] w-[40px] items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 focus:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700">
-        <svg className="hidden h-[18px] w-[18px] dark:inline">
+      <summary
+        className={`_no-triangle focus:border-200 flex h-[40px] w-[40px] items-center justify-center rounded-full ${className}`}
+      >
+        <svg className="hidden h-[24px] w-[24px] dark:inline">
           <use href={`${iconsHref}#moon`} />
         </svg>
-        <svg className="h-[18px] w-[18px] dark:hidden">
+        <svg className="h-[24px] w-[24px] dark:hidden">
           <use href={`${iconsHref}#sun`} />
         </svg>
       </summary>
       <DetailsPopup>
-        <div className="py-2">
-          <Form replace action="/color-scheme" method="post">
-            <input
-              type="hidden"
-              name="returnTo"
-              value={location.pathname + location.search}
-            />
-            <ColorSchemeButton
-              svgId="sun"
-              label="Light"
-              value="light"
-              name="colorScheme"
-            />
-            <ColorSchemeButton
-              svgId="moon"
-              label="Dark"
-              value="dark"
-              name="colorScheme"
-            />
-            <ColorSchemeButton
-              svgId="computer"
-              label="System"
-              value="system"
-              name="colorScheme"
-            />
-          </Form>
-        </div>
+        <Form replace action="/color-scheme" method="post">
+          <input
+            type="hidden"
+            name="returnTo"
+            value={location.pathname + location.search}
+          />
+          <ColorSchemeButton
+            svgId="sun"
+            label="Light"
+            value="light"
+            name="colorScheme"
+          />
+          <ColorSchemeButton
+            svgId="moon"
+            label="Dark"
+            value="dark"
+            name="colorScheme"
+          />
+          <ColorSchemeButton
+            svgId="setting"
+            label="System"
+            value="system"
+            name="colorScheme"
+          />
+        </Form>
       </DetailsPopup>
     </DetailsMenu>
   );
@@ -216,7 +221,9 @@ let ColorSchemeButton = React.forwardRef<
       disabled={colorScheme === props.value}
       className={classNames(
         "flex w-full items-center gap-4 py-1 px-4",
-        colorScheme === props.value ? "text-red-brand" : "hover:bg-gray-50"
+        colorScheme === props.value
+          ? "text-red-brand"
+          : "hover:bg-gray-50 active:text-red-brand dark:hover:bg-gray-700 dark:active:text-red-brand"
       )}
     >
       <svg className="h-[18px] w-[18px]">
@@ -308,7 +315,7 @@ function NavMenuMobile() {
 function DetailsPopup({ children }: { children: React.ReactNode }) {
   return (
     <div className="absolute right-0 z-20">
-      <div className="relative top-1 w-40 rounded-lg border bg-white shadow-lg dark:bg-gray-800">
+      <div className="relative top-1 w-40 rounded-lg border border-gray-100 bg-white py-2 shadow-lg dark:border-gray-400 dark:bg-gray-800 ">
         {children}
       </div>
     </div>
@@ -325,36 +332,40 @@ function VersionSelect() {
     lang,
   } = useLoaderData<LoaderData>();
 
+  // This is the same default, hover, focus style as the ColorScheme trigger
+  const className =
+    "border border-transparent bg-gray-100 hover:bg-gray-200 focus:border focus:border-gray-100 focus:bg-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:border-gray-400 dark:focus:bg-gray-700";
+
   return (
     <DetailsMenu className="relative">
-      <summary className="_no-triangle relative flex h-[40px] cursor-pointer list-none items-center justify-center gap-3 rounded-full border border-transparent bg-gray-100 px-3 hover:bg-gray-200 focus:border focus:border-gray-100 focus:bg-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+      <summary
+        className={`_no-triangle relative flex h-[40px] cursor-pointer list-none items-center justify-center gap-3 rounded-full px-3 ${className}`}
+      >
         <div>{currentGitHubRef}</div>
         <svg aria-hidden className="h-[18px] w-[18px] text-gray-400">
           <use href={`${iconsHref}#dropdown-arrows`} />
         </svg>
       </summary>
       <DetailsPopup>
-        <div className="p-4">
-          <VersionsLabel label="Branches" />
-          {branches.map((branch) => (
-            <VersionLink
-              key={branch}
-              to={currentGitHubRef === branch ? "" : `/${lang}/${branch}`}
-            >
-              {releaseBranch === branch ? `main (${latestVersion})` : branch}
-            </VersionLink>
-          ))}
+        <VersionsLabel label="Branches" />
+        {branches.map((branch) => (
+          <VersionLink
+            key={branch}
+            to={currentGitHubRef === branch ? "" : `/${lang}/${branch}`}
+          >
+            {releaseBranch === branch ? `main (${latestVersion})` : branch}
+          </VersionLink>
+        ))}
 
-          <VersionsLabel label="Versions" />
-          {versions.map((version) => (
-            <VersionLink
-              key={version}
-              to={currentGitHubRef === version ? "" : `/${lang}/${version}`}
-            >
-              {version}
-            </VersionLink>
-          ))}
-        </div>
+        <VersionsLabel label="Versions" />
+        {versions.map((version) => (
+          <VersionLink
+            key={version}
+            to={currentGitHubRef === version ? "" : `/${lang}/${version}`}
+          >
+            {version}
+          </VersionLink>
+        ))}
       </DetailsPopup>
     </DetailsMenu>
   );
@@ -362,7 +373,7 @@ function VersionSelect() {
 
 function VersionsLabel({ label }: { label: string }) {
   return (
-    <div className="pt-2 pb-2 text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-300">
+    <div className="px-4 pt-2 pb-2 text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-300">
       {label}
     </div>
   );
@@ -376,7 +387,7 @@ function VersionLink({
 }) {
   let isActive = useIsActivePath(to);
   let className =
-    "group items-center flex pl-1 py-1 before:mr-2 before:block before:h-1.5 before:w-1.5 before:rounded-full before:content-['']";
+    "pl-4 group items-center flex py-1 before:mr-4 before:relative before:top-[1px] before:block before:h-1.5 before:w-1.5 before:rounded-full before:content-['']";
 
   return to ? (
     <Link
@@ -385,7 +396,7 @@ function VersionLink({
         "before:bg-transparent",
         isActive
           ? "text-red-brand"
-          : "text-gray-600 hover:text-gray-900 active:text-red-brand dark:text-gray-200 dark:hover:text-gray-50 dark:active:text-red-brand"
+          : "hover:bg-gray-50 active:text-red-brand dark:text-gray-200 dark:hover:bg-gray-700 dark:active:text-red-brand"
       )}
       to={to}
     >
