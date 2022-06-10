@@ -173,7 +173,7 @@ html.dark {
 
   /*****************************************************************************/
   /* links */
-  & :not(h1, h2, h3, h4, h5, h6) a {
+  & :not(h1, h2, h3, h4, h5, h6) a[href] {
     @apply text-gray-900 no-underline shadow-[0_1px_0px] shadow-gray-800 dark:text-gray-50 dark:shadow-gray-100;
 
     &:hover {
