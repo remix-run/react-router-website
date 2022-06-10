@@ -33,7 +33,7 @@ function useDelegatedReactRouterLinks(nodeRef: React.RefObject<HTMLElement>) {
     return () => {
       node?.removeEventListener("click", handler);
     };
-  }, [navigate]);
+  }, [navigate, nodeRef]);
 }
 
 export { useDelegatedReactRouterLinks };
