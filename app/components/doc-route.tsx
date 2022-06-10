@@ -5,15 +5,11 @@ import { useLoaderData, useParams } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import type { Doc } from "~/modules/gh-docs";
 import { getRepoDoc } from "~/modules/gh-docs";
-import {
-  CACHE_CONTROL,
-  isProductionHost,
-  whyDoWeNotHaveGoodMiddleWareYetRyan,
-} from "~/http";
+import { CACHE_CONTROL, whyDoWeNotHaveGoodMiddleWareYetRyan } from "~/http";
 import { seo } from "~/seo";
 import { useDelegatedReactRouterLinks } from "./delegate-markdown-links";
 
-type LoaderData = { doc: Doc; isProductionApp: boolean };
+type LoaderData = { doc: Doc };
 
 export let loader: LoaderFunction = async ({ params, request }) => {
   await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
@@ -25,14 +21,8 @@ export let loader: LoaderFunction = async ({ params, request }) => {
     throw new Response("", { status: 404 });
   }
 
-  // Would rather do this once in root.tsx but `seo` is kinda funny, need to
-  // think about it a bit, but I'm thinking it shouldn't automatically add
-  // robots stuff unless you explicitly ask for it in the default or `set()`
-  // call.
-  let isProductionApp = isProductionHost(request);
-
   return json<LoaderData>(
-    { doc, isProductionApp },
+    { doc },
     { headers: { "Cache-Control": CACHE_CONTROL.doc } }
   );
 };
@@ -46,13 +36,12 @@ export function headers() {
 
 export function meta({ data }: { data?: LoaderData }) {
   if (!data) return { title: "Not Found" };
-  let { doc, isProductionApp } = data;
+  let { doc } = data;
   let title = doc.attrs.title;
   let [meta] = seo({
     title: title,
     twitter: { title },
     openGraph: { title },
-    robots: { noindex: !isProductionApp },
   });
   return meta;
 }

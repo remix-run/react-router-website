@@ -22,6 +22,7 @@ import {
   ColorSchemeScript,
   useColorScheme,
 } from "./modules/color-scheme/components";
+import { isHost } from "./modules/http-utils/is-host";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
@@ -33,19 +34,17 @@ export const meta: MetaFunction = () => ({
 
 type LoaderData = {
   colorScheme: "light" | "dark" | "system";
-  host: string;
+  isProductionHost: boolean;
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
   await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
+
   let colorScheme = await parseColorScheme(request);
-  let host =
-    request.headers.get("X-Forwarded-Host") ??
-    request.headers.get("host") ??
-    "";
+  let isProductionHost = isHost("reactrouter.com", request);
 
   return json<LoaderData>(
-    { colorScheme, host },
+    { colorScheme, isProductionHost },
     {
       headers: {
         "Cache-Control": CACHE_CONTROL.doc,
@@ -57,10 +56,10 @@ export let loader: LoaderFunction = async ({ request }) => {
 
 export default function App() {
   let colorScheme = useColorScheme();
-  let { host } = useLoaderData();
-  let isProductionHost = host === "reactrouter.com";
+  let { isProductionHost } = useLoaderData();
 
   return (
+    // TODO: change lang when we do translations
     <html lang="en" className={colorScheme} suppressHydrationWarning>
       <head>
         <ColorSchemeScript />

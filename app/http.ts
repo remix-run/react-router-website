@@ -1,7 +1,6 @@
 import { ensureSecure } from "~/modules/http-utils/ensure-secure";
 import { handleRedirects } from "~/modules/redirects";
 import { removeTrailingSlashes } from "~/modules/http-utils/remove-slashes";
-import { isHost } from "~/modules/http-utils/is-host";
 
 export const CACHE_CONTROL = {
   /**
@@ -11,10 +10,6 @@ export const CACHE_CONTROL = {
    */
   doc: "max-age=300, stale-while-revalidate=604800",
 };
-
-export function isProductionHost(request: Request) {
-  return isHost(request, "reactrouter.com");
-}
 
 export async function whyDoWeNotHaveGoodMiddleWareYetRyan(
   request: Request
