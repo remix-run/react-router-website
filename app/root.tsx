@@ -57,6 +57,18 @@ export default function App() {
         <ColorSchemeScript />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link
+          rel="icon"
+          href="/favicon-light.png"
+          type="image/png"
+          media="(prefers-color-scheme: light)"
+        />
+        <link
+          rel="icon"
+          href="/favicon-dark.png"
+          type="image/png"
+          media="(prefers-color-scheme: dark)"
+        />
         <Meta />
         <Links />
       </head>
