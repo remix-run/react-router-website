@@ -534,9 +534,6 @@ function Menu() {
 }
 
 function Footer() {
-  let doc = useDoc();
-  let repoUrl = "https://github.com/remix-run/react-router";
-  let editUrl = doc ? `${repoUrl}/edit/main/docs/${doc.slug}.md` : null;
   return (
     <div className="mt-16 flex justify-between border-t pt-4 text-sm text-gray-500 dark:border-gray-600">
       <div className="lg:flex lg:items-center">
@@ -558,15 +555,31 @@ function Footer() {
         </div>
       </div>
       <div>
-        {editUrl && (
-          <a className="flex items-center gap-1 hover:underline" href={editUrl}>
-            Edit
-            <svg aria-hidden className="h-4 w-4">
-              <use href={`${iconsHref}#edit`} />
-            </svg>
-          </a>
-        )}
+        <EditLink />
       </div>
     </div>
+  );
+}
+
+function EditLink() {
+  let doc = useDoc();
+  let params = useParams();
+  let isEditableRef = params.ref === "main" || params.ref === "dev";
+
+  if (!doc || !isEditableRef) {
+    return null;
+  }
+
+  let repoUrl = "https://github.com/remix-run/react-router";
+  // TODO: deal with translations when we add them with params.lang
+  let editUrl = `${repoUrl}/edit/${params.ref}/docs/${doc.slug}.md`;
+
+  return (
+    <a className="flex items-center gap-1 hover:underline" href={editUrl}>
+      Edit
+      <svg aria-hidden className="h-4 w-4">
+        <use href={`${iconsHref}#edit`} />
+      </svg>
+    </a>
   );
 }
