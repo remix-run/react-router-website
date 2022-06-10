@@ -168,7 +168,7 @@ function ColorSchemeToggle() {
   let location = useLocation();
   return (
     <DetailsMenu closeOnSubmission className="relative cursor-pointer">
-      <summary className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 focus:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+      <summary className="_no-triangle flex h-[40px] w-[40px] items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 focus:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-700">
         <svg className="hidden h-[18px] w-[18px] dark:inline">
           <use href={`${iconsHref}#moon`} />
         </svg>
