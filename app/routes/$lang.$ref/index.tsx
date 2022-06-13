@@ -155,7 +155,7 @@ export default function Index() {
         {features.map(({ title, description, cta, slug, className, svg }) => (
           <Link
             key={slug}
-            to={`/en/dev/${slug}` /* TODO read in lang/branch */}
+            to={slug /* TODO read in lang/branch */}
             className="group relative flex flex-col gap-1 rounded-lg border-[3px] border-gray-50 p-4 pt-8 hover:border-gray-100 dark:border-gray-800 hover:dark:border-gray-600 md:p-6"
           >
             <h3
