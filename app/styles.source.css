@@ -334,10 +334,13 @@ html.dark {
     /* @apply rounded bg-gray-50 py-[2px] px-1 text-[color:inherit] dark:bg-gray-800; */
     @apply p-0 text-gray-900 dark:text-white;
     font-size: 100%;
-    /* &:before,
+  }
+
+  & :not(pre) > code {
+    &:before,
     &:after {
       content: "`";
-    } */
+    }
   }
 
   & :is(a, h1, h2, h3, h4, h5, h6) code,
