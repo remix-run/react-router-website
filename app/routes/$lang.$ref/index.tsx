@@ -201,10 +201,9 @@ export default function Index() {
       <div className="mx-auto mt-16 max-w-xl text-center leading-relaxed text-gray-400 dark:text-gray-300">
         <h3 className="text-xl font-bold">What is React Router?</h3>
         <p className="my-4">
-          React Router is <em>the</em> routing library for React. It keeps the
-          your UI in sync with your data and the URL. And it runs everywhere
-          React does: on the web, on the server (using node.js), and on React
-          Native.
+          React Router is <em>the</em> routing library for React. It keeps your
+          UI in sync with your data and the URL. And it runs everywhere React
+          does: on the web, on the server (using node.js), and on React Native.
         </p>
         <p>
           <em>It is used by everyone everywhere all of the time.</em>
