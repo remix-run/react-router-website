@@ -8,6 +8,7 @@ import {
   default as DocPage,
   meta as docMeta,
 } from "~/components/doc-route";
+import iconsHref from "~/icons.svg";
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   let is6dot4 =
@@ -37,7 +38,7 @@ const features = [
     className: "text-green-brand",
     // prettier-ignore
     svg: (
-      <div className="absolute top-[-35px] right-[-3px]">
+      <div className="absolute top-[-35px] right-[-4px]">
         <svg width="107" height="85" viewBox="0 0 107 85" fill="none" xmlns="http://www.w3.org/2000/svg">
           <mask id="path-1-inside-1_1305_761" fill="white">
             <path fillRule="evenodd" clipRule="evenodd" d="M30.2112 60.7292C27.8371 57.4406 26.1169 54.2428 24.6141 51.4493C20.9709 44.677 18.6057 40.2804 11.3011 42.7245C-8.17874 49.2425 0.412893 8.93231 15.3645 16.3531C24.0327 20.6553 32.7413 18.5514 38.8087 16.623C46.0398 9.43895 56.0015 5 67 5C89.0914 5 107 22.9086 107 45C107 67.0914 89.0914 85 67 85C50.4928 85 36.3211 75.0009 30.2112 60.7292Z"/>
@@ -97,7 +98,7 @@ const features = [
     className: "text-pink-brand",
     // prettier-ignore
     svg: (
-      <div className="absolute top-[-35px] right-[-6px]">
+      <div className="absolute top-[-35px] right-[-7px]">
         <svg width="96" height="86" viewBox="0 0 96 86" fill="none" xmlns="http://www.w3.org/2000/svg">
           <mask id="path-1-inside-1_1306_721" fill="white">
             <path fillRule="evenodd" clipRule="evenodd" d="M92 40C92 17.9086 74.0914 -3.97289e-06 52 -3.00725e-06C29.9086 -2.0416e-06 12 17.9086 12 40C12 62.0914 29.9086 80 52 80C54.8895 80 57.7074 79.6936 60.423 79.1116C61.387 79.6096 62.2571 80.1735 63.0089 80.8181C70.6942 87.4079 88.5086 90.3181 88.5088 73.3181C88.5088 71.0784 89.0138 68.3515 89.5957 65.2091C90.5044 60.3024 91.6006 54.3827 91.2551 47.7229C91.7439 45.2241 92 42.642 92 40Z"/>
@@ -143,6 +144,23 @@ const features = [
   },
 ];
 
+const stats = [
+  {
+    svgId: "github",
+    // TODO: get info from Github API
+    numbers: [
+      { label: "Stars", count: 47213 },
+      { label: "Users", count: 3591113 },
+      { label: "Contributors", count: 737 },
+    ],
+  },
+  {
+    svgId: "npm",
+    // TODO: get info from https://api.npmjs.org/downloads/point/2015-01-01:2022-06-12/react-router
+    numbers: [{ label: "Downloads (since Dec. 2020)", count: 439887046 }],
+  },
+];
+
 export default function Index() {
   // if we have loader data then we're not on a version where we expect the
   // custom index page, so we'll serve the doc index markdown file instead
@@ -180,6 +198,38 @@ export default function Index() {
           </Link>
         ))}
       </div>
+      <div className="mx-auto mt-16 max-w-xl text-center leading-relaxed text-gray-400 dark:text-gray-300">
+        <h3 className="text-xl font-bold">What is React Router?</h3>
+        <p className="my-4">
+          React Router is <em>the</em> routing library for React. It keeps the
+          your UI in sync with your data and the URL. And it runs everywhere
+          React does: on the web, on the server (using node.js), and on React
+          Native.
+        </p>
+        <p>
+          <em>It is used by everyone everywhere all of the time.</em>
+        </p>
+      </div>
+      {stats.map(({ svgId, numbers }) => (
+        <div key={svgId} className="text-gray-400 dark:text-gray-300">
+          <svg
+            aria-label="TODO GitHub Octocat logo"
+            className="mx-auto mt-12 mb-2 h-12 w-12 "
+          >
+            <use href={`${iconsHref}#${svgId}`} />
+          </svg>
+          <dl className="flex justify-center ">
+            {numbers.map(({ label, count }, i) => (
+              <div key={i} className="flex w-1/3 flex-col text-center">
+                <dt className="text-3xl font-bold tabular-nums">
+                  {count.toLocaleString("en-US")}
+                </dt>
+                <dd>{label}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      ))}
     </div>
   );
 }
