@@ -33,7 +33,6 @@ const features = [
     title: "What’s New?",
     description:
       "Version 6 incorporates everything we learned in Remix about keeping your data in sync with your UI.",
-    cta: "Data APIs Quick Start",
     slug: "getting-started/data",
     className: "text-green-brand",
     // prettier-ignore
@@ -65,7 +64,6 @@ const features = [
     title: "I’m New",
     description:
       "Start with the tutorial. It has everything you need to know to get up and running with React Router quickly.",
-    cta: "Getting Started Tutorial",
     slug: "getting-started/tutorial",
     className: "text-red-brand",
     // prettier-ignore
@@ -93,7 +91,6 @@ const features = [
     title: "I’m Familiar",
     description:
       "We introduced several new features and exciting changes in version 6. Learn what makes them special.",
-    cta: "Overview Quick Start",
     slug: "getting-started/overview",
     className: "text-pink-brand",
     // prettier-ignore
@@ -125,7 +122,6 @@ const features = [
     title: "I’ve a Question",
     description:
       "Running into a problem? Chances are, you're not the first! Explore common questions about React Router v6.",
-    cta: "FAQs",
     slug: "getting-started/faq",
     className: "text-yellow-600 dark:text-yellow-brand",
     // prettier-ignore
@@ -185,15 +181,6 @@ export default function Index() {
               {title}
             </h2>
             <p>{description}</p>
-            {/* TODO maybe we don't need these at all... <p
-              className={classNames(
-                className,
-                "transition-transform after:ml-2 after:no-underline after:content-['→'] group-hover:after:translate-x-1 "
-              )}
-            >
-              <span className="underline">{cta}</span>
-            </p> */}
-
             {svg}
           </Link>
         ))}
