@@ -141,13 +141,15 @@ const features = [
 ];
 
 const stats = [
-  // TODO: get info from https://api.npmjs.org/downloads/point/2015-01-01:2022-06-12/react-router
+  // https://api.npmjs.org/downloads/point/2015-01-01:2022-06-12/react-router
   {
     label: "Downloads on npm",
     count: 1276906709,
     svgId: "stat-download",
   },
-  { label: "Dependents on GitHub", count: 3591113, svgId: "stat-users" },
+  // https://github.com/remix-run/react-router/network/dependents?package_id=UGFja2FnZS00OTM0MDEzMDg%3D
+  { label: "Dependents on GitHub", count: 3597612, svgId: "stat-users" },
+  // https://github.com/remix-run/react-router/
   { label: "Contributors on GitHub", count: 737, svgId: "stat-merge" },
   { label: "Stars on GitHub", count: 47213, svgId: "stat-star" },
 ];
