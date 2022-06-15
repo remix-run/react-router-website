@@ -168,7 +168,7 @@ export default function Index() {
         </h1>
       </div>
       <div className="grid max-w-[60ch] gap-y-10 md:max-w-none md:grid-cols-2 md:grid-rows-2 md:gap-y-12 md:gap-x-8">
-        {features.map(({ title, description, cta, slug, className, svg }) => (
+        {features.map(({ title, description, slug, className, svg }) => (
           <Link
             key={slug}
             to={slug}
