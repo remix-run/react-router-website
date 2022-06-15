@@ -193,31 +193,6 @@ html.dark {
   /* headings */
   & :is(h1, h2, h3, h4, h5, h6) {
     @apply mx-0 my-4 text-gray-900 dark:text-white;
-
-    &:target {
-      @apply text-red-brand;
-
-      &:before {
-        content: "";
-        @apply absolute -left-5 top-3 h-2 w-2 rounded-full bg-red-brand;
-        /* position: absolute;
-        left: -19px;
-        width: 8px;
-        height: 8px;
-        background-color: #f44250;
-        border-radius: 50%;
-        top: 12px; */
-      }
-
-      &:hover {
-        &:before {
-          display: none;
-        }
-        .icon-link::before {
-          visibility: visible;
-        }
-      }
-    }
   }
 
   & h1 {
@@ -249,8 +224,8 @@ html.dark {
   /* heading anchors */
   & :is(h1, h2, h3, h4, h5, h6) {
     @apply relative;
-    scroll-snap-margin-top: 4.5em;
-    scroll-margin-top: 4.5em;
+    scroll-margin-top: 4em;
+    scroll-snap-margin-top: 4em;
 
     & a {
       @apply absolute top-0 -left-6 -right-0 z-10 flex h-full items-center leading-none;
