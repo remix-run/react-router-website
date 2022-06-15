@@ -60,7 +60,7 @@ html.dark {
 .md-prose {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
-  @apply break-words text-d-p-sm leading-normal text-gray-700 dark:text-gray-200;
+  @apply break-words leading-normal text-gray-700 dark:text-gray-200;
 
   & > :first-child {
     @apply mt-0;
@@ -163,7 +163,7 @@ html.dark {
     @apply mt-0 mb-4 p-0;
 
     & dt {
-      @apply mt-4 p-0 text-d-p-sm font-semibold italic;
+      @apply mt-4 p-0 font-semibold italic;
     }
 
     & dd {
@@ -236,13 +236,13 @@ html.dark {
   }
 
   & h3 {
-    @apply text-m-h3 font-medium md:text-d-h3;
+    @apply text-xl font-bold;
   }
 
   & h4,
   & h5,
   & h6 {
-    @apply text-m-p-lg font-bold md:text-d-p-lg;
+    @apply text-xl font-light;
   }
 
   /*****************************************************************************/
@@ -309,7 +309,7 @@ html.dark {
   & kbd,
   & pre {
     word-wrap: normal;
-    @apply overflow-auto rounded-lg p-3 text-m-p-sm leading-none md:p-4;
+    @apply overflow-auto rounded-lg p-3 text-sm leading-none md:p-4;
   }
 
   & pre {
@@ -423,8 +423,8 @@ html.dark {
   }
 
   & table th {
-    @apply sticky top-0 bg-transparent text-m-p-sm font-semibold text-gray-700 dark:text-gray-300;
-    @apply border-0 border-b border-gray-200 p-0 pb-1 pr-4 dark:border-gray-800 md:pr-6;
+    @apply sticky top-0 bg-transparent font-semibold;
+    @apply border-0 border-b-2 border-gray-200 p-0 pb-1 pr-4 dark:border-gray-800 md:pr-6;
   }
 
   & table tbody {
@@ -432,7 +432,7 @@ html.dark {
   }
 
   & table td {
-    @apply whitespace-nowrap border-0 border-b border-gray-100 p-0 py-2 pr-4 text-m-p-sm text-black dark:text-white md:pr-6;
+    @apply whitespace-nowrap border-0 border-b border-gray-100 p-0 py-2 pr-4  dark:border-gray-800  md:pr-6;
   }
 
   /*****************************************************************************/

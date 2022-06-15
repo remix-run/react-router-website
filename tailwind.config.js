@@ -12,24 +12,6 @@ module.exports = {
   theme: {
     fontSize: {
       ...defaultTheme.fontSize,
-
-      // names come from the figma file
-      // desktop paragraph small -> d-p-s
-      "d-p-sm": ["16px", "24px"],
-      "d-p-lg": ["20px", "32px"],
-      "d-h3": ["20px", "32px"],
-      "d-h2": ["30px", "30px"],
-      "d-h1": ["45px", "45px"],
-
-      // mobile paragraph small -> d-m-s
-      "m-p-sm": ["14px", "24px"],
-      "m-p-lg": ["18px", "32px"],
-      "m-h3": ["20px", "24px"],
-      "m-h2": ["24px", "32px"],
-      // "m-h1": ["32px", "32px"],
-      // "m-j": ["40px", "48px"],
-
-      eyebrow: ["16px", "24px"],
     },
     container: {
       center: true,
