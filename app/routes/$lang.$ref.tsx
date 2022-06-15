@@ -292,7 +292,7 @@ function NavMenuMobile() {
     <DetailsMenu className="group relative flex h-full flex-col lg:hidden">
       <summary
         tabIndex={0}
-        className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-50 bg-white bg-opacity-75 px-2 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:bg-opacity-50 dark:hover:bg-gray-800 dark:active:bg-gray-700"
+        className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-50 bg-white px-2 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 dark:active:bg-gray-700"
       >
         <div className="flex items-center gap-2">
           <svg aria-hidden className="h-5 w-5 group-open:hidden">
