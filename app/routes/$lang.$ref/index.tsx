@@ -164,7 +164,7 @@ export default function Index() {
     <div>
       <div className="md-prose mb-10 md:mb-12">
         <h1>
-          <em>The</em> JavaScript Routing Library
+          <em>The</em> Routing Library for React
         </h1>
       </div>
       <div className="grid max-w-[60ch] gap-y-10 md:max-w-none md:grid-cols-2 md:grid-rows-2 md:gap-y-12 md:gap-x-8">
