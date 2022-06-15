@@ -38,7 +38,7 @@ const features = [
     className: "text-green-brand",
     // prettier-ignore
     svg: (
-      <div className="absolute top-[-35px] right-[-4px]">
+      <div className="absolute top-[-30px] md:top-[-35px] right-[-4px]">
         <svg width="107" height="85" viewBox="0 0 107 85" fill="none" xmlns="http://www.w3.org/2000/svg">
           <mask id="path-1-inside-1_1305_761" fill="white">
             <path fillRule="evenodd" clipRule="evenodd" d="M30.2112 60.7292C27.8371 57.4406 26.1169 54.2428 24.6141 51.4493C20.9709 44.677 18.6057 40.2804 11.3011 42.7245C-8.17874 49.2425 0.412893 8.93231 15.3645 16.3531C24.0327 20.6553 32.7413 18.5514 38.8087 16.623C46.0398 9.43895 56.0015 5 67 5C89.0914 5 107 22.9086 107 45C107 67.0914 89.0914 85 67 85C50.4928 85 36.3211 75.0009 30.2112 60.7292Z"/>
@@ -70,7 +70,7 @@ const features = [
     className: "text-red-brand",
     // prettier-ignore
     svg: (
-      <div className="absolute top-[-35px] right-[-8px]">
+      <div className="absolute top-[-30px] md:top-[-35px] right-[-8px]">
         <svg width="98" height="86" viewBox="0 0 98 86" fill="none" xmlns="http://www.w3.org/2000/svg">
           <mask id="path-1-inside-1_1306_720" fill="white">
             <path fillRule="evenodd" clipRule="evenodd" d="M18.3831 66.0549C16.5182 65.3021 14.9214 64.7619 13.6567 64.5346C-1.37875 61.8331 -3.32992 41.7309 6.09364 38.3121C11.5775 36.3226 14.296 33.0663 16.5098 29.591C22.7739 15.6826 36.7562 6 53 6C75.0914 6 93 23.9086 93 46C93 68.0914 75.0914 86 53 86C38.217 86 25.3071 77.9806 18.3831 66.0549Z"/>
@@ -98,7 +98,7 @@ const features = [
     className: "text-pink-brand",
     // prettier-ignore
     svg: (
-      <div className="absolute top-[-35px] right-[-7px]">
+      <div className="absolute top-[-30px] md:top-[-35px] right-[-7px]">
         <svg width="96" height="86" viewBox="0 0 96 86" fill="none" xmlns="http://www.w3.org/2000/svg">
           <mask id="path-1-inside-1_1306_721" fill="white">
             <path fillRule="evenodd" clipRule="evenodd" d="M92 40C92 17.9086 74.0914 -3.97289e-06 52 -3.00725e-06C29.9086 -2.0416e-06 12 17.9086 12 40C12 62.0914 29.9086 80 52 80C54.8895 80 57.7074 79.6936 60.423 79.1116C61.387 79.6096 62.2571 80.1735 63.0089 80.8181C70.6942 87.4079 88.5086 90.3181 88.5088 73.3181C88.5088 71.0784 89.0138 68.3515 89.5957 65.2091C90.5044 60.3024 91.6006 54.3827 91.2551 47.7229C91.7439 45.2241 92 42.642 92 40Z"/>
@@ -130,7 +130,7 @@ const features = [
     className: "text-yellow-600 dark:text-yellow-brand",
     // prettier-ignore
     svg: (
-      <div className="absolute top-[-35px] right-[-16px]">
+      <div className="absolute top-[-30px] md:top-[-35px] right-[-16px]">
         <svg width="96" height="81" viewBox="0 0 96 81" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path className="fill-gray-50 dark:fill-gray-800 group-hover:fill-gray-100 dark:group-hover:fill-gray-700" fillRule="evenodd" clipRule="evenodd" d="M65.7841 8.89933C58.9684 3.50924 50.3558 0.291502 40.9917 0.291502C18.9003 0.291503 0.991697 18.2001 0.991697 40.2915C0.991698 62.3829 18.9003 80.2915 40.9917 80.2915C52.8792 80.2915 63.5556 75.1059 70.8821 66.8734C74.2015 65.9378 76.7373 66.4596 77.6437 70.1153C80.3926 81.2027 108.358 77.3893 89.4701 51.5577C83.761 43.7498 82.6847 37.5855 81.7077 31.9893C80.3411 24.162 79.1685 17.4462 65.7841 8.89933Z" />
           <path className="fill-yellow-500 dark:fill-yellow-brand" d="M63.5979 63.6262C63.7423 61.796 64.9691 60.405 67.2784 58.648C71.3918 55.5732 75 52.2056 75 46.2025C75 38.2959 68.7217 32 57.6804 32C47.2165 32 40 38.4424 40 48.3255C40 49.7165 40.2887 51.1807 40.5773 52.6449L52.5567 53.0109C52.268 52.0592 52.0515 50.9611 52.0515 49.2041C52.0515 45.4704 53.4948 42.5421 57.6082 42.5421C60.6392 42.5421 62.1546 44.5187 62.1546 46.8614C62.1546 50.1558 59.9175 51.9128 57.0309 54.2555C53.8557 56.8178 52.4124 60.1122 52.268 63.6262H63.5979ZM51.6907 79H64.1031V66.4081H51.6907V79Z" />
@@ -145,20 +145,15 @@ const features = [
 ];
 
 const stats = [
+  // TODO: get info from https://api.npmjs.org/downloads/point/2015-01-01:2022-06-12/react-router
   {
-    svgId: "github",
-    // TODO: get info from Github API
-    numbers: [
-      { label: "Stars", count: 47213 },
-      { label: "Users", count: 3591113 },
-      { label: "Contributors", count: 737 },
-    ],
+    label: "Downloads on npm",
+    count: 1276906709,
+    svgId: "stat-download",
   },
-  {
-    svgId: "npm",
-    // TODO: get info from https://api.npmjs.org/downloads/point/2015-01-01:2022-06-12/react-router
-    numbers: [{ label: "Downloads (since Dec. 2020)", count: 439887046 }],
-  },
+  { label: "Dependents on GitHub", count: 3591113, svgId: "stat-users" },
+  { label: "Contributors on GitHub", count: 737, svgId: "stat-merge" },
+  { label: "Stars on GitHub", count: 47213, svgId: "stat-star" },
 ];
 
 export default function Index() {
@@ -169,21 +164,26 @@ export default function Index() {
 
   return (
     <div>
-      <div className="mt-6 grid gap-y-10 md:grid-cols-2 md:grid-rows-2 md:gap-y-12 md:gap-x-8">
+      <div className="md-prose mb-10 md:mb-12">
+        <h1>
+          <em>The</em> JavaScript Routing Library
+        </h1>
+      </div>
+      <div className="grid max-w-[60ch] gap-y-10 md:max-w-none md:grid-cols-2 md:grid-rows-2 md:gap-y-12 md:gap-x-8">
         {features.map(({ title, description, cta, slug, className, svg }) => (
           <Link
             key={slug}
             to={slug}
-            className="group relative flex flex-col gap-1 rounded-lg border-[3px] border-gray-50 p-4 pt-8 hover:border-gray-100 dark:border-gray-800 hover:dark:border-gray-600 md:p-6"
+            className="group relative flex flex-col gap-1 rounded-lg border-[3px] border-gray-50 p-4 pt-6 hover:border-gray-100 dark:border-gray-800 hover:dark:border-gray-600 md:p-6"
           >
-            <h3
+            <h2
               className={classNames(
                 className,
-                "text-xl font-bold group-hover:underline"
+                "text-2xl font-bold group-hover:underline"
               )}
             >
               {title}
-            </h3>
+            </h2>
             <p>{description}</p>
             {/* TODO maybe we don't need these at all... <p
               className={classNames(
@@ -198,37 +198,39 @@ export default function Index() {
           </Link>
         ))}
       </div>
-      <div className="mx-auto mt-16 max-w-xl text-center leading-relaxed text-gray-400 dark:text-gray-300">
-        <h3 className="text-xl font-bold">What is React Router?</h3>
-        <p className="my-4">
-          React Router is <em>the</em> routing library for React. It keeps your
-          UI in sync with your data and the URL. And it runs everywhere React
-          does: on the web, on the server (using node.js), and on React Native.
-        </p>
-        <p>
-          <em>It is used by everyone everywhere all of the time.</em>
-        </p>
+      <div className="md-prose mt-16">
+        <h2>What is React Router?</h2>
+        <p>It’s a routing library that</p>
+        <ul>
+          <li>keeps your UI in sync with your data and the URL,</li>
+          <li>
+            runs everywhere React runs (on the web, on the server using node.js,
+            and on React Native), and
+          </li>
+          <li>
+            gets used by everyone everywhere all of the time (a tad of
+            hyperbole, but you get the point).
+          </li>
+        </ul>
       </div>
-      {stats.map(({ svgId, numbers }) => (
-        <div key={svgId} className="text-gray-400 dark:text-gray-300">
-          <svg
-            aria-label="TODO GitHub Octocat logo"
-            className="mx-auto mt-12 mb-2 h-12 w-12 "
-          >
-            <use href={`${iconsHref}#${svgId}`} />
-          </svg>
-          <dl className="flex justify-center ">
-            {numbers.map(({ label, count }, i) => (
-              <div key={i} className="flex w-1/3 flex-col text-center">
-                <dt className="text-3xl font-bold tabular-nums">
-                  {count.toLocaleString("en-US")}
-                </dt>
-                <dd>{label}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      ))}
+      <ul className="mt-8 grid grid-cols-1 gap-y-4 md:grid md:grid-cols-2">
+        {stats.map(({ svgId, count, label }) => (
+          <li key={svgId} className="flex gap-4">
+            <svg
+              aria-label="TODO GitHub Octocat logo"
+              className="mt-1 h-8 w-8 text-gray-200 dark:text-gray-600"
+            >
+              <use href={`${iconsHref}#${svgId}`} />
+            </svg>
+            <p className="flex flex-col">
+              <span className="text-3xl font-light tabular-nums tracking-tight">
+                {count.toLocaleString("en-US")}
+              </span>
+              <span className="text-gray-300 dark:text-gray-500">{label}</span>
+            </p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
