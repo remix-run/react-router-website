@@ -148,9 +148,9 @@ const stats = [
     svgId: "stat-download",
   },
   // https://github.com/remix-run/react-router/network/dependents?package_id=UGFja2FnZS00OTM0MDEzMDg%3D
-  { label: "Dependents on GitHub", count: 3597612, svgId: "stat-users" },
+  { label: "Dependents on GitHub", count: 3597612, svgId: "stat-box" },
   // https://github.com/remix-run/react-router/
-  { label: "Contributors on GitHub", count: 737, svgId: "stat-merge" },
+  { label: "Contributors on GitHub", count: 737, svgId: "stat-users" },
   { label: "Stars on GitHub", count: 47213, svgId: "stat-star" },
 ];
 
