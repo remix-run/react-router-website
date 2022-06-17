@@ -27,9 +27,7 @@ let statCountsCache =
 
 export async function getStats(): Promise<Stats[]> {
   let cacheKey = "ONE_KEY_TO_RULE_THEM_ALL";
-
   let statCounts = statCountsCache.get(cacheKey);
-  console.log("This is always coming back as undefined", statCounts);
 
   if (!statCounts) {
     console.log("Fetching fresh stats: NPM & GitHub APIs");
