@@ -9,7 +9,7 @@ import {
   meta as docMeta,
 } from "~/components/doc-route";
 import iconsHref from "~/icons.svg";
-import { getStats, Stat } from "~/modules/stats";
+import { getStats, Stats } from "~/modules/stats";
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   let is6dot4 =
@@ -198,7 +198,7 @@ export default function Index() {
         </ul>
       </div>
       <ul className="mt-8 grid grid-cols-1 gap-y-4 md:grid md:grid-cols-2">
-        {stats.map(({ svgId, count, label }: Stat) => (
+        {stats.map(({ svgId, count, label }: Stats) => (
           <li key={svgId} className="flex gap-4">
             <svg
               aria-label="TODO GitHub Octocat logo"
