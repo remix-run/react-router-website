@@ -144,7 +144,7 @@ const stats = [
   // https://api.npmjs.org/downloads/point/2015-01-01:2022-06-12/react-router
   {
     label: "Downloads on npm",
-    count: 847110940,
+    count: 844617220,
     svgId: "stat-download",
   },
   // https://github.com/remix-run/react-router/network/dependents?package_id=UGFja2FnZS00OTM0MDEzMDg%3D
