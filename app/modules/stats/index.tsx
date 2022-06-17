@@ -116,7 +116,10 @@ async function fetchNpmDownloads() {
   } catch (e) {
     // If this fails for some reason, just return a hard-coded value fetched
     // on June 17, 2022
-    console.error("Failed to fetch stats for npm downloads.", e);
+    console.error(
+      "Failed to fetch stats for npm downloads. Falling back to a hard-coded value",
+      e
+    );
     return 844617220;
   }
 }
@@ -135,10 +138,16 @@ async function fetchGithubContributors() {
       per_page: 1,
     });
     const link = headers.link || "";
-    const [_, contributors] = link.match(/rel="next".*&page=(\d*)/);
-    return Number(contributors);
+    const matches = link.match(/rel="next".*&page=(\d*)/);
+    if (!(matches && matches[1])) {
+      throw Error("Unable to find the number of contributors using a regex.");
+    }
+    return Number(matches[1]);
   } catch (e) {
-    console.error("Failed to fetch stats for GitHub contributors.", e);
+    console.error(
+      "Failed to fetch stats for GitHub contributors. Falling back to a hard-coded value",
+      e
+    );
     // Return a hard-coded value retrieved manually on Jun 15, 2022
     return 737;
   }
@@ -158,7 +167,10 @@ async function fetchGithubStars() {
     });
     return stargazers_count;
   } catch (e) {
-    console.log("Failed to fetch stats for GitHub stars.", e);
+    console.log(
+      "Failed to fetch stats for GitHub stars. Falling back to a hard-coded value",
+      e
+    );
     // Return hard-coded value retrieved Jun 15, 2022
     return 47245;
   }
