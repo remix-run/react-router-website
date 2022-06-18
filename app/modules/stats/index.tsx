@@ -64,7 +64,7 @@ export async function getStats(): Promise<Stats[]> {
       svgId: "stat-star",
     },
     {
-      count: statCounts.githubContributors,
+      count: statCounts.githubDependents,
       label: "Dependents on GitHub",
       svgId: "stat-box",
     },
