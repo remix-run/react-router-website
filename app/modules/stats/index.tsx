@@ -26,7 +26,7 @@ let statCountsCache =
   }));
 
 export async function getStats(): Promise<Stats[]> {
-  let cacheKey = "ONE_KEY_TO_RULE_THEM_ALL";
+  let cacheKey = "ONE_STATS_KEY_TO_RULE_THEM_ALL";
   let statCounts = statCountsCache.get(cacheKey);
 
   if (!statCounts) {
