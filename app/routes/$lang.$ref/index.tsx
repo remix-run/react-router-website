@@ -1,4 +1,4 @@
-import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import classNames from "classnames";
 import semver from "semver";
@@ -9,13 +9,17 @@ import {
   meta as docMeta,
 } from "~/components/doc-route";
 import iconsHref from "~/icons.svg";
+import { getStats, Stats } from "~/modules/stats";
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   let is6dot4 =
     params.ref === "main" ||
     params.ref === "dev" ||
     semver.satisfies(params.ref || "", "^6.4");
-  if (is6dot4) return null;
+  if (is6dot4) {
+    const stats = await getStats();
+    return json({ is6dot4: true, stats });
+  }
   return docLoader({ request, params, context: {} });
 };
 
@@ -24,7 +28,10 @@ export { headers };
 export let meta: MetaFunction = ({ data }) => {
   // fake a doc for the new custom page, it does all the SEO stuff internally,
   // easier than repeating here
-  data ||= { doc: { attrs: { title: "Home" } } };
+  if (data.is6dot4) {
+    data = { doc: { attrs: { title: "Home" } } };
+  }
+
   return docMeta({ data });
 };
 
@@ -140,25 +147,13 @@ const features = [
   },
 ];
 
-const stats = [
-  // https://api.npmjs.org/downloads/point/2015-01-01:2022-06-12/react-router
-  {
-    label: "Downloads on npm",
-    count: 844617220,
-    svgId: "stat-download",
-  },
-  // https://github.com/remix-run/react-router/network/dependents?package_id=UGFja2FnZS00OTM0MDEzMDg%3D
-  { label: "Dependents on GitHub", count: 3597612, svgId: "stat-box" },
-  // https://github.com/remix-run/react-router/
-  { label: "Stars on GitHub", count: 47213, svgId: "stat-star" },
-  { label: "Contributors on GitHub", count: 737, svgId: "stat-users" },
-];
-
 export default function Index() {
-  // if we have loader data then we're not on a version where we expect the
+  // If we're not on 6.4 then we're not on a version where we expect the
   // custom index page, so we'll serve the doc index markdown file instead
   let loaderData = useLoaderData();
-  if (loaderData) return <DocPage />;
+  if (!loaderData.is6dot4) return <DocPage />;
+
+  const { stats } = loaderData;
 
   return (
     <div>
@@ -203,7 +198,7 @@ export default function Index() {
         </ul>
       </div>
       <ul className="mt-8 grid grid-cols-1 gap-y-4 md:grid md:grid-cols-2">
-        {stats.map(({ svgId, count, label }) => (
+        {stats.map(({ svgId, count, label }: Stats) => (
           <li key={svgId} className="flex gap-4">
             <svg
               aria-label="TODO GitHub Octocat logo"
