@@ -1,6 +1,5 @@
-import type { LoaderFunction } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
 import classNames from "classnames";
+import type { FC } from "react";
 
 export default function Brand() {
   return (
@@ -26,11 +25,11 @@ export default function Brand() {
         This is it—if you’re looking to use the React Router logo, start here
         (if this doesn’t work for some reason, see the alternatives below).
       </p>
-      <LogoBox name="react-router" />
+      <LogoBox name="react-router" Logo={LogoReactRouter} />
 
       <h2>Alt: Stacked</h2>
       <p>For tighter horizontal spaces, the stacked logo is at your service.</p>
-      <LogoBox name="react-router-stacked" />
+      <LogoBox name="react-router-stacked" Logo={LogoReactRouterStacked} />
 
       <h2>Alt: Mark</h2>
       <p>
@@ -38,19 +37,23 @@ export default function Brand() {
         we don’t have the ubiquitous recognizability of the Nike swoosh).
         However, sometimes you just need a mark for certain contexts—we get it.
       </p>
-      <LogoBox name="react-router-mark" />
+      <LogoBox name="react-router-mark" Logo={LogoReactRouterMark} />
     </div>
   );
 }
 
-function LogoBox({ name }) {
-  const Logos = {
-    "react-router": LogoReactRouter,
-    "react-router-stacked": LogoReactRouterStacked,
-    "react-router-mark": LogoReactRouterMark,
-  };
-  const Logo = Logos[name];
+interface LogoProps {
+  fg: string;
+  highlight: string;
+}
 
+function LogoBox({
+  name,
+  Logo,
+}: {
+  name: "react-router" | "react-router-stacked" | "react-router-mark";
+  Logo: FC<LogoProps>;
+}) {
   // Tailwind classnames for the various ways we style the individual
   // component pieces of each LogoBox variant
   let variants = {
@@ -112,7 +115,7 @@ function LogoBox({ name }) {
   );
 }
 
-function LogoReactRouterMark({ fg, highlight }) {
+function LogoReactRouterMark({ fg, highlight }: LogoProps) {
   return (
     <svg
       width="94"
@@ -132,7 +135,7 @@ function LogoReactRouterMark({ fg, highlight }) {
   );
 }
 
-function LogoReactRouterStacked({ fg, highlight }) {
+function LogoReactRouterStacked({ fg, highlight }: LogoProps) {
   return (
     <svg
       width="145"
@@ -163,7 +166,7 @@ function LogoReactRouterStacked({ fg, highlight }) {
   );
 }
 
-function LogoReactRouter({ fg, highlight }) {
+function LogoReactRouter({ fg, highlight }: LogoProps) {
   return (
     <svg
       width="230"
