@@ -51,14 +51,16 @@ function LogoBox({ name }) {
   };
   const Logo = Logos[name];
 
+  // Tailwind classnames for the various ways we style the individual
+  // component pieces of each LogoBox variant
   let variants = {
-    normal: {
+    color: {
       fg: "fill-gray-900",
       bg: "bg-white",
       highlight: "fill-red-brand",
       border: "border-gray-50 dark:border-transparent",
     },
-    "normal-inverted": {
+    "color-inverted": {
       fg: "fill-white",
       bg: "bg-gray-900",
       highlight: "fill-red-brand",
@@ -84,7 +86,7 @@ function LogoBox({ name }) {
           <div className="flex flex-col" key={variant}>
             <div
               className={classNames(
-                `flex h-40 items-center justify-center rounded-lg border-[3px] p-4 md:h-44`,
+                `flex h-40 items-center justify-center rounded-lg border-[3px] p-4 md:h-48`,
                 bg,
                 border
               )}
@@ -95,7 +97,8 @@ function LogoBox({ name }) {
               {["svg", "png"].map((format) => (
                 <a
                   className="uppercase underline opacity-50 hover:opacity-100"
-                  href="#"
+                  href={`/brand/${name}-${variant}.${format}`}
+                  download={true}
                   key={format}
                 >
                   {format}
