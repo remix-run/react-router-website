@@ -15,7 +15,10 @@ export default function Brand() {
 
       <p>
         If you do have a question about usage, email{" "}
-        <a href="mailto:design@remix.run">design@remix.run</a>.
+        <a href="mailto:hello@remix.run?subject=A question about React Router logo usage…">
+          hello@remix.run
+        </a>
+        .
       </p>
 
       <h2>Logo</h2>
