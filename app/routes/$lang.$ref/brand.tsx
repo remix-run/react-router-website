@@ -58,37 +58,38 @@ function LogoBox({
   // component pieces of each LogoBox variant
   let variants = {
     color: {
-      fg: "fill-gray-900",
       bg: "bg-white",
-      highlight: "fill-red-brand",
       border: "border-gray-50 dark:border-transparent",
+      fg: "fill-gray-900",
+      highlight: "fill-red-brand",
     },
     "color-inverted": {
-      fg: "fill-white",
       bg: "bg-gray-900",
-      highlight: "fill-red-brand",
       border: "border-transparent dark:border-gray-800",
+      fg: "fill-white",
+      highlight: "fill-red-brand",
     },
     monotone: {
-      fg: "fill-gray-900",
       bg: "bg-white",
-      highlight: "fill-gray-900",
       border: "border-gray-50 dark:border-transparent",
+      fg: "fill-gray-900",
+      highlight: "fill-gray-900",
     },
     "monotone-inverted": {
-      fg: "fill-white",
       bg: "bg-gray-900",
-      highlight: "fill-white",
       border: "border-transparent dark:border-gray-800",
+      fg: "fill-white",
+      highlight: "fill-white",
     },
   };
   return (
     <div className="grid grid-cols-2 grid-rows-2 gap-4 gap-x-6">
       {Object.entries(variants).map(
-        ([variant, { border, bg, fg, highlight }]) => (
+        ([variant, { bg, border, fg, highlight }]) => (
           <div className="flex flex-col" key={variant}>
             <div
               className={classNames(
+                /* border here is the same as the custom index page */
                 `flex h-40 items-center justify-center rounded-lg border-[3px] p-4 md:h-48`,
                 bg,
                 border
@@ -96,7 +97,7 @@ function LogoBox({
             >
               <Logo fg={fg} highlight={highlight} />
             </div>
-            <div className="op mt-1 flex items-end gap-4 text-sm">
+            <div className="mt-1 flex items-end gap-4 text-sm">
               {["svg", "png"].map((format) => (
                 <a
                   className="uppercase underline opacity-50 hover:opacity-100"
