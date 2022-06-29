@@ -11,7 +11,12 @@ import {
   useTransition,
 } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { matchPath, useParams, useResolvedPath } from "react-router-dom";
+import {
+  matchPath,
+  useNavigate,
+  useParams,
+  useResolvedPath,
+} from "react-router-dom";
 import classNames from "classnames";
 import {
   getRepoBranches,
@@ -114,12 +119,18 @@ export default function DocsLayout() {
 }
 
 function Header() {
+  let navigate = useNavigate();
+
   return (
     <div className="relative z-20 flex h-16 w-full items-center justify-between border-b border-gray-50 bg-white px-4 py-3 text-gray-900 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 lg:px-8">
       <div className="flex w-full items-center justify-between gap-8 md:w-auto">
         <Link
           to="."
           className="flex items-center gap-1 text-gray-900 dark:text-white"
+          onContextMenu={(event) => {
+            event.preventDefault();
+            navigate("/brand");
+          }}
         >
           <svg
             aria-label="React Router logo, nine dots in an upward triangle (one on top, two in the middle, three on the bottom) with a path of three highlighted and connected from top to bottom"
@@ -544,7 +555,13 @@ function Footer() {
           </a>
         </div>
         <div className="hidden lg:block">•</div>
-        <div className="lg:pl-4">
+        <div className="pr-4 lg:pl-4">
+          <Link className="hover:underline" to="/brand">
+            Brand
+          </Link>
+        </div>
+        <div className="hidden lg:block">•</div>
+        <div className="pr-4 lg:pl-4">
           Docs and examples{" "}
           <a
             className="hover:underline"
