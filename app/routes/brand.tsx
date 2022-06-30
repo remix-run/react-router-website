@@ -101,7 +101,7 @@ function LogoBox({
               {["svg", "png"].map((format) => (
                 <a
                   className="uppercase underline opacity-50 hover:opacity-100"
-                  href={`/brand/${name}-${variant}.${format}`}
+                  href={`/_brand/${name}-${variant}.${format}`}
                   download={true}
                   key={format}
                 >
