@@ -95,7 +95,7 @@ export default function DocsLayout() {
         }
       >
         <NavMenuDesktop />
-        <div className="px-4 pt-8 pb-4 lg:ml-80 lg:px-8">
+        <div className="px-4 pt-8 pb-4 lg:ml-72 lg:pr-8 lg:pl-12">
           <div
             className={classNames(
               "min-h-[80vh]",
@@ -277,7 +277,7 @@ function HeaderLink({
 
 function NavMenuDesktop() {
   return (
-    <div className="fixed top-16 bottom-0 hidden w-80 overflow-auto border-r border-r-gray-50 py-6 pl-8 dark:border-r-gray-800 lg:block">
+    <div className="fixed top-16 bottom-0 hidden w-72 overflow-auto border-r border-r-gray-50 py-6 pl-8 dark:border-r-gray-800 lg:block">
       <Menu />
     </div>
   );
