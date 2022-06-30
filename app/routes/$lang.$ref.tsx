@@ -100,7 +100,7 @@ export default function DocsLayout() {
         }
       >
         <NavMenuDesktop />
-        <div className="px-4 py-8 lg:ml-80 lg:px-8">
+        <div className="px-4 pt-8 pb-4 lg:ml-72 lg:pr-8 lg:pl-12">
           <div
             className={classNames(
               "min-h-[80vh]",
@@ -123,10 +123,10 @@ function Header() {
 
   return (
     <div className="relative z-20 flex h-16 w-full items-center justify-between border-b border-gray-50 bg-white px-4 py-3 text-gray-900 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 lg:px-8">
-      <div className="flex items-center gap-4">
+      <div className="flex w-full items-center justify-between gap-8 md:w-auto">
         <Link
           to="."
-          className="flex items-center gap-1"
+          className="flex items-center gap-1 text-gray-900 dark:text-white"
           onContextMenu={(event) => {
             event.preventDefault();
             navigate("/en/main/brand");
@@ -144,24 +144,25 @@ function Header() {
             </svg>
           </div>
         </Link>
+        <div className="flex items-center gap-2">
+          <VersionSelect />
+          <ColorSchemeToggle />
+        </div>
       </div>
       <div className="flex items-center gap-4">
-        <VersionSelect />
-        <ColorSchemeToggle />
         <HeaderLink
-          className="border-l border-gray-50 pl-4 dark:border-gray-800"
           href="https://github.com/remix-run/react-router"
           svgId="github"
           svgLabel="GitHub octocat logo in a circle"
           title="View code on GitHub"
-          svgSize="40x40"
+          svgSize="24x24"
         />
         <HeaderLink
           href="https://rmx.as/discord"
           svgId="discord"
           svgLabel="Discord logo in a circle"
           title="Chat on Discord"
-          svgSize="40x40"
+          svgSize="24x24"
         />
         <HeaderLink
           href="https://remix.run"
@@ -270,7 +271,7 @@ function HeaderLink({
     <a
       href={href}
       className={classNames(
-        `hidden text-gray-800 hover:text-gray-900 dark:text-gray-100 dark:hover:text-gray-50 md:block`,
+        `hidden text-gray-400 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 md:block`,
         className
       )}
       title={title}
@@ -287,7 +288,7 @@ function HeaderLink({
 
 function NavMenuDesktop() {
   return (
-    <div className="fixed top-16 bottom-0 hidden w-80 overflow-auto p-8 lg:block">
+    <div className="fixed top-16 bottom-0 hidden w-72 overflow-auto border-r border-r-gray-50 py-6 pl-8 dark:border-r-gray-800 lg:block">
       <Menu />
     </div>
   );
@@ -329,7 +330,7 @@ function NavMenuMobile() {
 
 function DetailsPopup({ children }: { children: React.ReactNode }) {
   return (
-    <div className="absolute right-0 z-20">
+    <div className="absolute right-0 z-20 md:left-0">
       <div className="relative top-1 w-40 rounded-lg border border-gray-100 bg-white py-2 shadow-lg dark:border-gray-400 dark:bg-gray-800 ">
         {children}
       </div>
@@ -482,14 +483,10 @@ function MenuCategoryLink({
       to={to}
       className={classNames(
         // link styles
-        "group -mx-4 flex items-center py-2",
+        "group -mx-4 flex items-center rounded-lg py-1.5 pl-4 lg:rounded-br-none lg:rounded-tr-none lg:text-sm",
         isActive
-          ? "font-bold text-red-brand"
-          : "text-gray-500 hover:text-gray-900 active:text-red-brand dark:text-gray-300 dark:hover:text-gray-100 dark:active:text-red-brand",
-
-        // active pill styles
-        "before:mr-2 before:block before:h-2 before:w-2 before:rounded-full before:content-['']",
-        isActive ? "before:bg-red-brand" : "before:bg-transparent"
+          ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
+          : "text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"
       )}
       children={children}
     />
@@ -505,14 +502,10 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
       to={to}
       className={classNames(
         // link styles
-        "group flex items-center py-1",
+        "group my-1 flex items-center rounded-lg border-transparent py-1.5 pl-4 lg:rounded-br-none lg:rounded-tr-none lg:text-sm",
         isActive
-          ? "font-bold text-red-brand"
-          : "text-gray-500 hover:text-gray-900 active:text-red-brand dark:text-gray-300 dark:hover:text-gray-100 dark:active:text-red-brand",
-
-        // active pill styles
-        "before:mr-4 before:block before:h-2 before:w-2 before:rounded-full before:content-['']",
-        isActive ? "before:bg-red-brand" : "before:bg-transparent"
+          ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
+          : "text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"
       )}
       children={children}
     />
@@ -531,7 +524,7 @@ function Menu() {
                 {category.attrs.title}
               </MenuCategoryLink>
             ) : (
-              <div className="mb-2 block text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-300">
+              <div className="mb-2 block font-bold lg:text-sm">
                 {category.attrs.title}
               </div>
             )}
