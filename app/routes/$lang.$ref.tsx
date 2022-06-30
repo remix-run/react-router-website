@@ -542,7 +542,7 @@ function Menu() {
 
 function Footer() {
   return (
-    <div className="mt-16 flex justify-between border-t border-gray-50 pt-4 text-sm text-gray-400 dark:border-gray-800 dark:text-gray-500">
+    <div className="mt-16 -ml-8 flex justify-between border-t border-t-gray-50 pl-8 pt-4 text-sm text-gray-400 dark:border-gray-800 lg:-ml-12">
       <div className="lg:flex lg:items-center">
         <div className="pr-4">
           &copy;{" "}
