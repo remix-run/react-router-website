@@ -196,7 +196,7 @@ html.dark {
   }
 
   & h1 {
-    @apply my-4 text-3xl font-bold;
+    @apply my-4 text-3xl font-bold tracking-tight;
     &:first-child {
       @apply mt-0;
     }

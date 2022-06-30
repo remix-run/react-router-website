@@ -172,7 +172,7 @@ export default function Index() {
             <h2
               className={classNames(
                 className,
-                "text-2xl font-bold group-hover:underline"
+                "text-2xl font-bold tracking-tight group-hover:underline"
               )}
             >
               {title}
@@ -207,7 +207,7 @@ export default function Index() {
               <use href={`${iconsHref}#${svgId}`} />
             </svg>
             <p className="flex flex-col">
-              <span className="text-3xl font-light tabular-nums tracking-tight">
+              <span className="text-3xl font-light tracking-tight">
                 {count.toLocaleString("en-US")}
               </span>
               <span className="text-gray-300 dark:text-gray-500">{label}</span>
