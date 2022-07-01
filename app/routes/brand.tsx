@@ -53,8 +53,6 @@ export default function Brand() {
           contexts—we get it.
         </p>
         <LogoBox name="react-router-mark" Logo={LogoReactRouterMark} />
-
-        <h2>Color</h2>
       </div>
     </div>
   );
