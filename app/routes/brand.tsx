@@ -1,18 +1,19 @@
 import { ColorSchemeToggle } from "./$lang.$ref";
 import classNames from "classnames";
 import type { FC } from "react";
+import { Link } from "@remix-run/react";
 
 export default function Brand() {
   return (
     <div className="relative m-auto max-w-2xl px-4 py-8">
       <div className="mb-12 flex items-center justify-between">
-        <a
-          href="/"
-          className="text-gray-400 hover:text-gray-900 active:text-red-brand"
+        <Link
+          to="/"
+          className="text-gray-400 hover:text-gray-900 active:text-red-brand hover:dark:text-white active:dark:text-red-brand"
         >
           <span className="mr-3 md:absolute md:-left-3">←</span>
           Back to reactrouter.com
-        </a>
+        </Link>
         <ColorSchemeToggle />
       </div>
       <div className="md-prose">
