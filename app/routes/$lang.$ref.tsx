@@ -129,7 +129,7 @@ function Header() {
           className="flex items-center gap-1 text-gray-900 dark:text-white"
           onContextMenu={(event) => {
             event.preventDefault();
-            navigate("/en/main/brand");
+            navigate("/brand");
           }}
         >
           <svg
@@ -175,7 +175,7 @@ function Header() {
   );
 }
 
-function ColorSchemeToggle() {
+export function ColorSchemeToggle() {
   let location = useLocation();
 
   // This is the same default, hover, focus style as the VersionSelect
@@ -562,7 +562,7 @@ function Footer() {
         </div>
         <div className="hidden lg:block">•</div>
         <div className="lg:pl-4">
-          <Link to="/en/main/brand">Brand</Link>
+          <Link to="/brand">Brand</Link>
         </div>
       </div>
       <div>

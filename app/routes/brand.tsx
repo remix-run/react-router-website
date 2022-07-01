@@ -1,43 +1,61 @@
+import { ColorSchemeToggle } from "./$lang.$ref";
 import classNames from "classnames";
 import type { FC } from "react";
 
 export default function Brand() {
   return (
-    <div className="md-prose">
-      <h1>Brand</h1>
-      <p>
-        The React Router logo is provided here for your convenience. There’s no
-        small print for its usage (e.g. “violation of these guidliness will
-        result in termination of any license to use the mark…”). Be smart using
-        it. We trust you.
-      </p>
-
-      <p>
-        If you do have a question about usage, email{" "}
-        <a href="mailto:hello@remix.run?subject=A question about React Router logo usage…">
-          hello@remix.run
+    <div className="relative m-auto max-w-2xl px-4 py-8">
+      <div className="mb-12 flex items-center justify-between">
+        <a
+          href="/"
+          className="text-gray-400 hover:text-gray-900 active:text-red-brand"
+        >
+          <span className="mr-3 md:absolute md:-left-3">←</span>
+          Back to reactrouter.com
         </a>
-        .
-      </p>
+        <ColorSchemeToggle />
+      </div>
+      <div className="md-prose">
+        <h1>React Router Brand</h1>
+        <p>
+          The React Router logo is provided here for your convenience. There’s
+          no small print for its usage (e.g. “violation of these guidliness will
+          result in termination of any license to use the mark…”). Be smart
+          using it. We trust you.
+        </p>
 
-      <h2>Logo</h2>
-      <p>
-        This is it—if you’re looking to use the React Router logo, start here
-        (if this doesn’t work for some reason, see the alternatives below).
-      </p>
-      <LogoBox name="react-router" Logo={LogoReactRouter} />
+        <p>
+          If you do have a question about usage, email{" "}
+          <a href="mailto:hello@remix.run?subject=A question about React Router logo usage…">
+            hello@remix.run
+          </a>
+          .
+        </p>
 
-      <h2>Alt: Stacked</h2>
-      <p>For tighter horizontal spaces, the stacked logo is at your service.</p>
-      <LogoBox name="react-router-stacked" Logo={LogoReactRouterStacked} />
+        <h2>Logo</h2>
+        <p>
+          This is it—if you’re looking to use the React Router logo, start here
+          (if this doesn’t work for some reason, see the alternatives below).
+        </p>
+        <LogoBox name="react-router" Logo={LogoReactRouter} />
 
-      <h2>Alt: Mark</h2>
-      <p>
-        Where possible, try to use the logo with the words “React Router” (alas:
-        we don’t have the ubiquitous recognizability of the Nike swoosh).
-        However, sometimes you just need a mark for certain contexts—we get it.
-      </p>
-      <LogoBox name="react-router-mark" Logo={LogoReactRouterMark} />
+        <h3>Alt: Stacked</h3>
+        <p>
+          For tighter horizontal spaces, the stacked logo is at your service.
+        </p>
+        <LogoBox name="react-router-stacked" Logo={LogoReactRouterStacked} />
+
+        <h3>Alt: Mark</h3>
+        <p>
+          Where possible, try to use the logo with the words “React Router”
+          (alas: we don’t have the ubiquitous recognizability of the Nike
+          swoosh). However, sometimes you just need a mark for certain
+          contexts—we get it.
+        </p>
+        <LogoBox name="react-router-mark" Logo={LogoReactRouterMark} />
+
+        <h2>Color</h2>
+      </div>
     </div>
   );
 }
@@ -45,6 +63,8 @@ export default function Brand() {
 interface LogoProps {
   fg: string;
   highlight: string;
+  width?: number;
+  height?: number;
 }
 
 function LogoBox({
@@ -83,14 +103,14 @@ function LogoBox({
     },
   };
   return (
-    <div className="grid grid-cols-2 grid-rows-2 gap-4 gap-x-6">
+    <div className="mb-8 grid grid-cols-2 grid-rows-2 gap-4 gap-x-6">
       {Object.entries(variants).map(
         ([variant, { bg, border, fg, highlight }]) => (
           <div className="flex flex-col" key={variant}>
             <div
               className={classNames(
                 /* border here is the same as the custom index page */
-                `flex h-40 items-center justify-center rounded-lg border-[3px] p-4 md:h-48`,
+                `flex h-48 items-center justify-center rounded-lg border-[3px] p-4 md:h-48`,
                 bg,
                 border
               )}
