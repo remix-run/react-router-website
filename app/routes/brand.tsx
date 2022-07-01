@@ -5,7 +5,7 @@ import { Link } from "@remix-run/react";
 
 export default function Brand() {
   return (
-    <div className="relative m-auto max-w-2xl px-4 py-8">
+    <div className="relative m-auto max-w-2xl px-4 pt-8 pb-20">
       <div className="mb-12 flex items-center justify-between">
         <Link
           to="/"
