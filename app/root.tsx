@@ -181,13 +181,12 @@ window.__remixRouteModules = {${matches
         />
         <link rel="modulepreload" href={manifest.entry.module} />
         <script
+          type="module"
           dangerouslySetInnerHTML={{
             __html: `
               // just gaming the bogus "total blocking time" metrics
               // you freakin' dorks.
-              setTimeout(() => {
-                import("${manifest.entry.module}");
-              }, 100)
+              import("${manifest.entry.module}");
             `,
           }}
         />
