@@ -187,7 +187,7 @@ window.__remixRouteModules = {${matches
               // you freakin' dorks.
               setTimeout(() => {
                 import("${manifest.entry.module}");
-              }, 1000)
+              }, 100)
             `,
           }}
         />
