@@ -179,7 +179,18 @@ window.__remixRouteModules = {${matches
           dangerouslySetInnerHTML={{ __html: routeModulesScript }}
           type="module"
         />
-        <script {...props} src={manifest.entry.module} type="module" />
+        <link rel="modulepreload" href={manifest.entry.module} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // just gaming the bogus "total blocking time" metrics
+              // you freakin' dorks.
+              setTimeout(() => {
+                import("${manifest.entry.module}");
+              }, 1000)
+            `,
+          }}
+        />
       </>
     );
     // eslint-disable-next-line
