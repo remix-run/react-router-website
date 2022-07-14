@@ -1,7 +1,6 @@
 import type { HandleDocumentRequestFunction } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import { renderToString } from "react-dom/server";
-import { Entry } from "./entry";
 
 let handleDocumentRequest: HandleDocumentRequestFunction = async (
   request,
@@ -10,9 +9,7 @@ let handleDocumentRequest: HandleDocumentRequestFunction = async (
   remixContext
 ) => {
   const markup = renderToString(
-    <Entry context={remixContext}>
-      <RemixServer context={remixContext} url={request.url} />
-    </Entry>
+    <RemixServer context={remixContext} url={request.url} />
   );
 
   responseHeaders.set("Content-Type", "text/html");

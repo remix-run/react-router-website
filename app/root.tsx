@@ -1,4 +1,3 @@
-import * as React from "react";
 import type {
   LinksFunction,
   LoaderFunction,
@@ -10,6 +9,7 @@ import {
   LiveReload,
   Meta,
   Outlet,
+  Scripts,
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
@@ -23,8 +23,6 @@ import {
   useColorScheme,
 } from "./modules/color-scheme/components";
 import { isHost } from "./modules/http-utils/is-host";
-import { useEntryContext } from "./entry";
-import { matchClientRoutes } from "@remix-run/react/routeMatching";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
@@ -96,7 +94,8 @@ export default function App() {
       <body className="bg-white text-black dark:bg-gray-900 dark:text-white">
         <Outlet />
         <ScrollRestoration />
-        <Scripts />
+        {/* @ts-expect-error */}
+        <Scripts defer />
         <LiveReload />
       </body>
     </html>
@@ -129,108 +128,4 @@ export function ErrorBoundary({ error }: { error: Error }) {
       </body>
     </html>
   );
-}
-
-let isHydrated = false;
-
-export function Scripts(props: any) {
-  let {
-    manifest,
-    matches,
-    pendingLocation,
-    clientRoutes,
-    serverHandoffString,
-  } = useEntryContext();
-
-  React.useEffect(() => {
-    isHydrated = true;
-  }, []);
-
-  let initialScripts = React.useMemo(() => {
-    let contextScript = serverHandoffString
-      ? `window.__remixContext = ${serverHandoffString};`
-      : "";
-
-    let routeModulesScript = `${matches
-      .map(
-        (match: any, index: number) =>
-          `import * as route${index} from ${JSON.stringify(
-            manifest.routes[match.route.id].module
-          )};`
-      )
-      .join("\n")}
-window.__remixRouteModules = {${matches
-      .map(
-        (match: any, index: number) =>
-          `${JSON.stringify(match.route.id)}:route${index}`
-      )
-      .join(",")}};`;
-
-    return (
-      <>
-        <script
-          {...props}
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{ __html: contextScript }}
-        />
-        <script defer {...props} src={manifest.url} />
-        <script
-          {...props}
-          dangerouslySetInnerHTML={{ __html: routeModulesScript }}
-          type="module"
-        />
-        <link rel="modulepreload" href={manifest.entry.module} />
-        <script
-          type="module"
-          dangerouslySetInnerHTML={{
-            // hydrate in idle time after initial SSR
-            __html: `
-              requestIdleCallback(() => {
-                import("${manifest.entry.module}");
-              })
-            `,
-          }}
-        />
-      </>
-    );
-    // eslint-disable-next-line
-  }, []);
-
-  // avoid waterfall when importing the next route module
-  let nextMatches = React.useMemo(() => {
-    if (pendingLocation) {
-      let matches = matchClientRoutes(clientRoutes, pendingLocation);
-      return matches;
-    }
-
-    return [];
-  }, [pendingLocation, clientRoutes]);
-
-  let routePreloads = matches
-    .concat(nextMatches)
-    .map((match: any) => {
-      let route = manifest.routes[match.route.id];
-      return (route.imports || []).concat([route.module]);
-    })
-    .flat(1);
-
-  let preloads = manifest.entry.imports.concat(routePreloads);
-
-  return (
-    <>
-      {dedupe(preloads).map((path) => (
-        <link
-          key={path}
-          rel="modulepreload"
-          href={path}
-          crossOrigin={props.crossOrigin}
-        />
-      ))}
-      {isHydrated ? null : initialScripts}
-    </>
-  );
-}
-
-function dedupe(array: any[]) {
-  return [...new Set(array)];
 }
