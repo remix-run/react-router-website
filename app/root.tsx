@@ -183,10 +183,11 @@ window.__remixRouteModules = {${matches
         <script
           type="module"
           dangerouslySetInnerHTML={{
+            // hydrate in idle time after initial SSR
             __html: `
-              // just gaming the bogus "total blocking time" metrics
-              // you freakin' dorks.
-              import("${manifest.entry.module}");
+              requestIdleCallback(() => {
+                import("${manifest.entry.module}");
+              })
             `,
           }}
         />
