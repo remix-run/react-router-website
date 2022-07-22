@@ -277,7 +277,7 @@ function HeaderLink({
 
 function NavMenuDesktop() {
   return (
-    <div className="fixed top-16 bottom-0 hidden w-72 overflow-auto border-r border-r-gray-50 py-6 pl-8 dark:border-r-gray-800 lg:block">
+    <div className="fixed top-16 bottom-0 hidden w-72 overflow-auto border-r border-r-gray-50 py-6 pl-8 pr-6 dark:border-r-gray-800 lg:block">
       <Menu />
     </div>
   );
@@ -472,7 +472,7 @@ function MenuCategoryLink({
       to={to}
       className={classNames(
         // link styles
-        "group -mx-4 flex items-center rounded-lg py-1.5 pl-4 lg:rounded-br-none lg:rounded-tr-none lg:text-sm",
+        "group -mx-4 flex items-center rounded-md py-1.5 pl-4 lg:text-sm",
         isActive
           ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
           : "text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"
@@ -491,7 +491,7 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
       to={to}
       className={classNames(
         // link styles
-        "group my-1 flex items-center rounded-lg border-transparent py-1.5 pl-4 lg:rounded-br-none lg:rounded-tr-none lg:text-sm",
+        "group my-1 flex items-center rounded-md border-transparent py-1.5 pl-4 lg:text-sm",
         isActive
           ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
           : "text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"
