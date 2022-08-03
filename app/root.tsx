@@ -23,6 +23,7 @@ import {
   useColorScheme,
 } from "./modules/color-scheme/components";
 import { isHost } from "./modules/http-utils/is-host";
+import iconsHref from "~/icons.svg";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
@@ -92,6 +93,15 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-white text-black dark:bg-gray-900 dark:text-white">
+        <img
+          src={iconsHref}
+          alt=""
+          hidden
+          // this img tag simply forces the icons to be loaded at a higher
+          // priority than the scripts (chrome only for now)
+          // @ts-expect-error
+          fetchpriority="high"
+        />
         <Outlet />
         <ScrollRestoration />
         {/* @ts-expect-error */}
