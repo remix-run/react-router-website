@@ -15,7 +15,7 @@ import { getStats } from "~/modules/stats";
 export let loader: LoaderFunction = async ({ request, params }) => {
   let is6dot4 =
     params.ref === "local" ||
-    params.ref === "main" ||
+    // params.ref === "main" ||
     params.ref === "dev" ||
     semver.satisfies(params.ref || "", "^6.4");
   if (is6dot4) {
