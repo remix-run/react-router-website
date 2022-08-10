@@ -1,4 +1,5 @@
-import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import classNames from "classnames";
 import semver from "semver";
@@ -17,7 +18,7 @@ export let loader: LoaderFunction = async ({ request, params }) => {
     params.ref === "local" ||
     // params.ref === "main" ||
     params.ref === "dev" ||
-    semver.satisfies(params.ref || "", "^6.4");
+    semver.satisfies(params.ref || "", "^6.4", { includePrerelease: true });
   if (is6dot4) {
     const stats = await getStats();
     return json({ is6dot4: true, stats });

@@ -26,9 +26,21 @@ export async function getLatestRepoTag(): Promise<string> {
 }
 
 export function getRepoDocsMenu(ref: string, lang: string) {
-  return getMenu(REPO, ref, lang);
+  return getMenu(REPO, fixupRefName(ref), lang);
 }
 
 export function getRepoDoc(ref: string, slug: string) {
-  return getDoc(REPO, ref, slug);
+  return getDoc(REPO, fixupRefName(ref), slug);
+}
+
+function fixupRefName(ref: string) {
+  return ref === "dev" ||
+    ref === "main" ||
+    ref === "local" ||
+    // when we switched to changesets the `v` went away, so we use that as a way
+    // to know if we need to add hte `react-router@` prefix for interacting w/
+    // github.
+    ref.startsWith("v")
+    ? ref
+    : `react-router@${ref}`;
 }
