@@ -16,9 +16,11 @@ let branchesCache =
   global.branchesCache ||
   (global.branchesCache = new LRUCache<string, string[]>({
     max: 100,
-    ttl: 30000, // 5 minutes, so we can see new tags quickly
+    ttl: 1000 * 60 * 5, // 5 minutes, so we can see new tags quickly
+    allowStale: true,
+    noDeleteOnFetchRejection: true,
     fetchMethod: async (key) => {
-      console.log("Fetching fresh tags", key);
+      console.log("Fetching fresh branches", key);
       let [owner, repo] = key.split("/");
       const { data } = await octokit.rest.repos.listBranches({
         mediaType: { format: "json" },

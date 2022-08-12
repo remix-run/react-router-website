@@ -128,10 +128,8 @@ export function ErrorBoundary({ error }: { error: Error }) {
       </head>
       <body className="flex bg-white text-black dark:bg-gray-900 dark:text-white">
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <div className="flex gap-4">
-            <div className="border-r pr-4 font-bold">Oops</div>
-            <div>This is embarassing, our site is broken.</div>
-          </div>
+          <div className="font-bold">Oops</div>
+          <div>Something went wrong</div>
           <Link to="/" className="mt-8 underline">
             Go Home
           </Link>

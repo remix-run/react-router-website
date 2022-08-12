@@ -26,9 +26,11 @@ let tagsCache =
   global.tagsCache ||
   (global.tagsCache = new LRUCache<string, string[]>({
     max: 100,
-    ttl: 30000, // 5 minutes, so we can see new tags quickly
+    ttl: 1000 * 60 * 5, // 5 minutes, so we can see new tags quickly
+    allowStale: true,
+    noDeleteOnFetchRejection: true,
     fetchMethod: async (key) => {
-      console.log("Fetching fresh tags", key);
+      console.log("Fetching fresh tags (releases)");
       let [owner, repo] = key.split("/");
       return getAllReleases(owner, repo, "react-router");
     },
@@ -43,7 +45,7 @@ export async function getAllReleases(
   page = 1,
   releases: string[] = []
 ): Promise<string[]> {
-  console.log("Fetching fresh releases", page);
+  console.log("Fetching fresh releases, page", page);
   const { data, headers, status } = await octokit.rest.repos.listReleases({
     mediaType: { format: "json" },
     owner,

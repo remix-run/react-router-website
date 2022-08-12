@@ -35,23 +35,23 @@ let menuCache =
   (global.menuCache = new LRUCache<string, MenuDoc[]>({
     max: 30,
     ttl: NO_CACHE ? 1 : 300000, // 5 minutes
+    allowStale: true,
+    noDeleteOnFetchRejection: true,
+    fetchMethod: async (cacheKey) => {
+      console.log(`Fetching fresh menu: ${cacheKey}`);
+      let [repo, ref] = cacheKey.split(":");
+      let stream = await getRepoTarballStream(repo, ref);
+      let menu = await getMenuFromStream(stream);
+      return menu;
+    },
   }));
 
 export async function getMenu(
   repo: string,
   ref: string,
   lang: string
-): Promise<MenuDoc[]> {
-  let cacheKey = `${ref}:${lang}`;
-  let cached = menuCache.get(cacheKey);
-  if (cached) return cached;
-
-  console.log(`Fetching fresh menu: ${repo} ${ref}`);
-  let stream = await getRepoTarballStream(repo, ref);
-  let menu = await getMenuFromStream(stream);
-
-  menuCache.set(cacheKey, menu);
-  return menu;
+): Promise<MenuDoc[] | undefined> {
+  return menuCache.fetch(`${repo}:${ref}`);
 }
 
 function parseAttrs(
@@ -80,7 +80,9 @@ let docCache =
   global.docCache ||
   (global.docCache = new LRUCache<string, Doc | undefined>({
     max: 300,
-    ttl: NO_CACHE ? 1 : 300000,
+    ttl: NO_CACHE ? 1 : 1000 * 60 * 5, // 5 minutes
+    allowStale: true,
+    noDeleteOnFetchRejection: true,
     fetchMethod: async (key) => {
       console.log("Fetching fresh doc", key);
       let [repo, ref, slug] = key.split(":");

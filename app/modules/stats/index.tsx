@@ -23,52 +23,54 @@ let statCountsCache =
   (global.statCountsCache = new LRUCache<string, StatCounts>({
     max: 30,
     ttl: process.env.NO_CACHE ? 1 : 1000 * 60 * 60, // 1 hour
+    allowStale: true,
+    noDeleteOnFetchRejection: true,
+    fetchMethod: async (key) => {
+      console.log("Fetching fresh stats");
+      let [npmDownloads, githubContributors, githubStars, githubDependents] =
+        await Promise.all([
+          fetchNpmDownloads(),
+          fetchGithubContributors(),
+          fetchGithubStars(),
+          fetchGithubDependents(),
+        ]);
+      return {
+        npmDownloads,
+        githubContributors,
+        githubStars,
+        githubDependents,
+      };
+    },
   }));
 
-export async function getStats(): Promise<Stats[]> {
+export async function getStats(): Promise<Stats[] | undefined> {
   let cacheKey = "ONE_STATS_KEY_TO_RULE_THEM_ALL";
-  let statCounts = statCountsCache.get(cacheKey);
+  let statCounts = await statCountsCache.fetch(cacheKey);
 
-  if (!statCounts) {
-    console.log("Fetching fresh stats: NPM & GitHub APIs");
-    const [npmDownloads, githubContributors, githubStars, githubDependents] =
-      await Promise.all([
-        fetchNpmDownloads(),
-        fetchGithubContributors(),
-        fetchGithubStars(),
-        fetchGithubDependents(),
-      ]);
-    statCounts = {
-      npmDownloads,
-      githubContributors,
-      githubStars,
-      githubDependents,
-    };
-    statCountsCache.set(cacheKey, statCounts);
-  }
-
-  return [
-    {
-      count: statCounts.npmDownloads,
-      label: "Downloads on npm",
-      svgId: "stat-download",
-    },
-    {
-      count: statCounts.githubContributors,
-      label: "Contributors on GitHub",
-      svgId: "stat-users",
-    },
-    {
-      count: statCounts.githubStars,
-      label: "Stars on GitHub",
-      svgId: "stat-star",
-    },
-    {
-      count: statCounts.githubDependents,
-      label: "Dependents on GitHub",
-      svgId: "stat-box",
-    },
-  ];
+  return statCounts
+    ? [
+        {
+          count: statCounts.npmDownloads,
+          label: "Downloads on npm",
+          svgId: "stat-download",
+        },
+        {
+          count: statCounts.githubContributors,
+          label: "Contributors on GitHub",
+          svgId: "stat-users",
+        },
+        {
+          count: statCounts.githubStars,
+          label: "Stars on GitHub",
+          svgId: "stat-star",
+        },
+        {
+          count: statCounts.githubDependents,
+          label: "Dependents on GitHub",
+          svgId: "stat-box",
+        },
+      ]
+    : undefined;
 }
 
 /**

@@ -45,7 +45,7 @@
     "gunzip-maybe": "^1.4.2",
     "iso-639-1": "^2.1.13",
     "lodash.merge": "^4.6.2",
-    "lru-cache": "^7.9.0",
+    "lru-cache": "7.13",
     "octokit": "^1.7.1",
     "parse-link-header": "^2.0.0",
     "react": "^18.2.0",

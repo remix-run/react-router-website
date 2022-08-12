@@ -180,24 +180,28 @@ export default function Index() {
           </Link>
         ))}
       </div>
-      <ul className="mt-8 grid grid-cols-1 gap-y-4 md:grid md:grid-cols-2">
-        {stats.map(({ svgId, count, label }: Stats) => (
-          <li key={svgId} className="flex gap-4">
-            <svg
-              aria-label="TODO GitHub Octocat logo"
-              className="mt-1 h-8 w-8 text-gray-200 dark:text-gray-600"
-            >
-              <use href={`${iconsHref}#${svgId}`} />
-            </svg>
-            <p className="flex flex-col">
-              <span className="text-3xl font-light tracking-tight">
-                {count.toLocaleString("en-US")}
-              </span>
-              <span className="text-gray-300 dark:text-gray-500">{label}</span>
-            </p>
-          </li>
-        ))}
-      </ul>
+      {stats && (
+        <ul className="mt-8 grid grid-cols-1 gap-y-4 md:grid md:grid-cols-2">
+          {stats.map(({ svgId, count, label }: Stats) => (
+            <li key={svgId} className="flex gap-4">
+              <svg
+                aria-label="TODO GitHub Octocat logo"
+                className="mt-1 h-8 w-8 text-gray-200 dark:text-gray-600"
+              >
+                <use href={`${iconsHref}#${svgId}`} />
+              </svg>
+              <p className="flex flex-col">
+                <span className="text-3xl font-light tracking-tight">
+                  {count.toLocaleString("en-US")}
+                </span>
+                <span className="text-gray-300 dark:text-gray-500">
+                  {label}
+                </span>
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
       <div className="md-prose mt-16">
         <h2>Features</h2>
         <ul>

@@ -16,10 +16,8 @@ export function CatchBoundary() {
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center">
-      <div className="flex gap-4">
-        <div className="border-r pr-4 font-bold">{caught.status}</div>
-        <div>{caught.statusText}</div>
-      </div>
+      <div className="font-bold">{caught.status}</div>
+      <div>{caught.statusText || "Not Found"}</div>
       <Link to="/" className="mt-8 underline">
         Go Home
       </Link>
