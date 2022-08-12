@@ -26,7 +26,7 @@ import { getLatestVersion } from "~/modules/gh-docs/tags";
 import { useColorScheme } from "~/modules/color-scheme/components";
 
 type LoaderData = {
-  menu: MenuDoc[];
+  menu?: MenuDoc[];
   versions: string[];
   latestVersion: string;
   releaseBranch: string;
@@ -277,7 +277,7 @@ function HeaderLink({
 
 function NavMenuDesktop() {
   return (
-    <div className="fixed top-16 bottom-0 hidden w-72 overflow-auto border-r border-r-gray-50 py-6 pl-8 pr-6 dark:border-r-gray-800 lg:block">
+    <div className="fixed top-16 bottom-0 hidden w-72 overflow-auto py-6 pl-8 pr-6 lg:block">
       <Menu />
     </div>
   );
@@ -503,7 +503,7 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
 
 function Menu() {
   let { menu } = useLoaderData<LoaderData>();
-  return (
+  return menu ? (
     <nav>
       <ul>
         {menu.map((category) => (
@@ -526,6 +526,10 @@ function Menu() {
         ))}
       </ul>
     </nav>
+  ) : (
+    <div className="bold text-gray-300 dark:text-gray-400">
+      Failed to load menu
+    </div>
   );
 }
 
