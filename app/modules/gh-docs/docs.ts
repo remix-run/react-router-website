@@ -35,7 +35,7 @@ let menuCache =
   (global.menuCache = new LRUCache<string, MenuDoc[]>({
     max: 30,
     ttl: NO_CACHE ? 1 : 300000, // 5 minutes
-    allowStale: true,
+    allowStale: !NO_CACHE,
     noDeleteOnFetchRejection: true,
     fetchMethod: async (cacheKey) => {
       console.log(`Fetching fresh menu: ${cacheKey}`);
@@ -81,7 +81,7 @@ let docCache =
   (global.docCache = new LRUCache<string, Doc | undefined>({
     max: 300,
     ttl: NO_CACHE ? 1 : 1000 * 60 * 5, // 5 minutes
-    allowStale: true,
+    allowStale: !NO_CACHE,
     noDeleteOnFetchRejection: true,
     fetchMethod: async (key) => {
       console.log("Fetching fresh doc", key);

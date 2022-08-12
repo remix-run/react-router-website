@@ -421,11 +421,16 @@ html.dark {
   & docs-warning,
   & docs-error,
   & docs-success {
-    @apply my-8 block border-l-4 px-4 py-0;
+    @apply relative my-8 block px-4 py-0;
 
     &:before {
       @apply block bg-no-repeat pl-6 text-sm font-medium uppercase tracking-widest;
       background-position: 0 1px;
+    }
+
+    &:after {
+      @apply absolute left-0 top-0 bottom-0 w-1 rounded-full;
+      content: "";
     }
 
     /* It's possible these could have an image embedded in them */
@@ -435,7 +440,9 @@ html.dark {
   }
 
   & docs-info {
-    @apply border-blue-brand;
+    &:after {
+      @apply bg-blue-brand;
+    }
 
     &:before {
       @apply text-blue-brand;
@@ -447,7 +454,9 @@ html.dark {
   }
 
   & docs-warning {
-    @apply border-yellow-600 dark:border-yellow-brand;
+    &:after {
+      @apply bg-yellow-600 dark:bg-yellow-brand;
+    }
 
     &:before {
       @apply text-yellow-600 dark:text-yellow-brand;
@@ -464,7 +473,10 @@ html.dark {
   }
 
   & docs-error {
-    @apply border-red-700 dark:border-red-400;
+    &:after {
+      @apply bg-red-700 dark:bg-red-400;
+    }
+
     &:before {
       @apply text-red-700 dark:text-red-400;
       content: "Danger";
