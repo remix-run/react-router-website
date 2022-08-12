@@ -1,4 +1,4 @@
-import { useTransition } from "@remix-run/react";
+import { useLocation } from "@remix-run/react";
 import * as React from "react";
 
 /**
@@ -7,45 +7,17 @@ import * as React from "react";
  */
 export let DetailsMenu = React.forwardRef<
   HTMLDetailsElement,
-  React.ComponentPropsWithRef<"details"> & { closeOnSubmission?: boolean }
->(({ closeOnSubmission, ...props }, forwardedRef) => {
+  React.ComponentPropsWithRef<"details">
+>(({ ...props }, forwardedRef) => {
   let { onToggle, onMouseDown, onTouchStart, onFocus, open, ...rest } = props;
   let [isOpen, setIsOpen] = React.useState(false);
-  let transition = useTransition();
+  let location = useLocation();
   let clickRef = React.useRef<boolean>(false);
   let focusRef = React.useRef<boolean>(false);
-  let submissionRef = React.useRef<boolean>(false);
 
   React.useEffect(() => {
-    if (transition.state === "submitting") {
-      submissionRef.current = true;
-    }
-    return () => {
-      submissionRef.current = false;
-    };
-  }, [transition]);
-
-  React.useEffect(() => {
-    let closeOnNormalNavigation = !closeOnSubmission;
-    if (
-      closeOnNormalNavigation &&
-      transition.state === "idle" &&
-      submissionRef.current === false
-    ) {
-      setIsOpen(false);
-    }
-  }, [closeOnSubmission, transition]);
-
-  React.useEffect(() => {
-    // If don't want to close on submission, do nothing in this effect.
-    if (!closeOnSubmission) {
-      return;
-    }
-
-    if (transition.state === "submitting") {
-      setIsOpen(false);
-    }
-  }, [transition, closeOnSubmission]);
+    setIsOpen(false);
+  }, [location.key]);
 
   React.useEffect(() => {
     if (isOpen) {

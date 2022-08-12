@@ -172,7 +172,7 @@ function ColorSchemeToggle() {
     "border border-transparent bg-gray-100 hover:bg-gray-200 focus:border focus:border-gray-100 focus:bg-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:border-gray-400 dark:focus:bg-gray-700";
 
   return (
-    <DetailsMenu closeOnSubmission className="relative cursor-pointer">
+    <DetailsMenu className="relative cursor-pointer">
       <summary
         className={`_no-triangle focus:border-200 flex h-[40px] w-[40px] items-center justify-center rounded-full ${className}`}
       >

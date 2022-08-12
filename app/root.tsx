@@ -61,7 +61,11 @@ export default function App() {
 
   return (
     // TODO: change lang when we do translations
-    <html lang="en" className={colorScheme} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={colorScheme === "dark" ? "dark" : ""}
+      suppressHydrationWarning
+    >
       <head>
         <ColorSchemeScript />
         {isProductionHost ? (
