@@ -13,6 +13,7 @@ import { getStats, Stats } from "~/modules/stats";
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   let is6dot4 =
+    params.ref === "local" ||
     params.ref === "main" ||
     params.ref === "dev" ||
     semver.satisfies(params.ref || "", "^6.4");
@@ -37,14 +38,14 @@ export let meta: MetaFunction = ({ data }) => {
 
 const features = [
   {
-    title: "What’s New?",
+    title: "What’s New in 6.4?",
     description:
       "Version 6 incorporates everything we learned in Remix about keeping your data in sync with your UI.",
     slug: "getting-started/data",
     className: "text-green-brand",
     // prettier-ignore
     svg: (
-      <div className="absolute top-[-30px] md:top-[-35px] right-[-4px]">
+      <div className="sr-only absolute top-[-35px] right-[-3px]">
         <svg width="107" height="85" viewBox="0 0 107 85" fill="none" xmlns="http://www.w3.org/2000/svg">
           <mask id="path-1-inside-1_1305_761" fill="white">
             <path fillRule="evenodd" clipRule="evenodd" d="M30.2112 60.7292C27.8371 57.4406 26.1169 54.2428 24.6141 51.4493C20.9709 44.677 18.6057 40.2804 11.3011 42.7245C-8.17874 49.2425 0.412893 8.93231 15.3645 16.3531C24.0327 20.6553 32.7413 18.5514 38.8087 16.623C46.0398 9.43895 56.0015 5 67 5C89.0914 5 107 22.9086 107 45C107 67.0914 89.0914 85 67 85C50.4928 85 36.3211 75.0009 30.2112 60.7292Z"/>

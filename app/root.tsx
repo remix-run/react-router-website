@@ -94,7 +94,8 @@ export default function App() {
       <body className="bg-white text-black dark:bg-gray-900 dark:text-white">
         <Outlet />
         <ScrollRestoration />
-        <Scripts />
+        {/* @ts-expect-error */}
+        <Scripts defer />
         <LiveReload />
       </body>
     </html>

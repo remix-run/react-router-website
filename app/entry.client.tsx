@@ -1,7 +1,12 @@
+import * as React from "react";
 import { RemixBrowser } from "@remix-run/react";
-import { hydrate } from "react-dom";
+import { hydrateRoot } from "react-dom/client";
 
-// enable :active styles on iOS since we disabled the gross tap highlight color
-document.addEventListener("touchstart", function () {}, true);
-
-hydrate(<RemixBrowser />, document);
+React.startTransition(() => {
+  hydrateRoot(
+    document,
+    <React.StrictMode>
+      <RemixBrowser />
+    </React.StrictMode>
+  );
+});
