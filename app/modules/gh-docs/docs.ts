@@ -30,21 +30,19 @@ declare global {
 
 let NO_CACHE = process.env.NO_CACHE;
 
-let menuCache =
-  global.menuCache ||
-  (global.menuCache = new LRUCache<string, MenuDoc[]>({
-    max: 30,
-    ttl: NO_CACHE ? 1 : 300000, // 5 minutes
-    allowStale: !NO_CACHE,
-    noDeleteOnFetchRejection: true,
-    fetchMethod: async (cacheKey) => {
-      console.log(`Fetching fresh menu: ${cacheKey}`);
-      let [repo, ref] = cacheKey.split(":");
-      let stream = await getRepoTarballStream(repo, ref);
-      let menu = await getMenuFromStream(stream);
-      return menu;
-    },
-  }));
+global.menuCache ??= new LRUCache<string, MenuDoc[]>({
+  max: 30,
+  ttl: NO_CACHE ? 1 : 300000, // 5 minutes
+  allowStale: !NO_CACHE,
+  noDeleteOnFetchRejection: true,
+  fetchMethod: async (cacheKey) => {
+    console.log(`Fetching fresh menu: ${cacheKey}`);
+    let [repo, ref] = cacheKey.split(":");
+    let stream = await getRepoTarballStream(repo, ref);
+    let menu = await getMenuFromStream(stream);
+    return menu;
+  },
+});
 
 export async function getMenu(
   repo: string,
@@ -75,25 +73,22 @@ function parseAttrs(
  * let's have simpler and faster deployments with just one origin server, but
  * still distribute the documents across the CDN.
  */
-let docCache =
-  // we need a better hot reload story here
-  global.docCache ||
-  (global.docCache = new LRUCache<string, Doc | undefined>({
-    max: 300,
-    ttl: NO_CACHE ? 1 : 1000 * 60 * 5, // 5 minutes
-    allowStale: !NO_CACHE,
-    noDeleteOnFetchRejection: true,
-    fetchMethod: async (key) => {
-      console.log("Fetching fresh doc", key);
-      let [repo, ref, slug] = key.split(":");
-      let filename = `docs/${slug}.md`;
-      let md = await getRepoContent(repo, ref, filename);
-      if (md === null) return undefined;
-      let { content, attrs } = parseAttrs(md, filename);
-      let html = await processMarkdown(content);
-      return { attrs, filename, html, slug, children: [] };
-    },
-  }));
+global.docCache ??= new LRUCache<string, Doc | undefined>({
+  max: 300,
+  ttl: NO_CACHE ? 1 : 1000 * 60 * 5, // 5 minutes
+  allowStale: !NO_CACHE,
+  noDeleteOnFetchRejection: true,
+  fetchMethod: async (key) => {
+    console.log("Fetching fresh doc", key);
+    let [repo, ref, slug] = key.split(":");
+    let filename = `docs/${slug}.md`;
+    let md = await getRepoContent(repo, ref, filename);
+    if (md === null) return undefined;
+    let { content, attrs } = parseAttrs(md, filename);
+    let html = await processMarkdown(content);
+    return { attrs, filename, html, slug, children: [] };
+  },
+});
 
 export async function getDoc(
   repo: string,

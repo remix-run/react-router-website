@@ -71,9 +71,9 @@ const mainLinks = [
       ),
   },
   {
-    title: "I’m New",
+    title: "I'm New",
     description:
-      "Start with the tutorial. It has everything you need to know to get up and running with React Router quickly.",
+      "Start with the tutorial. It will quickly introduce you to the primary features of React Router: from configuring routes, to loading and mutating data, to pending and optimistic UI.",
     slug: "getting-started/tutorial",
     className: "text-red-brand",
     // prettier-ignore
@@ -98,9 +98,9 @@ const mainLinks = [
     ),
   },
   {
-    title: "I’m Familiar with v5",
+    title: "I'm Familiar with v5",
     description:
-      "We introduced several new features and exciting changes in v6 like ranked route matching and nested routes. The overview will introduce the changes from v5 to v6 quickly.",
+      "We introduced several new features and exciting changes in v6 like ranked route matching, nested routes, and data APIs. The Feature Overview will show you all the things React Router can do.",
     slug: "getting-started/overview",
     className: "text-pink-brand",
     // prettier-ignore
@@ -129,9 +129,9 @@ const mainLinks = [
     ),
   },
   {
-    title: "I’ve a Question",
+    title: "I'm Stuck!",
     description:
-      "Running into a problem? Chances are, you're not the first! Explore common questions about React Router v6.",
+      "Running into a problem? Chances are you're not the first! Explore common questions about React Router v6.",
     slug: "getting-started/faq",
     className: "text-yellow-600 dark:text-yellow-brand",
     // prettier-ignore

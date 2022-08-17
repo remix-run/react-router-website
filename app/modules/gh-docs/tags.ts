@@ -21,20 +21,18 @@ declare global {
   var tagsCache: LRUCache<string, string[]>;
 }
 
-let tagsCache =
-  // we need a better hot reload story here
-  global.tagsCache ||
-  (global.tagsCache = new LRUCache<string, string[]>({
-    max: 100,
-    ttl: 1000 * 60 * 5, // 5 minutes, so we can see new tags quickly
-    allowStale: true,
-    noDeleteOnFetchRejection: true,
-    fetchMethod: async (key) => {
-      console.log("Fetching fresh tags (releases)");
-      let [owner, repo] = key.split("/");
-      return getAllReleases(owner, repo, "react-router");
-    },
-  }));
+// global for SS "HMR", we need a better story here
+global.tagsCache ??= new LRUCache<string, string[]>({
+  max: 100,
+  ttl: 1000 * 60 * 5, // 5 minutes, so we can see new tags quickly
+  allowStale: true,
+  noDeleteOnFetchRejection: true,
+  fetchMethod: async (key) => {
+    console.log("Fetching fresh tags (releases)");
+    let [owner, repo] = key.split("/");
+    return getAllReleases(owner, repo, "react-router");
+  },
+});
 
 // TODO: implementation details of the react router site leaked into here cause
 // I'm in a hurry now, sorry!

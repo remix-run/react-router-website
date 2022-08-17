@@ -12,22 +12,20 @@ declare global {
   var branchesCache: LRUCache<string, string[]>;
 }
 
-let branchesCache =
-  global.branchesCache ||
-  (global.branchesCache = new LRUCache<string, string[]>({
-    max: 100,
-    ttl: 1000 * 60 * 5, // 5 minutes, so we can see new tags quickly
-    allowStale: true,
-    noDeleteOnFetchRejection: true,
-    fetchMethod: async (key) => {
-      console.log("Fetching fresh branches", key);
-      let [owner, repo] = key.split("/");
-      const { data } = await octokit.rest.repos.listBranches({
-        mediaType: { format: "json" },
-        owner,
-        repo,
-        per_page: 100,
-      });
-      return data.map((branch: { name: string }) => branch.name);
-    },
-  }));
+global.branchesCache ??= new LRUCache<string, string[]>({
+  max: 100,
+  ttl: 1000 * 60 * 5, // 5 minutes, so we can see new tags quickly
+  allowStale: true,
+  noDeleteOnFetchRejection: true,
+  fetchMethod: async (key) => {
+    console.log("Fetching fresh branches", key);
+    let [owner, repo] = key.split("/");
+    const { data } = await octokit.rest.repos.listBranches({
+      mediaType: { format: "json" },
+      owner,
+      repo,
+      per_page: 100,
+    });
+    return data.map((branch: { name: string }) => branch.name);
+  },
+});

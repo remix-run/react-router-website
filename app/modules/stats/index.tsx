@@ -18,30 +18,28 @@ declare global {
   var statCountsCache: LRUCache<string, StatCounts>;
 }
 
-let statCountsCache =
-  global.statCountsCache ||
-  (global.statCountsCache = new LRUCache<string, StatCounts>({
-    max: 30,
-    ttl: process.env.NO_CACHE ? 1 : 1000 * 60 * 60, // 1 hour
-    allowStale: true,
-    noDeleteOnFetchRejection: true,
-    fetchMethod: async (key) => {
-      console.log("Fetching fresh stats");
-      let [npmDownloads, githubContributors, githubStars, githubDependents] =
-        await Promise.all([
-          fetchNpmDownloads(),
-          fetchGithubContributors(),
-          fetchGithubStars(),
-          fetchGithubDependents(),
-        ]);
-      return {
-        npmDownloads,
-        githubContributors,
-        githubStars,
-        githubDependents,
-      };
-    },
-  }));
+global.statCountsCache ??= new LRUCache<string, StatCounts>({
+  ttlAutopurge: true,
+  ttl: process.env.NO_CACHE ? 1 : 1000 * 60 * 60, // 1 hour
+  allowStale: true,
+  noDeleteOnFetchRejection: true,
+  fetchMethod: async (key) => {
+    console.log("Fetching fresh stats");
+    let [npmDownloads, githubContributors, githubStars, githubDependents] =
+      await Promise.all([
+        fetchNpmDownloads(),
+        fetchGithubContributors(),
+        fetchGithubStars(),
+        fetchGithubDependents(),
+      ]);
+    return {
+      npmDownloads,
+      githubContributors,
+      githubStars,
+      githubDependents,
+    };
+  },
+});
 
 export async function getStats(): Promise<Stats[] | undefined> {
   let cacheKey = "ONE_STATS_KEY_TO_RULE_THEM_ALL";
