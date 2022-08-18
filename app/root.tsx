@@ -107,10 +107,9 @@ export default function App() {
           fetchpriority="high"
         />
         <Outlet />
-        <ScrollRestoration />
-        {/* @ts-expect-error */}
-        <Scripts defer />
-        <LiveReload />
+        {/* <ScrollRestoration /> */}
+        {/* <Scripts defer />
+        <LiveReload /> */}
       </body>
     </html>
   );
@@ -134,9 +133,9 @@ export function ErrorBoundary({ error }: { error: Error }) {
             Go Home
           </Link>
         </div>
-        <ScrollRestoration />
+        {/* <ScrollRestoration />
         <Scripts />
-        <LiveReload />
+        <LiveReload /> */}
       </body>
     </html>
   );
