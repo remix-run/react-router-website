@@ -279,6 +279,11 @@ html.dark {
   /* images */
   & img {
     @apply max-w-full border-0;
+
+    /* avoid CLS for tutorial screenshots */
+    &.tutorial {
+      aspect-ratio: 1.47;
+    }
   }
 
   /*****************************************************************************/
