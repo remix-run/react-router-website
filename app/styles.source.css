@@ -278,7 +278,7 @@ html.dark {
   /*****************************************************************************/
   /* images */
   & img {
-    @apply max-w-full border-0;
+    @apply w-full border-0;
 
     /* avoid CLS for tutorial screenshots */
     &.tutorial {
@@ -385,7 +385,7 @@ html.dark {
   }
 
   & pre[data-bad][data-filename]::before {
-    content: attr(data-filename) " - This is bad code";
+    content: attr(data-filename) " - This is a bad example";
   }
 
   & pre[data-bad] .codeblock-line[data-highlight="true"]::after {
