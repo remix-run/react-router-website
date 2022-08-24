@@ -6,3 +6,4 @@
 # Ignore this
 
 /docs/* /*
+/core/* https://v5.reactrouter.com/core/*

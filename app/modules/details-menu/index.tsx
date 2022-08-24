@@ -1,4 +1,4 @@
-import { useLocation } from "@remix-run/react";
+import { useLocation, useTransition } from "@remix-run/react";
 import * as React from "react";
 
 /**
@@ -12,8 +12,15 @@ export let DetailsMenu = React.forwardRef<
   let { onToggle, onMouseDown, onTouchStart, onFocus, open, ...rest } = props;
   let [isOpen, setIsOpen] = React.useState(false);
   let location = useLocation();
+  let transition = useTransition();
   let clickRef = React.useRef<boolean>(false);
   let focusRef = React.useRef<boolean>(false);
+
+  React.useEffect(() => {
+    if (transition.submission) {
+      setIsOpen(false);
+    }
+  }, [transition]);
 
   React.useEffect(() => {
     setIsOpen(false);

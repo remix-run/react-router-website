@@ -31,4 +31,11 @@ describe("handleRedirects", () => {
     let response = await checkUrl("/docs", redirects);
     expect(response?.headers.get("location")).toBe("/");
   });
+
+  it("redirects splats to other domains", async () => {
+    let response = await checkUrl("/core/one/two", redirects);
+    expect(response?.headers.get("location")).toBe(
+      "https://v5.reactrouter.com/core/one/two"
+    );
+  });
 });

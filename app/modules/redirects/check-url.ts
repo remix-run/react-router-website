@@ -12,7 +12,11 @@ export async function checkUrl(url: string, redirects: Redirect[]) {
         let splatPath = url.replace(from, "");
         location = base + splatPath;
       }
-      if (!location.startsWith("/")) {
+      if (
+        !location.startsWith("/") &&
+        !location.startsWith("http://") &&
+        !location.startsWith("https://")
+      ) {
         location = "/" + location;
       }
       return redirect(location, { status });
