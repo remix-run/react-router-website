@@ -1,16 +1,15 @@
-.ds_store
+node_modules
 
-/.cache
-/.env
-/node_modules
-
+/build
 /public/build
-/server/build
+.env
 
-/prisma/*.db-journal
-/prisma/*.db
+/cypress/screenshots
+/cypress/videos
+/prisma/data.db
+/prisma/data.db-journal
 
-/app/styles
+/app/styles.processed.css
+/.local.tgz
+/app/modules/gh-docs/__fixture__/tar.tgz
 
-yalc.lock
-.yalc

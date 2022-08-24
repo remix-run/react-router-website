@@ -1,9 +1,0 @@
-.scrollxp-nested {
-  & h2 {
-    @apply text-4xl font-display text-white md:text-5xl lg:text-6xl xl:text-7xl;
-  }
-
-  & p {
-    @apply text-gray-200 md:text-base lg:text-lg xl:text-xl;
-  }
-}
