@@ -79,7 +79,8 @@ function parseAttrs(
 let docCache = new LRUCache<string, Doc | undefined>({
   max: 100,
   // ttl: NO_CACHE ? 1 : 1000 * 60 * 5, // 5 minutes
-  ttl: 1000 * 60 * 5, // 5 minutes
+  // ttl: 1000 * 60 * 5, // 5 minutes
+  ttl: 1,
   allowStale: !NO_CACHE,
   noDeleteOnFetchRejection: true,
   fetchMethod: async (key) => {
