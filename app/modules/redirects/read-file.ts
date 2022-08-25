@@ -19,6 +19,7 @@ export async function readRedirectsFile(relativePath: string = "_redirects") {
   let filePath = path.join(process.cwd(), relativePath);
   let buffer = await fs.readFile(filePath);
 
+  console.log("Reading redirects file");
   redirects = buffer
     .toString()
     .split("\n")
