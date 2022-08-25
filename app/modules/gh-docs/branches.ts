@@ -13,7 +13,7 @@ declare global {
 }
 
 global.branchesCache ??= new LRUCache<string, string[]>({
-  max: 100,
+  max: 3,
   ttl: 1000 * 60 * 5, // 5 minutes, so we can see new tags quickly
   allowStale: true,
   noDeleteOnFetchRejection: true,

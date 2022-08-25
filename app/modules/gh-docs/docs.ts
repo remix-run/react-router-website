@@ -31,7 +31,7 @@ declare global {
 let NO_CACHE = process.env.NO_CACHE;
 
 global.menuCache ??= new LRUCache<string, MenuDoc[]>({
-  max: 30,
+  max: 10,
   ttl: NO_CACHE ? 1 : 300000, // 5 minutes
   allowStale: !NO_CACHE,
   noDeleteOnFetchRejection: true,
@@ -74,7 +74,7 @@ function parseAttrs(
  * still distribute the documents across the CDN.
  */
 global.docCache ??= new LRUCache<string, Doc | undefined>({
-  max: 300,
+  max: 100,
   ttl: NO_CACHE ? 1 : 1000 * 60 * 5, // 5 minutes
   allowStale: !NO_CACHE,
   noDeleteOnFetchRejection: true,

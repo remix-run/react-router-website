@@ -19,7 +19,6 @@ declare global {
 }
 
 global.statCountsCache ??= new LRUCache<string, StatCounts>({
-  ttlAutopurge: true,
   ttl: process.env.NO_CACHE ? 1 : 1000 * 60 * 60, // 1 hour
   allowStale: true,
   noDeleteOnFetchRejection: true,
