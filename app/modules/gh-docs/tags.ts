@@ -22,7 +22,8 @@ declare global {
 }
 
 // global for SS "HMR", we need a better story here
-global.tagsCache ??= new LRUCache<string, string[]>({
+// global.tagsCache ??= new LRUCache<string, string[]>({
+let tagsCache = new LRUCache<string, string[]>({
   max: 3,
   ttl: 1000 * 60 * 5, // 5 minutes, so we can see new tags quickly
   allowStale: true,

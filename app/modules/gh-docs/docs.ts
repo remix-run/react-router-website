@@ -30,7 +30,8 @@ declare global {
 
 let NO_CACHE = process.env.NO_CACHE;
 
-global.menuCache ??= new LRUCache<string, MenuDoc[]>({
+// global.menuCache ??= new LRUCache<string, MenuDoc[]>({
+let menuCache = new LRUCache<string, MenuDoc[]>({
   max: 10,
   // ttl: NO_CACHE ? 1 : 300000, // 5 minutes
   ttl: 300000, // 5 minutes
@@ -74,7 +75,8 @@ function parseAttrs(
  * let's have simpler and faster deployments with just one origin server, but
  * still distribute the documents across the CDN.
  */
-global.docCache ??= new LRUCache<string, Doc | undefined>({
+// global.docCache ??= new LRUCache<string, Doc | undefined>({
+let docCache = new LRUCache<string, Doc | undefined>({
   max: 100,
   // ttl: NO_CACHE ? 1 : 1000 * 60 * 5, // 5 minutes
   ttl: 1000 * 60 * 5, // 5 minutes
