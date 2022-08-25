@@ -6,4 +6,5 @@
 #!/bin/sh
 
 set -ex
+export $(cat .env | xargs)
 npm run start
