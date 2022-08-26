@@ -33,8 +33,7 @@ let NO_CACHE = process.env.NO_CACHE;
 // global.menuCache ??= new LRUCache<string, MenuDoc[]>({
 let menuCache = new LRUCache<string, MenuDoc[]>({
   max: 10,
-  // ttl: NO_CACHE ? 1 : 300000, // 5 minutes
-  ttl: 300000, // 5 minutes
+  ttl: NO_CACHE ? 1 : 300000, // 5 minutes
   allowStale: !NO_CACHE,
   noDeleteOnFetchRejection: true,
   fetchMethod: async (cacheKey) => {
@@ -77,9 +76,8 @@ function parseAttrs(
  */
 // global.docCache ??= new LRUCache<string, Doc | undefined>({
 let docCache = new LRUCache<string, Doc | undefined>({
-  max: 100,
-  // ttl: NO_CACHE ? 1 : 1000 * 60 * 5, // 5 minutes
-  ttl: 1000 * 60 * 60 * 12, // 12 hrs
+  max: 300,
+  ttl: NO_CACHE ? 1 : 1000 * 60 * 5, // 5 minutes
   allowStale: !NO_CACHE,
   noDeleteOnFetchRejection: true,
   fetchMethod: async (key) => {

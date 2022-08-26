@@ -33,7 +33,7 @@
     "@remix-run/node": "^1.5.1",
     "@remix-run/react": "^1.5.1",
     "@remix-run/serve": "^1.5.1",
-    "@ryanflorence/md": "^7.1.0",
+    "@ryanflorence/md": "^7.2.0",
     "@types/lru-cache": "^7.6.1",
     "@types/parse-link-header": "^2.0.0",
     "@types/semver": "^7.3.9",
