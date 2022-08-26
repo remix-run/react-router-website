@@ -13,3 +13,4 @@ node_modules
 /.local.tgz
 /app/modules/gh-docs/__fixture__/tar.tgz
 
+*.code-workspace
