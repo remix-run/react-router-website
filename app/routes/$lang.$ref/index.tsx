@@ -42,8 +42,8 @@ const mainLinks = [
   {
     title: "What's New in 6.4?",
     description:
-      "v6.4 is our most exciting release yet with new data abstractions for reads, writes, and navigation hooks to easily keep your UI in sync with your data. The Data Quickstart will catch you up.",
-    slug: "getting-started/data",
+      "v6.4 is our most exciting release yet with new data abstractions for reads, writes, and navigation hooks to easily keep your UI in sync with your data. The new feature overview will catch you up.",
+    slug: "start/overview",
     className: "text-green-brand",
     // prettier-ignore
     svg: (
@@ -74,7 +74,7 @@ const mainLinks = [
     title: "I'm New",
     description:
       "Start with the tutorial. It will quickly introduce you to the primary features of React Router: from configuring routes, to loading and mutating data, to pending and optimistic UI.",
-    slug: "getting-started/tutorial",
+    slug: "start/tutorial",
     className: "text-red-brand",
     // prettier-ignore
     svg: (
@@ -98,10 +98,10 @@ const mainLinks = [
     ),
   },
   {
-    title: "I'm Familiar with v5",
+    title: "I'm on v5",
     description:
-      "We introduced several new features and exciting changes in v6 like ranked route matching, nested routes, and data APIs. The Feature Overview will show you all the things React Router can do.",
-    slug: "getting-started/overview",
+      "The migration guide will help you migrate incrementally and keep shipping along the way. Or, do it all in one yolo commit! Either way, we've got you covered to start using the new features right away.",
+    slug: "upgrading/v5",
     className: "text-pink-brand",
     // prettier-ignore
     svg: (
@@ -132,7 +132,7 @@ const mainLinks = [
     title: "I'm Stuck!",
     description:
       "Running into a problem? Chances are you're not the first! Explore common questions about React Router v6.",
-    slug: "getting-started/faq",
+    slug: "start/faq",
     className: "text-yellow-600 dark:text-yellow-brand",
     // prettier-ignore
     svg: (
@@ -202,63 +202,6 @@ export default function Index() {
           ))}
         </ul>
       )}
-      <div className="md-prose mt-16">
-        <h2>Features</h2>
-        <ul>
-          <li>
-            <Link to="getting-started/tutorial#nested-routes">
-              Nested routes
-            </Link>{" "}
-            - couple URL segments to component hierarchies
-          </li>
-          <li>
-            <Link to="getting-started/concepts#ranking-routes">
-              Ranked route matching
-            </Link>{" "}
-            - never worry about route ordering
-          </li>
-          <li>
-            <Link to="getting-started/concepts#csr">
-              Client side URL synchronization
-            </Link>{" "}
-            - for the fastest dynamic user experiences
-          </li>
-          <li>
-            <Link to="components/nav-link">Active navigation link styling</Link>
-          </li>
-          <li>
-            <Link to="hooks/use-search-params">Search param manipulation</Link>
-          </li>
-          <li>
-            <Link to="getting-started/data#data-loading">
-              Conventional data loading
-            </Link>{" "}
-            - put useEffect on the shelf
-          </li>
-          <li>
-            <Link to="getting-started/data#data-mutations">
-              Conventional data mutation
-            </Link>{" "}
-            - delete half of your code
-          </li>
-          <li>
-            Automatic data revalidation - keep your data in state with your UI
-          </li>
-          <li>
-            Automatic race condition handling - fix bugs your users see but you
-            don't
-          </li>
-          <li>
-            Tools for optimistic UI, pending navigation, and busy indicators
-          </li>
-          <li>
-            <Link to="route/error-element">Built-in error handling</Link>
-          </li>
-          <li>
-            Runs everywhere React runs (browsers, servers, even React Native)
-          </li>
-        </ul>
-      </div>
     </div>
   );
 }

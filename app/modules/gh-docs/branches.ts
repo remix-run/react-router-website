@@ -8,12 +8,12 @@ export async function getBranches(repo: string) {
   return branchesCache.fetch(repo);
 }
 
-// declare global {
-//   var branchesCache: LRUCache<string, string[]>;
-// }
+declare global {
+  var branchesCache: LRUCache<string, string[]>;
+}
 
-// global.branchesCache ??= new LRUCache<string, string[]>({
-let branchesCache = new LRUCache<string, string[]>({
+global.branchesCache ??= new LRUCache<string, string[]>({
+  // let branchesCache = new LRUCache<string, string[]>({
   max: 3,
   ttl: 1000 * 60 * 5, // 5 minutes, so we can see new tags quickly
   allowStale: true,

@@ -18,8 +18,8 @@ declare global {
   var statCountsCache: LRUCache<string, StatCounts>;
 }
 
-// global.statCountsCache ??= new LRUCache<string, StatCounts>({
-let statCountsCache = new LRUCache<string, StatCounts>({
+global.statCountsCache ??= new LRUCache<string, StatCounts>({
+  // let statCountsCache = new LRUCache<string, StatCounts>({
   max: 3,
   // ttl: process.env.NO_CACHE ? 1 : 1000 * 60 * 60, // 1 hour
   ttl: 1000 * 60 * 60, // 1 hour
