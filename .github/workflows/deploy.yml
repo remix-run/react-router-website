@@ -200,11 +200,11 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-  # purge:
-  #   name: 🧹 Purge CDN
-  #   runs-on: ubuntu-latest
-  #   needs: [deploy]
-  #   steps:
-  #     - name: 🧹 Purge All
-  #       run: |
-  #         curl -D - -X POST --location "https://api.fastly.com/service/${{ secrets.FASTLY_SERVICE_ID }}/purge_all" -H "Accept: application/json" -H "Fastly-Key: ${{ secrets.FASTLY_API_TOKEN }}" -H "fastly-soft-purge: 1"
+  purge:
+    name: 🧹 Purge CDN
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    steps:
+      - name: 🧹 Purge All
+        run: |
+          curl -D - -X POST --location "https://api.fastly.com/service/${{ secrets.FASTLY_SERVICE_ID }}/purge_all" -H "Accept: application/json" -H "Fastly-Key: ${{ secrets.FASTLY_API_TOKEN }}" -H "fastly-soft-purge: 1"
