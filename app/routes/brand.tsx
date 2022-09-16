@@ -1,11 +1,23 @@
 import classNames from "classnames";
 import type { FC } from "react";
+import { seo } from "~/seo";
+
+export function meta() {
+  return seo({
+    title: "Brand Guidelines",
+    description:
+      "Official assets for things like articles and video tutorials.",
+  });
+}
 
 export default function Brand() {
   return (
     <div className="md-prose container my-8 max-w-4xl">
       <h1>React Router Brand</h1>
-      <p>Brand assets and usage guidelines</p>​
+      <p>
+        These assets are provided for use in situations like articles and video
+        tutorials.
+      </p>
       <h2>Trademark Usage Agreement</h2>
       <p>
         The React Router name and logos are trademarks of Remix Software Inc.
