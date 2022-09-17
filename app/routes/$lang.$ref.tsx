@@ -118,6 +118,30 @@ export default function DocsLayout() {
   );
 }
 
+function VersionWarning() {
+  let { latestVersion, releaseBranch, branches, currentGitHubRef } =
+    useLoaderData();
+
+  let isLatest =
+    currentGitHubRef === releaseBranch || currentGitHubRef === latestVersion;
+  if (isLatest) return null;
+
+  let warning = branches.includes(currentGitHubRef)
+    ? `Viewing docs for ${currentGitHubRef} branch, not the latest release`
+    : `Viewing docs for an older release`;
+
+  return (
+    <div className="hidden lg:block">
+      <div className="animate-[bounce_500ms_2.5] bg-red-brand p-2 text-xs text-white">
+        {warning}.{" "}
+        <Link to="/en/main" className="underline">
+          View latest
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 function Header() {
   let navigate = useNavigate();
 
@@ -149,6 +173,7 @@ function Header() {
           <ColorSchemeToggle />
         </div>
       </div>
+      <VersionWarning />
       <div className="flex items-center gap-4">
         <HeaderLink
           href="https://github.com/remix-run/react-router"

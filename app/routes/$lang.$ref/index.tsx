@@ -28,14 +28,14 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 
 export { headers };
 
-export let meta: MetaFunction = ({ data }) => {
+export let meta: MetaFunction = ({ data, ...rest }) => {
   // fake a doc for the new custom page, it does all the SEO stuff internally,
   // easier than repeating here
   if (data.is6dot4) {
     data = { doc: { attrs: { title: "Home" } } };
   }
 
-  return docMeta({ data });
+  return docMeta({ data, ...rest });
 };
 
 const mainLinks = [

@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import * as React from "react";
 import { json, Response } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
@@ -34,17 +34,33 @@ export function headers() {
   };
 }
 
-export function meta({ data }: { data?: LoaderData }) {
+export let meta: MetaFunction = ({ data, parentsData }) => {
   if (!data) return { title: "Not Found" };
+  let parentData = parentsData["routes/$lang.$ref"];
+  if (!parentData) return {};
+
   let { doc } = data;
-  let title = doc.attrs.title;
+  let { latestVersion, releaseBranch, branches, currentGitHubRef } = parentData;
+
+  let titleRef =
+    currentGitHubRef === releaseBranch
+      ? `v${latestVersion}`
+      : branches.includes(currentGitHubRef)
+      ? `(${currentGitHubRef} branch)`
+      : currentGitHubRef.startsWith("v")
+      ? currentGitHubRef
+      : `v${currentGitHubRef}`;
+
+  let title = doc.attrs.title + ` ${titleRef}`;
+
   let [meta] = seo({
     title: title,
     twitter: { title },
     openGraph: { title },
   });
+
   return meta;
-}
+};
 
 export default function DocPage() {
   let { doc } = useLoaderData<LoaderData>();
