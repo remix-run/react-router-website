@@ -3,11 +3,12 @@ import type { FC } from "react";
 import { seo } from "~/seo";
 
 export function meta() {
-  return seo({
+  let [meta] = seo({
     title: "Brand Guidelines",
     description:
       "Official assets for things like articles and video tutorials.",
   });
+  return meta;
 }
 
 export default function Brand() {
