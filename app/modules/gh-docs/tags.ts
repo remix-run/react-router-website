@@ -59,17 +59,22 @@ export async function getAllReleases(
 
   releases.push(
     ...data
-      .filter((release) =>
-        Boolean(
-          release.name?.split("@")[0] === primaryPackage ||
+      .filter((release) => {
+        return Boolean(
+          // changesets, looking for react-router@6.4.0
+          release.tag_name.split("@")[0] === primaryPackage ||
+            // pre-changesets, tag_name started with "v"
             release.tag_name.startsWith("v6")
-        )
-      )
+        );
+      })
       .map((release) => {
-        // FIXME: v6 is an implementation detail of react router :\
-        return release.tag_name.startsWith("v6")
-          ? release.tag_name
-          : release.name?.split("@")[1] || "unknown";
+        return (
+          // pre-changesets, is like v6.2.0
+          release.tag_name.startsWith("v6")
+            ? release.tag_name
+            : // with changesets its like react-router@6.4.0
+              release.tag_name.split("@")[1] || "unknown"
+        );
       })
   );
 
