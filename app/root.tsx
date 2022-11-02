@@ -29,9 +29,13 @@ export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
 };
 
-export const meta: MetaFunction = () => ({
-  title: "React Router",
-});
+export const meta: MetaFunction = ({ data }: { data: LoaderData }) => {
+  return {
+    title: "React Router",
+    robots: data.isProductionHost ? "index,follow" : "noindex, nofollow",
+    googlebot: data.isProductionHost ? "index,follow" : "noindex, nofollow",
+  };
+};
 
 type LoaderData = {
   colorScheme: "light" | "dark" | "system";
@@ -57,10 +61,8 @@ export let loader: LoaderFunction = async ({ request }) => {
 
 export default function App() {
   let colorScheme = useColorScheme();
-  let { isProductionHost } = useLoaderData();
 
   return (
-    // TODO: change lang when we do translations
     <html
       lang="en"
       className={colorScheme === "dark" ? "dark" : ""}
@@ -68,17 +70,6 @@ export default function App() {
     >
       <head>
         <ColorSchemeScript />
-        {isProductionHost ? (
-          <>
-            <meta content="index,follow" name="robots" />
-            <meta content="index,follow" name="googlebot" />
-          </>
-        ) : (
-          <>
-            <meta content="noindex,nofollow" name="robots" />
-            <meta content="noindex,nofollow" name="googlebot" />
-          </>
-        )}
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <link

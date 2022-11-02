@@ -38,6 +38,7 @@ type LoaderData = {
   branches: string[];
   lang: string;
   currentGitHubRef: string;
+  isLatest: boolean;
 };
 
 export let loader: LoaderFunction = async ({ params, request }) => {
@@ -59,15 +60,19 @@ export let loader: LoaderFunction = async ({ params, request }) => {
   if (betterUrl) throw redirect("/" + betterUrl);
 
   let menu = await getRepoDocsMenu(ref, lang);
+  let releaseBranch = "main";
+  let latestVersion = getLatestVersion(tags);
+  let isLatest = ref === releaseBranch || ref === latestVersion;
+
   return json<LoaderData>({
     menu,
-    // TODO: after updating v3/v5 docs, include them here too
     versions: [getLatestVersion(tags)],
-    latestVersion: getLatestVersion(tags),
-    releaseBranch: "main",
+    latestVersion,
+    releaseBranch,
     branches: branchesInMenu,
     currentGitHubRef: ref,
     lang,
+    isLatest,
   });
 };
 
@@ -119,11 +124,8 @@ export default function DocsLayout() {
 }
 
 function VersionWarning() {
-  let { latestVersion, releaseBranch, branches, currentGitHubRef } =
-    useLoaderData();
+  let { isLatest, branches, currentGitHubRef } = useLoaderData();
 
-  let isLatest =
-    currentGitHubRef === releaseBranch || currentGitHubRef === latestVersion;
   if (isLatest) return null;
 
   let warning = branches.includes(currentGitHubRef)

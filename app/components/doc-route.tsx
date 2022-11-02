@@ -39,6 +39,8 @@ export let meta: MetaFunction = ({ data, parentsData }) => {
   let parentData = parentsData["routes/$lang.$ref"];
   if (!parentData) return {};
 
+  let rootData = parentsData["root"];
+
   let { doc } = data;
   let { latestVersion, releaseBranch, branches, currentGitHubRef } = parentData;
 
@@ -53,10 +55,17 @@ export let meta: MetaFunction = ({ data, parentsData }) => {
 
   let title = doc.attrs.title + ` ${titleRef}`;
 
+  // seo: only want to index the main branch
+  let isMainBranch = currentGitHubRef === releaseBranch;
+
   let [meta] = seo({
     title: title,
     twitter: { title },
     openGraph: { title },
+    robots: {
+      nofollow: !rootData.isProductionHost || !isMainBranch,
+      noindex: !rootData.isProductionHost || !isMainBranch,
+    },
   });
 
   return meta;
