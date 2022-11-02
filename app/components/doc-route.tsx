@@ -8,6 +8,7 @@ import { getRepoDoc } from "~/modules/gh-docs";
 import { CACHE_CONTROL, whyDoWeNotHaveGoodMiddleWareYetRyan } from "~/http";
 import { seo } from "~/seo";
 import { useDelegatedReactRouterLinks } from "./delegate-markdown-links";
+import iconsHref from "~/icons.svg";
 
 type LoaderData = { doc: Doc };
 
@@ -58,16 +59,16 @@ export let meta: MetaFunction = ({ data, parentsData }) => {
   // seo: only want to index the main branch
   let isMainBranch = currentGitHubRef === releaseBranch;
 
-  let robots =
-    rootData.isProductionHost && isMainBranch
-      ? "index,follow"
-      : "noindex,nofollow";
-
   let [meta] = seo({
     title: title,
     twitter: { title },
     openGraph: { title },
   });
+
+  let robots =
+    rootData.isProductionHost && isMainBranch
+      ? "index,follow"
+      : "noindex,nofollow";
 
   return {
     ...meta,
@@ -81,11 +82,71 @@ export default function DocPage() {
   let ref = React.useRef<HTMLDivElement>(null);
   useDelegatedReactRouterLinks(ref);
   return (
-    <div
-      ref={ref}
-      className="markdown pb-[33vh]"
-      dangerouslySetInnerHTML={{ __html: doc.html }}
-    />
+    <div className="xl:flex xl:w-full xl:gap-8">
+      {doc.headings.length > 3 ? (
+        <>
+          <SmallOnThisPage doc={doc} />
+          <LargeOnThisPage doc={doc} />
+        </>
+      ) : (
+        <div className="hidden xl:order-1 xl:block xl:w-56 xl:flex-shrink-0" />
+      )}
+      <div className="px-4 pt-8 pb-4 lg:ml-72 lg:pr-8 lg:pl-12  xl:flex-grow">
+        <div
+          ref={ref}
+          className="markdown w-full pb-[33vh]"
+          dangerouslySetInnerHTML={{ __html: doc.html }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function LargeOnThisPage({ doc }: { doc: Doc }) {
+  return (
+    <div className="hidden xl:sticky xl:top-28 xl:order-1 xl:mt-10 xl:block xl:max-h-[calc(100vh-10rem)] xl:w-56 xl:flex-shrink-0 xl:self-start xl:overflow-auto">
+      <nav className="mb-2 text-sm font-bold">On this page</nav>
+      <ul>
+        {doc.headings.map((heading, i) => (
+          <li key={i}>
+            <a
+              href={`#${heading.slug}`}
+              dangerouslySetInnerHTML={{ __html: heading.html }}
+              className="block py-1 text-sm text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function SmallOnThisPage({ doc }: { doc: Doc }) {
+  return (
+    <details className="group flex h-full flex-col lg:ml-80 lg:mt-4 xl:hidden">
+      <summary className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-50 bg-white px-2 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 dark:active:bg-gray-700">
+        <div className="flex items-center gap-2">
+          <svg aria-hidden className="h-5 w-5 group-open:hidden">
+            <use href={`${iconsHref}#chevron-r`} />
+          </svg>
+          <svg aria-hidden className="hidden h-5 w-5 group-open:block">
+            <use href={`${iconsHref}#chevron-d`} />
+          </svg>
+        </div>
+        <div className="whitespace-nowrap">On this page</div>
+      </summary>
+      <ul className="pl-9">
+        {doc.headings.map((heading, i) => (
+          <li key={i}>
+            <a
+              href={`#${heading.slug}`}
+              dangerouslySetInnerHTML={{ __html: heading.html }}
+              className="block py-2 text-sm text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"
+            />
+          </li>
+        ))}
+      </ul>
+    </details>
   );
 }
 

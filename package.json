@@ -39,6 +39,7 @@
     "@types/semver": "^7.3.9",
     "@types/tar-stream": "^2.2.2",
     "bcryptjs": "^2.4.3",
+    "cheerio": "^1.0.0-rc.12",
     "classnames": "^2.3.1",
     "follow-redirects": "^1.15.0",
     "gray-matter": "^4.0.3",

@@ -94,7 +94,7 @@ export default function DocsLayout() {
     !navigation.location.pathname.match(params.ref);
 
   return (
-    <div className="lg:m-auto lg:max-w-6xl">
+    <div className="lg:m-auto lg:max-w-[90rem]">
       <div className="sticky top-0 z-20">
         <Header />
         <NavMenuMobile />
@@ -105,17 +105,17 @@ export default function DocsLayout() {
         }
       >
         <NavMenuDesktop />
+        <div
+          className={classNames(
+            "min-h-[80vh]",
+            !changingVersions && navigating
+              ? "opacity-25 transition-opacity delay-300"
+              : ""
+          )}
+        >
+          <Outlet />
+        </div>
         <div className="px-4 pt-8 pb-4 lg:ml-72 lg:pr-8 lg:pl-12">
-          <div
-            className={classNames(
-              "min-h-[80vh]",
-              !changingVersions && navigating
-                ? "opacity-25 transition-opacity delay-300"
-                : ""
-            )}
-          >
-            <Outlet />
-          </div>
           <Footer />
         </div>
       </div>

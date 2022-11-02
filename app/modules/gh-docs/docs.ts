@@ -5,6 +5,7 @@ import invariant from "tiny-invariant";
 import { getRepoContent } from "./repo-content";
 import { getRepoTarballStream } from "./repo-tarball";
 import { createTarFileProcessor } from "./tarball";
+import { load as $ } from "cheerio";
 
 export interface MenuDoc {
   attrs: {
@@ -21,6 +22,7 @@ export interface MenuDoc {
 
 export interface Doc extends Omit<MenuDoc, "hasContent"> {
   html: string;
+  headings: { html: string; slug: string }[];
 }
 
 declare global {
@@ -88,9 +90,23 @@ global.docCache ??= new LRUCache<string, Doc | undefined>({
     if (md === null) return undefined;
     let { content, attrs } = parseAttrs(md, filename);
     let html = await processMarkdown(content);
-    return { attrs, filename, html, slug, children: [] };
+    // sorry, cheerio is so much easier than using rehype stuff.
+    let headings = createTableOfContentsFromHeadings(html);
+    return { attrs, filename, html, slug, headings, children: [] };
   },
 });
+
+// create table of contents from h2 and h3 headings
+function createTableOfContentsFromHeadings(html: string) {
+  let $headings = $(html)("h2,h3");
+
+  let headings = $headings.toArray().map((heading) => ({
+    html: $(heading)("a").remove().end().children().html(),
+    slug: heading.attributes.find((attr) => attr.name === "id")?.value,
+  }));
+
+  return headings;
+}
 
 export async function getDoc(
   repo: string,
