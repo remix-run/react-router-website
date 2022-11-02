@@ -159,7 +159,7 @@ export default function Index() {
   const { stats } = loaderData;
 
   return (
-    <div>
+    <div className="px-4 pt-8 pb-4 lg:ml-72 lg:pr-8 lg:pl-12">
       <div className="my-4 grid max-w-[60ch] gap-y-10 md:max-w-none md:grid-cols-2 md:grid-rows-2 md:gap-y-12 md:gap-x-8">
         {mainLinks.map(({ title, description, slug, className, svg }) => (
           <Link
