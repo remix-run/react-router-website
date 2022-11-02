@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo } from "react";
+import { useLayoutEffect, useMemo } from "react";
 import { useMatches, useTransition } from "@remix-run/react";
 import type { ColorScheme } from "./types";
 

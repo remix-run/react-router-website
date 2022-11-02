@@ -1,7 +1,6 @@
 import LRUCache from "lru-cache";
 import parseLinkHeader from "parse-link-header";
 import semver from "semver";
-import invariant from "tiny-invariant";
 import { octokit } from "./github";
 
 /**
