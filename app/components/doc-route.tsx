@@ -58,17 +58,22 @@ export let meta: MetaFunction = ({ data, parentsData }) => {
   // seo: only want to index the main branch
   let isMainBranch = currentGitHubRef === releaseBranch;
 
+  let robots =
+    rootData.isProductionHost && isMainBranch
+      ? "index,follow"
+      : "noindex,nofollow";
+
   let [meta] = seo({
     title: title,
     twitter: { title },
     openGraph: { title },
-    robots: {
-      nofollow: !rootData.isProductionHost || !isMainBranch,
-      noindex: !rootData.isProductionHost || !isMainBranch,
-    },
   });
 
-  return meta;
+  return {
+    ...meta,
+    robots: robots,
+    googlebot: robots,
+  };
 };
 
 export default function DocPage() {
