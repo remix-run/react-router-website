@@ -22,7 +22,7 @@ export interface MenuDoc {
 
 export interface Doc extends Omit<MenuDoc, "hasContent"> {
   html: string;
-  headings: { html: string; slug: string }[];
+  headings: { html: string | null; slug: string | undefined }[];
 }
 
 declare global {
