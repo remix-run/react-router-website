@@ -1,4 +1,8 @@
-import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import type {
+  DataFunctionArgs,
+  SerializeFrom,
+  MetaFunction,
+} from "@remix-run/node";
 import * as React from "react";
 import { json, Response } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
@@ -10,9 +14,7 @@ import { seo } from "~/seo";
 import { useDelegatedReactRouterLinks } from "./delegate-markdown-links";
 import iconsHref from "~/icons.svg";
 
-type LoaderData = { doc: Doc };
-
-export let loader: LoaderFunction = async ({ params, request }) => {
+export let loader = async ({ params, request }: DataFunctionArgs) => {
   await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
 
   invariant(params.ref, "expected `ref` params");
@@ -22,11 +24,10 @@ export let loader: LoaderFunction = async ({ params, request }) => {
     throw new Response("", { status: 404 });
   }
 
-  return json<LoaderData>(
-    { doc },
-    { headers: { "Cache-Control": CACHE_CONTROL.doc } }
-  );
+  return json({ doc }, { headers: { "Cache-Control": CACHE_CONTROL.doc } });
 };
+
+let LoaderData = typeof loader;
 
 export function headers() {
   return {
@@ -78,7 +79,7 @@ export let meta: MetaFunction = ({ data, parentsData }) => {
 };
 
 export default function DocPage() {
-  let { doc } = useLoaderData<LoaderData>();
+  let { doc } = useLoaderData<typeof loader>();
   let ref = React.useRef<HTMLDivElement>(null);
   useDelegatedReactRouterLinks(ref);
   return (
@@ -102,7 +103,7 @@ export default function DocPage() {
   );
 }
 
-function LargeOnThisPage({ doc }: { doc: Doc }) {
+function LargeOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
   return (
     <div className="hidden xl:sticky xl:top-28 xl:order-1 xl:mt-10 xl:block xl:max-h-[calc(100vh-10rem)] xl:w-56 xl:flex-shrink-0 xl:self-start xl:overflow-auto">
       <nav className="mb-2 text-sm font-bold">On this page</nav>
@@ -121,7 +122,7 @@ function LargeOnThisPage({ doc }: { doc: Doc }) {
   );
 }
 
-function SmallOnThisPage({ doc }: { doc: Doc }) {
+function SmallOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
   return (
     <details className="group flex h-full flex-col lg:ml-80 lg:mt-4 xl:hidden">
       <summary className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-50 bg-white px-2 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 dark:active:bg-gray-700">
