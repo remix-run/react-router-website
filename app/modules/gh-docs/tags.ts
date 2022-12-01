@@ -60,8 +60,14 @@ export async function getAllReleases(
     ...data
       .filter((release) => {
         return Boolean(
-          // changesets, looking for react-router@6.4.0
-          release.tag_name.split("@")[0] === primaryPackage ||
+          // We aren't consistently using the "primaryPackage" tag to create
+          // release notes (sometimes react-router, sometimes react-dom) so we
+          // just check the release name here
+          release.name?.startsWith("v6") ||
+            // ideally all we care about is release.name, but we have some old
+            // releases that don't have that set, so we check the tag name too
+            // After changesets, we look for react-router@6.4.0
+            release.tag_name.split("@")[0] === primaryPackage ||
             // pre-changesets, tag_name started with "v"
             release.tag_name.startsWith("v6")
         );
