@@ -27,8 +27,6 @@ export let loader = async ({ params, request }: DataFunctionArgs) => {
   return json({ doc }, { headers: { "Cache-Control": CACHE_CONTROL.doc } });
 };
 
-let LoaderData = typeof loader;
-
 export function headers() {
   return {
     "Cache-Control": CACHE_CONTROL.doc,
