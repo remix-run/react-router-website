@@ -1,5 +1,5 @@
 {
-  "name": "router-website-new-5d43",
+  "name": "router-website",
   "private": true,
   "description": "",
   "license": "",
@@ -10,18 +10,13 @@
     "build:remix": "remix build",
     "dev": "run-p dev:*",
     "dev:css": "npm run generate:css -- --watch",
-    "dev:remix": "cross-env NODE_ENV=development binode --require ./mocks -- @remix-run/dev:remix dev",
+    "dev:remix": "remix dev",
     "format": "prettier --write .",
     "generate:css": "postcss app/styles.source.css -o app/styles.processed.css",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve build",
-    "start:mocks": "binode --require ./mocks -- @remix-run/serve:remix-serve build",
     "test": "vitest",
-    "test:e2e:dev": "start-server-and-test dev http://localhost:3000 \"cypress open\"",
-    "pretest:e2e:run": "npm run build",
-    "test:e2e:run": "cross-env PORT=8811 start-server-and-test start:mocks http://localhost:8811 \"cypress run\"",
-    "typecheck": "tsc -b && tsc -b cypress",
-    "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run"
+    "typecheck": "tsc -b && tsc -b cypress"
   },
   "prettier": {},
   "eslintIgnore": [
@@ -52,7 +47,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
-    "remix-flat-routes": "^0.3.1",
     "semver": "^7.3.7",
     "sort-by": "^1.2.0",
     "tar": "^6.1.11",
