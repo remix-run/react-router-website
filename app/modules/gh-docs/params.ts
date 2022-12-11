@@ -1,4 +1,5 @@
 import * as semver from "semver";
+import type { LanguageCode } from "iso-639-1";
 import iso_639_1 from "iso-639-1";
 
 const CODES = iso_639_1.getAllCodes();
@@ -11,7 +12,7 @@ export function validateParams(
 ): string | null {
   let { lang: first, ref: second, "*": splat } = params;
 
-  let firstIsLang = CODES.includes(first);
+  let firstIsLang = CODES.includes(first as LanguageCode);
   let secondIsRef =
     second && (tags.includes(second) || branches.includes(second));
 
