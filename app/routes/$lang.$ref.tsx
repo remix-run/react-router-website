@@ -1,5 +1,5 @@
+import type { LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import type { LoaderFunction } from "@remix-run/node";
 import * as React from "react";
 import {
   Form,
@@ -24,24 +24,13 @@ import {
   getRepoTags,
   validateParams,
 } from "~/modules/gh-docs";
-import type { Doc, MenuDoc } from "~/modules/gh-docs";
+import type { Doc } from "~/modules/gh-docs";
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { getLatestVersion } from "~/modules/gh-docs/tags";
 import { useColorScheme } from "~/modules/color-scheme/components";
 
-type LoaderData = {
-  menu?: MenuDoc[];
-  versions: string[];
-  latestVersion: string;
-  releaseBranch: string;
-  branches: string[];
-  lang: string;
-  currentGitHubRef: string;
-  isLatest: boolean;
-};
-
-export let loader: LoaderFunction = async ({ params, request }) => {
+export let loader = async ({ params }: LoaderArgs) => {
   let { lang, ref, "*": splat } = params;
   invariant(lang, "expected `params.lang`");
   invariant(ref, "expected `params.ref`");
@@ -64,7 +53,7 @@ export let loader: LoaderFunction = async ({ params, request }) => {
   let latestVersion = getLatestVersion(tags);
   let isLatest = ref === releaseBranch || ref === latestVersion;
 
-  return json<LoaderData>({
+  return json({
     menu,
     versions: [getLatestVersion(tags)],
     latestVersion,
@@ -124,7 +113,7 @@ export default function DocsLayout() {
 }
 
 function VersionWarning() {
-  let { isLatest, branches, currentGitHubRef } = useLoaderData();
+  let { isLatest, branches, currentGitHubRef } = useLoaderData<typeof loader>();
 
   if (isLatest) return null;
 
@@ -373,7 +362,7 @@ function VersionSelect() {
     branches,
     currentGitHubRef,
     lang,
-  } = useLoaderData<LoaderData>();
+  } = useLoaderData<typeof loader>();
 
   // This is the same default, hover, focus style as the ColorScheme trigger
   const className =
@@ -540,7 +529,7 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
 }
 
 function Menu() {
-  let { menu } = useLoaderData<LoaderData>();
+  let { menu } = useLoaderData<typeof loader>();
   return menu ? (
     <nav>
       <ul>

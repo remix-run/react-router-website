@@ -6,7 +6,7 @@ import invariant from "tiny-invariant";
 export { validateParams } from "./params";
 export { getRepoTarballStream } from "./repo-tarball";
 
-export type { MenuDoc, Doc } from "./docs";
+export type { Doc } from "./docs";
 
 const REPO = process.env.SOURCE_REPO!;
 if (!REPO) throw new Error("Missing process.env.SOURCE_REPO");
