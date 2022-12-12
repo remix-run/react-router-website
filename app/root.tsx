@@ -1,8 +1,4 @@
-import type {
-  LinksFunction,
-  LoaderFunction,
-  MetaFunction,
-} from "@remix-run/node";
+import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node";
 import {
   Link,
   Links,
@@ -28,7 +24,7 @@ export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
 };
 
-export const meta: MetaFunction = ({ data }: { data: LoaderData }) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return {
     title: "React Router",
     robots: data.isProductionHost ? "index,follow" : "noindex, nofollow",
@@ -36,18 +32,13 @@ export const meta: MetaFunction = ({ data }: { data: LoaderData }) => {
   };
 };
 
-type LoaderData = {
-  colorScheme: "light" | "dark" | "system";
-  isProductionHost: boolean;
-};
-
-export let loader: LoaderFunction = async ({ request }) => {
+export let loader = async ({ request }: LoaderArgs) => {
   await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
 
   let colorScheme = await parseColorScheme(request);
   let isProductionHost = isHost("reactrouter.com", request);
 
-  return json<LoaderData>(
+  return json(
     { colorScheme, isProductionHost },
     {
       headers: {

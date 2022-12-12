@@ -1,8 +1,4 @@
-import type {
-  DataFunctionArgs,
-  SerializeFrom,
-  MetaFunction,
-} from "@remix-run/node";
+import type { LoaderArgs, MetaFunction, SerializeFrom } from "@remix-run/node";
 import * as React from "react";
 import { json, Response } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
@@ -14,7 +10,7 @@ import { seo } from "~/seo";
 import { useDelegatedReactRouterLinks } from "./delegate-markdown-links";
 import iconsHref from "~/icons.svg";
 
-export let loader = async ({ params, request }: DataFunctionArgs) => {
+export let loader = async ({ params, request }: LoaderArgs) => {
   await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
 
   invariant(params.ref, "expected `ref` params");

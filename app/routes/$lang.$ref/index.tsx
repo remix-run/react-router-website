@@ -1,4 +1,4 @@
-import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import classNames from "classnames";
@@ -13,7 +13,7 @@ import iconsHref from "~/icons.svg";
 import type { Stats } from "~/modules/stats";
 import { getStats } from "~/modules/stats";
 
-export let loader: LoaderFunction = async ({ request, params }) => {
+export let loader = async ({ params, request }: LoaderArgs) => {
   let is6dot4 =
     params.ref === "local" ||
     params.ref === "main" ||
