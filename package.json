@@ -11,9 +11,10 @@
     "dev": "run-p dev:*",
     "dev:css": "npm run generate:css -- --watch",
     "dev:remix": "remix dev",
-    "format": "prettier --write .",
+    "format": "prettier --write . && npm run lint:fix",
     "generate:css": "postcss app/styles.source.css -o app/styles.processed.css",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "lint:fix": "npm run lint -- --fix",
     "start": "remix-serve build",
     "test": "vitest",
     "typecheck": "tsc -b"
