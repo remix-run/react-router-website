@@ -192,7 +192,7 @@ export default function Index() {
               </svg>
               <p className="flex flex-col">
                 <span className="text-3xl font-light tracking-tight">
-                  {count.toLocaleString("en-US")}
+                  {count?.toLocaleString("en-US")}
                 </span>
                 <span className="text-gray-300 dark:text-gray-500">
                   {label}
