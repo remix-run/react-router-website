@@ -111,7 +111,7 @@ async function fetchNpmDownloads() {
       urls.map((url) => fetch(url).then((res) => res.json()))
     );
     const allTimeDownloads = queryData.reduce(
-      (acc, { downloads }) => acc + downloads,
+      (acc, { downloads = 0 }) => acc + downloads,
       0
     );
     return allTimeDownloads;
