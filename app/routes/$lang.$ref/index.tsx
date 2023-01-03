@@ -20,7 +20,8 @@ export let loader = async ({ params, request }: LoaderArgs) => {
     params.ref === "dev" ||
     semver.satisfies(params.ref || "", "^6.4", { includePrerelease: true });
   if (is6dot4) {
-    const stats = await getStats();
+    // const stats = await getStats();
+    const stats = null;
     return json({ is6dot4: true, stats });
   }
   return docLoader({ request, params, context: {} });

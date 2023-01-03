@@ -1,6 +1,6 @@
 import type { LinkDescriptor, AppData } from "@remix-run/node";
 import type { Params } from "react-router-dom";
-import type { Location } from "history";
+import type { Location } from "react-router-dom";
 import merge from "lodash.merge";
 
 type RouteData = { [routeId: string]: any };
