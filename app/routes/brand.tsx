@@ -3,7 +3,7 @@ import type { FC } from "react";
 
 export function meta() {
   return {
-    title: "React Router Assets and Branding Guidlines",
+    title: "React Router Assets and Branding Guidelines",
   };
 }
 
