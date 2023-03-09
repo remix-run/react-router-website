@@ -34,7 +34,7 @@ export function getRepoDoc(ref: string, slug: string) {
 }
 
 function fixupRefName(ref: string) {
-  return ["dev", "main", "release-next", "local"].includes(ref) || 
+  return ["dev", "main", "release-next", "local"].includes(ref) ||
     // when we switched to changesets the `v` went away, so we use that as a way
     // to know if we need to add hte `react-router@` prefix for interacting w/
     // github.
