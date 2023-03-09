@@ -36,6 +36,7 @@ export function getRepoDoc(ref: string, slug: string) {
 function fixupRefName(ref: string) {
   return ref === "dev" ||
     ref === "main" ||
+    ref === "release-next" ||
     ref === "local" ||
     // when we switched to changesets the `v` went away, so we use that as a way
     // to know if we need to add hte `react-router@` prefix for interacting w/
