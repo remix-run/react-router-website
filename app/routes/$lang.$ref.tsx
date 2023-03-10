@@ -117,7 +117,9 @@ function VersionWarning() {
 
   if (isLatest) return null;
 
-  let warning = branches.includes(currentGitHubRef)
+  // Don't want to show release-next in the menu, but we do want to show
+  // the branch-warning
+  let warning = [...branches, "release-next"].includes(currentGitHubRef)
     ? `Viewing docs for ${currentGitHubRef} branch, not the latest release`
     : `Viewing docs for an older release`;
 
