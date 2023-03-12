@@ -2,7 +2,7 @@
 
 ## Setup
 
-Copy the `.env` file and add your information to it.
+Copy the contents of `.env.example` file to the `.env` file and add your information to it.
 
 ```sh
 cp .env.example .env
