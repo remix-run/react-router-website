@@ -122,7 +122,7 @@ jobs:
           field: "app"
 
       - name: 🐳 Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
 
       # Setup cache
       - name: ⚡️ Cache Docker layers
