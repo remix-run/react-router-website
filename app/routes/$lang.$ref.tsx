@@ -104,7 +104,7 @@ export default function DocsLayout() {
         >
           <Outlet />
         </div>
-        <div className="px-4 pt-8 pb-4 lg:ml-72 lg:pr-8 lg:pl-12">
+        <div className="px-4 pb-4 pt-8 lg:ml-72 lg:pl-12 lg:pr-8">
           <Footer />
         </div>
       </div>
@@ -254,7 +254,7 @@ let ColorSchemeButton = React.forwardRef<
       ref={forwardedRef}
       disabled={colorScheme === props.value}
       className={classNames(
-        "flex w-full items-center gap-4 py-1 px-4",
+        "flex w-full items-center gap-4 px-4 py-1",
         colorScheme === props.value
           ? "text-red-brand"
           : "hover:bg-gray-50 active:text-red-brand dark:hover:bg-gray-700 dark:active:text-red-brand"
@@ -306,7 +306,7 @@ function HeaderLink({
 
 function NavMenuDesktop() {
   return (
-    <div className="fixed top-16 bottom-0 hidden w-72 overflow-auto py-6 pl-8 pr-6 lg:block">
+    <div className="fixed bottom-0 top-16 hidden w-72 overflow-auto py-6 pl-8 pr-6 lg:block">
       <Menu />
     </div>
   );
@@ -416,7 +416,7 @@ function VersionSelect() {
 
 function VersionsLabel({ label }: { label: string }) {
   return (
-    <div className="px-4 pt-2 pb-2 text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-300">
+    <div className="px-4 pb-2 pt-2 text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-300">
       {label}
     </div>
   );

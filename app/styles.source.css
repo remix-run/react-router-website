@@ -74,7 +74,7 @@ html.dark {
   /* general text styles */
 
   & p {
-    @apply mt-0 mb-4;
+    @apply mb-4 mt-0;
   }
 
   & p,
@@ -160,7 +160,7 @@ html.dark {
   }
 
   & dl {
-    @apply mt-0 mb-4 p-0;
+    @apply mb-4 mt-0 p-0;
 
     & dt {
       @apply mt-4 p-0 font-semibold italic;
@@ -228,7 +228,7 @@ html.dark {
     scroll-snap-margin-top: 5em;
 
     & a {
-      @apply absolute top-0 -left-6 -right-0 z-10 flex h-full items-center leading-none;
+      @apply absolute -left-6 -right-0 top-0 z-10 flex h-full items-center leading-none;
     }
 
     &:hover a,
@@ -263,7 +263,7 @@ html.dark {
   /*****************************************************************************/
   /* details / summary */
   & details {
-    @apply mt-0 mb-4 block;
+    @apply mb-4 mt-0 block;
   }
 
   & summary {
@@ -361,7 +361,7 @@ html.dark {
 
   & pre[data-filename]::before,
   & pre[data-bad]::before {
-    @apply sticky left-0 mb-2 block border-b border-gray-100 bg-no-repeat pl-10 pb-3 dark:border-gray-700;
+    @apply sticky left-0 mb-2 block border-b border-gray-100 bg-no-repeat pb-3 pl-10 dark:border-gray-700;
     background-position: 1rem 3px;
   }
 
@@ -394,7 +394,7 @@ html.dark {
 
   & .codeblock-line[data-highlight="true"]::after {
     content: " ";
-    @apply pointer-events-none absolute top-0 left-0 w-full bg-green-500 opacity-10 dark:opacity-20;
+    @apply pointer-events-none absolute left-0 top-0 w-full bg-green-500 opacity-10 dark:opacity-20;
   }
 
   /*****************************************************************************/
@@ -434,7 +434,7 @@ html.dark {
     }
 
     &:after {
-      @apply absolute left-0 top-0 bottom-0 w-1 rounded-full;
+      @apply absolute bottom-0 left-0 top-0 w-1 rounded-full;
       content: "";
     }
 
@@ -529,7 +529,7 @@ html.dark {
   /* blockquotes */
 
   & blockquote {
-    @apply mx-0 mt-0 mb-4 border-l-4 border-gray-200 p-0 pl-4 text-gray-600 dark:border-gray-800 dark:text-gray-300;
+    @apply mx-0 mb-4 mt-0 border-l-4 border-gray-200 p-0 pl-4 text-gray-600 dark:border-gray-800 dark:text-gray-300;
   }
 
   & blockquote > :first-child {
@@ -544,6 +544,6 @@ html.dark {
   /* hr */
 
   & hr {
-    @apply my-6 mx-0 h-[1px] overflow-visible border-0 bg-gray-200 p-0 dark:bg-gray-800;
+    @apply mx-0 my-6 h-[1px] overflow-visible border-0 bg-gray-200 p-0 dark:bg-gray-800;
   }
 }
