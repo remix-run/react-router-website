@@ -134,7 +134,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: 🔑 Fly Registry Auth
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: registry.fly.io
           username: x
