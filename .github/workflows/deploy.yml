@@ -4,7 +4,11 @@ on:
     branches:
       - main
       # - dev
-  pull_request: {}
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint:
@@ -53,9 +57,6 @@ jobs:
     name: ⚡ Vitest
     runs-on: ubuntu-latest
     steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.11.0
-
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
@@ -74,9 +75,6 @@ jobs:
   #   name: ⚫️ Cypress
   #   runs-on: ubuntu-latest
   #   steps:
-  #     - name: 🛑 Cancel Previous Runs
-  #       uses: styfle/cancel-workflow-action@0.11.0
-
   #     - name: ⬇️ Checkout repo
   #       uses: actions/checkout@v3
 
@@ -108,9 +106,6 @@ jobs:
     if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.11.0
-
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
@@ -170,9 +165,6 @@ jobs:
     if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
 
     steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.11.0
-
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
