@@ -27,5 +27,7 @@ jobs:
             response from the original author 🙈. This automation helps keep the issue
             tracker clean from PRs that aren't actionable. Please reach out if you
             want to resume the work on this PR! 🙂
+          # don't automatically mark issues/PRs as stale
+          days-before-stale: -1
           stale-issue-label: needs-response
           stale-pr-label: needs-response
