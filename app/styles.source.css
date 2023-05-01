@@ -333,7 +333,7 @@ html.dark {
   }
 
   & pre code {
-    display: grid;
+    display: inline-block;
     max-width: auto;
     padding: 0;
     margin: 0;
