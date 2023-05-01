@@ -4,11 +4,12 @@
  * Color scheme: https://tailwind.ink?p=7.f9faf9f0f1f1dddfe1b7bcbe8894936a726d54575040413c2c2b2a121212fdfcfbfcf0edf9ccdbf09eb7ee6e90f44250d03150aa253a7d1a264d1014faf9f0f8ef9ffecc1bd3be33a69719837a0b686207514a07373307271f06f2f6f1e0f0deb6e7b56bd96833ad4e22942c1e7e1f1b611b1443170f2913ecf4f3c9eff03defe954cfb71db28b14996313844c13663e0f46300b2c25f5f9fbdff0fcbcdcf98ebbf03992ff4d71da3f55c93240a7232b7a141b4efcfbfbf9eef5f4caece79fd7e571bed83bd2c1338b9a2769701c45441325
  *
  */
-const defaultTheme = require("tailwindcss/defaultTheme");
+import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
-module.exports = {
-  darkMode: "class",
+export default {
   content: ["./app/**/*.{ts,tsx}"],
+  darkMode: "class",
   theme: {
     fontSize: {
       ...defaultTheme.fontSize,
@@ -118,4 +119,5 @@ module.exports = {
       },
     },
   },
-};
+  plugins: [],
+} satisfies Config;
