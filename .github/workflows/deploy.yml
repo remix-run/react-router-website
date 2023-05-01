@@ -15,19 +15,18 @@ jobs:
     name: ⬣ ESLint
     runs-on: ubuntu-latest
     steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.11.0
-
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          cache: npm
+          cache-dependency-path: ./package-lock.json
+          node-version: 18
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+      - name: 📥 Install deps
+        run: npm install
 
       - name: 🔬 Lint
         run: npm run lint
@@ -36,19 +35,18 @@ jobs:
     name: ʦ TypeScript
     runs-on: ubuntu-latest
     steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.11.0
-
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          cache: npm
+          cache-dependency-path: ./package-lock.json
+          node-version: 18
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+      - name: 📥 Install deps
+        run: npm install
 
       - name: 🔎 Type check
         run: npm run typecheck --if-present
@@ -63,10 +61,12 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          cache: npm
+          cache-dependency-path: ./package-lock.json
+          node-version: 18
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
+      - name: 📥 Install deps
+        run: npm install
 
       - name: ⚡ Run vitest
         run: npm run test -- --coverage
@@ -84,10 +84,12 @@ jobs:
   #     - name: ⎔ Setup node
   #       uses: actions/setup-node@v3
   #       with:
-  #         node-version: 16
+  #         cache: npm
+  #         cache-dependency-path: ./package-lock.json
+  #         node-version: 18
 
-  #     - name: 📥 Download deps
-  #       uses: bahmutov/npm-install@v1
+  #     - name: 📥 Install deps
+  #       run: npm install
 
   #     - name: ⚙️ Build
   #       run: npm run build
