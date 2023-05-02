@@ -334,6 +334,7 @@ html.dark {
 
   & pre code {
     display: inline-block;
+    width: 100%;
     max-width: auto;
     padding: 0;
     margin: 0;
