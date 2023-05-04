@@ -342,7 +342,7 @@ html.dark {
     background-color: initial;
     border: 0;
     border-radius: initial;
-    min-width: 100%
+    min-width: 100%;
   }
 
   & pre[data-line-numbers="true"]:not([data-lang="bash"], [data-lang="sh"]) {
