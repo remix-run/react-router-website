@@ -23,9 +23,9 @@
     "/public/build"
   ],
   "dependencies": {
-    "@remix-run/node": "^1.16.0",
-    "@remix-run/react": "^1.16.0",
-    "@remix-run/serve": "^1.16.0",
+    "@remix-run/node": "1.16.0",
+    "@remix-run/react": "1.16.0",
+    "@remix-run/serve": "1.16.0",
     "@ryanflorence/md": "^7.2.0",
     "bcryptjs": "^2.4.3",
     "cheerio": "^1.0.0-rc.12",
@@ -41,7 +41,7 @@
     "parse-link-header": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.11.1",
+    "react-router-dom": "6.11.0",
     "semver": "^7.5.0",
     "sort-by": "^1.2.0",
     "tar": "^6.1.14",
@@ -49,8 +49,8 @@
     "tiny-invariant": "^1.3.1"
   },
   "devDependencies": {
-    "@remix-run/dev": "^1.16.0",
-    "@remix-run/eslint-config": "^1.16.0",
+    "@remix-run/dev": "1.16.0",
+    "@remix-run/eslint-config": "1.16.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/bcryptjs": "^2.4.2",
     "@types/eslint": "^8.37.0",
