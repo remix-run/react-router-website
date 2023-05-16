@@ -11,7 +11,6 @@ import {
 } from "~/components/doc-route";
 import iconsHref from "~/icons.svg";
 import type { Stats } from "~/modules/stats";
-import { getStats } from "~/modules/stats";
 
 export let loader = async ({ params, request }: LoaderArgs) => {
   let is6dot4 =

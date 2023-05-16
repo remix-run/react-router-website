@@ -1,7 +1,8 @@
-/**
- * @type {import('@remix-run/dev').AppConfig}
- */
+/** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
   cacheDirectory: "./node_modules/.cache/remix",
   devServerBroadcastDelay: 500,
+  future: {
+    v2_routeConvention: true,
+  },
 };
