@@ -5,4 +5,6 @@ module.exports = {
   future: {
     v2_routeConvention: true,
   },
+  postcss: true,
+  tailwind: true,
 };

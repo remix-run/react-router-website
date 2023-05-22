@@ -9,7 +9,6 @@ node_modules
 /prisma/data.db
 /prisma/data.db-journal
 
-/app/styles.processed.css
 /.local.tgz
 /app/modules/gh-docs/__fixture__/tar.tgz
 
