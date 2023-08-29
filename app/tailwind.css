@@ -22,6 +22,7 @@ html {
 }
 
 html.dark {
+  color-scheme: dark;
   --base00: theme("colors.gray.800");
   --base01: theme("colors.gray.700");
   --base02: theme("colors.gray.600");
