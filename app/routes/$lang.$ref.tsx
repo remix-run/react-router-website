@@ -8,7 +8,7 @@ import {
   useLoaderData,
   useLocation,
   useMatches,
-  useTransition,
+  useNavigation,
 } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import {
@@ -72,11 +72,11 @@ export function headers() {
 export let unstable_shouldReload = () => false;
 
 export default function DocsLayout() {
-  let navigation = useTransition();
-  let navigating = navigation.location && !navigation.submission;
+  let navigation = useNavigation();
+  let navigating = navigation.location && !navigation.formData;
   let params = useParams();
   let changingVersions =
-    !navigation.submission &&
+    !navigation.formData &&
     navigation.location &&
     params.ref &&
     // TODO: we should have `transition.params`
@@ -476,10 +476,10 @@ function VersionLink({
 
 function useIsActivePath(to: string) {
   let { pathname } = useResolvedPath(to);
-  let navigation = useTransition();
+  let navigation = useNavigation();
   let currentLocation = useLocation();
   let location =
-    navigation.location && !navigation.submission
+    navigation.location && !navigation.formData
       ? navigation.location
       : currentLocation;
   let match = matchPath(pathname + "/*", location.pathname);

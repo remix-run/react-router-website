@@ -1,13 +1,13 @@
 import { useLayoutEffect, useMemo } from "react";
-import { useMatches, useTransition } from "@remix-run/react";
+import { useMatches, useNavigation } from "@remix-run/react";
 import type { ColorScheme } from "./types";
 
 export function useColorScheme(): ColorScheme {
   let rootLoaderData = useMatches()[0].data;
-  let { submission } = useTransition();
+  let { formData } = useNavigation();
   let optimisticColorScheme =
-    submission && submission.formData.has("colorScheme")
-      ? (submission.formData.get("colorScheme") as ColorScheme)
+    formData && formData.has("colorScheme")
+      ? (formData.get("colorScheme") as ColorScheme)
       : null;
   return optimisticColorScheme || rootLoaderData.colorScheme;
 }
