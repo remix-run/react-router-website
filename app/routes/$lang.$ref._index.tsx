@@ -1,4 +1,4 @@
-import type { LoaderArgs, MetaFunction } from "@remix-run/node";
+import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import classNames from "classnames";
@@ -28,7 +28,7 @@ export let loader = async ({ params, request }: LoaderArgs) => {
 
 export { headers };
 
-export let meta: MetaFunction = ({ data, ...rest }) => {
+export const meta: V2_MetaFunction = ({ data, ...rest }) => {
   // fake a doc for the new custom page, it does all the SEO stuff internally,
   // easier than repeating here
   if (data.is6dot4) {

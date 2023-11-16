@@ -1,4 +1,8 @@
-import type { LoaderArgs, MetaFunction, SerializeFrom } from "@remix-run/node";
+import type {
+  LoaderArgs,
+  SerializeFrom,
+  V2_MetaFunction,
+} from "@remix-run/node";
 import * as React from "react";
 import { json, Response } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
@@ -29,48 +33,49 @@ export function headers() {
     Vary: "Cookie",
   };
 }
+export const meta: V2_MetaFunction = () => [];
 
-export let meta: MetaFunction = ({ data, parentsData }) => {
-  if (!data) return { title: "Not Found" };
-  let parentData = parentsData["routes/$lang.$ref"];
-  if (!parentData) return {};
+// export const meta: MetaFunction = ({ data, parentsData }) => {
+//   if (!data) return { title: "Not Found" };
+//   let parentData = parentsData["routes/$lang.$ref"];
+//   if (!parentData) return {};
 
-  let rootData = parentsData["root"];
+//   let rootData = parentsData["root"];
 
-  let { doc } = data;
-  let { latestVersion, releaseBranch, branches, currentGitHubRef } = parentData;
+//   let { doc } = data;
+//   let { latestVersion, releaseBranch, branches, currentGitHubRef } = parentData;
 
-  let titleRef =
-    currentGitHubRef === releaseBranch
-      ? `v${latestVersion}`
-      : branches.includes(currentGitHubRef)
-      ? `(${currentGitHubRef} branch)`
-      : currentGitHubRef.startsWith("v")
-      ? currentGitHubRef
-      : `v${currentGitHubRef}`;
+//   let titleRef =
+//     currentGitHubRef === releaseBranch
+//       ? `v${latestVersion}`
+//       : branches.includes(currentGitHubRef)
+//       ? `(${currentGitHubRef} branch)`
+//       : currentGitHubRef.startsWith("v")
+//       ? currentGitHubRef
+//       : `v${currentGitHubRef}`;
 
-  let title = doc.attrs.title + ` ${titleRef}`;
+//   let title = doc.attrs.title + ` ${titleRef}`;
 
-  // seo: only want to index the main branch
-  let isMainBranch = currentGitHubRef === releaseBranch;
+//   // seo: only want to index the main branch
+//   let isMainBranch = currentGitHubRef === releaseBranch;
 
-  let [meta] = seo({
-    title: title,
-    twitter: { title },
-    openGraph: { title },
-  });
+//   let [meta] = seo({
+//     title: title,
+//     twitter: { title },
+//     openGraph: { title },
+//   });
 
-  let robots =
-    rootData.isProductionHost && isMainBranch
-      ? "index,follow"
-      : "noindex,nofollow";
+//   let robots =
+//     rootData.isProductionHost && isMainBranch
+//       ? "index,follow"
+//       : "noindex,nofollow";
 
-  return {
-    ...meta,
-    robots: robots,
-    googlebot: robots,
-  };
-};
+//   return {
+//     ...meta,
+//     robots: robots,
+//     googlebot: robots,
+//   };
+// };
 
 export default function DocPage() {
   let { doc } = useLoaderData<typeof loader>();
