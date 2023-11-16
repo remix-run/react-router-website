@@ -1,4 +1,4 @@
-import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import classNames from "classnames";
@@ -12,7 +12,7 @@ import {
 import iconsHref from "~/icons.svg";
 import type { Stats } from "~/modules/stats";
 
-export let loader = async ({ params, request }: LoaderArgs) => {
+export let loader = async ({ params, request }: LoaderFunctionArgs) => {
   let is6dot4 =
     params.ref === "local" ||
     params.ref === "main" ||
@@ -28,7 +28,7 @@ export let loader = async ({ params, request }: LoaderArgs) => {
 
 export { headers };
 
-export const meta: V2_MetaFunction = ({ data, ...rest }) => {
+export const meta: MetaFunction = ({ data, ...rest }) => {
   // fake a doc for the new custom page, it does all the SEO stuff internally,
   // easier than repeating here
   if (data.is6dot4) {

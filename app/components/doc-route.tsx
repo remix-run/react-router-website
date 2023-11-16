@@ -1,10 +1,10 @@
 import type {
-  LoaderArgs,
+  LoaderFunctionArgs,
   SerializeFrom,
-  V2_MetaFunction,
+  MetaFunction,
 } from "@remix-run/node";
 import * as React from "react";
-import { json, Response } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
   isRouteErrorResponse,
   useLoaderData,
@@ -19,7 +19,7 @@ import { seo } from "~/seo";
 import { useDelegatedReactRouterLinks } from "./delegate-markdown-links";
 import iconsHref from "~/icons.svg";
 
-export let loader = async ({ params, request }: LoaderArgs) => {
+export let loader = async ({ params, request }: LoaderFunctionArgs) => {
   await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
 
   invariant(params.ref, "expected `ref` params");
@@ -38,7 +38,7 @@ export function headers() {
     Vary: "Cookie",
   };
 }
-export const meta: V2_MetaFunction = () => [];
+export const meta: MetaFunction = () => [];
 
 // export const meta: MetaFunction = ({ data, parentsData }) => {
 //   if (!data) return { title: "Not Found" };
