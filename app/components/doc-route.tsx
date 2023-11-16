@@ -5,7 +5,12 @@ import type {
 } from "@remix-run/node";
 import * as React from "react";
 import { json, Response } from "@remix-run/node";
-import { useLoaderData, useParams } from "@remix-run/react";
+import {
+  isRouteErrorResponse,
+  useLoaderData,
+  useParams,
+  useRouteError,
+} from "@remix-run/react";
 import invariant from "tiny-invariant";
 import type { Doc } from "~/modules/gh-docs";
 import { getRepoDoc } from "~/modules/gh-docs";
@@ -150,14 +155,20 @@ function SmallOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
   );
 }
 
-export function CatchBoundary() {
+export function ErrorBoundary() {
+  let error = useRouteError();
   let params = useParams();
-  return (
-    <div className="flex h-[50vh] flex-col items-center justify-center">
-      <h1 className="text-9xl font-bold">404</h1>
-      <p className="text-lg">
-        There is no doc for <i className="text-gray-500">{params["*"]}</i>
-      </p>
-    </div>
-  );
+
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div className="flex h-[50vh] flex-col items-center justify-center">
+        <h1 className="text-9xl font-bold">404</h1>
+        <p className="text-lg">
+          There is no doc for <i className="text-gray-500">{params["*"]}</i>
+        </p>
+      </div>
+    );
+  }
+
+  throw error;
 }
