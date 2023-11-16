@@ -4,7 +4,7 @@ import parseYamlHeader from "gray-matter";
 import invariant from "tiny-invariant";
 import { getRepoContent } from "./repo-content";
 import { getRepoTarballStream } from "./repo-tarball";
-import { createTarFileProcessor } from "./tarball";
+import { createTarFileProcessor } from "./tarball.server";
 import { load as $ } from "cheerio";
 
 export interface MenuDoc {
