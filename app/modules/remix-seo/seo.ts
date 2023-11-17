@@ -1,4 +1,4 @@
-import type { LinkDescriptor, AppData } from "@remix-run/node";
+import type { LinkDescriptor } from "@remix-run/node";
 import type { Params } from "react-router-dom";
 import type { Location } from "react-router-dom";
 import merge from "lodash.merge";
@@ -11,7 +11,7 @@ export function getSeo(defaultConfig: SeoProps) {
   return function seo(
     config: SeoProps,
     data?: {
-      data: AppData;
+      data: any;
       parentsData?: RouteData;
       params?: Params;
       location?: Location;
@@ -398,7 +398,7 @@ export function getSeo(defaultConfig: SeoProps) {
 function getSeoTitle(
   config: SeoProps,
   data?: {
-    data: AppData;
+    data: any;
     parentsData?: RouteData;
     params?: Params;
     location?: Location;

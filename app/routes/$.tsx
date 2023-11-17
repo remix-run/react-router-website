@@ -1,8 +1,8 @@
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { Link, isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import { whyDoWeNotHaveGoodMiddleWareYetRyan } from "~/http";
 
-export let loader = async ({ request }: LoaderArgs) => {
+export let loader = async ({ request }: LoaderFunctionArgs) => {
   await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
   throw new Response("Not Found", { status: 404 });
 };

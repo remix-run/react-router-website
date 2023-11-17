@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import * as React from "react";
 import {
@@ -30,7 +30,7 @@ import { DetailsMenu } from "~/modules/details-menu";
 import { getLatestVersion } from "~/modules/gh-docs/tags";
 import { useColorScheme } from "~/modules/color-scheme/components";
 
-export let loader = async ({ params }: LoaderArgs) => {
+export let loader = async ({ params }: LoaderFunctionArgs) => {
   let { lang, ref, "*": splat } = params;
   invariant(lang, "expected `params.lang`");
   invariant(ref, "expected `params.ref`");
