@@ -1,26 +1,16 @@
-import type { LinkDescriptor } from "@remix-run/node";
-import type { Params } from "react-router-dom";
-import type { Location } from "react-router-dom";
+import type { LinkDescriptor, MetaDescriptor } from "@remix-run/node";
 import merge from "lodash.merge";
 
-type RouteData = { [routeId: string]: any };
-type Meta = { [name: string]: string };
-type Links = LinkDescriptor[];
-
 export function getSeo(defaultConfig: SeoProps) {
-  return function seo(
-    config: SeoProps,
-    data?: {
-      data: any;
-      parentsData?: RouteData;
-      params?: Params;
-      location?: Location;
-    }
-  ): [Meta, Links] {
+  return function seo(config: SeoProps): [MetaDescriptor[], LinkDescriptor[]] {
     config = merge(defaultConfig, config);
-    let title = getSeoTitle(config, data);
-    let meta: Meta = title ? { title } : {};
-    let links: Links = [];
+    let meta: MetaDescriptor[] = [];
+    let links: LinkDescriptor[] = [];
+
+    let title = getSeoTitle(config);
+    if (title) {
+      meta.push({ title });
+    }
 
     let robotsParams: string[] = [];
     if (config.robots) {
@@ -69,7 +59,7 @@ export function getSeo(defaultConfig: SeoProps) {
     }
 
     if (config.description) {
-      meta.description = config.description;
+      meta.push({ name: "description", content: config.description });
     }
 
     if (config.mobileAlternate) {
@@ -93,7 +83,10 @@ export function getSeo(defaultConfig: SeoProps) {
     // OG: Twitter
     if (config.twitter) {
       if (config.twitter.title || title) {
-        meta["twitter:title"] = config.twitter.title || title;
+        meta.push({
+          name: "twitter:title",
+          content: config.twitter.title || title,
+        });
       }
 
       if (
@@ -101,31 +94,40 @@ export function getSeo(defaultConfig: SeoProps) {
         config.openGraph?.description ||
         config.description
       ) {
-        meta["twitter:description"] =
-          config.twitter.description ||
-          config.openGraph?.description ||
-          config.description!;
+        meta.push({
+          name: "twitter:description",
+          content:
+            config.twitter.description ||
+            config.openGraph?.description ||
+            config.description!,
+        });
       }
 
       if (config.twitter.card) {
-        meta["twitter:card"] = config.twitter.card;
+        meta.push({ name: "twitter:card", content: config.twitter.card });
       }
 
       if (config.twitter.site) {
-        meta["twitter:site"] = config.twitter.site;
+        meta.push({ name: "twitter:site", content: config.twitter.site });
       }
 
       if (config.twitter.creator) {
-        meta["twitter:creator"] = config.twitter.creator;
+        meta.push({ name: "twitter:creator", content: config.twitter.creator });
       }
 
       if (config.twitter.image && config.twitter.image.url) {
-        meta["twitter:image"] = config.host + config.twitter.image.url;
+        meta.push({
+          name: "twitter:image",
+          content: config.host + config.twitter.image.url,
+        });
         if (config.twitter.image.alt) {
-          meta["twitter:image:alt"] = config.twitter.image.alt;
+          meta.push({
+            name: "twitter:image:alt",
+            content: config.twitter.image.alt,
+          });
         }
-        if (!meta["twitter:card"]) {
-          meta["twitter:card"] = "summary";
+        if (!meta.some((m) => "name" in m && m.name === "twitter:card")) {
+          meta.push({ name: "twitter:card", content: "summary" });
         }
       }
     }
@@ -133,45 +135,65 @@ export function getSeo(defaultConfig: SeoProps) {
     // OG: Facebook
     if (config.facebook) {
       if (config.facebook.appId) {
-        meta["fb:app_id"] = config.facebook.appId;
+        meta.push({ name: "fb:app_id", content: config.facebook.appId });
       }
     }
 
     // OG: Other stuff
     if (config.openGraph?.title || config.title) {
-      meta["og:title"] = config.openGraph?.title || title;
+      meta.push({
+        name: "og:title",
+        content: config.openGraph?.title || title,
+      });
     }
 
     if (config.openGraph?.description || config.description) {
-      meta["og:description"] =
-        config.openGraph?.description || config.description!;
+      meta.push({
+        name: "og:description",
+        content: config.openGraph?.description || config.description!,
+      });
     }
 
     if (config.openGraph) {
       if (config.openGraph.url || config.canonical) {
-        meta["og:url"] = config.openGraph.url || config.canonical!;
+        meta.push({
+          name: "og:url",
+          content: config.openGraph.url || config.canonical!,
+        });
       }
 
       if (config.openGraph.type) {
         const ogType = config.openGraph.type.toLowerCase();
 
-        meta["og:type"] = ogType;
+        meta.push({ name: "og:type", content: ogType });
 
         if (ogType === "profile" && config.openGraph.profile) {
           if (config.openGraph.profile.firstName) {
-            meta["profile:first_name"] = config.openGraph.profile.firstName;
+            meta.push({
+              name: "profile:first_name",
+              content: config.openGraph.profile.firstName,
+            });
           }
 
           if (config.openGraph.profile.lastName) {
-            meta["profile:last_name"] = config.openGraph.profile.lastName;
+            meta.push({
+              name: "profile:last_name",
+              content: config.openGraph.profile.lastName,
+            });
           }
 
           if (config.openGraph.profile.username) {
-            meta["profile:username"] = config.openGraph.profile.username;
+            meta.push({
+              name: "profile:username",
+              content: config.openGraph.profile.username,
+            });
           }
 
           if (config.openGraph.profile.gender) {
-            meta["profile:gender"] = config.openGraph.profile.gender;
+            meta.push({
+              name: "profile:gender",
+              content: config.openGraph.profile.gender,
+            });
           }
         } else if (ogType === "book" && config.openGraph.book) {
           if (
@@ -184,18 +206,24 @@ export function getSeo(defaultConfig: SeoProps) {
               // if (Array.isArray(meta["book:author"])) {
               //   meta["book:author"].push(author);
               // } else {
-              //   meta["book:author"] = [author];
+              //   meta.push({name: "book:author", content: [author] });
               // }
-              meta["book:author"] = author;
+              meta.push({ name: "book:author", content: author });
             }
           }
 
           if (config.openGraph.book.isbn) {
-            meta["book:isbn"] = config.openGraph.book.isbn;
+            meta.push({
+              name: "book:isbn",
+              content: config.openGraph.book.isbn,
+            });
           }
 
           if (config.openGraph.book.releaseDate) {
-            meta["book:release_date"] = config.openGraph.book.releaseDate;
+            meta.push({
+              name: "book:release_date",
+              content: config.openGraph.book.releaseDate,
+            });
           }
 
           if (config.openGraph.book.tags && config.openGraph.book.tags.length) {
@@ -205,25 +233,31 @@ export function getSeo(defaultConfig: SeoProps) {
               // if (Array.isArray(meta["book:tag"])) {
               //   meta["book:tag"].push(tag);
               // } else {
-              //   meta["book:tag"] = [tag];
+              //   meta.push({name: "book:tag", content: [tag] });
               // }
-              meta["book:tag"] = tag;
+              meta.push({ name: "book:tag", content: tag });
             }
           }
         } else if (ogType === "article" && config.openGraph.article) {
           if (config.openGraph.article.publishedTime) {
-            meta["article:published_time"] =
-              config.openGraph.article.publishedTime;
+            meta.push({
+              name: "article:published_time",
+              content: config.openGraph.article.publishedTime,
+            });
           }
 
           if (config.openGraph.article.modifiedTime) {
-            meta["article:modified_time"] =
-              config.openGraph.article.modifiedTime;
+            meta.push({
+              name: "article:modified_time",
+              content: config.openGraph.article.modifiedTime,
+            });
           }
 
           if (config.openGraph.article.expirationTime) {
-            meta["article:expiration_time"] =
-              config.openGraph.article.expirationTime;
+            meta.push({
+              name: "article:expiration_time",
+              content: config.openGraph.article.expirationTime,
+            });
           }
 
           if (
@@ -236,14 +270,17 @@ export function getSeo(defaultConfig: SeoProps) {
               // if (Array.isArray(meta["article:author"])) {
               //   meta["article:author"].push(author);
               // } else {
-              //   meta["article:author"] = [author];
+              //   meta.push({name: "article:author", content: [author] });
               // }
-              meta["article:author"] = author;
+              meta.push({ name: "article:author", content: author });
             }
           }
 
           if (config.openGraph.article.section) {
-            meta["article:section"] = config.openGraph.article.section;
+            meta.push({
+              name: "article:section",
+              content: config.openGraph.article.section,
+            });
           }
 
           if (
@@ -256,9 +293,9 @@ export function getSeo(defaultConfig: SeoProps) {
               // if (Array.isArray(meta["article:tag"])) {
               //   meta["article:tag"].push(tag);
               // } else {
-              //   meta["article:tag"] = [tag];
+              //   meta.push({name: "article:tag", content: [tag] });
               // }
-              meta["article:tag"] = tag;
+              meta.push({ name: "article:tag", content: tag });
             }
           }
         } else if (
@@ -274,11 +311,11 @@ export function getSeo(defaultConfig: SeoProps) {
           ) {
             for (let actor of config.openGraph.video.actors) {
               if (actor.profile) {
-                meta["video:actor"] = actor.profile;
+                meta.push({ name: "video:actor", content: actor.profile });
               }
 
               if (actor.role) {
-                meta["video:actor:role"] = actor.role;
+                meta.push({ name: "video:actor:role", content: actor.role });
               }
             }
           }
@@ -288,7 +325,7 @@ export function getSeo(defaultConfig: SeoProps) {
             config.openGraph.video.directors.length
           ) {
             for (let director of config.openGraph.video.directors) {
-              meta["video:director"] = director;
+              meta.push({ name: "video:director", content: director });
             }
           }
 
@@ -297,16 +334,22 @@ export function getSeo(defaultConfig: SeoProps) {
             config.openGraph.video.writers.length
           ) {
             for (let writer of config.openGraph.video.writers) {
-              meta["video:writer"] = writer;
+              meta.push({ name: "video:writer", content: writer });
             }
           }
 
           if (config.openGraph.video.duration) {
-            meta["video:duration"] = config.openGraph.video.duration.toString();
+            meta.push({
+              name: "video:duration",
+              content: config.openGraph.video.duration.toString(),
+            });
           }
 
           if (config.openGraph.video.releaseDate) {
-            meta["video:release_date"] = config.openGraph.video.releaseDate;
+            meta.push({
+              name: "video:release_date",
+              content: config.openGraph.video.releaseDate,
+            });
           }
 
           if (
@@ -314,73 +357,99 @@ export function getSeo(defaultConfig: SeoProps) {
             config.openGraph.video.tags.length
           ) {
             for (let tag of config.openGraph.video.tags) {
-              meta["video:tag"] = tag;
+              meta.push({ name: "video:tag", content: tag });
             }
           }
 
           if (config.openGraph.video.series) {
-            meta["video:series"] = config.openGraph.video.series;
+            meta.push({
+              name: "video:series",
+              content: config.openGraph.video.series,
+            });
           }
         }
       }
 
       if (config.openGraph.images && config.openGraph.images.length) {
         for (let image of config.openGraph.images) {
-          meta["og:image"] = config.host + image.url;
+          meta.push({ name: "og:image", content: config.host + image.url });
           if (image.alt) {
-            meta["og:image:alt"] = image.alt;
+            meta.push({ name: "og:image:alt", content: image.alt });
           }
 
           if (image.secureUrl) {
-            meta["og:image:secure_url"] =
-              config.host + image.secureUrl.toString();
+            meta.push({
+              name: "og:image:secure_url",
+              content: config.host + image.secureUrl.toString(),
+            });
           }
 
           if (image.type) {
-            meta["og:image:type"] = image.type.toString();
+            meta.push({
+              name: "og:image:type",
+              content: image.type.toString(),
+            });
           }
 
           if (image.width) {
-            meta["og:image:width"] = image.width.toString();
+            meta.push({
+              name: "og:image:width",
+              content: image.width.toString(),
+            });
           }
 
           if (image.height) {
-            meta["og:image:height"] = image.height.toString();
+            meta.push({
+              name: "og:image:height",
+              content: image.height.toString(),
+            });
           }
         }
       }
 
       if (config.openGraph.videos && config.openGraph.videos.length) {
         for (let video of config.openGraph.videos) {
-          meta["og:video"] = video.url;
+          meta.push({ name: "og:video", content: video.url });
           if (video.alt) {
-            meta["og:video:alt"] = video.alt;
+            meta.push({ name: "og:video:alt", content: video.alt });
           }
 
           if (video.secureUrl) {
-            meta["og:video:secure_url"] = video.secureUrl.toString();
+            meta.push({
+              name: "og:video:secure_url",
+              content: video.secureUrl.toString(),
+            });
           }
 
           if (video.type) {
-            meta["og:video:type"] = video.type.toString();
+            meta.push({
+              name: "og:video:type",
+              content: video.type.toString(),
+            });
           }
 
           if (video.width) {
-            meta["og:video:width"] = video.width.toString();
+            meta.push({
+              name: "og:video:width",
+              content: video.width.toString(),
+            });
           }
 
           if (video.height) {
-            meta["og:video:height"] = video.height.toString();
+            meta.push({
+              name: "og:video:height",
+              content: video.height.toString(),
+            });
           }
         }
       }
 
       if (config.openGraph.locale) {
-        meta["og:locale"] = config.openGraph.locale;
+        meta.push({ name: "og:locale", content: config.openGraph.locale });
       }
 
       if (config.openGraph.siteName) {
-        meta["og:site_name"] = config.openGraph.siteName;
+        meta.push({ name: "og:site_name", content: config.openGraph.siteName });
       }
     }
 
@@ -395,15 +464,7 @@ export function getSeo(defaultConfig: SeoProps) {
   };
 }
 
-function getSeoTitle(
-  config: SeoProps,
-  data?: {
-    data: any;
-    parentsData?: RouteData;
-    params?: Params;
-    location?: Location;
-  }
-): string {
+function getSeoTitle(config: SeoProps): string {
   let bypassTemplate = config.bypassTemplate || false;
   let templateTitle = config.titleTemplate || "";
   let updatedTitle = "";

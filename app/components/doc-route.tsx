@@ -18,6 +18,9 @@ import { CACHE_CONTROL, whyDoWeNotHaveGoodMiddleWareYetRyan } from "~/http";
 import { seo } from "~/seo";
 import { useDelegatedReactRouterLinks } from "./delegate-markdown-links";
 import iconsHref from "~/icons.svg";
+import { isDoc } from "~/modules/gh-docs/docs";
+import { type loader as rootLoader } from "~/root";
+import { type loader as langRefLoader } from "~/routes/$lang.$ref";
 
 export let loader = async ({ params, request }: LoaderFunctionArgs) => {
   await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
@@ -38,49 +41,64 @@ export function headers() {
     Vary: "Cookie",
   };
 }
-export const meta: MetaFunction = () => [];
 
-// export const meta: MetaFunction = ({ data, parentsData }) => {
-//   if (!data) return { title: "Not Found" };
-//   let parentData = parentsData["routes/$lang.$ref"];
-//   if (!parentData) return {};
+export const meta: MetaFunction<
+  typeof loader,
+  {
+    root: typeof rootLoader;
+    "routes/$lang.$ref": typeof langRefLoader;
+  }
+> = ({ data, matches }) => {
+  if (!data) return [{ title: "Not Found" }];
+  let parentMatch = matches.find((m) => m.id === "routes/$lang.$ref");
+  let parentData = parentMatch ? parentMatch.data : undefined;
+  if (!parentData || !("latestVersion" in parentData)) return [];
 
-//   let rootData = parentsData["root"];
+  let rootMatch = matches.find((m) => m.id === "root");
+  let rootData = rootMatch ? rootMatch.data : undefined;
 
-//   let { doc } = data;
-//   let { latestVersion, releaseBranch, branches, currentGitHubRef } = parentData;
+  let { latestVersion, releaseBranch, branches, currentGitHubRef } = parentData;
 
-//   let titleRef =
-//     currentGitHubRef === releaseBranch
-//       ? `v${latestVersion}`
-//       : branches.includes(currentGitHubRef)
-//       ? `(${currentGitHubRef} branch)`
-//       : currentGitHubRef.startsWith("v")
-//       ? currentGitHubRef
-//       : `v${currentGitHubRef}`;
+  let titleRef =
+    currentGitHubRef === releaseBranch
+      ? `v${latestVersion}`
+      : branches.includes(currentGitHubRef)
+      ? `(${currentGitHubRef} branch)`
+      : currentGitHubRef.startsWith("v")
+      ? currentGitHubRef
+      : `v${currentGitHubRef}`;
 
-//   let title = doc.attrs.title + ` ${titleRef}`;
+  let title =
+    typeof data === "object" &&
+    typeof data.doc === "object" &&
+    typeof data.doc.attrs === "object" &&
+    typeof data.doc.attrs.title === "string"
+      ? data.doc.attrs.title + ` ${titleRef}`
+      : "";
 
-//   // seo: only want to index the main branch
-//   let isMainBranch = currentGitHubRef === releaseBranch;
+  // seo: only want to index the main branch
+  let isMainBranch = currentGitHubRef === releaseBranch;
 
-//   let [meta] = seo({
-//     title: title,
-//     twitter: { title },
-//     openGraph: { title },
-//   });
+  let [meta] = seo({
+    title: title,
+    twitter: { title },
+    openGraph: { title },
+  });
 
-//   let robots =
-//     rootData.isProductionHost && isMainBranch
-//       ? "index,follow"
-//       : "noindex,nofollow";
+  let robots =
+    rootData &&
+    "isProductionHost" in rootData &&
+    rootData.isProductionHost &&
+    isMainBranch
+      ? "index,follow"
+      : "noindex,nofollow";
 
-//   return {
-//     ...meta,
-//     robots: robots,
-//     googlebot: robots,
-//   };
-// };
+  return [
+    ...meta,
+    { name: "robots", content: robots },
+    { name: "googlebot", content: robots },
+  ];
+};
 
 export default function DocPage() {
   let { doc } = useLoaderData<typeof loader>();
