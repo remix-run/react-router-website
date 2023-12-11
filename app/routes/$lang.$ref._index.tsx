@@ -28,13 +28,25 @@ export let loader = async ({ params, request }: LoaderFunctionArgs) => {
 
 export { headers };
 
-export const meta: MetaFunction = ({ data, ...rest }) => {
+export const meta: MetaFunction<typeof loader> = ({ data, ...rest }) => {
   // fake a doc for the new custom page, it does all the SEO stuff internally,
   // easier than repeating here
-  if (data.is6dot4) {
-    data = { doc: { attrs: { title: "Home" } } };
+  if (data && "is6dot4" in data && data.is6dot4) {
+    data = {
+      doc: {
+        attrs: {
+          title: "Home",
+        },
+        children: [],
+        filename: "",
+        slug: "",
+        html: "",
+        headings: [],
+      },
+    };
   }
 
+  // @ts-expect-error This is made because of the stub I think
   return docMeta({ data, ...rest });
 };
 
@@ -153,10 +165,10 @@ const mainLinks = [
 export default function Index() {
   // If we're not on 6.4 then we're not on a version where we expect the
   // custom index page, so we'll serve the doc index markdown file instead
-  let loaderData = useLoaderData();
-  if (!loaderData.is6dot4) return <DocPage />;
+  let loaderData = useLoaderData<typeof loader>();
+  if ("is6dot4" in loaderData && !loaderData.is6dot4) return <DocPage />;
 
-  const { stats } = loaderData;
+  let stats = "stats" in loaderData ? loaderData.stats : [];
 
   return (
     <div className="px-4 pb-4 pt-8 lg:ml-72 lg:pl-12 lg:pr-8">

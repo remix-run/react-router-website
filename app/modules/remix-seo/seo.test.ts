@@ -30,7 +30,8 @@ describe("getSeo", () => {
     let TITLE = "real title";
     let seo = getSeo({ defaultTitle: DEFAULT_TITLE });
     let [meta] = seo({ title: TITLE });
-    expect(meta.find((m) => m.title).title).toBe(TITLE);
+    let titleMeta = meta.find((m) => "title" in m && m.title != null);
+    expect("title" in titleMeta! ? titleMeta.title : null).toBe(TITLE);
   });
 
   it("defaults the description for everybody who who hates the normal description", () => {

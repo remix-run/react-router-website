@@ -314,8 +314,8 @@ function NavMenuDesktop() {
 
 function useDoc(): Doc | null {
   let data = useMatches().slice(-1)[0].data;
-  if (!data) return null;
-  return data.doc;
+  if (!data || !(typeof data === "object") || !("doc" in data)) return null;
+  return data.doc as Doc;
 }
 
 function NavMenuMobile() {

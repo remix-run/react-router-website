@@ -1,9 +1,11 @@
 import { useLayoutEffect, useMemo } from "react";
+import type { SerializeFrom } from "@remix-run/node";
 import { useMatches, useNavigation } from "@remix-run/react";
+import type { loader as rootLoader } from "../../root";
 import type { ColorScheme } from "./types";
 
 export function useColorScheme(): ColorScheme {
-  let rootLoaderData = useMatches()[0].data;
+  let rootLoaderData = useMatches()[0].data as SerializeFrom<typeof rootLoader>;
   let { formData } = useNavigation();
   let optimisticColorScheme =
     formData && formData.has("colorScheme")
