@@ -18,7 +18,6 @@ import { CACHE_CONTROL, whyDoWeNotHaveGoodMiddleWareYetRyan } from "~/http";
 import { seo } from "~/seo";
 import { useDelegatedReactRouterLinks } from "./delegate-markdown-links";
 import iconsHref from "~/icons.svg";
-import { isDoc } from "~/modules/gh-docs/docs";
 import { type loader as rootLoader } from "~/root";
 import { type loader as langRefLoader } from "~/routes/$lang.$ref";
 
