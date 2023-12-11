@@ -1,7 +1,7 @@
 import path from "path";
-import { checkUrl } from "./check-url";
-import { readRedirectsFile } from "./read-file";
-import type { Redirect } from "./read-file";
+import { checkUrl } from "./check-url.server";
+import { readRedirectsFile } from "./read-file.server";
+import type { Redirect } from "./read-file.server";
 
 describe("handleRedirects", () => {
   let redirects: Redirect[];

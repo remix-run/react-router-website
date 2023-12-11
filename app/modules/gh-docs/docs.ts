@@ -2,8 +2,8 @@ import { processMarkdown } from "@ryanflorence/md";
 import LRUCache from "lru-cache";
 import parseYamlHeader from "gray-matter";
 import invariant from "tiny-invariant";
-import { getRepoContent } from "./repo-content";
-import { getRepoTarballStream } from "./repo-tarball";
+import { getRepoContent } from "./repo-content.server";
+import { getRepoTarballStream } from "./repo-tarball.server";
 import { createTarFileProcessor } from "./tarball.server";
 import { load as $ } from "cheerio";
 

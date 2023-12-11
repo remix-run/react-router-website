@@ -27,7 +27,7 @@ import {
 import type { Doc } from "~/modules/gh-docs";
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
-import { getLatestVersion } from "~/modules/gh-docs/tags";
+import { getLatestVersion } from "~/modules/gh-docs/tags.server";
 import { useColorScheme } from "~/modules/color-scheme/components";
 
 export let loader = async ({ params }: LoaderFunctionArgs) => {

@@ -1,10 +1,10 @@
 import { getDoc, getMenu } from "./docs";
 import { getBranches } from "./branches";
-import { getLatestVersion, getTags } from "./tags";
+import { getLatestVersion, getTags } from "./tags.server";
 import invariant from "tiny-invariant";
 
 export { validateParams } from "./params";
-export { getRepoTarballStream } from "./repo-tarball";
+export { getRepoTarballStream } from "./repo-tarball.server";
 
 export type { Doc } from "./docs";
 
