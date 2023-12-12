@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import * as React from "react";
 import {
@@ -8,7 +8,7 @@ import {
   useLoaderData,
   useLocation,
   useMatches,
-  useTransition,
+  useNavigation,
 } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import {
@@ -27,10 +27,10 @@ import {
 import type { Doc } from "~/modules/gh-docs";
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
-import { getLatestVersion } from "~/modules/gh-docs/tags";
+import { getLatestVersion } from "~/modules/gh-docs/tags.server";
 import { useColorScheme } from "~/modules/color-scheme/components";
 
-export let loader = async ({ params }: LoaderArgs) => {
+export let loader = async ({ params }: LoaderFunctionArgs) => {
   let { lang, ref, "*": splat } = params;
   invariant(lang, "expected `params.lang`");
   invariant(ref, "expected `params.ref`");
@@ -72,11 +72,11 @@ export function headers() {
 export let unstable_shouldReload = () => false;
 
 export default function DocsLayout() {
-  let navigation = useTransition();
-  let navigating = navigation.location && !navigation.submission;
+  let navigation = useNavigation();
+  let navigating = navigation.location && !navigation.formData;
   let params = useParams();
   let changingVersions =
-    !navigation.submission &&
+    !navigation.formData &&
     navigation.location &&
     params.ref &&
     // TODO: we should have `transition.params`
@@ -314,8 +314,8 @@ function NavMenuDesktop() {
 
 function useDoc(): Doc | null {
   let data = useMatches().slice(-1)[0].data;
-  if (!data) return null;
-  return data.doc;
+  if (!data || !(typeof data === "object") || !("doc" in data)) return null;
+  return data.doc as Doc;
 }
 
 function NavMenuMobile() {
@@ -476,10 +476,10 @@ function VersionLink({
 
 function useIsActivePath(to: string) {
   let { pathname } = useResolvedPath(to);
-  let navigation = useTransition();
+  let navigation = useNavigation();
   let currentLocation = useLocation();
   let location =
-    navigation.location && !navigation.submission
+    navigation.location && !navigation.formData
       ? navigation.location
       : currentLocation;
   let match = matchPath(pathname + "/*", location.pathname);

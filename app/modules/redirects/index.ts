@@ -1,5 +1,5 @@
-import { checkUrl } from "./check-url";
-import { readRedirectsFile } from "./read-file";
+import { checkUrl } from "./check-url.server";
+import { readRedirectsFile } from "./read-file.server";
 
 /**
  * Super basic redirects handling with a redirects file.

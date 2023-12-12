@@ -1,11 +1,14 @@
+import type { MetaFunction } from "@remix-run/node";
 import classNames from "classnames";
 import type { FC } from "react";
 
-export function meta() {
-  return {
-    title: "React Router Assets and Branding Guidelines",
-  };
-}
+export const meta: MetaFunction = () => {
+  return [
+    {
+      title: "React Router Assets and Branding Guidelines",
+    },
+  ];
+};
 
 export default function Brand() {
   return (

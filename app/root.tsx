@@ -1,4 +1,8 @@
-import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node";
+import type {
+  LinksFunction,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "@remix-run/node";
 import {
   Link,
   Links,
@@ -25,14 +29,22 @@ export const links: LinksFunction = () => [
 ];
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return {
-    title: "React Router",
-    robots: data.isProductionHost ? "index,follow" : "noindex, nofollow",
-    googlebot: data.isProductionHost ? "index,follow" : "noindex, nofollow",
-  };
+  return [
+    {
+      title: "React Router",
+    },
+    {
+      name: "robots",
+      content: data?.isProductionHost ? "index,follow" : "noindex, nofollow",
+    },
+    {
+      name: "googlebot",
+      content: data?.isProductionHost ? "index,follow" : "noindex, nofollow",
+    },
+  ];
 };
 
-export let loader = async ({ request }: LoaderArgs) => {
+export let loader = async ({ request }: LoaderFunctionArgs) => {
   await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
 
   let colorScheme = await parseColorScheme(request);

@@ -1,7 +1,16 @@
-import type { LoaderArgs, MetaFunction, SerializeFrom } from "@remix-run/node";
+import type {
+  LoaderFunctionArgs,
+  SerializeFrom,
+  MetaFunction,
+} from "@remix-run/node";
 import * as React from "react";
-import { json, Response } from "@remix-run/node";
-import { useLoaderData, useParams } from "@remix-run/react";
+import { json } from "@remix-run/node";
+import {
+  isRouteErrorResponse,
+  useLoaderData,
+  useParams,
+  useRouteError,
+} from "@remix-run/react";
 import invariant from "tiny-invariant";
 import type { Doc } from "~/modules/gh-docs";
 import { getRepoDoc } from "~/modules/gh-docs";
@@ -9,8 +18,10 @@ import { CACHE_CONTROL, whyDoWeNotHaveGoodMiddleWareYetRyan } from "~/http";
 import { seo } from "~/seo";
 import { useDelegatedReactRouterLinks } from "./delegate-markdown-links";
 import iconsHref from "~/icons.svg";
+import { type loader as rootLoader } from "~/root";
+import { type loader as langRefLoader } from "~/routes/$lang.$ref";
 
-export let loader = async ({ params, request }: LoaderArgs) => {
+export let loader = async ({ params, request }: LoaderFunctionArgs) => {
   await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
 
   invariant(params.ref, "expected `ref` params");
@@ -30,14 +41,21 @@ export function headers() {
   };
 }
 
-export let meta: MetaFunction = ({ data, parentsData }) => {
-  if (!data) return { title: "Not Found" };
-  let parentData = parentsData["routes/$lang.$ref"];
-  if (!parentData) return {};
+export const meta: MetaFunction<
+  typeof loader,
+  {
+    root: typeof rootLoader;
+    "routes/$lang.$ref": typeof langRefLoader;
+  }
+> = ({ data, matches }) => {
+  if (!data) return [{ title: "Not Found" }];
+  let parentMatch = matches.find((m) => m.id === "routes/$lang.$ref");
+  let parentData = parentMatch ? parentMatch.data : undefined;
+  if (!parentData || !("latestVersion" in parentData)) return [];
 
-  let rootData = parentsData["root"];
+  let rootMatch = matches.find((m) => m.id === "root");
+  let rootData = rootMatch ? rootMatch.data : undefined;
 
-  let { doc } = data;
   let { latestVersion, releaseBranch, branches, currentGitHubRef } = parentData;
 
   let titleRef =
@@ -49,7 +67,13 @@ export let meta: MetaFunction = ({ data, parentsData }) => {
       ? currentGitHubRef
       : `v${currentGitHubRef}`;
 
-  let title = doc.attrs.title + ` ${titleRef}`;
+  let title =
+    typeof data === "object" &&
+    typeof data.doc === "object" &&
+    typeof data.doc.attrs === "object" &&
+    typeof data.doc.attrs.title === "string"
+      ? data.doc.attrs.title + ` ${titleRef}`
+      : "";
 
   // seo: only want to index the main branch
   let isMainBranch = currentGitHubRef === releaseBranch;
@@ -61,15 +85,18 @@ export let meta: MetaFunction = ({ data, parentsData }) => {
   });
 
   let robots =
-    rootData.isProductionHost && isMainBranch
+    rootData &&
+    "isProductionHost" in rootData &&
+    rootData.isProductionHost &&
+    isMainBranch
       ? "index,follow"
       : "noindex,nofollow";
 
-  return {
+  return [
     ...meta,
-    robots: robots,
-    googlebot: robots,
-  };
+    { name: "robots", content: robots },
+    { name: "googlebot", content: robots },
+  ];
 };
 
 export default function DocPage() {
@@ -145,14 +172,20 @@ function SmallOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
   );
 }
 
-export function CatchBoundary() {
+export function ErrorBoundary() {
+  let error = useRouteError();
   let params = useParams();
-  return (
-    <div className="flex h-[50vh] flex-col items-center justify-center">
-      <h1 className="text-9xl font-bold">404</h1>
-      <p className="text-lg">
-        There is no doc for <i className="text-gray-500">{params["*"]}</i>
-      </p>
-    </div>
-  );
+
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div className="flex h-[50vh] flex-col items-center justify-center">
+        <h1 className="text-9xl font-bold">404</h1>
+        <p className="text-lg">
+          There is no doc for <i className="text-gray-500">{params["*"]}</i>
+        </p>
+      </div>
+    );
+  }
+
+  throw error;
 }
