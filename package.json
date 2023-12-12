@@ -7,7 +7,7 @@
     "format": "prettier --write . && npm run lint:fix",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "start": "remix-serve build",
+    "start": "remix-serve build/index.js",
     "test": "vitest",
     "typecheck": "tsc -b"
   },
