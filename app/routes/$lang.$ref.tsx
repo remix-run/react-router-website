@@ -24,7 +24,7 @@ import {
   getRepoTags,
   validateParams,
 } from "~/modules/gh-docs";
-import type { Doc } from "~/modules/gh-docs";
+import type { Doc, MenuDoc } from "~/modules/gh-docs";
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { getLatestVersion } from "~/modules/gh-docs/tags.server";
@@ -532,33 +532,68 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
 
 function Menu() {
   let { menu } = useLoaderData<typeof loader>();
-  return menu ? (
+  const [search, setSearch] = React.useState<string>("");
+
+  if (!menu) {
+    return (
+      <div className="bold text-gray-300 dark:text-gray-400">
+        Failed to load menu
+      </div>
+    );
+  }
+
+  const filteredMenu = menu.filter((category) =>
+    category.children.some((doc) =>
+      doc.attrs.title.toLowerCase().includes(search)
+    )
+  );
+
+  return (
     <nav>
+      <Search onSearch={setSearch} />
       <ul>
-        {menu.map((category) => (
-          <li key={category.attrs.title} className="mb-6">
-            {category.hasContent ? (
-              <MenuCategoryLink to={category.slug}>
-                {category.attrs.title}
-              </MenuCategoryLink>
-            ) : (
-              <div className="mb-2 block font-bold lg:text-sm">
-                {category.attrs.title}
-              </div>
-            )}
-            {category.children.map((doc) => (
-              <MenuLink key={doc.slug} to={doc.slug}>
-                {doc.attrs.title} {doc.attrs.new && "🆕"}
-              </MenuLink>
-            ))}
-          </li>
-        ))}
+        {filteredMenu.map((category) => {
+          const filteredChildren = category.children.filter((doc) =>
+            doc.attrs.title.toLowerCase().includes(search)
+          );
+
+          return (
+            <MenuCategory
+              key={category.attrs.title}
+              category={category}
+              filteredChildren={filteredChildren}
+            />
+          );
+        })}
       </ul>
     </nav>
-  ) : (
-    <div className="bold text-gray-300 dark:text-gray-400">
-      Failed to load menu
-    </div>
+  );
+}
+
+function MenuCategory({
+  category,
+  filteredChildren,
+}: {
+  category: MenuDoc;
+  filteredChildren: MenuDoc[];
+}) {
+  return (
+    <li key={category.attrs.title} className="mb-6">
+      {category.hasContent ? (
+        <MenuCategoryLink to={category.slug}>
+          {category.attrs.title}
+        </MenuCategoryLink>
+      ) : (
+        <div className="mb-2 block font-bold lg:text-sm">
+          {category.attrs.title}
+        </div>
+      )}
+      {filteredChildren.map((doc) => (
+        <MenuLink key={doc.slug} to={doc.slug}>
+          {doc.attrs.title} {doc.attrs.new && "🆕"}
+        </MenuLink>
+      ))}
+    </li>
   );
 }
 
@@ -616,5 +651,17 @@ function EditLink() {
         <use href={`${iconsHref}#edit`} />
       </svg>
     </a>
+  );
+}
+
+function Search({ onSearch }: { onSearch: (text: string) => void }) {
+  return (
+    <div className="my-4">
+      <input
+        onChange={(e) => onSearch(e.target.value.toLowerCase())}
+        placeholder="Search"
+        className="rounded-lg px-3 py-2 focus:border-transparent focus:outline-none"
+      />
+    </div>
   );
 }
