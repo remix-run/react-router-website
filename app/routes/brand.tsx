@@ -12,13 +12,15 @@ export const meta: MetaFunction = () => {
 
 export default function Brand() {
   return (
-    <div className="md-prose container my-8 max-w-4xl">
-      <h1>React Router Brand</h1>
+    <div className="prose container my-8 flex max-w-full flex-col gap-8 text-base sm:text-lg lg:max-w-4xl">
+      <h1 className="text-2xl font-extrabold dark:text-gray-200 md:text-5xl">
+        React Router Brand
+      </h1>
       <p>
         These assets are provided for use in situations like articles and video
         tutorials.
       </p>
-      <h2>Trademark Usage Agreement</h2>
+      <AssetHeader>Trademark Usage Agreement</AssetHeader>
       <p>
         The React Router name and logos are trademarks of Remix Software Inc.
       </p>
@@ -32,19 +34,27 @@ export default function Brand() {
         Additionally, you may not use our trademarks for t-shirts, stickers, or
         other merchandise without explicit written consent.
       </p>
-      <h2>Logo</h2>
+      <AssetHeader>Logo</AssetHeader>
       <p>
         Please use the logo with appropriate background. On dark backgrounds use
         the logo with white dots, and on light backgrounds use the logo with
         black dots.
       </p>
       <LogoBox name="react-router" Logo={LogoReactRouter} />
-      <h2>Logo Stacked</h2>
+      <AssetHeader>Logo Stacked</AssetHeader>
       <p>For tighter horizontal spaces, the stacked logo is at your service.</p>
       <LogoBox name="react-router-stacked" Logo={LogoReactRouterStacked} />
-      <h2>Logo Mark</h2>
+      <AssetHeader>Logo Mark</AssetHeader>
       <LogoBox name="react-router-mark" Logo={LogoReactRouterMark} />
     </div>
+  );
+}
+
+function AssetHeader({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="text-xl font-extrabold dark:text-gray-200 md:text-3xl">
+      {children}
+    </h2>
   );
 }
 
