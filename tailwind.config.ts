@@ -11,8 +11,30 @@ export default {
   content: ["./app/**/*.{ts,tsx}"],
   darkMode: "class",
   theme: {
+    screens: {
+      "2xs": "320px",
+      xs: "480px",
+      ...defaultTheme.screens,
+    },
+    fontFamily: {
+      display: ["Inter", ...defaultTheme.fontFamily.sans],
+      sans: ["Inter", ...defaultTheme.fontFamily.sans],
+      mono: ["Source Code Pro", ...defaultTheme.fontFamily.mono],
+    },
     fontSize: {
-      ...defaultTheme.fontSize,
+      xs: ["0.75rem", { lineHeight: "1.333" }], // 12px
+      sm: ["0.875rem", { lineHeight: "1.425" }], // 14px
+      base: ["1rem", { lineHeight: "1.5" }], // 16px
+      lg: ["1.125rem", { lineHeight: "1.556" }], // 18px
+      xl: ["1.25rem", { lineHeight: "1.556" }], // 20px
+      "2xl": ["1.5rem", { lineHeight: "1.333" }], // 24px
+      "3xl": ["1.875rem", { lineHeight: "1.2" }], // 30px
+      "4xl": ["2.25rem", { lineHeight: "1.111" }], // 36px
+      "5xl": ["3rem", { lineHeight: "1.083" }], // 48px
+      "6xl": ["4rem", { lineHeight: "1.0625" }], // 64px
+      "7xl": ["4.5rem", { lineHeight: "1.05" }], // 72px
+      "8xl": ["6rem", { lineHeight: "1.125" }], // 96px
+      "9xl": ["8rem", { lineHeight: "1.125" }], // 128px
     },
     container: {
       center: true,

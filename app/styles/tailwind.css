@@ -2,6 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Inter";
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+  src: url("/font/inter-roman-latin-var.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: italic;
+  src: url("/font/inter-italic-latin-var.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Source Code Pro";
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+  src: url("/font/source-code-pro-roman-var.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Source Code Pro";
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: italic;
+  src: url("/font/source-code-pro-italic-var.woff2") format("woff2");
+}
+
 html {
   --base00: theme("colors.gray.50");
   --base01: theme("colors.gray.200");

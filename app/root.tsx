@@ -22,7 +22,7 @@ import {
 } from "./modules/color-scheme/components";
 import { isHost } from "./modules/http-utils/is-host";
 import iconsHref from "~/icons.svg";
-import stylesheet from "~/tailwind.css";
+import stylesheet from "~/styles/tailwind.css";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
