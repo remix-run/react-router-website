@@ -1,4 +1,4 @@
-import { processMarkdown } from "@ryanflorence/md";
+import { processMarkdown } from "~/modules/gh-docs/md.server";
 import LRUCache from "lru-cache";
 import parseYamlHeader from "gray-matter";
 import invariant from "tiny-invariant";
@@ -7,13 +7,15 @@ import { getRepoTarballStream } from "./repo-tarball.server";
 import { createTarFileProcessor } from "./tarball.server";
 import { load as $ } from "cheerio";
 
+interface MenuDocAttributes {
+  title: string;
+  order?: number;
+  new?: boolean;
+  [key: string]: any;
+}
+
 export interface MenuDoc {
-  attrs: {
-    title: string;
-    order?: number;
-    new?: boolean;
-    [key: string]: any;
-  };
+  attrs: MenuDocAttributes;
   children: MenuDoc[];
   filename: string;
   hasContent: boolean;
@@ -77,24 +79,30 @@ function parseAttrs(
  * still distribute the documents across the CDN.
  */
 global.docCache ??= new LRUCache<string, Doc | undefined>({
-  // let docCache = new LRUCache<string, Doc | undefined>({
   max: 300,
   ttl: NO_CACHE ? 1 : 1000 * 60 * 5, // 5 minutes
   allowStale: !NO_CACHE,
   noDeleteOnFetchRejection: true,
-  fetchMethod: async (key) => {
-    console.log("Fetching fresh doc", key);
-    let [repo, ref, slug] = key.split(":");
-    let filename = `docs/${slug}.md`;
-    let md = await getRepoContent(repo, ref, filename);
-    if (md === null) return undefined;
-    let { content, attrs } = parseAttrs(md, filename);
-    let html = await processMarkdown(content);
-    // sorry, cheerio is so much easier than using rehype stuff.
-    let headings = createTableOfContentsFromHeadings(html);
-    return { attrs, filename, html, slug, headings, children: [] };
-  },
+  fetchMethod: fetchDoc,
 });
+
+async function fetchDoc(key: string): Promise<Doc> {
+  let [repo, ref, slug] = key.split(":");
+  let filename = `docs/${slug}.md`;
+  let md = await getRepoContent(repo, ref, filename);
+  if (md === null) {
+    throw Error(`Could not find ${filename} in ${repo}@${ref}`);
+  }
+  let { html, attributes } = await processMarkdown(md);
+  let attrs: MenuDocAttributes = { title: filename };
+  if (isPlainObject(attributes)) {
+    attrs = { title: filename, ...attributes };
+  }
+
+  // sorry, cheerio is so much easier than using rehype stuff.
+  let headings = createTableOfContentsFromHeadings(html);
+  return { attrs, filename, html, slug, headings, children: [] };
+}
 
 // create table of contents from h2 and h3 headings
 function createTableOfContentsFromHeadings(html: string) {
@@ -189,4 +197,8 @@ function makeSlug(docName: string): string {
     .replace(/\.md$/, "")
     .replace(/index$/, "")
     .replace(/\/$/, "");
+}
+
+function isPlainObject(obj: unknown): obj is Record<keyof any, unknown> {
+  return !!obj && Object.prototype.toString.call(obj) === "[object Object]";
 }
