@@ -13,7 +13,6 @@ export const meta: MetaFunction = () => {
 export default function Brand() {
   return (
     <div className="prose container my-8 flex max-w-full flex-col gap-8 text-base sm:text-lg lg:max-w-4xl">
-      <p>a little secret</p>
       <h1 className="text-2xl font-extrabold dark:text-gray-200 md:text-5xl">
         React Router Brand
       </h1>
