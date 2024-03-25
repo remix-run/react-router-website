@@ -36,18 +36,24 @@ export default {
       "8xl": ["6rem", { lineHeight: "1.125" }], // 96px
       "9xl": ["8rem", { lineHeight: "1.125" }], // 128px
     },
-    container: {
-      center: true,
-      padding: {
-        DEFAULT: "24px",
-        sm: "24px",
-        md: "32px",
-        lg: "40px",
-      },
+    container({ theme }) {
+      return {
+        center: true,
+        padding: {
+          DEFAULT: theme("spacing.6", "1.5rem"),
+          sm: theme("spacing.6", "1.5rem"),
+          md: theme("spacing.8", "2rem"),
+          lg: theme("spacing.10", "2.5rem"),
+        },
+      };
     },
     extend: {
       colors: {
         current: "currentColor",
+        transparent: "transparent",
+        inherit: "inherit",
+        white: "#fff",
+        black: "#000",
         gray: {
           50: "#f7f7f7",
           100: "#e3e3e3",

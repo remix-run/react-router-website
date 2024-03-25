@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import * as React from "react";
 import {
@@ -29,6 +29,12 @@ import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { getLatestVersion } from "~/modules/gh-docs/tags.server";
 import { useColorScheme } from "~/modules/color-scheme/components";
+
+import docsStylesheet from "~/styles/docs.css";
+
+export let links: LinksFunction = () => {
+  return [{ rel: "stylesheet", href: docsStylesheet }];
+};
 
 export let loader = async ({ params }: LoaderFunctionArgs) => {
   let { lang, ref, "*": splat } = params;

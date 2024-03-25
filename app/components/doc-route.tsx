@@ -105,7 +105,7 @@ export default function DocPage() {
   let ref = React.useRef<HTMLDivElement>(null);
   useDelegatedReactRouterLinks(ref);
   return (
-    <div className="xl:flex xl:w-full xl:gap-8">
+    <div className="xl:flex xl:w-full xl:justify-between xl:gap-8">
       {doc.headings.length > 3 ? (
         <>
           <SmallOnThisPage doc={doc} />
@@ -114,10 +114,10 @@ export default function DocPage() {
       ) : (
         <div className="hidden xl:order-1 xl:block xl:w-56 xl:flex-shrink-0" />
       )}
-      <div className="px-4 pb-4 pt-8 lg:ml-72 lg:pl-12 lg:pr-8  xl:flex-grow">
+      <div className="px-4 pb-4 pt-8 lg:ml-72 lg:pl-12 lg:pr-8 xl:flex-grow">
         <div
           ref={ref}
-          className="markdown w-full pb-[33vh]"
+          className="markdown w-full max-w-3xl pb-[33vh]"
           dangerouslySetInnerHTML={{ __html: doc.html }}
         />
       </div>
