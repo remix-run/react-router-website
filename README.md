@@ -42,10 +42,3 @@ LOCAL_REPO_RELATIVE_PATH="../react-router"
 ```
 
 You'll notice a "local" option in the version dropdown menu when the app is running. That will pull the docs from your machine instead of GitHub.
-
-## Roadmap
-
-- Handle translations
-- Allow links to link to ".md" so code completion works when editing docs (sorry, this is a stupid @ryanflorence/md thing, need open that up so we can do more w/ markdown across all our sites)
-- parse out descriptions in @remix-run/md and add to seo
-- create resource route so the og:image is the first code block of the doc (with syntax highlighting!)

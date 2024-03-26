@@ -114,12 +114,13 @@ export default function DocPage() {
       ) : (
         <div className="hidden xl:order-1 xl:block xl:w-56 xl:flex-shrink-0" />
       )}
-      <div className="px-4 pb-4 pt-8 lg:ml-72 lg:pl-12 lg:pr-8 xl:flex-grow">
-        <div
-          ref={ref}
-          className="markdown w-full max-w-3xl pb-[33vh]"
-          dangerouslySetInnerHTML={{ __html: doc.html }}
-        />
+      <div className="px-4 pb-4 pt-12 lg:ml-72 lg:pl-12 lg:pr-8 xl:flex-grow xl:pt-20">
+        <div ref={ref} className="markdown w-full max-w-3xl pb-[33vh]">
+          <div
+            className="md-prose"
+            dangerouslySetInnerHTML={{ __html: doc.html }}
+          />
+        </div>
       </div>
     </div>
   );
@@ -127,9 +128,9 @@ export default function DocPage() {
 
 function LargeOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
   return (
-    <div className="hidden xl:sticky xl:top-28 xl:order-1 xl:mt-10 xl:block xl:max-h-[calc(100vh-10rem)] xl:w-56 xl:flex-shrink-0 xl:self-start xl:overflow-auto">
-      <nav className="mb-2 text-sm font-bold">On this page</nav>
-      <ul>
+    <div className="sticky top-36 order-1 mt-20 hidden max-h-[calc(100vh-9rem)] w-56 flex-shrink-0 self-start overflow-y-auto pb-10 xl:block">
+      <nav className="mb-3 flex items-center font-semibold">On this page</nav>
+      <ul className="md-toc flex flex-col flex-wrap gap-3 leading-[1.125]">
         {doc.headings.map((heading, i) => (
           <li key={i}>
             <Link
