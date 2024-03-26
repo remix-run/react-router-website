@@ -2,6 +2,7 @@ import type {
   LoaderFunctionArgs,
   SerializeFrom,
   MetaFunction,
+  HeadersFunction,
 } from "@remix-run/node";
 import * as React from "react";
 import { json } from "@remix-run/node";
@@ -27,20 +28,24 @@ export let loader = async ({ params, request }: LoaderFunctionArgs) => {
 
   invariant(params.ref, "expected `ref` params");
 
-  let doc = await getRepoDoc(params.ref, params["*"] || "index");
-  if (!doc) {
+  try {
+    let slug = params["*"]?.endsWith("/changelog")
+      ? "CHANGELOG"
+      : `docs/${params["*"] || "index"}`;
+    let doc = await getRepoDoc(params.ref, slug);
+    if (!doc) throw null;
+    return json({ doc }, { headers: { "Cache-Control": CACHE_CONTROL.doc } });
+  } catch (_) {
     throw new Response("", { status: 404 });
   }
-
-  return json({ doc }, { headers: { "Cache-Control": CACHE_CONTROL.doc } });
 };
 
-export function headers() {
-  return {
-    "Cache-Control": CACHE_CONTROL.doc,
-    Vary: "Cookie",
-  };
-}
+export const headers: HeadersFunction = ({ loaderHeaders }) => {
+  // Inherit the caching headers from the loader so we don't cache 404s
+  let headers = new Headers(loaderHeaders);
+  headers.set("Vary", "Cookie");
+  return headers;
+};
 
 export const meta: MetaFunction<
   typeof loader,
