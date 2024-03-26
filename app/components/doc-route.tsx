@@ -137,7 +137,10 @@ function LargeOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
       <nav className="mb-3 flex items-center font-semibold">On this page</nav>
       <ul className="md-toc flex flex-col flex-wrap gap-3 leading-[1.125]">
         {doc.headings.map((heading, i) => (
-          <li key={i}>
+          <li
+            key={i}
+            className={heading.headingLevel === "h2" ? "ml-0" : "ml-4"}
+          >
             <Link
               to={`#${heading.slug}`}
               dangerouslySetInnerHTML={{ __html: heading.html || "" }}
@@ -166,7 +169,10 @@ function SmallOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
       </summary>
       <ul className="pl-9">
         {doc.headings.map((heading, i) => (
-          <li key={i}>
+          <li
+            key={i}
+            className={heading.headingLevel === "h2" ? "ml-0" : "ml-4"}
+          >
             <Link
               to={`#${heading.slug}`}
               dangerouslySetInnerHTML={{ __html: heading.html || "" }}
