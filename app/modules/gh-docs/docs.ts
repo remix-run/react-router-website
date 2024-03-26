@@ -88,6 +88,7 @@ global.docCache ??= new LRUCache<string, Doc | undefined>({
 
 async function fetchDoc(key: string): Promise<Doc> {
   let [repo, ref, slug] = key.split(":");
+  // remove docs/ when we do https://github.com/remix-run/react-router-website/issues/94
   let filename = `docs/${slug}.md`;
   let md = await getRepoContent(repo, ref, filename);
   if (md === null) {

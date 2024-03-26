@@ -57,10 +57,13 @@
   }
 }
 
+/*****************************************************************************/
+/* prose */
+
 .md-prose {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
-  @apply min-w-0 flex-auto break-words text-base leading-normal text-gray-700 dark:text-gray-300;
+  @apply min-w-0 break-words text-base leading-normal text-gray-700 dark:text-gray-300;
 
   & > :first-child {
     @apply mt-0;
@@ -218,12 +221,13 @@
     scroll-margin-top: 5em;
     scroll-snap-margin-top: 5em;
 
-    & a {
+    /* only apply these styles for links starting with a hash -- if a header does not start with a hash, it was generated from HTML, not markdown headers */
+    & a[href^="#"] {
       @apply absolute -left-6 -right-0 top-0 z-10 flex h-full items-center leading-none;
     }
 
-    &:hover a,
-    & a:hover {
+    &:hover a[href^="#"],
+    & a[href^="#"]:hover {
       @apply no-underline;
     }
 
@@ -232,9 +236,10 @@
     }
 
     & a .icon-link::before {
-      @apply invisible inline-block h-4 w-4;
-      content: " ";
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' stroke='gray' viewBox='0 0 16 16' version='1.1' width='16' height='16' aria-hidden='true'%3E%3Cpath fill-rule='evenodd' d='M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z'%3E%3C/path%3E%3C/svg%3E");
+      @apply invisible inline-block h-4 w-4 bg-gray-500 bg-cover opacity-0 transition-opacity;
+      content: "";
+      mask: url("data:image/svg+xml,%3Csvg width='24' height='24' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+      mask-size: cover;
     }
 
     & a:hover .icon-link,
@@ -245,10 +250,6 @@
     &:hover a .icon-link::before {
       @apply visible opacity-100;
     }
-  }
-
-  & a[id] {
-    @apply scroll-mt-24;
   }
 
   /*****************************************************************************/
@@ -269,7 +270,7 @@
   /*****************************************************************************/
   /* images */
   & img {
-    @apply w-full border-0;
+    @apply max-w-full border-0 bg-white dark:bg-black;
 
     /* avoid CLS for tutorial screenshots */
     &.tutorial {
@@ -288,43 +289,48 @@
   }
 
   & pre {
-    @apply my-4 bg-[color:var(--base00)] leading-relaxed;
+    @apply my-4 border border-gray-100 leading-relaxed dark:border-gray-800;
+  }
+
+  & code,
+  & kbd {
+    @apply text-gray-700 dark:text-gray-300;
   }
 
   /* TODO */
   & kbd {
-    @apply inline-block rounded bg-gray-100 align-middle font-mono leading-[10px] dark:bg-gray-900;
+    @apply inline-block rounded border border-gray-200 bg-gray-100 align-middle font-mono leading-[10px] dark:border-gray-800 dark:bg-gray-900;
     box-shadow: inset 0 -1px 0 hsl(0, 0%, 0%, 0.5);
   }
 
   & pre > code {
-    @apply m-0 whitespace-pre break-normal bg-transparent p-0;
+    @apply m-0 whitespace-pre break-normal border-0 bg-transparent p-0;
   }
 
   & .codeblock-line {
     @apply relative block pr-4;
   }
 
-  & code {
-    /* @apply rounded bg-gray-50 py-[2px] px-1 text-[color:inherit] dark:bg-gray-800; */
-    @apply p-0 text-gray-900 dark:text-white;
-    font-size: 90%;
-  }
-
   & :not(pre) > code {
-    &:before,
-    &:after {
-      content: "`";
-    }
+    @apply rounded bg-gray-100/50 px-1.5 pb-0.5 pt-px text-sm text-gray-700 dark:bg-gray-800/50;
   }
 
   & :is(a, h1, h2, h3, h4, h5, h6) code,
   & :is(a, h1, h2, h3, h4, h5, h6) kbd {
-    @apply text-[color:inherit];
+    @apply text-inherit;
+  }
+
+  & :is(h1, h2, h3, h4, h5, h6) code {
+    font-size: 90%;
+    padding-top: max(0.125rem, 0.125em);
+    padding-bottom: max(0.125rem, 0.125em);
+    padding-right: max(0.25rem, 0.25em);
+    padding-left: max(0.25rem, 0.25em);
   }
 
   & pre code {
-    display: inline-block;
+    display: grid;
+    max-width: auto;
     padding: 0;
     margin: 0;
     overflow: visible;
@@ -333,7 +339,27 @@
     background-color: initial;
     border: 0;
     border-radius: initial;
-    min-width: 100%;
+  }
+
+  & [data-code-block] {
+    position: relative;
+  }
+
+  & [data-code-block-copy] {
+    @apply absolute right-4 top-[1.125rem] h-5 w-5 cursor-pointer bg-gray-500 opacity-0 hover:bg-black dark:bg-gray-400 dark:hover:bg-gray-100;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2' ry='2' vector-effect='non-scaling-stroke'%3E%3C/rect%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1' vector-effect='non-scaling-stroke'%3E%3C/path%3E%3C/svg%3E");
+    mask-size: cover;
+  }
+
+  & [data-code-block]:hover [data-code-block-copy],
+  & [data-code-block-copy]:focus {
+    @apply opacity-100;
+  }
+
+  & [data-code-block-copy][data-copied="true"] {
+    @apply bg-black opacity-100 dark:bg-gray-100;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12' vector-effect='non-scaling-stroke'%3E%3C/polyline%3E%3C/svg%3E");
+    mask-size: cover;
   }
 
   & pre[data-line-numbers="true"]:not([data-lang="bash"], [data-lang="sh"]) {
@@ -345,47 +371,68 @@
     pre[data-line-numbers="true"]:not([data-lang="bash"], [data-lang="sh"])
     [data-line-number]::before {
     content: attr(data-line-number);
-    @apply mr-6 inline-block w-10 bg-gray-50 pl-0 pr-2 text-right text-gray-300 dark:bg-gray-800 dark:text-gray-600;
-    position: sticky;
-    left: 0;
+    @apply mr-6 inline-block w-8 pl-0 text-right text-gray-300 dark:text-gray-600;
   }
 
-  & pre[data-filename]::before,
-  & pre[data-bad]::before {
-    @apply sticky left-0 mb-2 block border-b border-gray-100 bg-no-repeat pb-3 pl-10 dark:border-gray-700;
-    background-position: 1rem 3px;
+  & pre[data-good] {
+    @apply bg-green-50 dark:bg-green-900/10;
+  }
+
+  & pre[data-good],
+  & pre[data-good][data-filename]:before {
+    @apply border-green-200 dark:border-green-900/50;
+  }
+
+  &
+    pre[data-line-numbers="true"][data-good]:not(
+      [data-lang="bash"],
+      [data-lang="sh"]
+    )
+    [data-line-number]::before {
+    @apply text-green-700 dark:text-green-400;
+  }
+
+  & pre[data-bad] {
+    @apply bg-red-50 dark:bg-red-900/10;
+  }
+
+  & pre[data-bad],
+  & pre[data-bad][data-filename]:before {
+    @apply border-red-200 dark:border-red-900/50;
+  }
+
+  &
+    pre[data-line-numbers="true"][data-bad]:not(
+      [data-lang="bash"],
+      [data-lang="sh"]
+    )
+    [data-line-number]::before {
+    @apply text-red-700 dark:text-red-400;
   }
 
   & pre[data-filename]::before {
-    @apply text-gray-400 dark:text-gray-300;
+    @apply mb-4 block border-b border-gray-100 bg-no-repeat pb-4 pl-11 dark:border-gray-800;
     content: attr(data-filename);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' width='16' height='16' viewBox='0 0 24 24' stroke='#aaa'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' /%3E%3C/svg%3E");
   }
 
-  & pre[data-bad]::before {
-    @apply font-semibold text-red-700 dark:text-red-400;
-    content: "This is a bad example";
-    /* Hardcoding: fill={theme('colors.red.700')} */
-    background-image: url("data:image/svg+xml,%3Csvg fill='%23bd1825' width='18' height='18' viewBox='0 0 18 18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.65625 15.75C6.50625 15.75 6.35938 15.7188 6.21563 15.6562C6.07188 15.5938 5.95 15.5125 5.85 15.4125L2.5875 12.15C2.4875 12.05 2.40625 11.9281 2.34375 11.7844C2.28125 11.6406 2.25 11.4937 2.25 11.3438V6.65625C2.25 6.50625 2.28125 6.35938 2.34375 6.21563C2.40625 6.07188 2.4875 5.95 2.5875 5.85L5.85 2.5875C5.95 2.4875 6.07188 2.40625 6.21563 2.34375C6.35938 2.28125 6.50625 2.25 6.65625 2.25H11.3438C11.4937 2.25 11.6406 2.28125 11.7844 2.34375C11.9281 2.40625 12.05 2.4875 12.15 2.5875L15.4125 5.85C15.5125 5.95 15.5938 6.07188 15.6562 6.21563C15.7188 6.35938 15.75 6.50625 15.75 6.65625V11.3438C15.75 11.4937 15.7188 11.6406 15.6562 11.7844C15.5938 11.9281 15.5125 12.05 15.4125 12.15L12.15 15.4125C12.05 15.5125 11.9281 15.5938 11.7844 15.6562C11.6406 15.7188 11.4937 15.75 11.3438 15.75H6.65625ZM9 12.7313C9.175 12.7313 9.32812 12.6656 9.45938 12.5344C9.59063 12.4031 9.65625 12.25 9.65625 12.075C9.65625 11.9 9.59063 11.7469 9.45938 11.6156C9.32812 11.4844 9.175 11.4188 9 11.4188C8.825 11.4188 8.67188 11.4844 8.54062 11.6156C8.40937 11.7469 8.34375 11.9 8.34375 12.075C8.34375 12.25 8.40937 12.4031 8.54062 12.5344C8.67188 12.6656 8.825 12.7313 9 12.7313ZM9 10.0312C9.1625 10.0312 9.29688 9.97813 9.40313 9.87188C9.50938 9.76563 9.5625 9.63125 9.5625 9.46875V5.6625C9.5625 5.5 9.50938 5.36562 9.40313 5.25937C9.29688 5.15312 9.1625 5.1 9 5.1C8.8375 5.1 8.70312 5.15312 8.59687 5.25937C8.49062 5.36562 8.4375 5.5 8.4375 5.6625V9.46875C8.4375 9.63125 8.49062 9.76563 8.59687 9.87188C8.70312 9.97813 8.8375 10.0312 9 10.0312ZM6.65625 14.625H11.3438L14.625 11.3438V6.65625L11.3438 3.375H6.65625L3.375 6.65625V11.3438L6.65625 14.625Z'/%3E%3C/svg%3E%0A");
-  }
-  .dark & {
-    & pre[data-bad]::before {
-      /* Hardcoding: fill={theme('colors.red.400')} */
-      background-image: url("data:image/svg+xml,%3Csvg fill='%23fc6d78' width='18' height='18' viewBox='0 0 18 18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.65625 15.75C6.50625 15.75 6.35938 15.7188 6.21563 15.6562C6.07188 15.5938 5.95 15.5125 5.85 15.4125L2.5875 12.15C2.4875 12.05 2.40625 11.9281 2.34375 11.7844C2.28125 11.6406 2.25 11.4937 2.25 11.3438V6.65625C2.25 6.50625 2.28125 6.35938 2.34375 6.21563C2.40625 6.07188 2.4875 5.95 2.5875 5.85L5.85 2.5875C5.95 2.4875 6.07188 2.40625 6.21563 2.34375C6.35938 2.28125 6.50625 2.25 6.65625 2.25H11.3438C11.4937 2.25 11.6406 2.28125 11.7844 2.34375C11.9281 2.40625 12.05 2.4875 12.15 2.5875L15.4125 5.85C15.5125 5.95 15.5938 6.07188 15.6562 6.21563C15.7188 6.35938 15.75 6.50625 15.75 6.65625V11.3438C15.75 11.4937 15.7188 11.6406 15.6562 11.7844C15.5938 11.9281 15.5125 12.05 15.4125 12.15L12.15 15.4125C12.05 15.5125 11.9281 15.5938 11.7844 15.6562C11.6406 15.7188 11.4937 15.75 11.3438 15.75H6.65625ZM9 12.7313C9.175 12.7313 9.32812 12.6656 9.45938 12.5344C9.59063 12.4031 9.65625 12.25 9.65625 12.075C9.65625 11.9 9.59063 11.7469 9.45938 11.6156C9.32812 11.4844 9.175 11.4188 9 11.4188C8.825 11.4188 8.67188 11.4844 8.54062 11.6156C8.40937 11.7469 8.34375 11.9 8.34375 12.075C8.34375 12.25 8.40937 12.4031 8.54062 12.5344C8.67188 12.6656 8.825 12.7313 9 12.7313ZM9 10.0312C9.1625 10.0312 9.29688 9.97813 9.40313 9.87188C9.50938 9.76563 9.5625 9.63125 9.5625 9.46875V5.6625C9.5625 5.5 9.50938 5.36562 9.40313 5.25937C9.29688 5.15312 9.1625 5.1 9 5.1C8.8375 5.1 8.70312 5.15312 8.59687 5.25937C8.49062 5.36562 8.4375 5.5 8.4375 5.6625V9.46875C8.4375 9.63125 8.49062 9.76563 8.59687 9.87188C8.70312 9.97813 8.8375 10.0312 9 10.0312ZM6.65625 14.625H11.3438L14.625 11.3438V6.65625L11.3438 3.375H6.65625L3.375 6.65625V11.3438L6.65625 14.625Z'/%3E%3C/svg%3E%0A");
-    }
-  }
-
-  & pre[data-bad][data-filename]::before {
-    content: attr(data-filename) " - This is a bad example";
-  }
-
-  & pre[data-bad] .codeblock-line[data-highlight="true"]::after {
-    @apply bg-red-700 dark:bg-red-400;
+  & pre[data-filename]::after {
+    @apply absolute left-[1.125rem] top-5 h-4 w-4 bg-gray-400 dark:bg-gray-500;
+    content: "";
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z' vector-effect='non-scaling-stroke'%3E%3C/path%3E%3Cpolyline points='13 2 13 9 20 9' vector-effect='non-scaling-stroke'%3E%3C/polyline%3E%3C/svg%3E");
+    mask-size: cover;
   }
 
   & .codeblock-line[data-highlight="true"]::after {
     content: " ";
-    @apply pointer-events-none absolute left-0 top-0 w-full bg-green-500 opacity-10 dark:opacity-20;
+    @apply pointer-events-none absolute left-0 top-0 w-full bg-green-400 opacity-10 dark:bg-green-300 dark:opacity-20;
+  }
+
+  & pre[data-good] .codeblock-line[data-highlight="true"]::after {
+    @apply bg-green-700 dark:bg-green-400;
+  }
+
+  & pre[data-bad] .codeblock-line[data-highlight="true"]::after {
+    @apply bg-red-700 dark:bg-red-400;
   }
 
   /*****************************************************************************/
@@ -398,8 +445,8 @@
   }
 
   & table th {
-    @apply sticky top-0 bg-transparent font-semibold;
-    @apply border-0 border-b-2 border-gray-200 p-0 pb-1 pr-4 dark:border-gray-800 md:pr-6;
+    @apply sticky top-0 w-full bg-transparent text-sm font-semibold text-gray-700 dark:text-gray-300;
+    @apply border-0 border-b border-gray-200 p-0 pb-1 pr-4 dark:border-gray-800;
   }
 
   & table tbody {
@@ -407,91 +454,77 @@
   }
 
   & table td {
-    @apply whitespace-nowrap border-0 border-b border-gray-100 p-0 py-2 pr-4  dark:border-gray-800  md:pr-6;
+    @apply w-full whitespace-nowrap border-0 border-b border-gray-100 p-0 py-2 pr-4 text-sm text-black dark:text-white;
   }
 
   /*****************************************************************************/
   /* blocks */
 
   & docs-info,
+  & docs-success,
   & docs-warning,
-  & docs-error,
-  & docs-success {
-    @apply relative my-8 block px-4 py-0;
-
-    &:before {
-      @apply block bg-no-repeat pl-6 text-sm font-medium uppercase tracking-widest;
-      background-position: 0 1px;
-    }
-
-    &:after {
-      @apply absolute bottom-0 left-0 top-0 w-1 rounded-full;
-      content: "";
-    }
-
-    /* It's possible these could have an image embedded in them */
-    img {
-      @apply mt-4;
-    }
+  & docs-error {
+    @apply relative mb-3 mt-0 block rounded-lg border-l-2 border-r-2 border-current px-4 py-2;
   }
 
-  & docs-info {
-    &:after {
-      @apply bg-blue-brand;
-    }
+  & docs-info::before,
+  & docs-success::before,
+  & docs-warning::before,
+  & docs-error::before {
+    @apply pointer-events-none absolute inset-0 opacity-10 content-[""];
+  }
 
-    &:before {
-      @apply text-blue-brand;
-      content: "Note";
-      /* Great tool for inlining svg: https://yoksel.github.io/url-encoder/ */
-      /* Hardcoding: fill={theme('colors.blue.brand')} */
-      background-image: url("data:image/svg+xml,%3Csvg fill='%233992ff' width='18' height='18' viewBox='0 0 18 18'  xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9.05625 12.75C9.21875 12.75 9.35312 12.6969 9.45937 12.5906C9.56562 12.4844 9.61875 12.35 9.61875 12.1875V8.79375C9.61875 8.64375 9.5625 8.51562 9.45 8.40937C9.3375 8.30312 9.20625 8.25 9.05625 8.25C8.89375 8.25 8.75937 8.30312 8.65312 8.40937C8.54687 8.51562 8.49375 8.65 8.49375 8.8125V12.2062C8.49375 12.3562 8.55 12.4844 8.6625 12.5906C8.775 12.6969 8.90625 12.75 9.05625 12.75ZM9 6.8625C9.175 6.8625 9.32187 6.80625 9.44062 6.69375C9.55937 6.58125 9.61875 6.4375 9.61875 6.2625C9.61875 6.0875 9.55937 5.9375 9.44062 5.8125C9.32187 5.6875 9.175 5.625 9 5.625C8.825 5.625 8.67812 5.6875 8.55937 5.8125C8.44062 5.9375 8.38125 6.0875 8.38125 6.2625C8.38125 6.4375 8.44062 6.58125 8.55937 6.69375C8.67812 6.80625 8.825 6.8625 9 6.8625ZM9 16.5C7.9375 16.5 6.95 16.3094 6.0375 15.9281C5.125 15.5469 4.33125 15.0187 3.65625 14.3437C2.98125 13.6687 2.45312 12.875 2.07187 11.9625C1.69063 11.05 1.5 10.0625 1.5 9C1.5 7.95 1.69063 6.96875 2.07187 6.05625C2.45312 5.14375 2.98125 4.35 3.65625 3.675C4.33125 3 5.125 2.46875 6.0375 2.08125C6.95 1.69375 7.9375 1.5 9 1.5C10.05 1.5 11.0312 1.69375 11.9437 2.08125C12.8562 2.46875 13.65 3 14.325 3.675C15 4.35 15.5312 5.14375 15.9187 6.05625C16.3062 6.96875 16.5 7.95 16.5 9C16.5 10.0625 16.3062 11.05 15.9187 11.9625C15.5312 12.875 15 13.6687 14.325 14.3437C13.65 15.0187 12.8562 15.5469 11.9437 15.9281C11.0312 16.3094 10.05 16.5 9 16.5ZM9 15.375C10.75 15.375 12.25 14.75 13.5 13.5C14.75 12.25 15.375 10.75 15.375 9C15.375 7.25 14.75 5.75 13.5 4.5C12.25 3.25 10.75 2.625 9 2.625C7.25 2.625 5.75 3.25 4.5 4.5C3.25 5.75 2.625 7.25 2.625 9C2.625 10.75 3.25 12.25 4.5 13.5C5.75 14.75 7.25 15.375 9 15.375Z' /%3E%3C/svg%3E");
-    }
+  & docs-info > :last-child,
+  & docs-success > :last-child,
+  & docs-warning > :last-child,
+  & docs-error > :last-child {
+    @apply mb-0;
   }
 
   & docs-warning {
-    &:after {
-      @apply bg-yellow-600 dark:bg-yellow-brand;
-    }
-
-    &:before {
-      @apply text-yellow-600 dark:text-yellow-brand;
-      content: "Important";
-      /* Hardcoding: fill={theme('colors.yellow.600')} */
-      background-image: url("data:image/svg+xml,%3Csvg fill='%23cd8701' width='18' height='18' viewBox='0 0 18 18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.72501 15.75C1.51251 15.75 1.35001 15.6562 1.23751 15.4688C1.12501 15.2812 1.12501 15.0938 1.23751 14.9062L8.51251 2.34375C8.62501 2.15625 8.78751 2.0625 9.00001 2.0625C9.21251 2.0625 9.37501 2.15625 9.48751 2.34375L16.7625 14.9062C16.875 15.0938 16.875 15.2812 16.7625 15.4688C16.65 15.6562 16.4875 15.75 16.275 15.75H1.72501ZM9.07501 7.275C8.91251 7.275 8.77814 7.32813 8.67189 7.43438C8.56564 7.54063 8.51251 7.675 8.51251 7.8375V10.9125C8.51251 11.075 8.56564 11.2094 8.67189 11.3156C8.77814 11.4219 8.91251 11.475 9.07501 11.475C9.23751 11.475 9.37189 11.4219 9.47814 11.3156C9.58439 11.2094 9.63751 11.075 9.63751 10.9125V7.8375C9.63751 7.675 9.58439 7.54063 9.47814 7.43438C9.37189 7.32813 9.23751 7.275 9.07501 7.275ZM9.07501 13.5563C9.23751 13.5563 9.37189 13.5031 9.47814 13.3969C9.58439 13.2906 9.63751 13.1563 9.63751 12.9938C9.63751 12.8313 9.58439 12.6969 9.47814 12.5906C9.37189 12.4844 9.23751 12.4313 9.07501 12.4313C8.91251 12.4313 8.77814 12.4844 8.67189 12.5906C8.56564 12.6969 8.51251 12.8313 8.51251 12.9938C8.51251 13.1563 8.56564 13.2906 8.67189 13.3969C8.77814 13.5031 8.91251 13.5563 9.07501 13.5563ZM2.70001 14.625H15.3L9.00001 3.75L2.70001 14.625Z'/%3E%3C/svg%3E");
-    }
+    @apply text-yellow-800 dark:text-yellow-100;
   }
-  /* Hardcoding: fill={theme('colors.yellow.brand')} */
-  .dark & {
-    docs-warning:before {
-      background-image: url("data:image/svg+xml,%3Csvg fill='%23fecc1b' width='18' height='18' viewBox='0 0 18 18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.72501 15.75C1.51251 15.75 1.35001 15.6562 1.23751 15.4688C1.12501 15.2812 1.12501 15.0938 1.23751 14.9062L8.51251 2.34375C8.62501 2.15625 8.78751 2.0625 9.00001 2.0625C9.21251 2.0625 9.37501 2.15625 9.48751 2.34375L16.7625 14.9062C16.875 15.0938 16.875 15.2812 16.7625 15.4688C16.65 15.6562 16.4875 15.75 16.275 15.75H1.72501ZM9.07501 7.275C8.91251 7.275 8.77814 7.32813 8.67189 7.43438C8.56564 7.54063 8.51251 7.675 8.51251 7.8375V10.9125C8.51251 11.075 8.56564 11.2094 8.67189 11.3156C8.77814 11.4219 8.91251 11.475 9.07501 11.475C9.23751 11.475 9.37189 11.4219 9.47814 11.3156C9.58439 11.2094 9.63751 11.075 9.63751 10.9125V7.8375C9.63751 7.675 9.58439 7.54063 9.47814 7.43438C9.37189 7.32813 9.23751 7.275 9.07501 7.275ZM9.07501 13.5563C9.23751 13.5563 9.37189 13.5031 9.47814 13.3969C9.58439 13.2906 9.63751 13.1563 9.63751 12.9938C9.63751 12.8313 9.58439 12.6969 9.47814 12.5906C9.37189 12.4844 9.23751 12.4313 9.07501 12.4313C8.91251 12.4313 8.77814 12.4844 8.67189 12.5906C8.56564 12.6969 8.51251 12.8313 8.51251 12.9938C8.51251 13.1563 8.56564 13.2906 8.67189 13.3969C8.77814 13.5031 8.91251 13.5563 9.07501 13.5563ZM2.70001 14.625H15.3L9.00001 3.75L2.70001 14.625Z'/%3E%3C/svg%3E");
-    }
+
+  & docs-warning::before {
+    @apply bg-yellow-400 opacity-[0.15];
+  }
+
+  & docs-info {
+    @apply text-blue-brand dark:text-blue-300;
+  }
+
+  & docs-info::before {
+    @apply bg-blue-brand;
   }
 
   & docs-error {
-    &:after {
-      @apply bg-red-700 dark:bg-red-400;
-    }
-
-    &:before {
-      @apply text-red-700 dark:text-red-400;
-      content: "Danger";
-      /* Hardcoding: fill={theme('colors.red.700')} */
-      background-image: url("data:image/svg+xml,%3Csvg fill='%23bd1825' width='18' height='18' viewBox='0 0 18 18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.65625 15.75C6.50625 15.75 6.35938 15.7188 6.21563 15.6562C6.07188 15.5938 5.95 15.5125 5.85 15.4125L2.5875 12.15C2.4875 12.05 2.40625 11.9281 2.34375 11.7844C2.28125 11.6406 2.25 11.4937 2.25 11.3438V6.65625C2.25 6.50625 2.28125 6.35938 2.34375 6.21563C2.40625 6.07188 2.4875 5.95 2.5875 5.85L5.85 2.5875C5.95 2.4875 6.07188 2.40625 6.21563 2.34375C6.35938 2.28125 6.50625 2.25 6.65625 2.25H11.3438C11.4937 2.25 11.6406 2.28125 11.7844 2.34375C11.9281 2.40625 12.05 2.4875 12.15 2.5875L15.4125 5.85C15.5125 5.95 15.5938 6.07188 15.6562 6.21563C15.7188 6.35938 15.75 6.50625 15.75 6.65625V11.3438C15.75 11.4937 15.7188 11.6406 15.6562 11.7844C15.5938 11.9281 15.5125 12.05 15.4125 12.15L12.15 15.4125C12.05 15.5125 11.9281 15.5938 11.7844 15.6562C11.6406 15.7188 11.4937 15.75 11.3438 15.75H6.65625ZM9 12.7313C9.175 12.7313 9.32812 12.6656 9.45938 12.5344C9.59063 12.4031 9.65625 12.25 9.65625 12.075C9.65625 11.9 9.59063 11.7469 9.45938 11.6156C9.32812 11.4844 9.175 11.4188 9 11.4188C8.825 11.4188 8.67188 11.4844 8.54062 11.6156C8.40937 11.7469 8.34375 11.9 8.34375 12.075C8.34375 12.25 8.40937 12.4031 8.54062 12.5344C8.67188 12.6656 8.825 12.7313 9 12.7313ZM9 10.0312C9.1625 10.0312 9.29688 9.97813 9.40313 9.87188C9.50938 9.76563 9.5625 9.63125 9.5625 9.46875V5.6625C9.5625 5.5 9.50938 5.36562 9.40313 5.25937C9.29688 5.15312 9.1625 5.1 9 5.1C8.8375 5.1 8.70312 5.15312 8.59687 5.25937C8.49062 5.36562 8.4375 5.5 8.4375 5.6625V9.46875C8.4375 9.63125 8.49062 9.76563 8.59687 9.87188C8.70312 9.97813 8.8375 10.0312 9 10.0312ZM6.65625 14.625H11.3438L14.625 11.3438V6.65625L11.3438 3.375H6.65625L3.375 6.65625V11.3438L6.65625 14.625Z'/%3E%3C/svg%3E%0A");
-    }
+    @apply text-red-700 dark:text-red-300;
   }
-  .dark & {
-    docs-error::before {
-      /* Hardcoding: fill={theme('colors.red.400')} */
-      background-image: url("data:image/svg+xml,%3Csvg fill='%23fc6d78' width='18' height='18' viewBox='0 0 18 18' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.65625 15.75C6.50625 15.75 6.35938 15.7188 6.21563 15.6562C6.07188 15.5938 5.95 15.5125 5.85 15.4125L2.5875 12.15C2.4875 12.05 2.40625 11.9281 2.34375 11.7844C2.28125 11.6406 2.25 11.4937 2.25 11.3438V6.65625C2.25 6.50625 2.28125 6.35938 2.34375 6.21563C2.40625 6.07188 2.4875 5.95 2.5875 5.85L5.85 2.5875C5.95 2.4875 6.07188 2.40625 6.21563 2.34375C6.35938 2.28125 6.50625 2.25 6.65625 2.25H11.3438C11.4937 2.25 11.6406 2.28125 11.7844 2.34375C11.9281 2.40625 12.05 2.4875 12.15 2.5875L15.4125 5.85C15.5125 5.95 15.5938 6.07188 15.6562 6.21563C15.7188 6.35938 15.75 6.50625 15.75 6.65625V11.3438C15.75 11.4937 15.7188 11.6406 15.6562 11.7844C15.5938 11.9281 15.5125 12.05 15.4125 12.15L12.15 15.4125C12.05 15.5125 11.9281 15.5938 11.7844 15.6562C11.6406 15.7188 11.4937 15.75 11.3438 15.75H6.65625ZM9 12.7313C9.175 12.7313 9.32812 12.6656 9.45938 12.5344C9.59063 12.4031 9.65625 12.25 9.65625 12.075C9.65625 11.9 9.59063 11.7469 9.45938 11.6156C9.32812 11.4844 9.175 11.4188 9 11.4188C8.825 11.4188 8.67188 11.4844 8.54062 11.6156C8.40937 11.7469 8.34375 11.9 8.34375 12.075C8.34375 12.25 8.40937 12.4031 8.54062 12.5344C8.67188 12.6656 8.825 12.7313 9 12.7313ZM9 10.0312C9.1625 10.0312 9.29688 9.97813 9.40313 9.87188C9.50938 9.76563 9.5625 9.63125 9.5625 9.46875V5.6625C9.5625 5.5 9.50938 5.36562 9.40313 5.25937C9.29688 5.15312 9.1625 5.1 9 5.1C8.8375 5.1 8.70312 5.15312 8.59687 5.25937C8.49062 5.36562 8.4375 5.5 8.4375 5.6625V9.46875C8.4375 9.63125 8.49062 9.76563 8.59687 9.87188C8.70312 9.97813 8.8375 10.0312 9 10.0312ZM6.65625 14.625H11.3438L14.625 11.3438V6.65625L11.3438 3.375H6.65625L3.375 6.65625V11.3438L6.65625 14.625Z'/%3E%3C/svg%3E%0A");
-    }
+
+  & docs-error::before {
+    @apply bg-red-700 dark:bg-red-300;
+  }
+
+  & docs-success {
+    @apply text-green-600 dark:text-green-300;
+  }
+
+  & docs-success::before {
+    @apply bg-green-brand;
+  }
+
+  & docs-info a,
+  & docs-success a,
+  & docs-warning a,
+  & docs-error a {
+    text-decoration: underline;
   }
 
   & docs-cards {
     @apply flex grid-cols-2 flex-col gap-6 md:grid;
 
     & > a {
-      @apply block rounded;
+      @apply relative block dark:text-inherit;
       color: unset;
     }
 
@@ -501,7 +534,7 @@
   }
 
   & docs-card {
-    @apply block h-full w-full rounded border border-gray-200 p-6 shadow transition-shadow ease-out dark:border-gray-800;
+    @apply block h-full w-full rounded-lg border-[3px] border-gray-50 p-4 hover:border-gray-100 dark:border-gray-700 hover:dark:border-gray-600 sm:p-6;
 
     & > :first-child {
       @apply mt-0;
@@ -512,15 +545,11 @@
     }
   }
 
-  & a:hover docs-card {
-    @apply shadow-lg;
-  }
-
   /*****************************************************************************/
   /* blockquotes */
 
   & blockquote {
-    @apply mx-0 mb-4 mt-0 border-l-4 border-gray-200 p-0 pl-4 text-gray-600 dark:border-gray-800 dark:text-gray-300;
+    @apply mx-0 mb-4 mt-0 border-l-4 border-gray-200 p-0 pl-4 text-gray-600 dark:border-gray-800 dark:text-gray-400;
   }
 
   & blockquote > :first-child {
@@ -536,5 +565,11 @@
 
   & hr {
     @apply mx-0 my-6 h-[1px] overflow-visible border-0 bg-gray-200 p-0 dark:bg-gray-800;
+  }
+}
+
+.md-toc {
+  & :where(li code) {
+    @apply rounded-sm bg-gray-100/50 px-1.5 pb-0.5 pt-px text-xs text-gray-600 group-hover:text-gray-100 dark:bg-gray-800/50 dark:text-gray-300;
   }
 }
