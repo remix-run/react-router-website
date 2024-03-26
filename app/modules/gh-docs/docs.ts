@@ -24,7 +24,11 @@ export interface MenuDoc {
 
 export interface Doc extends Omit<MenuDoc, "hasContent"> {
   html: string;
-  headings: { html: string | null; slug: string | undefined }[];
+  headings: {
+    headingLevel: string;
+    html: string | null;
+    slug: string | undefined;
+  }[];
 }
 
 declare global {
@@ -110,6 +114,7 @@ function createTableOfContentsFromHeadings(html: string) {
   let $headings = $(html)("h2,h3");
 
   let headings = $headings.toArray().map((heading) => ({
+    headingLevel: heading.name,
     html: $(heading)("a").remove().end().children().html(),
     slug: heading.attributes.find((attr) => attr.name === "id")?.value,
   }));
