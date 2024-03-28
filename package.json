@@ -2,12 +2,12 @@
   "name": "react-router-website",
   "sideEffects": false,
   "scripts": {
-    "build": "remix build",
-    "dev": "remix dev",
+    "dev": "remix vite:dev",
+    "build": "remix vite:build",
     "format": "prettier --write . && npm run lint:fix",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "start": "remix-serve build/index.js",
+    "start": "remix-serve ./build/server/index.js",
     "test": "vitest",
     "typecheck": "tsc -b",
     "push:stage": "git tag -f stage && git push origin stage -f"
