@@ -11,6 +11,6 @@ node_modules
 /prisma/data.db-journal
 
 /.local.tgz
-/app/modules/gh-docs/__fixture__/tar.tgz
+app/modules/gh-docs/.server/__fixture__/tar.tgz
 
 *.code-workspace
