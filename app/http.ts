@@ -1,5 +1,5 @@
 import { ensureSecure } from "~/modules/http-utils/ensure-secure";
-import { handleRedirects } from "~/modules/redirects";
+import { handleRedirects } from "~/modules/redirects/.server";
 import { removeTrailingSlashes } from "~/modules/http-utils/remove-slashes";
 
 export const CACHE_CONTROL = {
