@@ -1,6 +1,23 @@
 {
   "exclude": ["./cypress"],
-  "include": ["env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "app/modules/gh-docs/.server/branches.ts",
+    "app/modules/gh-docs/.server/docs.test.ts",
+    "app/modules/gh-docs/.server/docs.ts",
+    "app/modules/gh-docs/.server/github.ts",
+    "app/modules/gh-docs/.server/index.ts",
+    "app/modules/gh-docs/.server/md.ts",
+    "app/modules/gh-docs/.server/params.test.ts",
+    "app/modules/gh-docs/.server/params.ts",
+    "app/modules/gh-docs/.server/repo-content.ts",
+    "app/modules/gh-docs/.server/repo-tarball.ts",
+    "app/modules/gh-docs/.server/tags.ts",
+    "app/modules/gh-docs/.server/tarball.ts",
+    "app/modules/gh-docs/.server/tarball.test.ts"
+  ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2019"],
     "types": ["vitest/globals"],

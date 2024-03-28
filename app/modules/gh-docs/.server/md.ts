@@ -13,7 +13,7 @@ import type * as Hast from "hast";
 import type * as Unist from "unist";
 import type * as Shiki from "shiki";
 import type * as Unified from "unified";
-import themeJson from "../../../data/base16.json";
+import themeJson from "../../../../data/base16.json";
 
 export interface ProcessorOptions {
   resolveHref?(href: string): string;
