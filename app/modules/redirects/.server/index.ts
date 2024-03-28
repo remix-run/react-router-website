@@ -1,5 +1,5 @@
-import { checkUrl } from "./check-url.server";
-import { readRedirectsFile } from "./read-file.server";
+import { checkUrl } from "./check-url";
+import { getRedirects } from "./get-redirects";
 
 /**
  * Super basic redirects handling with a redirects file.
@@ -15,7 +15,7 @@ import { readRedirectsFile } from "./read-file.server";
  * @param request Web Fetch Request to possibly redirect
  */
 export async function handleRedirects(request: Request): Promise<void> {
-  let redirects = await readRedirectsFile();
+  let redirects = await getRedirects();
   let url = new URL(request.url);
   let response = await checkUrl(url.pathname, redirects);
   if (response) throw response;

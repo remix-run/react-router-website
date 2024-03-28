@@ -8,7 +8,7 @@ import {
   loader as docLoader,
   default as DocPage,
   meta as docMeta,
-} from "~/components/doc-route";
+} from "~/routes/$lang.$ref.$";
 import iconsHref from "~/icons.svg";
 import type { Stats } from "~/modules/stats";
 

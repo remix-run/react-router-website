@@ -1,5 +1,5 @@
 import { redirect } from "@remix-run/node";
-import type { Redirect } from "./read-file.server";
+import type { Redirect } from "./get-redirects";
 
 export async function checkUrl(url: string, redirects: Redirect[]) {
   for (let r of redirects) {

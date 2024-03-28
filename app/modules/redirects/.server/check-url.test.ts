@@ -1,15 +1,20 @@
-import path from "path";
-import { checkUrl } from "./check-url.server";
-import { readRedirectsFile } from "./read-file.server";
-import type { Redirect } from "./read-file.server";
+import { checkUrl } from "./check-url";
+import { getRedirects } from "./get-redirects";
+import type { Redirect } from "./get-redirects";
 
 describe("handleRedirects", () => {
   let redirects: Redirect[];
 
   beforeAll(async () => {
-    redirects = await readRedirectsFile(
-      path.join("app", "modules", "redirects", "__fixtures__", "_redirects")
+    vi.mock(
+      "../../../../_redirects?raw",
+      async () => await import("./__fixtures__/_redirects?raw")
     );
+    redirects = await getRedirects();
+  });
+
+  afterAll(() => {
+    vi.restoreAllMocks();
   });
 
   it("redirects static string", async () => {

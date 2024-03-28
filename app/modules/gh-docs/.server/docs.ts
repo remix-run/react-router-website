@@ -1,10 +1,10 @@
-import { processMarkdown } from "~/modules/gh-docs/md.server";
+import { processMarkdown } from "~/modules/gh-docs/.server/md";
 import LRUCache from "lru-cache";
 import parseYamlHeader from "gray-matter";
 import invariant from "tiny-invariant";
-import { getRepoContent } from "./repo-content.server";
-import { getRepoTarballStream } from "./repo-tarball.server";
-import { createTarFileProcessor } from "./tarball.server";
+import { getRepoContent } from "./repo-content";
+import { getRepoTarballStream } from "./repo-tarball";
+import { createTarFileProcessor } from "./tarball";
 import { load as $ } from "cheerio";
 
 interface MenuDocAttributes {

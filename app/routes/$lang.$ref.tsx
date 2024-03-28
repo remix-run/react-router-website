@@ -23,14 +23,14 @@ import {
   getRepoDocsMenu,
   getRepoTags,
   validateParams,
-} from "~/modules/gh-docs";
-import type { Doc } from "~/modules/gh-docs";
+} from "~/modules/gh-docs/.server";
+import type { Doc } from "~/modules/gh-docs/.server";
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
-import { getLatestVersion } from "~/modules/gh-docs/tags.server";
+import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
 import { useColorScheme } from "~/modules/color-scheme/components";
 
-import docsStylesheet from "~/styles/docs.css";
+import docsStylesheet from "~/styles/docs.css?url";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: docsStylesheet }];
