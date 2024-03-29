@@ -492,31 +492,6 @@ function useIsActivePath(to: string) {
   return Boolean(match);
 }
 
-function MenuCategoryLink({
-  to,
-  children,
-}: {
-  to: string;
-  children: React.ReactNode;
-}) {
-  let isActive = useIsActivePath(to);
-
-  return (
-    <Link
-      prefetch="intent"
-      to={to}
-      className={classNames(
-        // link styles
-        "group -mx-4 flex items-center rounded-md py-1.5 pl-4 lg:text-sm",
-        isActive
-          ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
-          : "text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"
-      )}
-      children={children}
-    />
-  );
-}
-
 function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
   let isActive = useIsActivePath(to);
 
@@ -541,30 +516,169 @@ function Menu() {
   return menu ? (
     <nav>
       <ul>
-        {menu.map((category) => (
-          <li key={category.attrs.title} className="mb-6">
-            {category.hasContent ? (
-              <MenuCategoryLink to={category.slug}>
-                {category.attrs.title}
-              </MenuCategoryLink>
-            ) : (
-              <div className="mb-2 block font-bold lg:text-sm">
-                {category.attrs.title}
-              </div>
-            )}
-            {category.children.map((doc) => (
-              <MenuLink key={doc.slug} to={doc.slug}>
-                {doc.attrs.title} {doc.attrs.new && "🆕"}
-              </MenuLink>
-            ))}
-          </li>
-        ))}
+        {menu.map((category) => {
+          // Technically we can have a category that has content (and thus
+          // needs it's own link) _and_ has children, so needs to be a details
+          // element. It's ridiculous, but it's possible.
+          const menuCategoryType = category.hasContent
+            ? category.children.length > 0
+              ? "linkAndDetails"
+              : "link"
+            : "details";
+
+          return (
+            <li key={category.attrs.title} className="mb-3">
+              {menuCategoryType === "link" ? (
+                <MenuSummary as="div">
+                  <MenuCategoryLink to={category.slug}>
+                    {category.attrs.title}
+                  </MenuCategoryLink>
+                </MenuSummary>
+              ) : (
+                <MenuCategoryDetails className="group" slug={category.slug}>
+                  <MenuSummary>
+                    {menuCategoryType === "linkAndDetails" ? (
+                      <MenuCategoryLink to={category.slug}>
+                        {category.attrs.title}
+                      </MenuCategoryLink>
+                    ) : (
+                      category.attrs.title
+                    )}
+                    <svg aria-hidden className="h-5 w-5 group-open:hidden">
+                      <use href={`${iconsHref}#chevron-r`} />
+                    </svg>
+                    <svg
+                      aria-hidden
+                      className="hidden h-5 w-5 group-open:block"
+                    >
+                      <use href={`${iconsHref}#chevron-d`} />
+                    </svg>
+                  </MenuSummary>
+                  {category.children.map((doc) => {
+                    return (
+                      <MenuLink key={doc.slug} to={doc.slug}>
+                        {doc.attrs.title} {doc.attrs.new && "🆕"}
+                      </MenuLink>
+                    );
+                  })}
+                </MenuCategoryDetails>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </nav>
   ) : (
     <div className="bold text-gray-300 dark:text-gray-400">
       Failed to load menu
     </div>
+  );
+}
+
+type MenuCategoryDetailsType = {
+  className?: string;
+  slug: string;
+  children: React.ReactNode;
+};
+
+function MenuCategoryDetails({
+  className,
+  slug,
+  children,
+}: MenuCategoryDetailsType) {
+  const isActivePath = useIsActivePath(slug);
+  // By default only the active path is open
+  const [isOpen, setIsOpen] = React.useState(isActivePath);
+
+  // Auto open the details element, useful when navigating from the home page
+  React.useEffect(() => {
+    if (isActivePath) {
+      setIsOpen(true);
+    }
+  }, [isActivePath]);
+
+  return (
+    <details
+      className={classNames(className, "relative flex cursor-pointer flex-col")}
+      open={isOpen}
+      onToggle={(e) => {
+        // Synchronize the DOM's state with React state to prevent the
+        // details element from being closed after navigation and re-evaluation
+        // of useIsActivePath
+        setIsOpen(e.currentTarget.open);
+      }}
+    >
+      {children}
+    </details>
+  );
+}
+
+// This components attempts to keep all of the styles as similar as possible
+function MenuSummary({
+  children,
+  as = "summary",
+}: {
+  children: React.ReactNode;
+  as?: "summary" | "div";
+}) {
+  // "-mx-4 pl-4",
+
+  const sharedClassName =
+    "-mx-4 rounded-md px-3 py-3 transition-colors duration-100";
+  const wrappedChildren = (
+    <div className="flex h-5 w-full items-center justify-between font-bold lg:text-sm">
+      {children}
+    </div>
+  );
+
+  if (as === "summary") {
+    return (
+      <summary
+        className={classNames(
+          sharedClassName,
+          "_no-triangle block select-none",
+          "outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-red-brand  dark:focus-visible:ring-gray-100",
+          "hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 dark:active:bg-gray-700"
+        )}
+      >
+        {wrappedChildren}
+      </summary>
+    );
+  }
+
+  return (
+    <div
+      className={classNames(
+        sharedClassName,
+        "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-red-brand dark:has-[:focus-visible]:ring-gray-100"
+      )}
+    >
+      {wrappedChildren}
+    </div>
+  );
+}
+
+function MenuCategoryLink({
+  to,
+  children,
+}: {
+  to: string;
+  children: React.ReactNode;
+}) {
+  let isActive = useIsActivePath(to);
+  return (
+    <Link
+      prefetch="intent"
+      to={to}
+      className={classNames(
+        "outline-none focus:outline-none focus-visible:text-red-brand dark:focus-visible:text-red-400",
+        isActive
+          ? "text-red-brand"
+          : "hover:text-red-brand dark:hover:text-red-400 "
+      )}
+    >
+      {children}
+    </Link>
   );
 }
 
