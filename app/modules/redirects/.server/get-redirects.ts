@@ -1,5 +1,4 @@
-import fs from "fs/promises";
-import path from "path";
+import redirectsFileContents from "../../../../_redirects?raw";
 
 export type Redirect = [string, string, boolean, number?];
 let redirects: null | Redirect[] = null;
@@ -11,17 +10,13 @@ let redirects: null | Redirect[] = null;
  * defaults to `_redirects`
  * @returns string
  */
-export async function readRedirectsFile(relativePath: string = "_redirects") {
+export async function getRedirects() {
   if (redirects) {
     return redirects;
   }
 
-  let filePath = path.join(process.cwd(), relativePath);
-  let buffer = await fs.readFile(filePath);
-
   console.log("Reading redirects file");
-  redirects = buffer
-    .toString()
+  redirects = redirectsFileContents
     .split("\n")
     .reduce((redirects, line: string) => {
       if (line.startsWith("#") || line.trim() === "") {

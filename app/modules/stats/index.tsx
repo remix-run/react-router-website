@@ -1,5 +1,5 @@
 import LRUCache from "lru-cache";
-import { octokit } from "../gh-docs/github";
+import { octokit } from "../gh-docs/.server/github";
 
 export interface Stats {
   label: string;
