@@ -24,7 +24,7 @@ const oramaInstance = new OramaClient({
 if (typeof window !== "undefined") {
   RegisterSearchBox({
     oramaInstance,
-    colorScheme: "dark",
+    colorScheme: 'dark',
     resultsMap: {
       description: "content",
     },
@@ -37,6 +37,6 @@ if (typeof window !== "undefined") {
   });
 
   RegisterSearchButton({
-    colorScheme: "dark",
+    colorScheme: 'dark',
   });
 }
