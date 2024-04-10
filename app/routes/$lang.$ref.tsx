@@ -29,7 +29,6 @@ import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
 import { useColorScheme } from "~/modules/color-scheme/components";
-import "~/modules/orama";
 
 import docsStylesheet from "~/styles/docs.css?url";
 import { SearchBox, SearchButton } from "@orama/searchbox/dist/index";
