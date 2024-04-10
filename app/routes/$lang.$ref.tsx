@@ -523,9 +523,7 @@ function Menu() {
   let { menu } = useLoaderData<typeof loader>();
   return menu ? (
     <nav>
-      <div className="mb-3">
-        <SearchButton {...SearchButtonParams} />
-      </div>
+      <SearchButton {...SearchButtonParams} />
       <ul>
         {menu.map((category) => {
           // Technically we can have a category that has content (and thus
