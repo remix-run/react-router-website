@@ -29,6 +29,7 @@ import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
 import { useColorScheme } from "~/modules/color-scheme/components";
+import "~/modules/orama";
 
 import docsStylesheet from "~/styles/docs.css?url";
 
@@ -174,6 +175,13 @@ function Header() {
       </div>
       <VersionWarning />
       <div className="flex items-center gap-4">
+        <div>
+          <orama-search-button />
+          <div className="fixed">
+            <orama-searchbox />
+          </div>
+        </div>
+
         <HeaderLink
           href="https://github.com/remix-run/react-router"
           svgId="github"
