@@ -524,7 +524,7 @@ function Menu() {
   let colorScheme = useColorScheme();
   return menu ? (
     <nav>
-      <SearchButton {...{ ...SearchButtonParams, colorScheme }} />
+      <SearchButton { ...SearchButtonParams } colorScheme={colorScheme} />
       <ul>
         {menu.map((category) => {
           // Technically we can have a category that has content (and thus
