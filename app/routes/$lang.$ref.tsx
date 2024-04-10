@@ -176,12 +176,9 @@ function Header() {
       </div>
       <VersionWarning />
       <div className="flex items-center gap-4">
-        <div>
-          <div className="fixed">
-            <SearchBox {...SearchBoxParams} />
-          </div>
+        <div className="fixed">
+          <SearchBox {...SearchBoxParams} />
         </div>
-
         <HeaderLink
           href="https://github.com/remix-run/react-router"
           svgId="github"
@@ -524,7 +521,7 @@ function Menu() {
   let colorScheme = useColorScheme();
   return menu ? (
     <nav>
-      <SearchButton { ...SearchButtonParams } colorScheme={colorScheme} />
+      <SearchButton {...SearchButtonParams} colorScheme={colorScheme} />
       <ul>
         {menu.map((category) => {
           // Technically we can have a category that has content (and thus
