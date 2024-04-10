@@ -20,6 +20,7 @@ export const SearchBoxParams = {
   searchParams: {
     threshold: 0,
   },
+  backdrop: true,
 };
 export const SearchButtonParams = {
   colorScheme: "dark",
