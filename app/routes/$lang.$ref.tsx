@@ -177,7 +177,6 @@ function Header() {
       <VersionWarning />
       <div className="flex items-center gap-4">
         <div>
-          <SearchButton {...SearchButtonParams} />
           <div className="fixed">
             <SearchBox {...SearchBoxParams} />
           </div>
@@ -524,6 +523,9 @@ function Menu() {
   let { menu } = useLoaderData<typeof loader>();
   return menu ? (
     <nav>
+      <div className="mb-3">
+        <SearchButton {...SearchButtonParams} />
+      </div>
       <ul>
         {menu.map((category) => {
           // Technically we can have a category that has content (and thus

@@ -25,4 +25,6 @@ export const SearchBoxParams = {
 
 export const SearchButtonParams = {
   colorScheme: "dark",
+  fullWidth: true,
+  className: "dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-transparent",
 };
