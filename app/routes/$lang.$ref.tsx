@@ -521,9 +521,10 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
 
 function Menu() {
   let { menu } = useLoaderData<typeof loader>();
+  let colorScheme = useColorScheme();
   return menu ? (
     <nav>
-      <SearchButton {...SearchButtonParams} />
+      <SearchButton {...{ ...SearchButtonParams, colorScheme }} />
       <ul>
         {menu.map((category) => {
           // Technically we can have a category that has content (and thus

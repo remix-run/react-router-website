@@ -27,5 +27,5 @@ export const SearchButtonParams = {
   colorScheme: "dark",
   fullWidth: true,
   className:
-    "dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-transparent mb-3 -mx-2",
+    "bg-gray-50 hover:bg-gray-100 border-transparent dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-transparent mb-3 -mx-2",
 };
