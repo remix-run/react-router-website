@@ -32,6 +32,8 @@ import { useColorScheme } from "~/modules/color-scheme/components";
 import "~/modules/orama";
 
 import docsStylesheet from "~/styles/docs.css?url";
+import { SearchBox, SearchButton } from "@orama/searchbox/dist/index";
+import { SearchBoxParams, SearchButtonParams } from "~/modules/orama";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: docsStylesheet }];
@@ -176,9 +178,9 @@ function Header() {
       <VersionWarning />
       <div className="flex items-center gap-4">
         <div>
-          <orama-search-button />
+          <SearchButton {...SearchButtonParams} />
           <div className="fixed">
-            <orama-searchbox />
+            <SearchBox {...SearchBoxParams} />
           </div>
         </div>
 
