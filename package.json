@@ -20,7 +20,7 @@
     "/public/build"
   ],
   "dependencies": {
-    "@orama/searchbox": "^1.0.0-rc19",
+    "@orama/searchbox": "^1.0.0-rc25",
     "@oramacloud/client": "^1.0.14",
     "@remix-run/node": "2.8.1",
     "@remix-run/react": "2.8.1",

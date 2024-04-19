@@ -29,6 +29,7 @@ import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
 import { useColorScheme } from "~/modules/color-scheme/components";
+import { useHydrated } from "~/ui/utils";
 
 import docsStylesheet from "~/styles/docs.css?url";
 import { SearchBox, SearchButton } from "@orama/searchbox/dist/index";
@@ -519,9 +520,17 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
 function Menu() {
   let { menu } = useLoaderData<typeof loader>();
   let colorScheme = useColorScheme();
+  let hydrated = useHydrated();
+
   return menu ? (
     <nav>
-      <SearchButton {...SearchButtonParams} colorScheme={colorScheme} />
+      {hydrated ? (
+        <div className="mb-3">
+          <SearchButton {...SearchButtonParams} colorScheme={colorScheme} />
+        </div>
+      ) : (
+        <div className="h-[42px]" />
+      )}
       <ul>
         {menu.map((category) => {
           // Technically we can have a category that has content (and thus

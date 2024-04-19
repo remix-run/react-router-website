@@ -1,3 +1,7 @@
+import type {
+  RegisterSearchBoxProps,
+  RegisterSearchButtonProps,
+} from "@orama/searchbox";
 import { OramaClient } from "@oramacloud/client";
 import "@orama/searchbox/dist/index.css";
 
@@ -8,7 +12,7 @@ const oramaInstance = new OramaClient({
   api_key: "23DOEM1uyLIqnumsPZICJzw2Xn7GSFkj",
 });
 
-export const SearchBoxParams = {
+export const SearchBoxParams: RegisterSearchBoxProps = {
   oramaInstance,
   colorScheme: "dark",
   resultsMap: {
@@ -21,11 +25,17 @@ export const SearchBoxParams = {
     threshold: 0,
   },
   backdrop: true,
+  themeConfig: {
+    light: {},
+    dark: {
+      "--backdrop-bg-color": "#12102080",
+    },
+  },
 };
 
-export const SearchButtonParams = {
+export const SearchButtonParams: RegisterSearchButtonProps = {
   colorScheme: "dark",
   fullWidth: true,
   className:
-    "bg-gray-50 hover:bg-gray-100 border-transparent dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-transparent mb-3 -mx-2",
+    "bg-gray-50 hover:bg-gray-100 border-transparent dark:bg-gray-800 dark:hover:bg-gray-700 dark:border-transparent mb-3 -mx-2 rounded-full",
 };
