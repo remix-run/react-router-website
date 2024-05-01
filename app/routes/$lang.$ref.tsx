@@ -92,29 +92,39 @@ export default function DocsLayout() {
     !navigation.location.pathname.match(params.ref);
 
   return (
-    <div className="lg:m-auto lg:max-w-[90rem]">
+    <div className="[--header-height:theme(spacing.16)] [--nav-width:theme(spacing.72)] lg:m-auto lg:max-w-[90rem]">
       <div className="sticky top-0 z-20">
         <Header />
         <NavMenuMobile />
       </div>
       <div
         className={
-          changingVersions ? "opacity-25 transition-opacity delay-300" : ""
+          changingVersions
+            ? "opacity-25 transition-opacity delay-300"
+            : undefined
         }
       >
-        <NavMenuDesktop />
-        <div
-          className={classNames(
-            "min-h-[80vh]",
-            !changingVersions && navigating
-              ? "opacity-25 transition-opacity delay-300"
-              : ""
-          )}
-        >
-          <Outlet />
-        </div>
-        <div className="px-4 pb-4 pt-8 lg:ml-72 lg:pl-12 lg:pr-8">
-          <Footer />
+        <div className="block lg:flex">
+          <NavMenuDesktop />
+          <div
+            className={classNames(
+              // add scroll margin to focused elements so that they aren't
+              // obscured by the sticky header
+              "[&_*:focus]:scroll-mt-[8rem] lg:[&_*:focus]:scroll-mt-[5rem]",
+              // Account for the left navbar
+              "min-h-[80vh] lg:ml-3 lg:w-[calc(100%-var(--nav-width))]",
+              "lg:pl-6 xl:pl-10 2xl:pl-12",
+              !changingVersions && navigating
+                ? "opacity-25 transition-opacity delay-300"
+                : "",
+              "flex flex-col"
+            )}
+          >
+            <Outlet />
+            <div className="mt-auto px-4 pt-8 lg:pr-8 xl:pl-0">
+              <Footer />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -318,8 +328,16 @@ function HeaderLink({
 
 function NavMenuDesktop() {
   return (
-    <div className="fixed bottom-0 top-16 hidden w-72 overflow-auto py-6 pl-8 pr-6 lg:block">
-      <Menu />
+    <div
+      className={classNames(
+        "sticky bottom-0 top-16 hidden w-[--nav-width] flex-col gap-3 self-start overflow-auto py-6 pl-8 pr-6 lg:flex",
+        // Account for the height of the top nav
+        "h-[calc(100vh-var(--header-height))]"
+      )}
+    >
+      <div className="[&_*:focus]:scroll-mt-[6rem]">
+        <Menu />
+      </div>
     </div>
   );
 }
@@ -700,7 +718,7 @@ function MenuCategoryLink({
 
 function Footer() {
   return (
-    <div className="-ml-8 mt-16 flex justify-between border-t border-t-gray-50 pl-8 pt-4 text-sm text-gray-400 dark:border-gray-800">
+    <div className="flex justify-between gap-4 border-t border-t-gray-50 py-4 text-sm text-gray-400 dark:border-gray-800">
       <div className="lg:flex lg:items-center">
         <div className="pr-4">
           &copy;{" "}
