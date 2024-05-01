@@ -119,7 +119,7 @@ export default function DocPage() {
       ) : (
         <div className="hidden xl:order-1 xl:block xl:w-56 xl:flex-shrink-0" />
       )}
-      <div className="px-4 pb-4 pt-12 lg:ml-72 lg:pl-12 lg:pr-8 xl:flex-grow xl:pt-20">
+      <div className="min-w-0 px-4 pt-12 xl:mr-4 xl:flex-grow xl:pl-0 xl:pt-20">
         <div ref={ref} className="markdown w-full max-w-3xl pb-[33vh]">
           <div
             className="md-prose"
@@ -155,7 +155,7 @@ function LargeOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
 
 function SmallOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
   return (
-    <details className="group flex h-full flex-col lg:ml-80 lg:mt-4 xl:hidden">
+    <details className="group flex flex-col lg:mt-4 xl:hidden">
       <summary className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-50 bg-white px-2 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 dark:active:bg-gray-700">
         <div className="flex items-center gap-2">
           <svg aria-hidden className="h-5 w-5 group-open:hidden">
