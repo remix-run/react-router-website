@@ -31,6 +31,7 @@ import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
 import { useColorScheme } from "~/modules/color-scheme/components";
 
 import docsStylesheet from "~/styles/docs.css?url";
+import { DocSearch } from "~/modules/docsearch";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: docsStylesheet }];
@@ -180,6 +181,7 @@ function Header() {
         <div className="flex items-center gap-2">
           <VersionSelect />
           <ColorSchemeToggle />
+          <DocSearchSection className="lg:hidden" />
         </div>
       </div>
       <VersionWarning />
@@ -204,6 +206,29 @@ function Header() {
           svgLabel="Stylized text saying “Made by Remix” with an right pointing arrow."
           svgSize="122x17"
         />
+      </div>
+    </div>
+  );
+}
+
+function DocSearchSection({ className }: { className?: string }) {
+  return (
+    <div
+      className={classNames(
+        "relative -mx-3 lg:sticky lg:top-0 lg:z-10",
+        className
+      )}
+    >
+      <div className="absolute -top-24 hidden h-24 w-full bg-white dark:bg-gray-900 lg:block" />
+      <div
+        className={classNames(
+          "relative lg:bg-white lg:dark:bg-gray-900",
+          // This hides some of the underlying text when the user scrolls to the
+          // bottom which results in the overscroll bounce
+          "before:absolute before:bottom-0 before:left-0 before:-z-10 before:hidden before:h-[200%] before:w-full before:bg-inherit lg:before:block"
+        )}
+      >
+        <DocSearch />
       </div>
     </div>
   );
@@ -329,6 +354,7 @@ function NavMenuDesktop() {
         "h-[calc(100vh-var(--header-height))]"
       )}
     >
+      <DocSearchSection />
       <div className="[&_*:focus]:scroll-mt-[6rem]">
         <Menu />
       </div>
