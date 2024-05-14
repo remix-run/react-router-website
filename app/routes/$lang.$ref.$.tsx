@@ -53,7 +53,7 @@ export const meta: MetaFunction<
     root: typeof rootLoader;
     "routes/$lang.$ref": typeof langRefLoader;
   }
-> = ({ data, matches }) => {
+> = ({ data, matches, params }) => {
   if (!data) return [{ title: "Not Found" }];
   let parentMatch = matches.find((m) => m.id === "routes/$lang.$ref");
   let parentData = parentMatch ? parentMatch.data : undefined;
@@ -100,6 +100,8 @@ export const meta: MetaFunction<
 
   return [
     ...meta,
+    { name: "docsearch:language", content: params.lang || "en" },
+    { name: "docsearch:version", content: params.ref || "v6" },
     { name: "robots", content: robots },
     { name: "googlebot", content: robots },
   ];

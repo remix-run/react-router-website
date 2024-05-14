@@ -20,6 +20,8 @@
     "/public/build"
   ],
   "dependencies": {
+    "@docsearch/css": "^3.6.0",
+    "@docsearch/react": "^3.6.0",
     "@remix-run/node": "2.8.1",
     "@remix-run/react": "2.8.1",
     "@remix-run/serve": "2.8.1",
