@@ -6,6 +6,9 @@ import tsconfigPaths from "vite-tsconfig-paths";
 installGlobals();
 
 export default defineConfig({
+  ssr: {
+    noExternal: ["@docsearch/react"],
+  },
   server: {
     port: 3000,
   },

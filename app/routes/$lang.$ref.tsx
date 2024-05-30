@@ -183,13 +183,13 @@ function Header() {
         <div className="flex items-center gap-2">
           <VersionSelect />
           <ColorSchemeToggle />
+          <div className="fixed">
+            <SearchBox {...SearchBoxParams} />
+          </div>
         </div>
       </div>
       <VersionWarning />
       <div className="flex items-center gap-4">
-        <div className="fixed">
-          <SearchBox {...SearchBoxParams} />
-        </div>
         <HeaderLink
           href="https://github.com/remix-run/react-router"
           svgId="github"
