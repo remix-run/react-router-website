@@ -317,7 +317,8 @@
 
   & :is(a, h1, h2, h3, h4, h5, h6) code,
   & :is(a, h1, h2, h3, h4, h5, h6) kbd {
-    @apply text-inherit;
+    /* dark:text-inherit needs to be specified explicitly for the :active color to apply */
+    @apply text-inherit dark:text-inherit;
   }
 
   & :is(h1, h2, h3, h4, h5, h6) code {
