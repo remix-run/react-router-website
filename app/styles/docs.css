@@ -218,8 +218,8 @@
   /* heading anchors */
   & :is(h1, h2, h3, h4, h5, h6) {
     @apply relative;
-    scroll-margin-top: 5em;
-    scroll-snap-margin-top: 5em;
+    scroll-margin-top: 4em;
+    scroll-snap-margin-top: 4em;
 
     /* only apply these styles for links starting with a hash -- if a header does not start with a hash, it was generated from HTML, not markdown headers */
     & a[href^="#"] {
