@@ -29,9 +29,11 @@ import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
 import { useColorScheme } from "~/modules/color-scheme/components";
+import { useHydrated } from "~/ui/utils";
 
 import docsStylesheet from "~/styles/docs.css?url";
-import { DocSearch } from "~/modules/docsearch";
+import { SearchBox, SearchButton } from "@orama/searchbox/dist/index";
+import { SearchBoxParams, SearchButtonParams } from "~/modules/orama";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: docsStylesheet }];
@@ -181,7 +183,9 @@ function Header() {
         <div className="flex items-center gap-2">
           <VersionSelect />
           <ColorSchemeToggle />
-          <DocSearchSection className="lg:hidden" />
+          <div className="fixed">
+            <SearchBox {...SearchBoxParams} />
+          </div>
         </div>
       </div>
       <VersionWarning />
@@ -206,26 +210,6 @@ function Header() {
           svgLabel="Stylized text saying “Made by Remix” with an right pointing arrow."
           svgSize="122x17"
         />
-      </div>
-    </div>
-  );
-}
-
-function DocSearchSection({ className }: { className?: string }) {
-  return (
-    <div
-      className={classNames("relative lg:sticky lg:top-0 lg:z-10", className)}
-    >
-      <div className="absolute -top-24 hidden h-24 w-full bg-white dark:bg-gray-900 lg:block" />
-      <div
-        className={classNames(
-          "relative lg:bg-white lg:dark:bg-gray-900",
-          // This hides some of the underlying text when the user scrolls to the
-          // bottom which results in the overscroll bounce
-          "before:absolute before:bottom-0 before:left-0 before:-z-10 before:hidden before:h-[200%] before:w-full before:bg-inherit lg:before:block"
-        )}
-      >
-        <DocSearch />
       </div>
     </div>
   );
@@ -351,7 +335,6 @@ function NavMenuDesktop() {
         "h-[calc(100vh-var(--header-height))]"
       )}
     >
-      <DocSearchSection className="-mx-3" />
       <div className="[&_*:focus]:scroll-mt-[6rem]">
         <Menu />
       </div>
@@ -554,8 +537,18 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
 
 function Menu() {
   let { menu } = useLoaderData<typeof loader>();
+  let colorScheme = useColorScheme();
+  let hydrated = useHydrated();
+
   return menu ? (
     <nav>
+      {hydrated ? (
+        <div className="mb-3">
+          <SearchButton {...SearchButtonParams} colorScheme={colorScheme} />
+        </div>
+      ) : (
+        <div className="h-[42px]" />
+      )}
       <ul>
         {menu.map((category) => {
           // Technically we can have a category that has content (and thus
