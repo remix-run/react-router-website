@@ -31,7 +31,7 @@ import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
 import { useColorScheme } from "~/modules/color-scheme/components";
 
 import docsStylesheet from "~/styles/docs.css?url";
-import { DocSearch } from "~/modules/docsearch";
+import { SearchModalProvider, SearchButton } from "~/modules/orama-search";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: docsStylesheet }];
@@ -90,42 +90,44 @@ export default function DocsLayout() {
     !navigation.location.pathname.match(params.ref);
 
   return (
-    <div className="[--header-height:theme(spacing.16)] [--nav-width:theme(spacing.72)] lg:m-auto lg:max-w-[90rem]">
-      <div className="sticky top-0 z-20">
-        <Header />
-        <NavMenuMobile />
-      </div>
-      <div
-        className={
-          changingVersions
-            ? "opacity-25 transition-opacity delay-300"
-            : undefined
-        }
-      >
-        <div className="block lg:flex">
-          <NavMenuDesktop />
-          <div
-            className={classNames(
-              // add scroll margin to focused elements so that they aren't
-              // obscured by the sticky header
-              "[&_*:focus]:scroll-mt-[8rem] lg:[&_*:focus]:scroll-mt-[5rem]",
-              // Account for the left navbar
-              "min-h-[80vh] lg:ml-3 lg:w-[calc(100%-var(--nav-width))]",
-              "lg:pl-6 xl:pl-10 2xl:pl-12",
-              !changingVersions && navigating
-                ? "opacity-25 transition-opacity delay-300"
-                : "",
-              "flex flex-col"
-            )}
-          >
-            <Outlet />
-            <div className="mt-auto px-4 pt-8 lg:pr-8 xl:pl-0">
-              <Footer />
+    <SearchModalProvider>
+      <div className="[--header-height:theme(spacing.16)] [--nav-width:theme(spacing.72)] lg:m-auto lg:max-w-[90rem]">
+        <div className="sticky top-0 z-20">
+          <Header />
+          <NavMenuMobile />
+        </div>
+        <div
+          className={
+            changingVersions
+              ? "opacity-25 transition-opacity delay-300"
+              : undefined
+          }
+        >
+          <div className="block lg:flex">
+            <NavMenuDesktop />
+            <div
+              className={classNames(
+                // add scroll margin to focused elements so that they aren't
+                // obscured by the sticky header
+                "[&_*:focus]:scroll-mt-[8rem] lg:[&_*:focus]:scroll-mt-[5rem]",
+                // Account for the left navbar
+                "min-h-[80vh] lg:ml-3 lg:w-[calc(100%-var(--nav-width))]",
+                "lg:pl-6 xl:pl-10 2xl:pl-12",
+                !changingVersions && navigating
+                  ? "opacity-25 transition-opacity delay-300"
+                  : "",
+                "flex flex-col"
+              )}
+            >
+              <Outlet />
+              <div className="mt-auto px-4 pt-8 lg:pr-8 xl:pl-0">
+                <Footer />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </SearchModalProvider>
   );
 }
 
@@ -181,7 +183,7 @@ function Header() {
         <div className="flex items-center gap-2">
           <VersionSelect />
           <ColorSchemeToggle />
-          <DocSearchSection className="lg:hidden" />
+          <SearchButtonSection className="lg:hidden" />
         </div>
       </div>
       <VersionWarning />
@@ -211,7 +213,7 @@ function Header() {
   );
 }
 
-function DocSearchSection({ className }: { className?: string }) {
+function SearchButtonSection({ className }: { className?: string }) {
   return (
     <div
       className={classNames("relative lg:sticky lg:top-0 lg:z-10", className)}
@@ -225,7 +227,7 @@ function DocSearchSection({ className }: { className?: string }) {
           "before:absolute before:bottom-0 before:left-0 before:-z-10 before:hidden before:h-[200%] before:w-full before:bg-inherit lg:before:block"
         )}
       >
-        <DocSearch />
+        <SearchButton />
       </div>
     </div>
   );
@@ -351,7 +353,7 @@ function NavMenuDesktop() {
         "h-[calc(100vh-var(--header-height))]"
       )}
     >
-      <DocSearchSection className="-mx-3" />
+      <SearchButtonSection className="-mx-3" />
       <div className="[&_*:focus]:scroll-mt-[6rem]">
         <Menu />
       </div>
