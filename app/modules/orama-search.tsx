@@ -41,13 +41,9 @@ export function SearchModalProvider({
             colorScheme={colorScheme}
             theme="secondary"
             resultsMap={{
-              description: "section",
+              description: "content",
             }}
             facetProperty="section"
-            searchParams={{
-              threshold: 0,
-            }}
-            searchMode="hybrid"
             backdrop
           />
         ) : null}
