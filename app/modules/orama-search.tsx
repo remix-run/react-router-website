@@ -40,6 +40,14 @@ export function SearchModalProvider({
             onClose={() => setShowSearchModal(false)}
             colorScheme={colorScheme}
             theme="secondary"
+            themeConfig={{
+              light: {
+                "--background-color-fourth": "#f7f7f7",
+              },
+              dark: {
+                "--background-color-fourth": "#383838",
+              },
+            }}
             resultsMap={{
               description: "content",
             }}
