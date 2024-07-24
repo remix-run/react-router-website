@@ -31,7 +31,7 @@ import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
 import { useColorScheme } from "~/modules/color-scheme/components";
 
 import docsStylesheet from "~/styles/docs.css?url";
-import { SearchModalProvider, SearchButton } from "~/modules/orama-search";
+import { SearchModalProvider, SearchButton } from "~/modules/search";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: docsStylesheet }];

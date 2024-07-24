@@ -4,7 +4,7 @@ import { useHydrated, useLayoutEffect } from "~/ui/utils";
 import "@orama/searchbox/dist/index.css";
 import "@docsearch/css/dist/style.css";
 import "~/styles/orama-search.css";
-import { useColorScheme } from "./color-scheme/components";
+import { useColorScheme } from "~/modules/color-scheme/components";
 
 const OriginalSearchBox = lazy(() =>
   import("@orama/searchbox").then((module) => ({
