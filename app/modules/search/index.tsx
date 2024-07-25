@@ -27,12 +27,14 @@ export function SearchModalProvider({
 }: {
   children: React.ReactNode;
 }) {
-  let bucket = useBucket();
+  let { bucket, isProductionHost } = useRootData();
 
   if (bucket === "orama") {
     return (
       <Suspense fallback={null}>
-        <OramaSearch>{children}</OramaSearch>
+        <OramaSearch environment={isProductionHost ? "prod" : "dev"}>
+          {children}
+        </OramaSearch>
       </Suspense>
     );
   }
@@ -42,7 +44,7 @@ export function SearchModalProvider({
 
 export function SearchButton() {
   let hydrated = useHydrated();
-  let bucket = useBucket();
+  let { bucket } = useRootData();
 
   if (!hydrated) {
     // The Algolia doc search container is hard-coded at 40px. It doesn't
@@ -60,12 +62,12 @@ export function SearchButton() {
   );
 }
 
-function useBucket() {
+function useRootData() {
   const data = useRouteLoaderData<typeof rootLoader>("root");
 
   if (!data) {
     throw new Error("useBucket must be used within root route loader");
   }
 
-  return data.bucket;
+  return data;
 }

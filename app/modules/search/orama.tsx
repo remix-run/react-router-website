@@ -1,4 +1,11 @@
-import { Suspense, createContext, lazy, useContext, useState } from "react";
+import {
+  Suspense,
+  createContext,
+  lazy,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import { useHydrated, useLayoutEffect } from "~/ui/utils";
 import { useColorScheme } from "~/modules/color-scheme/components";
 
@@ -15,25 +22,36 @@ const SearchModalContext = createContext<null | ((show: boolean) => void)>(
 );
 
 export function SearchModalProvider({
+  environment,
   children,
 }: {
+  environment: "prod" | "dev";
   children: React.ReactNode;
 }) {
   let [showSearchModal, setShowSearchModal] = useState(false);
   const isHydrated = useHydrated();
   const colorScheme = useSearchModalColorScheme();
 
+  const cloudConfig = useMemo(() => {
+    return environment === "prod"
+      ? {
+          url: "https://cloud.orama.run/v1/indexes/react-router-prod-rk4lmw",
+          key: "w27ab0xTLXlBW5fM4Cg07asblm0tFsiP",
+        }
+      : {
+          // The search endpoint for the Orama index
+          url: "https://cloud.orama.run/v1/indexes/react-router-dev-nwm58f",
+          // The public API key for performing search. This is commit-safe.
+          key: "23DOEM1uyLIqnumsPZICJzw2Xn7GSFkj",
+        };
+  }, [environment]);
+
   return (
     <SearchModalContext.Provider value={setShowSearchModal}>
       <Suspense fallback={null}>
         {isHydrated ? (
           <OramaSearch
-            cloudConfig={{
-              // The search endpoint for the Orama index
-              url: "https://cloud.orama.run/v1/indexes/react-router-dev-nwm58f",
-              // The public API key for performing search. This is commit-safe.
-              key: "23DOEM1uyLIqnumsPZICJzw2Xn7GSFkj",
-            }}
+            cloudConfig={cloudConfig}
             show={showSearchModal}
             onClose={() => setShowSearchModal(false)}
             colorScheme={colorScheme}
@@ -50,6 +68,7 @@ export function SearchModalProvider({
               description: "content",
             }}
             facetProperty="section"
+            searchMode="hybrid"
             backdrop
           />
         ) : null}

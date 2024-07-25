@@ -5,7 +5,6 @@ export let unencryptedSession = createCookieSessionStorage({
     name: "ab_session",
     path: "/",
     sameSite: "lax",
-    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 1 week
   },
 });
 
@@ -17,26 +16,29 @@ export async function bucketUser(request: Request) {
   );
 
   let { searchParams } = new URL(request.url);
-  let bucket = searchParams.get("bucket");
+  let searchParamBucket = searchParams.get("bucket");
 
-  // if the bucket isn't being overridden by a query parameter, use the session
-  if (!isBucketValue(bucket)) {
-    bucket = session.get(SESSION_KEY);
+  let sessionBucket = session.get(SESSION_KEY);
+
+  // if there is already a cookie and it's not being overridden, go ahead and return it
+  if (isBucketValue(sessionBucket) && !searchParamBucket) {
+    return {
+      bucket: sessionBucket,
+    };
   }
 
-  // if no bucket in the session, assign the user
-  if (!isBucketValue(bucket)) {
-    bucket = Math.random() > 0.5 ? "orama" : "docsearch";
-  }
+  let bucket = isBucketValue(searchParamBucket)
+    ? searchParamBucket
+    : randomBucket();
 
-  let safeBucket = isBucketValue(bucket) ? bucket : "docsearch";
-
-  session.set(SESSION_KEY, safeBucket);
+  session.set(SESSION_KEY, bucket);
 
   return {
-    bucket: safeBucket,
+    bucket,
     headers: {
-      "Set-Cookie": await unencryptedSession.commitSession(session),
+      "Set-Cookie": await unencryptedSession.commitSession(session, {
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 1 week
+      }),
     },
   };
 }
@@ -44,3 +46,5 @@ export async function bucketUser(request: Request) {
 function isBucketValue(bucket: any): bucket is "docsearch" | "orama" {
   return bucket === "docsearch" || bucket === "orama";
 }
+
+const randomBucket = () => (Math.random() > 0.1 ? "orama" : "docsearch");
