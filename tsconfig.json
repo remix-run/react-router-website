@@ -4,6 +4,8 @@
     "env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "**/.server/**/*.ts",
+    "**/.server/**/*.tsx",
     "app/modules/redirects/.server/check-url.test.ts"
   ],
   "compilerOptions": {
