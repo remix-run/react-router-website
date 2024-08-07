@@ -14,13 +14,23 @@ interface MenuDocAttributes {
   [key: string]: any;
 }
 
-export interface MenuDoc {
-  attrs: MenuDocAttributes;
-  children: MenuDoc[];
-  filename: string;
-  hasContent: boolean;
-  slug: string;
-}
+export type MenuDoc =
+  | {
+      attrs: MenuDocAttributes;
+      children: MenuDoc[];
+      filename: string;
+      hasContent: boolean;
+      slug: string;
+      slugs?: undefined;
+    }
+  | {
+      attrs: MenuDocAttributes;
+      children: MenuDoc[];
+      filename: string;
+      hasContent: boolean;
+      slug?: undefined;
+      slugs: string[];
+    };
 
 export interface Doc extends Omit<MenuDoc, "hasContent"> {
   html: string;
@@ -157,7 +167,7 @@ export async function getMenuFromStream(stream: NodeJS.ReadableStream) {
   });
 
   // sort so we can process parents before children
-  docs.sort((a, b) => (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0));
+  docs.sort((a, b) => (a.slug! < b.slug! ? -1 : a.slug! > b.slug! ? 1 : 0));
 
   // construct the hierarchy
   let tree: MenuDoc[] = [];
@@ -165,8 +175,8 @@ export async function getMenuFromStream(stream: NodeJS.ReadableStream) {
   for (let doc of docs) {
     let { slug } = doc;
 
-    let parentSlug = slug.substring(0, slug.lastIndexOf("/"));
-    map.set(slug, doc);
+    let parentSlug = slug!.substring(0, slug!.lastIndexOf("/"));
+    map.set(slug!, doc);
 
     if (parentSlug) {
       let parent = map.get(parentSlug);

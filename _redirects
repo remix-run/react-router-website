@@ -3,6 +3,9 @@
 # /foo /bar 301
 # /foo/* /bar/* 301
 
+# API reference redirects
+/reference /en/main/reference
+
 # old convenience API redirects
 /api /*
 

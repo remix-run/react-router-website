@@ -27,6 +27,7 @@ import {
 import type { Doc } from "~/modules/gh-docs/.server";
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
+import type { MenuDoc } from "~/modules/gh-docs/.server/docs";
 import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
 import { useColorScheme } from "~/modules/color-scheme/components";
 
@@ -79,6 +80,7 @@ export function headers() {
 export let unstable_shouldReload = () => false;
 
 export default function DocsLayout() {
+  let { menu } = useLoaderData<typeof loader>();
   let navigation = useNavigation();
   let navigating = navigation.location && !navigation.formData;
   let params = useParams();
@@ -93,7 +95,7 @@ export default function DocsLayout() {
     <div className="[--header-height:theme(spacing.16)] [--nav-width:theme(spacing.72)] lg:m-auto lg:max-w-[90rem]">
       <div className="sticky top-0 z-20">
         <Header />
-        <NavMenuMobile />
+        <NavMenuMobile menu={menu} />
       </div>
       <div
         className={
@@ -103,7 +105,7 @@ export default function DocsLayout() {
         }
       >
         <div className="block lg:flex">
-          <NavMenuDesktop />
+          <NavMenuDesktop menu={menu} />
           <div
             className={classNames(
               // add scroll margin to focused elements so that they aren't
@@ -152,14 +154,14 @@ function VersionWarning() {
   );
 }
 
-function Header() {
+export function Header() {
   let navigate = useNavigate();
 
   return (
     <div className="relative z-20 flex h-16 w-full items-center justify-between border-b border-gray-50 bg-white px-4 py-3 text-gray-900 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 lg:px-8">
       <div className="flex w-full items-center justify-between gap-8 md:w-auto">
         <Link
-          to="."
+          to="/"
           className="flex items-center gap-1 text-gray-900 dark:text-white"
           onContextMenu={(event) => {
             event.preventDefault();
@@ -182,25 +184,26 @@ function Header() {
           <VersionSelect />
           <ColorSchemeToggle />
           <DocSearchSection className="lg:hidden" />
+          <HeaderLink to="/reference">API Docs</HeaderLink>
         </div>
       </div>
       <VersionWarning />
       <div className="flex items-center gap-4">
-        <HeaderLink
+        <HeaderSvgLink
           href="https://github.com/remix-run/react-router"
           svgId="github"
           svgLabel="GitHub octocat logo in a circle"
           title="View code on GitHub"
           svgSize="24x24"
         />
-        <HeaderLink
+        <HeaderSvgLink
           href="https://rmx.as/discord"
           svgId="discord"
           svgLabel="Discord logo in a circle"
           title="Chat on Discord"
           svgSize="24x24"
         />
-        <HeaderLink
+        <HeaderSvgLink
           href="https://remix.run"
           svgId="remix"
           svgLabel="Stylized text saying “Made by Remix” with an right pointing arrow."
@@ -307,6 +310,23 @@ let ColorSchemeButton = React.forwardRef<
 });
 
 function HeaderLink({
+  children,
+  to,
+}: {
+  children: React.ReactNode;
+  to: string;
+}) {
+  return (
+    <Link
+      className="p-2 py-2.5 text-sm leading-none text-gray-500 decoration-gray-200 underline-offset-4 hover:underline dark:text-gray-300 dark:decoration-gray-500 md:p-3"
+      to={to}
+    >
+      {children}
+    </Link>
+  );
+}
+
+function HeaderSvgLink({
   className = "",
   href,
   svgId,
@@ -342,7 +362,7 @@ function HeaderLink({
   );
 }
 
-function NavMenuDesktop() {
+export function NavMenuDesktop({ menu }: { menu?: MenuDoc[] }) {
   return (
     <div
       className={classNames(
@@ -353,7 +373,7 @@ function NavMenuDesktop() {
     >
       <DocSearchSection className="-mx-3" />
       <div className="[&_*:focus]:scroll-mt-[6rem]">
-        <Menu />
+        <Menu menu={menu} />
       </div>
     </div>
   );
@@ -365,21 +385,21 @@ function useDoc(): Doc | null {
   return data.doc as Doc;
 }
 
-function NavMenuMobile() {
+export function NavMenuMobile({ menu }: { menu?: MenuDoc[] }) {
   let doc = useDoc();
 
   return (
-    <DetailsMenu className="group relative flex h-full flex-col lg:hidden">
+    <DetailsMenu className="relative flex h-full flex-col lg:hidden">
       <summary
         tabIndex={0}
         className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-50 bg-white px-2 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 dark:active:bg-gray-700"
       >
         <div className="flex items-center gap-2">
-          <svg aria-hidden className="h-5 w-5 group-open:hidden">
-            <use href={`${iconsHref}#chevron-r`} />
-          </svg>
           <svg aria-hidden className="hidden h-5 w-5 group-open:block">
             <use href={`${iconsHref}#chevron-d`} />
+          </svg>
+          <svg aria-hidden className="h-5 w-5 group-open:hidden">
+            <use href={`${iconsHref}#chevron-r`} />
           </svg>
         </div>
         <div className="whitespace-nowrap font-bold">
@@ -387,7 +407,7 @@ function NavMenuMobile() {
         </div>
       </summary>
       <div className="absolute h-[66vh] w-full overflow-auto overscroll-contain border-b bg-white p-3 shadow-2xl dark:border-gray-700 dark:bg-gray-900 dark:shadow-black">
-        <Menu />
+        <Menu menu={menu} />
       </div>
     </DetailsMenu>
   );
@@ -418,7 +438,7 @@ function VersionSelect() {
     "border border-transparent bg-gray-100 hover:bg-gray-200 focus:border focus:border-gray-100 focus:bg-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:border-gray-400 dark:focus:bg-gray-700";
 
   return (
-    <DetailsMenu className="relative">
+    <DetailsMenu className="group relative">
       <summary
         className={`_no-triangle relative flex h-[40px] cursor-pointer list-none items-center justify-center gap-3 rounded-full px-3 ${className}`}
       >
@@ -521,16 +541,22 @@ function VersionLink({
   );
 }
 
-function useIsActivePath(to: string) {
-  let { pathname } = useResolvedPath(to);
+function useIsActivePath(_to: string | string[]) {
   let navigation = useNavigation();
   let currentLocation = useLocation();
-  let location =
-    navigation.location && !navigation.formData
-      ? navigation.location
-      : currentLocation;
-  let match = matchPath(pathname + "/*", location.pathname);
-  return Boolean(match);
+  let tos = Array.isArray(_to) ? _to : [_to];
+  let matched = false;
+  for (let to of tos) {
+    // TODO: This is against the rules but the menu is static.
+    let { pathname } = useResolvedPath(to);
+    let location =
+      navigation.location && !navigation.formData
+        ? navigation.location
+        : currentLocation;
+    let match = matchPath(pathname + "/*", location.pathname);
+    matched = matched || Boolean(match);
+  }
+  return matched;
 }
 
 function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
@@ -552,61 +578,73 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
   );
 }
 
-function Menu() {
-  let { menu } = useLoaderData<typeof loader>();
+function MenuCategory({ category }: { category: MenuDoc }) {
+  const menuCategoryType = category.hasContent
+    ? category.children.length > 0
+      ? "linkAndDetails"
+      : "link"
+    : "details";
+
+  if (menuCategoryType === "link") {
+    return (
+      <MenuSummary as="div">
+        <MenuCategoryLink to={category.slug!}>
+          {category.attrs.title}
+        </MenuCategoryLink>
+      </MenuSummary>
+    );
+  }
+
+  return (
+    <MenuCategoryDetails
+      className="group"
+      slug={category.slug}
+      slugs={category.slugs}
+    >
+      <MenuSummary>
+        {menuCategoryType === "linkAndDetails" ? (
+          <MenuCategoryLink to={category.slug!}>
+            {category.attrs.title}
+          </MenuCategoryLink>
+        ) : (
+          category.attrs.title
+        )}
+        <svg aria-hidden className="hidden h-5 w-5 group-open:block">
+          <use href={`${iconsHref}#chevron-d`} />
+        </svg>
+        <svg aria-hidden className="h-5 w-5 group-open:hidden">
+          <use href={`${iconsHref}#chevron-r`} />
+        </svg>
+      </MenuSummary>
+      <ul>
+        {category.children.map((doc) => (
+          <li key={doc.slug}>
+            {doc.children.length > 0 ? (
+              <div className="pl-4">
+                <MenuCategory category={doc} />
+              </div>
+            ) : (
+              <MenuLink key={doc.slug} to={doc.slug!}>
+                {doc.attrs.title} {doc.attrs.new && "🆕"}
+              </MenuLink>
+            )}
+          </li>
+        ))}
+      </ul>
+    </MenuCategoryDetails>
+  );
+}
+
+// Updated Menu component
+function Menu({ menu }: { menu?: MenuDoc[] }) {
   return menu ? (
     <nav>
       <ul>
-        {menu.map((category) => {
-          // Technically we can have a category that has content (and thus
-          // needs it's own link) _and_ has children, so needs to be a details
-          // element. It's ridiculous, but it's possible.
-          const menuCategoryType = category.hasContent
-            ? category.children.length > 0
-              ? "linkAndDetails"
-              : "link"
-            : "details";
-
-          return (
-            <li key={category.attrs.title} className="mb-3">
-              {menuCategoryType === "link" ? (
-                <MenuSummary as="div">
-                  <MenuCategoryLink to={category.slug}>
-                    {category.attrs.title}
-                  </MenuCategoryLink>
-                </MenuSummary>
-              ) : (
-                <MenuCategoryDetails className="group" slug={category.slug}>
-                  <MenuSummary>
-                    {menuCategoryType === "linkAndDetails" ? (
-                      <MenuCategoryLink to={category.slug}>
-                        {category.attrs.title}
-                      </MenuCategoryLink>
-                    ) : (
-                      category.attrs.title
-                    )}
-                    <svg aria-hidden className="h-5 w-5 group-open:hidden">
-                      <use href={`${iconsHref}#chevron-r`} />
-                    </svg>
-                    <svg
-                      aria-hidden
-                      className="hidden h-5 w-5 group-open:block"
-                    >
-                      <use href={`${iconsHref}#chevron-d`} />
-                    </svg>
-                  </MenuSummary>
-                  {category.children.map((doc) => {
-                    return (
-                      <MenuLink key={doc.slug} to={doc.slug}>
-                        {doc.attrs.title} {doc.attrs.new && "🆕"}
-                      </MenuLink>
-                    );
-                  })}
-                </MenuCategoryDetails>
-              )}
-            </li>
-          );
-        })}
+        {menu.map((category) => (
+          <li key={category.attrs.title} className="mb-3">
+            <MenuCategory category={category} />
+          </li>
+        ))}
       </ul>
     </nav>
   ) : (
@@ -618,16 +656,19 @@ function Menu() {
 
 type MenuCategoryDetailsType = {
   className?: string;
-  slug: string;
+  slug?: string;
+  slugs?: string[];
   children: React.ReactNode;
+  onOpenChanged?: (isOpen: boolean) => void;
 };
 
 function MenuCategoryDetails({
   className,
   slug,
+  slugs,
   children,
 }: MenuCategoryDetailsType) {
-  const isActivePath = useIsActivePath(slug);
+  const isActivePath = useIsActivePath(slugs ?? slug ?? []);
   // By default only the active path is open
   const [isOpen, setIsOpen] = React.useState(isActivePath);
 
@@ -723,7 +764,7 @@ function MenuCategoryLink({
   );
 }
 
-function Footer() {
+export function Footer() {
   return (
     <div className="flex justify-between gap-4 border-t border-t-gray-50 py-4 text-sm text-gray-400 dark:border-gray-800">
       <div className="lg:flex lg:items-center">
@@ -762,13 +803,18 @@ function EditLink() {
   let params = useParams();
   let isEditableRef = params.ref === "main" || params.ref === "dev";
 
-  if (!doc || !isEditableRef) {
+  if (!doc || !isEditableRef || !doc.filename) {
     return null;
   }
 
+  let editUrl: string;
   let repoUrl = "https://github.com/remix-run/react-router";
-  // TODO: deal with translations when we add them with params.lang
-  let editUrl = `${repoUrl}/edit/${params.ref}/${doc.slug}.md`;
+  if (doc.filename.match(/\.tsx?$/)) {
+    editUrl = `${repoUrl}/edit/${params.ref}/${doc.filename}`;
+  } else {
+    // TODO: deal with translations when we add them with params.lang
+    editUrl = `${repoUrl}/edit/${params.ref}/${doc.slug}.md`;
+  }
 
   return (
     <a className="flex items-center gap-1 hover:underline" href={editUrl}>

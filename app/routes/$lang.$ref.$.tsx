@@ -133,7 +133,7 @@ export default function DocPage() {
   );
 }
 
-function LargeOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
+export function LargeOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
   return (
     <div className="sticky top-36 order-1 mt-20 hidden max-h-[calc(100vh-9rem)] w-56 flex-shrink-0 self-start overflow-y-auto pb-10 xl:block">
       <nav className="mb-3 flex items-center font-semibold">On this page</nav>
@@ -155,7 +155,7 @@ function LargeOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
   );
 }
 
-function SmallOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
+export function SmallOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
   return (
     <details className="group flex flex-col lg:mt-4 xl:hidden">
       <summary className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-50 bg-white px-2 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 dark:active:bg-gray-700">
