@@ -1,6 +1,4 @@
 import type { DocSearchProps } from "@docsearch/react";
-import "@docsearch/css/dist/style.css";
-import "~/styles/docsearch.css";
 import { useHydrated } from "~/ui/utils";
 import { Suspense, lazy } from "react";
 

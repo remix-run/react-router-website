@@ -22,6 +22,7 @@ import {
 import { isHost } from "./modules/http-utils/is-host";
 import iconsHref from "~/icons.svg";
 import stylesheet from "~/styles/tailwind.css?url";
+import { bucketUser } from "./modules/search/ab-session.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -49,12 +50,15 @@ export let loader = async ({ request }: LoaderFunctionArgs) => {
   let colorScheme = await parseColorScheme(request);
   let isProductionHost = isHost("reactrouter.com", request);
 
+  let { bucket, headers } = await bucketUser(request);
+
   return json(
-    { colorScheme, isProductionHost },
+    { colorScheme, isProductionHost, bucket },
     {
       headers: {
         "Cache-Control": CACHE_CONTROL.doc,
         Vary: "Cookie",
+        ...headers,
       },
     }
   );
