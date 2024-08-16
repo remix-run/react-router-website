@@ -27,6 +27,8 @@ export default defineConfig({
         v3_throwAbortReason: true,
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
+        unstable_singleFetch: true,
+        unstable_lazyRouteDiscovery: true,
       },
       routes(defineRoutes) {
         return defineRoutes((route) => {
