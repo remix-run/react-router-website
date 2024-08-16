@@ -1,6 +1,6 @@
 import { vitePlugin as remix } from "@remix-run/dev";
-import { defineConfig, splitVendorChunkPlugin } from "vite";
 import { installGlobals } from "@remix-run/node";
+import { defineConfig, splitVendorChunkPlugin } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 declare module "@remix-run/node" {
@@ -17,13 +17,16 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    host: '0.0.0.0',
+    host: "0.0.0.0",
   },
   plugins: [
     splitVendorChunkPlugin(),
     remix({
       future: {
         unstable_singleFetch: true,
+        v3_throwAbortReason: true,
+        v3_fetcherPersist: true,
+        v3_relativeSplatPath: true,
       },
       routes(defineRoutes) {
         return defineRoutes((route) => {
