@@ -62,7 +62,7 @@ export async function getReferenceAPI(repo: string, ref: string, lang: string) {
         : _qualifiedName?.qualifiedName) ?? "";
     let symbol = symbolMapByQualifiedName.get(qualifiedName);
     if (!symbol) {
-      console.log("No symbol found for", qualifiedName);
+      console.error("No symbol found for", qualifiedName);
       return "#";
     }
     // find the package the qualifiedName belongs to
@@ -93,8 +93,8 @@ export async function getReferenceAPI(repo: string, ref: string, lang: string) {
       }
     }
     if (!pkg) {
-      console.log("No package found for", qualifiedName);
-      return "/";
+      console.error("No package found for", qualifiedName);
+      return "#";
     }
     return `/${lang}/${ref}/reference/${pkg.name}/${qualifiedName}`;
   }
@@ -114,7 +114,23 @@ export async function getReferenceAPI(repo: string, ref: string, lang: string) {
     if (!symbol) return null;
 
     let node =
-      pkg.children?.find((child) => child.name === qualifiedName) || null;
+      pkg.children?.find((child) => child.name === qualifiedName) ||
+      pkg.children?.find(
+        (child) =>
+          child.name === "UNSAFE_" + qualifiedName ||
+          child.name === "unsafe_" + qualifiedName
+      ) ||
+      pkg.children?.find(
+        (child) =>
+          child.name === "UNSTABLE_" + qualifiedName ||
+          child.name === "unstable_" + qualifiedName
+      ) ||
+      pkg.children?.find(
+        (child) =>
+          child.name === "INTERNAL_" + qualifiedName ||
+          child.name === "internal_" + qualifiedName
+      ) ||
+      null;
     if (!node) return null;
     // return {
     //   name: node.name,
@@ -162,6 +178,25 @@ export async function getReferenceAPI(repo: string, ref: string, lang: string) {
     return md;
   }
 
+  function getLinkFromType(type: JSONOutput.SomeType | undefined | null) {
+    switch (type?.type) {
+      case "intrinsic":
+        return `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/${type.name}`;
+      case "reference":
+        if (type.package === "typescript") {
+          return `https://developer.mozilla.org/en-US/docs/Web/API/${type.name}`;
+        }
+        return getLink(type.name);
+      default:
+        if (type) {
+          if ("elementType" in type) {
+            return getLinkFromType(type.elementType);
+          }
+        }
+        return "#";
+    }
+  }
+
   function declarationToMarkdown(
     declaration: JSONOutput.DeclarationReflection
   ) {
@@ -177,6 +212,33 @@ export async function getReferenceAPI(repo: string, ref: string, lang: string) {
             if (sig.comment) {
               md += commentToMarkdown(sig.comment) + "\n\n";
             }
+
+            if (sig.parameters?.length) {
+              md += "## Parameters\n\n";
+              for (let param of sig.parameters) {
+                let name =
+                  param.name === "__namedParameters" ? "props" : param.name;
+                md += "- **" + name + "**: ";
+                if (param.type) {
+                  // console.log(param.type);
+                  const link = getLinkFromType(param.type);
+                  if (link === "#") {
+                    if (
+                      param.type?.type === "reflection" &&
+                      param.type.declaration
+                    ) {
+                      md += "`" + formatType(param.type) + "`" + "\n";
+                    } else {
+                      md += formatType(param.type) + "\n";
+                    }
+                  } else {
+                    md += `[${formatType(param.type)}](${link})\n`;
+                  }
+                } else {
+                  md += "unknown\n";
+                }
+              }
+            }
           }
         }
 
@@ -188,6 +250,7 @@ export async function getReferenceAPI(repo: string, ref: string, lang: string) {
       }
       case ReflectionKind.Interface: {
         md = `# ${declaration.name} <small>interface</small>\n\n`;
+        console.log(declaration);
 
         if (declaration.signatures) {
           for (let sig of declaration.signatures) {
@@ -195,6 +258,33 @@ export async function getReferenceAPI(repo: string, ref: string, lang: string) {
 
             if (sig.comment) {
               md += commentToMarkdown(sig.comment) + "\n\n";
+            }
+
+            if (sig.parameters?.length) {
+              md += "## Parameters\n\n";
+              for (let param of sig.parameters) {
+                let name =
+                  param.name === "__namedParameters" ? "props" : param.name;
+                md += "- **" + name + "**: ";
+                if (param.type) {
+                  // TODO: Update to be getLinksFromType
+                  const link = getLinkFromType(param.type);
+                  if (link === "#") {
+                    if (
+                      param.type?.type === "reflection" &&
+                      param.type.declaration
+                    ) {
+                      md += "`" + formatType(param.type) + "`" + "\n";
+                    } else {
+                      md += formatType(param.type) + "\n";
+                    }
+                  } else {
+                    md += `[${formatType(param.type)}](${link})\n`;
+                  }
+                } else {
+                  md += "unknown\n";
+                }
+              }
             }
           }
         }
@@ -209,7 +299,9 @@ export async function getReferenceAPI(repo: string, ref: string, lang: string) {
             let child = declaration.children?.find((child) => child.id === id);
             if (!child) continue;
             md += `### ${child.name}\n\n`;
-            if (child.type) {
+            if (child.signatures?.length === 1) {
+              md += "Type: `" + formatSignature(child.signatures[0]) + "`\n\n";
+            } else if (child.type) {
               md += `Type: \`${formatType(child.type)}\`\n\n`;
             }
             if (child.comment) {
@@ -255,7 +347,7 @@ export async function getReferenceAPI(repo: string, ref: string, lang: string) {
       case "intrinsic":
         return type.name;
       case "literal":
-        if (typeof type.value === "object") {
+        if (typeof type.value === "object" && type.value) {
           return `${type.value?.negative ? "-" : ""}${type.value?.value ?? ""}`;
         }
         return JSON.stringify(type.value);
@@ -289,7 +381,7 @@ export async function getReferenceAPI(repo: string, ref: string, lang: string) {
         return result;
       }
       case "reflection":
-        return type.declaration.name;
+        return formatTypeDeclaration(type.declaration);
       case "rest":
         return `...${formatType(type.elementType)}`;
       case "tuple":
@@ -301,6 +393,24 @@ export async function getReferenceAPI(repo: string, ref: string, lang: string) {
       default:
         return "unknown";
     }
+  }
+
+  function formatTypeDeclaration(
+    declaration:
+      | JSONOutput.ReferenceReflection
+      | JSONOutput.DeclarationReflection
+  ) {
+    let formatted = "{ ";
+    if (declaration.children) {
+      for (let child of declaration.children) {
+        if (child.type) {
+          formatted += `\n  ${child.name}: ${formatType(child.type)},`;
+        } else {
+          console.error("No type for", child.name);
+        }
+      }
+    }
+    return formatted.length > 2 ? formatted + "\n}" : formatted + " }";
   }
 
   function formatSignature(
@@ -326,13 +436,13 @@ export async function getReferenceAPI(repo: string, ref: string, lang: string) {
         if (sig.parameters?.length) {
           args = sig.parameters
             .map((param) => {
-              return `${param.name}: ${
-                param.type ? formatType(param.type) : "unknown"
+              return `${
+                param.name === "__namedParameters" ? "props" : param.name
               }`;
             })
             .join(", ");
         }
-        return `function ${sig.name}${typeParams}(${args}): ${
+        return `${sig.name}${typeParams}(${args}): ${
           sig.type ? formatType(sig.type) : "unknown"
         }`;
       }
