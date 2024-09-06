@@ -76,8 +76,6 @@ export function headers() {
   return { "Cache-Control": "max-age=300" };
 }
 
-export let unstable_shouldReload = () => false;
-
 export default function DocsLayout() {
   let { menu } = useLoaderData<typeof loader>();
   let navigation = useNavigation();
@@ -391,12 +389,61 @@ function NavTabs() {
   );
 }
 
+function PackageSelect({ pkgs, value }: { pkgs: string[]; value: string }) {
+  console.log({ value });
+  return (
+    <DetailsMenu className="relative cursor-pointer">
+      <summary className="relative flex cursor-pointer list-none items-center justify-between gap-3 border border-gray-100 px-3 py-1">
+        <span>{value}</span>
+        <svg aria-hidden className="h-[18px] w-[18px] text-gray-400">
+          <use href={`${iconsHref}#dropdown-arrows`} />
+        </svg>
+      </summary>
+      <DetailsPopup>
+        <div className="my-2">
+          <PopupLabel label="Select a package" />
+          {pkgs.map((pkg) => (
+            <PackageLink key={pkg} pkg={pkg} active={pkg === value} />
+          ))}
+        </div>
+      </DetailsPopup>
+    </DetailsMenu>
+  );
+}
+
+function PackageLink({ pkg, active }: { pkg: string; active: boolean }) {
+  let className =
+    "relative pl-4 group items-center flex py-1 before:mr-4 before:relative before:top-px before:block before:h-1.5 before:w-1.5 before:rounded-full before:content-['']";
+  return active ? (
+    <span
+      className={classNames(
+        className,
+        "font-bold text-red-brand before:bg-red-brand"
+      )}
+    >
+      {pkg}
+    </span>
+  ) : (
+    <Link
+      to={pkg}
+      className={classNames(
+        className,
+        "hover:bg-gray-50 active:text-red-brand dark:text-gray-200 dark:hover:bg-gray-700 dark:active:text-red-brand"
+      )}
+    >
+      {pkg}
+    </Link>
+  );
+}
+
 export function NavMenuDesktop({
   menu,
   pkgs,
+  pkg,
 }: {
   menu?: MenuDoc[];
   pkgs?: string[];
+  pkg?: string;
 }) {
   return (
     <div
@@ -407,15 +454,7 @@ export function NavMenuDesktop({
       )}
     >
       <NavTabs />
-      {pkgs && (
-        <select className="rounded-full border">
-          {pkgs.map((pkg) => (
-            <option key={pkg} value={pkg}>
-              {pkg}
-            </option>
-          ))}
-        </select>
-      )}
+      {pkgs && <PackageSelect pkgs={pkgs} value={pkg} />}
 
       <div className="[&_*:focus]:scroll-mt-[6rem]">
         <Menu menu={menu} />
@@ -499,7 +538,7 @@ function VersionSelect() {
         </svg>
       </summary>
       <DetailsPopup className="w-40">
-        <VersionsLabel label="Branches" />
+        <PopupLabel label="Branches" />
         {branches.map((branch) => (
           <VersionLink
             key={branch}
@@ -509,7 +548,7 @@ function VersionSelect() {
           </VersionLink>
         ))}
 
-        <VersionsLabel label="Versions" />
+        <PopupLabel label="Versions" />
         {versions.map((version) => (
           <VersionLink
             key={version}
@@ -532,7 +571,7 @@ function VersionSelect() {
   );
 }
 
-function VersionsLabel({ label }: { label: string }) {
+function PopupLabel({ label }: { label: string }) {
   return (
     <div className="px-4 pb-2 pt-2 text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-300">
       {label}
