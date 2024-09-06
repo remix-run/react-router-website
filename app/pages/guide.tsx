@@ -16,7 +16,7 @@ import {
 import invariant from "tiny-invariant";
 import type { Doc } from "~/modules/gh-docs/.server";
 import { getRepoDoc } from "~/modules/gh-docs/.server";
-import { CACHE_CONTROL, whyDoWeNotHaveGoodMiddleWareYetRyan } from "~/http";
+import { CACHE_CONTROL, middlewares } from "~/http";
 import { seo } from "~/seo";
 import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
 import iconsHref from "~/icons.svg";
@@ -24,15 +24,14 @@ import { type loader as rootLoader } from "~/root";
 import { type loader as langRefLoader } from "~/routes/$lang.$ref";
 
 export let loader = async ({ params, request }: LoaderFunctionArgs) => {
-  await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
-
-  invariant(params.ref, "expected `ref` params");
+  await middlewares(request);
+  let ref = params.ref || "main";
 
   try {
     let slug = params["*"]?.endsWith("/changelog")
       ? "CHANGELOG"
       : `docs/${params["*"] || "index"}`;
-    let doc = await getRepoDoc(params.ref, slug);
+    let doc = await getRepoDoc(ref, slug);
     if (!doc) throw null;
     return json({ doc }, { headers: { "Cache-Control": CACHE_CONTROL.doc } });
   } catch (_) {

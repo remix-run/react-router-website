@@ -3,17 +3,25 @@
 # /foo /bar 301
 # /foo/* /bar/* 301
 
+/ /main/guides
+
+
 # API reference redirects
 /reference /en/main/reference
 
 # old convenience API redirects
-/api /*
+# /api /*
 
 # removed `/docs` prefix
 /docs/en/v6/* /en/v6.3.0/*
 /docs/* /*
 
+# Removed :lang param, only english was ever used
+/en/main/*       /guides/*
+
+
 # Router v5 Redirects
 /core/* https://v5.reactrouter.com/core/*
 /web/* https://v5.reactrouter.com/web/*
 /native/* https://v5.reactrouter.com/native/*
+

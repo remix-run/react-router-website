@@ -19,7 +19,12 @@ import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
 
 import docsStylesheet from "~/styles/docs.css?url";
 
-import { Footer, Header, NavMenuDesktop, NavMenuMobile } from "./$lang.$ref";
+import {
+  Footer,
+  Header,
+  NavMenuDesktop,
+  NavMenuMobile,
+} from "../pages/docs-layout";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: docsStylesheet }];
@@ -75,8 +80,6 @@ export function headers() {
   return { "Cache-Control": "max-age=300" };
 }
 
-export let unstable_shouldReload = () => false;
-
 export default function Reference() {
   let { menu, pkgName } = useLoaderData<typeof loader>();
   let pkgMenu = menu.find((m) => m.attrs.title === pkgName)?.children;
@@ -108,7 +111,7 @@ export default function Reference() {
         }
       >
         <div className="block lg:flex">
-          <NavMenuDesktop pkgs={pkgs} menu={pkgMenu} />
+          <NavMenuDesktop pkgs={pkgs} menu={pkgMenu} pkg={pkgName} />
           <div
             className={classNames(
               // add scroll margin to focused elements so that they aren't

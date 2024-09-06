@@ -1,22 +1,22 @@
 import type { HeadersFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useLoaderData, type MetaFunction } from "@remix-run/react";
+import { useLoaderData, type MetaFunction } from "@remix-run/react";
 import * as React from "react";
 import invariant from "tiny-invariant";
 
-import { CACHE_CONTROL, whyDoWeNotHaveGoodMiddleWareYetRyan } from "~/http";
+import { CACHE_CONTROL, middlewares } from "~/http";
 import type { loader as rootLoader } from "~/root";
 import { seo } from "~/seo";
-import { Doc, getRepoReferenceDoc } from "~/modules/gh-docs/.server";
+import { getRepoReferenceDoc } from "~/modules/gh-docs/.server";
 import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
 
-import type { loader as langRefLoader } from "./api_.$ref";
-import { LargeOnThisPage, SmallOnThisPage } from "./$lang.$ref.$";
+import type { loader as langRefLoader } from "./$lang.$ref.$pkg";
+import { LargeOnThisPage, SmallOnThisPage } from "../pages/guide";
 
-export { ErrorBoundary } from "./$lang.$ref.$";
+export { ErrorBoundary } from "../pages/guide";
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
+  await middlewares(request);
   let { ref, "*": splat } = params;
   invariant(ref, "expected `params.ref`");
   invariant(splat, "expected `*` params");

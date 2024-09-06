@@ -12,7 +12,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import { json } from "@remix-run/node";
-import { CACHE_CONTROL, whyDoWeNotHaveGoodMiddleWareYetRyan } from "./http";
+import { CACHE_CONTROL, middlewares } from "./http";
 
 import { parseColorScheme } from "./modules/color-scheme/server";
 import {
@@ -44,7 +44,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export let loader = async ({ request }: LoaderFunctionArgs) => {
-  await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
+  await middlewares(request);
 
   let colorScheme = await parseColorScheme(request);
   let isProductionHost = isHost("reactrouter.com", request);

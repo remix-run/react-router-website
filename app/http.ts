@@ -11,9 +11,7 @@ export const CACHE_CONTROL = {
   doc: "max-age=300, stale-while-revalidate=604800",
 };
 
-export async function whyDoWeNotHaveGoodMiddleWareYetRyan(
-  request: Request
-): Promise<void> {
+export async function middlewares(request: Request): Promise<void> {
   await ensureSecure(request);
   await removeTrailingSlashes(request);
   await handleRedirects(request);
