@@ -12,5 +12,13 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  plugins: [splitVendorChunkPlugin(), remix(), tsconfigPaths()],
+  plugins: [
+    splitVendorChunkPlugin(),
+    remix({
+      future: {
+        unstable_singleFetch: true,
+      },
+    }),
+    tsconfigPaths(),
+  ],
 });

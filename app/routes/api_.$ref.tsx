@@ -1,8 +1,12 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Outlet, useLoaderData, useNavigation } from "@remix-run/react";
+import {
+  Outlet,
+  useLoaderData,
+  useNavigation,
+  useParams,
+} from "@remix-run/react";
 import classNames from "classnames";
-import { useParams } from "react-router-dom";
 import invariant from "tiny-invariant";
 
 import {

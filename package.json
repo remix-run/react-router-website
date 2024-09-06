@@ -22,9 +22,9 @@
   "dependencies": {
     "@docsearch/css": "^3.6.0",
     "@docsearch/react": "^3.6.0",
-    "@remix-run/node": "2.10.3",
-    "@remix-run/react": "2.10.3",
-    "@remix-run/serve": "2.10.3",
+    "@remix-run/node": "0.0.0-nightly-4083f718a-20240906",
+    "@remix-run/react": "0.0.0-nightly-4083f718a-20240906",
+    "@remix-run/serve": "0.0.0-nightly-4083f718a-20240906",
     "bcryptjs": "^2.4.3",
     "cheerio": "^1.0.0-rc.12",
     "classnames": "^2.3.2",
@@ -42,7 +42,6 @@
     "parse-numeric-range": "^1.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "6.25.0",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",
     "rehype-stringify": "^10.0.0",
@@ -60,8 +59,8 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "2.10.3",
-    "@remix-run/eslint-config": "2.10.3",
+    "@remix-run/dev": "0.0.0-nightly-4083f718a-20240906",
+    "@remix-run/eslint-config": "0.0.0-nightly-4083f718a-20240906",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/bcryptjs": "^2.4.2",
     "@types/eslint": "^8.56.6",

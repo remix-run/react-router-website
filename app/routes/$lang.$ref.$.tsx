@@ -11,6 +11,7 @@ import {
   useLoaderData,
   useParams,
   useRouteError,
+  Link,
 } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import type { Doc } from "~/modules/gh-docs/.server";
@@ -21,7 +22,6 @@ import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
 import iconsHref from "~/icons.svg";
 import { type loader as rootLoader } from "~/root";
 import { type loader as langRefLoader } from "~/routes/$lang.$ref";
-import { Link } from "react-router-dom";
 
 export let loader = async ({ params, request }: LoaderFunctionArgs) => {
   await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
