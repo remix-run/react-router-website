@@ -30,8 +30,8 @@ export function getRepoDocsMenu(ref: string, lang: string) {
   return getMenu(REPO, fixupRefName(ref), lang);
 }
 
-export async function getRepoDocsReferenceMenu(ref: string, lang: string) {
-  const api = await getReferenceAPI(REPO, ref, lang);
+export async function getRepoDocsReferenceMenu(ref: string) {
+  const api = await getReferenceAPI(REPO, ref);
   return api.getReferenceNav();
 }
 
@@ -41,11 +41,10 @@ export function getRepoDoc(ref: string, slug: string) {
 
 export async function getRepoReferenceDoc(
   ref: string,
-  lang: string,
   pkgName: string,
   qualifiedName: string
 ) {
-  const api = await getReferenceAPI(REPO, ref, lang);
+  const api = await getReferenceAPI(REPO, ref);
   return api.getDoc(pkgName, qualifiedName);
 }
 

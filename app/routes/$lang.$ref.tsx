@@ -4,6 +4,7 @@ import * as React from "react";
 import {
   Form,
   Link,
+  NavLink,
   Outlet,
   useLoaderData,
   useLocation,
@@ -183,11 +184,10 @@ export function Header() {
         <div className="flex items-center gap-2">
           <VersionSelect />
           <ColorSchemeToggle />
-          <DocSearchSection className="lg:hidden" />
-          <HeaderLink to="/reference">API Docs</HeaderLink>
         </div>
       </div>
       <VersionWarning />
+      <DocSearchSection />
       <div className="flex items-center gap-4">
         <HeaderSvgLink
           href="https://github.com/remix-run/react-router"
@@ -217,7 +217,10 @@ export function Header() {
 function DocSearchSection({ className }: { className?: string }) {
   return (
     <div
-      className={classNames("relative lg:sticky lg:top-0 lg:z-10", className)}
+      className={classNames(
+        "relative w-52 lg:sticky lg:top-0 lg:z-10",
+        className
+      )}
     >
       <div className="absolute -top-24 hidden h-24 w-full bg-white dark:bg-gray-900 lg:block" />
       <div
@@ -253,7 +256,7 @@ function ColorSchemeToggle() {
           <use href={`${iconsHref}#sun`} />
         </svg>
       </summary>
-      <DetailsPopup>
+      <DetailsPopup className="w-40">
         <Form replace action="/color-scheme" method="post" preventScrollReset>
           <input
             type="hidden"
@@ -362,7 +365,41 @@ function HeaderSvgLink({
   );
 }
 
-export function NavMenuDesktop({ menu }: { menu?: MenuDoc[] }) {
+function NavTab({ to, children }: { to: string; children: React.ReactNode }) {
+  return (
+    <NavLink
+      to={to}
+      className={({ isActive }) =>
+        classNames(
+          "-mb-[1px] block rounded-t-xl border border-gray-100 px-3 py-2 font-semibold",
+          isActive
+            ? "dark:TODO: border-b-white text-red-brand"
+            : "border-transparent text-gray-500 hover:border-gray-100 hover:border-b-transparent"
+        )
+      }
+    >
+      {children}
+    </NavLink>
+  );
+}
+
+function NavTabs() {
+  let params = useParams();
+  return (
+    <div className="flex justify-center gap-2 border-b border-b-gray-100">
+      <NavTab to={`/${params.lang || "en"}/${params.ref}`}>Guides</NavTab>
+      <NavTab to={`/api/${params.ref}/react-router`}>Reference</NavTab>
+    </div>
+  );
+}
+
+export function NavMenuDesktop({
+  menu,
+  pkgs,
+}: {
+  menu?: MenuDoc[];
+  pkgs?: string[];
+}) {
   return (
     <div
       className={classNames(
@@ -371,7 +408,17 @@ export function NavMenuDesktop({ menu }: { menu?: MenuDoc[] }) {
         "h-[calc(100vh-var(--header-height))]"
       )}
     >
-      <DocSearchSection className="-mx-3" />
+      <NavTabs />
+      {pkgs && (
+        <select className="rounded-full border">
+          {pkgs.map((pkg) => (
+            <option key={pkg} value={pkg}>
+              {pkg}
+            </option>
+          ))}
+        </select>
+      )}
+
       <div className="[&_*:focus]:scroll-mt-[6rem]">
         <Menu menu={menu} />
       </div>
@@ -413,10 +460,16 @@ export function NavMenuMobile({ menu }: { menu?: MenuDoc[] }) {
   );
 }
 
-function DetailsPopup({ children }: { children: React.ReactNode }) {
+function DetailsPopup({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="absolute right-0 z-20 md:left-0">
-      <div className="relative top-1 w-40 rounded-lg border border-gray-100 bg-white py-2 shadow-lg dark:border-gray-400 dark:bg-gray-800 ">
+    <div className={`absolute right-0 z-20 md:left-0 ${className}`}>
+      <div className="relative top-1 rounded-lg border border-gray-100 bg-white py-2 shadow-lg dark:border-gray-400 dark:bg-gray-800 ">
         {children}
       </div>
     </div>
@@ -440,14 +493,14 @@ function VersionSelect() {
   return (
     <DetailsMenu className="group relative">
       <summary
-        className={`_no-triangle relative flex h-[40px] cursor-pointer list-none items-center justify-center gap-3 rounded-full px-3 ${className}`}
+        className={`_no-triangle relative flex h-[40px] cursor-pointer list-none items-center justify-between gap-3 rounded-full px-3 ${className}`}
       >
         <div>{currentGitHubRef}</div>
         <svg aria-hidden className="h-[18px] w-[18px] text-gray-400">
           <use href={`${iconsHref}#dropdown-arrows`} />
         </svg>
       </summary>
-      <DetailsPopup>
+      <DetailsPopup className="w-40">
         <VersionsLabel label="Branches" />
         {branches.map((branch) => (
           <VersionLink
@@ -617,14 +670,14 @@ function MenuCategory({ category }: { category: MenuDoc }) {
         </svg>
       </MenuSummary>
       <ul>
-        {category.children.map((doc) => (
-          <li key={doc.slug}>
+        {category.children.map((doc, index) => (
+          <li key={index}>
             {doc.children.length > 0 ? (
               <div className="pl-4">
                 <MenuCategory category={doc} />
               </div>
             ) : (
-              <MenuLink key={doc.slug} to={doc.slug!}>
+              <MenuLink key={index} to={doc.slug!}>
                 {doc.attrs.title} {doc.attrs.new && "🆕"}
               </MenuLink>
             )}
@@ -670,7 +723,7 @@ function MenuCategoryDetails({
 }: MenuCategoryDetailsType) {
   const isActivePath = useIsActivePath(slugs ?? slug ?? []);
   // By default only the active path is open
-  const [isOpen, setIsOpen] = React.useState(isActivePath);
+  const [isOpen, setIsOpen] = React.useState(true);
 
   // Auto open the details element, useful when navigating from the home page
   React.useEffect(() => {

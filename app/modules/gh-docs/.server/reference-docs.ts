@@ -35,7 +35,7 @@ async function loadDevelopmentData(): Promise<JSONOutput.ProjectReflection> {
     .default as unknown as JSONOutput.ProjectReflection;
 }
 
-export async function getReferenceAPI(repo: string, ref: string, lang: string) {
+export async function getReferenceAPI(repo: string, ref: string) {
   const api = await referenceDocCache.fetch(`${repo}:${ref}`);
 
   type Qualified = {
@@ -96,7 +96,7 @@ export async function getReferenceAPI(repo: string, ref: string, lang: string) {
       console.error("No package found for", qualifiedName);
       return "#";
     }
-    return `/${lang}/${ref}/reference/${pkg.name}/${qualifiedName}`;
+    return `/api/${ref}/${pkg.name}/${qualifiedName}`;
   }
 
   function getPackage(pkgName: string) {
@@ -151,7 +151,7 @@ export async function getReferenceAPI(repo: string, ref: string, lang: string) {
         title: node.name,
       },
       filename: node.sources?.[0].fileName || "",
-      slug: `${lang}/${ref}/reference/${pkgName}/${qualifiedName}`,
+      slug: `api/${ref}/${pkgName}/${qualifiedName}`,
       html: (await processMarkdown(markdown.replace("<br>", "<br/>"))).html,
       headings: [],
       children: [],
@@ -515,7 +515,7 @@ export async function getReferenceAPI(repo: string, ref: string, lang: string) {
             title: child.qualifiedName,
           },
           filename: `${pkg.name}/${child.qualifiedName}`,
-          slug: `/${lang}/${ref}/reference/${pkg.name}/${child.qualifiedName}`,
+          slug: `/api/${ref}/${pkg.name}/${child.qualifiedName}`,
           hasContent: true,
           children: [],
         });

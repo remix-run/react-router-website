@@ -1,45 +1,43 @@
 import type { HeadersFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData, type MetaFunction } from "@remix-run/react";
+import { Link, useLoaderData, type MetaFunction } from "@remix-run/react";
 import * as React from "react";
 import invariant from "tiny-invariant";
 
 import { CACHE_CONTROL, whyDoWeNotHaveGoodMiddleWareYetRyan } from "~/http";
 import type { loader as rootLoader } from "~/root";
 import { seo } from "~/seo";
-import { getRepoReferenceDoc } from "~/modules/gh-docs/.server";
+import { Doc, getRepoReferenceDoc } from "~/modules/gh-docs/.server";
 import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
 
-import type { loader as langRefLoader } from "./$lang.$ref_.reference";
+import type { loader as langRefLoader } from "./api_.$ref";
 import { LargeOnThisPage, SmallOnThisPage } from "./$lang.$ref.$";
 
 export { ErrorBoundary } from "./$lang.$ref.$";
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  let { lang, ref, "*": splat } = params;
-  invariant(lang, "expected `params.lang`");
-  invariant(ref, "expected `params.ref`");
-
   await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
-  invariant(params.lang, "expected `params.lang`");
-  invariant(params.ref, "expected `ref` params");
+  let { ref, "*": splat } = params;
+  invariant(ref, "expected `params.ref`");
   invariant(splat, "expected `*` params");
   let [part1, part2, ...rest] = splat.split("/");
   let isNamespace = part1.startsWith("@");
   let pkgName = isNamespace ? `${part1}/${part2}` : part1;
   let lookup = isNamespace ? rest.join("/") : [part2, ...rest].join("/");
 
-  const doc = await getRepoReferenceDoc(
-    params.ref,
-    params.lang,
-    pkgName,
-    lookup
+  if (lookup !== "") {
+    const doc = await getRepoReferenceDoc(ref, pkgName, lookup);
+
+    // const doc = await getRepoReferenceDoc(params.ref, pkgName, lookup);
+    if (!doc) throw new Response("", { status: 404 });
+
+    return json({ doc }, { headers: { "Cache-Control": CACHE_CONTROL.doc } });
+  }
+
+  return json(
+    { doc: null },
+    { headers: { "Cache-Control": CACHE_CONTROL.doc } }
   );
-
-  // const doc = await getRepoReferenceDoc(params.ref, pkgName, lookup);
-  if (!doc) throw new Response("", { status: 404 });
-
-  return json({ doc }, { headers: { "Cache-Control": CACHE_CONTROL.doc } });
 }
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
@@ -53,13 +51,11 @@ export const meta: MetaFunction<
   typeof loader,
   {
     root: typeof rootLoader;
-    "routes/$lang.$ref_.reference": typeof langRefLoader;
+    "routes/api_.$ref": typeof langRefLoader;
   }
 > = ({ data, matches, params }) => {
   if (!data) return [{ title: "Not Found" }];
-  let parentMatch = matches.find(
-    (m) => m.id === "routes/$lang.$ref_.reference"
-  );
+  let parentMatch = matches.find((m) => m.id === "routes/api_.$ref");
   let parentData = parentMatch ? parentMatch.data : undefined;
   if (!parentData || !("latestVersion" in parentData)) return [];
 
@@ -77,13 +73,9 @@ export const meta: MetaFunction<
       ? currentGitHubRef
       : `v${currentGitHubRef}`;
 
-  let title =
-    typeof data === "object" &&
-    typeof data.doc === "object" &&
-    typeof data.doc.attrs === "object" &&
-    typeof data.doc.attrs.title === "string"
-      ? data.doc.attrs.title + ` ${titleRef}`
-      : "";
+  let title = data?.doc?.attrs?.title
+    ? `${data.doc.attrs.title} ${titleRef}`
+    : "";
 
   // seo: only want to index the main branch
   let isMainBranch = currentGitHubRef === releaseBranch;
@@ -111,8 +103,23 @@ export const meta: MetaFunction<
   ];
 };
 
-export default function ReferenceDoc() {
+export default function Component() {
   let { doc } = useLoaderData<typeof loader>();
+  return doc ? <ReferenceDoc /> : <Index />;
+}
+
+function Index() {
+  return (
+    <div>
+      <h1 className="m-4 font-display text-lg font-bold">API Reference</h1>
+      <p>TODO: Put the package's README.md here</p>
+    </div>
+  );
+}
+
+function ReferenceDoc() {
+  let { doc } = useLoaderData<typeof loader>();
+  invariant(doc, "expected `doc`");
   let ref = React.useRef<HTMLDivElement>(null);
   useDelegatedReactRouterLinks(ref);
   return (

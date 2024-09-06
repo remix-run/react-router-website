@@ -22,8 +22,7 @@ export let links: LinksFunction = () => {
 };
 
 export let loader = async ({ params }: LoaderFunctionArgs) => {
-  let { lang, ref, "*": splat } = params;
-  invariant(lang, "expected `params.lang`");
+  let { ref, "*": splat } = params;
   invariant(ref, "expected `params.ref`");
 
   let branchesInMenu = ["main", "dev"];
@@ -36,23 +35,34 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
     branchesInMenu.push("local");
   }
 
-  let betterUrl = validateParams(tags, branches, { lang, ref, "*": splat });
+  let betterUrl = validateParams(tags, branches, {
+    // API docs are always en
+    lang: "en",
+    ref,
+    "*": splat,
+  });
   if (betterUrl) throw redirect("/" + betterUrl);
 
-  const menu = await getRepoDocsReferenceMenu(ref, lang);
-  // let menu = await getRepoDocsReferenceMenu(ref, lang);
+  let menu = await getRepoDocsReferenceMenu(ref);
   let releaseBranch = "main";
   let latestVersion = getLatestVersion(tags);
   let isLatest = ref === releaseBranch || ref === latestVersion;
 
+  let pkgName = "react-router";
+  if (splat) {
+    let [part1, part2] = splat.split("/");
+    let isNamespace = part1.startsWith("@");
+    pkgName = isNamespace ? `${part1}/${part2}` : part1;
+  }
+
   return json({
+    pkgName,
     menu,
     versions: [getLatestVersion(tags)],
     latestVersion,
     releaseBranch,
     branches: branchesInMenu,
     currentGitHubRef: ref,
-    lang,
     isLatest,
   });
 };
@@ -64,7 +74,10 @@ export function headers() {
 export let unstable_shouldReload = () => false;
 
 export default function Reference() {
-  let { menu } = useLoaderData<typeof loader>();
+  let { menu, pkgName } = useLoaderData<typeof loader>();
+  let pkgMenu = menu.find((m) => m.attrs.title === pkgName)?.children;
+  invariant(pkgMenu, `Expected package menu for ${pkgName}`);
+
   let navigation = useNavigation();
   let navigating = navigation.location && !navigation.formData;
   let params = useParams();
@@ -75,11 +88,13 @@ export default function Reference() {
     // TODO: we should have `transition.params`
     !navigation.location.pathname.match(params.ref);
 
+  let pkgs = menu.map((m) => m.attrs.title);
+
   return (
     <div className="[--header-height:theme(spacing.16)] [--nav-width:theme(spacing.72)] lg:m-auto lg:max-w-[90rem]">
       <div className="sticky top-0 z-20">
         <Header />
-        <NavMenuMobile menu={menu} />
+        <NavMenuMobile menu={pkgMenu} />
       </div>
       <div
         className={
@@ -89,7 +104,7 @@ export default function Reference() {
         }
       >
         <div className="block lg:flex">
-          <NavMenuDesktop menu={menu} />
+          <NavMenuDesktop pkgs={pkgs} menu={pkgMenu} />
           <div
             className={classNames(
               // add scroll margin to focused elements so that they aren't
