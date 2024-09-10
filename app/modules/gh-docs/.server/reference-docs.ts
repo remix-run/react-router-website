@@ -96,7 +96,13 @@ export async function getReferenceAPI(repo: string, ref: string) {
       console.error("No package found for", qualifiedName);
       return "#";
     }
-    return `/api/${ref}/${pkg.name}/${qualifiedName}`;
+
+    // TODO: this URL depends on implementation details of the app so it doesn't
+    // meet the requirements to be in the `modules` folder.
+    //
+    // - routes already have :pkg so we use a relative URL
+    // - the app doesn't use trailing slashes so we can do ./ instead of ../
+    return `./${qualifiedName}`;
   }
 
   function getPackage(pkgName: string) {
@@ -151,7 +157,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
         title: node.name,
       },
       filename: node.sources?.[0].fileName || "",
-      slug: `api/${ref}/${pkgName}/${qualifiedName}`,
+      slug: qualifiedName,
       html: (await processMarkdown(markdown.replace("<br>", "<br/>"))).html,
       headings: [],
       children: [],
@@ -250,7 +256,6 @@ export async function getReferenceAPI(repo: string, ref: string) {
       }
       case ReflectionKind.Interface: {
         md = `# ${declaration.name} <small>interface</small>\n\n`;
-        console.log(declaration);
 
         if (declaration.signatures) {
           for (let sig of declaration.signatures) {
@@ -509,13 +514,13 @@ export async function getReferenceAPI(repo: string, ref: string) {
         let child = api.symbolIdMap[id];
         if (!child) continue;
 
-        c.slugs.push(`${pkg.name}/${child.qualifiedName}`);
+        c.slugs.push(child.qualifiedName);
         c.children.push({
           attrs: {
             title: child.qualifiedName,
           },
           filename: `${pkg.name}/${child.qualifiedName}`,
-          slug: `/api/${ref}/${pkg.name}/${child.qualifiedName}`,
+          slug: child.qualifiedName,
           hasContent: true,
           children: [],
         });
