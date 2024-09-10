@@ -8,9 +8,9 @@ export function NavPill() {
 
   return (
     <div className="inline-block">
-      <div className="flex justify-between bg-gray-100 rounded-full">
+      <div className="flex justify-between bg-gray-100 dark:bg-gray-800 rounded-full">
         <VersionSelect />
-        <div className="bg-gray-200 w-[1px] mr-2" />
+        <div className="bg-gray-200 dark:bg-gray-600 w-[1px] mr-2" />
         <Segments>
           <PillLink to={withRef("guides")}>Guides</PillLink>
           <PillLink to={withRef("api")}>API</PillLink>
@@ -31,9 +31,9 @@ export function PillLink({
   to: string;
   children: React.ReactNode;
 }) {
-  let activeClassName = "bg-white shadow text-red-brand";
+  let activeClassName = "bg-white dark:bg-black shadow text-red-brand";
   let inActiveClassName =
-    "border-transparent text-gray-500 hover:border-gray-100 hover:border-b-transparent";
+    "hover:bg-gray-200 dark:hover:bg-gray-700 border-transparent text-gray-500 dark:text-gray-100 hover:border-gray-100 hover:border-b-transparent";
   let navigation = useNavigation();
   let isNavigating = Boolean(navigation.location);
 

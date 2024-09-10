@@ -25,15 +25,7 @@ export async function loader() {
 export default function Playground() {
   return (
     <>
-      <Demo label="Package Select">
-        <div className="w-52">
-          <PackageSelect
-            value="@react-router/dev"
-            pkgs={["react-router", "@react-router/dev"]}
-          />
-        </div>
-      </Demo>
-      {/* <Header /> */}
+      <Header />
       {/* <Footer /> */}
       {/* <Demo label="DetailsPopup">
         <div className="min-h-28 relative">

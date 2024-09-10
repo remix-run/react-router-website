@@ -4,7 +4,6 @@ import {
   getRepoDocsMenu,
   getRepoDocsReferenceMenu,
 } from "~/modules/gh-docs/.server";
-import { getReferenceAPI } from "~/modules/gh-docs/.server/reference-docs";
 
 export type GuidesMenu = Awaited<
   SerializeFrom<ReturnType<typeof loadGuidesMenu>>
