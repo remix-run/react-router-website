@@ -19,7 +19,7 @@ export function PackageSelect() {
 
   return (
     <DetailsMenu className="relative">
-      <summary className="relative flex cursor-pointer list-none items-center justify-between gap-3 border border-gray-100 px-3 py-1 rounded-full">
+      <summary className="relative flex cursor-pointer list-none items-center justify-between gap-3 border border-gray-100 dark:border-gray-600 px-3 py-1 rounded-full">
         <span>{pkg}</span>
         <svg aria-hidden className="h-[18px] w-[18px] text-gray-400">
           <use href={`${iconsHref}#dropdown-arrows`} />
