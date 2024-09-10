@@ -7,7 +7,7 @@ import { NavPill } from "../nav-pill";
 
 export function Header() {
   return (
-    <div className="relative z-20 flex w-full items-center justify-between border-b border-gray-50 bg-white px-4 py-3 text-gray-900 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 lg:px-8">
+    <div className="relative z-20 flex h-16 w-full items-center justify-between border-b border-gray-50 bg-white px-4 text-gray-900 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 lg:px-8">
       <div className="flex w-full items-center justify-between gap-8 md:w-auto">
         <LogoLink />
         <div className="flex items-center gap-2">
