@@ -10,6 +10,7 @@ import { Footer } from "~/components/docs-footer";
 import { NavMenuDesktop } from "~/components/docs-menu/menu-desktop";
 import { NavMenuMobile } from "~/components/docs-menu/menu-mobile";
 import { loadGuidesMenu } from "~/components/docs-menu/data.server";
+import { Menu } from "~/components/docs-menu/menu";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: docsStylesheet }];
@@ -39,7 +40,9 @@ export default function DocsLayout() {
       </div>
 
       <div className="block lg:flex">
-        <NavMenuDesktop />
+        <NavMenuDesktop>
+          <Menu />
+        </NavMenuDesktop>
         <div
           className={classNames(
             // add scroll margin to focused elements so that they aren't
