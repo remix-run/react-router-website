@@ -182,6 +182,28 @@ export async function getReferenceAPI(repo: string, ref: string) {
     };
   }
 
+  async function getPackageIndexDoc(pkgName: string): Promise<Doc> {
+    let pkg = getPackage(pkgName);
+
+    let md = "";
+    if (pkg.readme) {
+      md += commentToMarkdown({
+        summary: pkg.readme,
+      });
+    }
+
+    return {
+      attrs: {
+        title: pkg.name,
+      },
+      filename: pkg.name,
+      slug: pkg.name,
+      html: (await processMarkdown(md.replace("<br>", "<br/>"))).html,
+      headings: [],
+      children: [],
+    };
+  }
+
   function commentToMarkdown(comment: JSONOutput.Comment) {
     let md = "";
     for (const part of comment.summary) {
@@ -599,6 +621,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
 
   return {
     getDoc,
+    getPackageIndexDoc,
     getPackageNav,
     getReferenceNav,
   };

@@ -48,6 +48,11 @@ export async function getRepoReferenceDoc(
   return api.getDoc(pkgName, qualifiedName);
 }
 
+export async function getPackageIndexDoc(ref: string, pkgName: string) {
+  const api = await getReferenceAPI(REPO, ref);
+  return api.getPackageIndexDoc(pkgName);
+}
+
 function fixupRefName(ref: string) {
   return ["dev", "main", "release-next", "local"].includes(ref) ||
     // when we switched to changesets the `v` went away, so we use that as a way
