@@ -51,6 +51,34 @@ export async function getReferenceAPI(repo: string, ref: string) {
     Object.keys(api.symbolIdMap).map(mapper).flat(1)
   );
 
+  function getSymbol(qualifiedName: string) {
+    let symbol = symbolMapByQualifiedName.get(qualifiedName);
+    if (!symbol) {
+      symbol = symbolMapByQualifiedName.get("UNSTABLE_" + qualifiedName);
+    }
+    if (!symbol) {
+      symbol = symbolMapByQualifiedName.get("INTERNAL_" + qualifiedName);
+    }
+    if (!symbol) {
+      symbol = symbolMapByQualifiedName.get("UNSAFE_" + qualifiedName);
+    }
+    if (!symbol) {
+      symbol = symbolMapByQualifiedName.get("unstable_" + qualifiedName);
+    }
+    if (!symbol) {
+      symbol = symbolMapByQualifiedName.get("internal_" + qualifiedName);
+    }
+    if (!symbol) {
+      symbol = symbolMapByQualifiedName.get("unsafe_" + qualifiedName);
+    }
+    if (!symbol) {
+      symbol = symbolMapByQualifiedName.get(
+        qualifiedName.replace(/^(unstable|unsafe|internal)_/, "")
+      );
+    }
+    return symbol;
+  }
+
   function getLink(
     _qualifiedName: string | number | JSONOutput.ReflectionSymbolId | undefined
   ) {
@@ -60,7 +88,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
         : typeof _qualifiedName === "number"
         ? api.symbolIdMap[_qualifiedName].qualifiedName
         : _qualifiedName?.qualifiedName) ?? "";
-    let symbol = symbolMapByQualifiedName.get(qualifiedName);
+    let symbol = getSymbol(qualifiedName);
     if (!symbol) {
       console.error("No symbol found for", qualifiedName);
       return "#";
@@ -113,10 +141,11 @@ export async function getReferenceAPI(repo: string, ref: string) {
 
   async function getDoc(
     pkgName: string,
-    qualifiedName: string
+    qualifiedName: string,
+    shouldProcessMarkdown = true
   ): Promise<Doc | null> {
     let pkg = getPackage(pkgName);
-    let symbol = symbolMapByQualifiedName.get(qualifiedName);
+    let symbol = getSymbol(qualifiedName);
     if (!symbol) return null;
 
     let node =
@@ -137,21 +166,10 @@ export async function getReferenceAPI(repo: string, ref: string) {
           child.name === "internal_" + qualifiedName
       ) ||
       null;
+
     if (!node) return null;
-    // return {
-    //   name: node.name,
-    //   signatures: node.signatures
-    //     ? await Promise.all(
-    //         node.signatures.map(async (sig) => {
-    //           let md = sig.comment
-    //             ? sig.comment.summary.map((s) => s.text).join("")
-    //             : null;
-    //           return { html: md ? String(await processMarkdown(md)) : "" };
-    //         })
-    //       )
-    //     : [],
-    // };
-    let markdown = declarationToMarkdown(node);
+
+    let markdown = shouldProcessMarkdown ? declarationToMarkdown(node) : "";
     return {
       attrs: {
         title: node.name,
@@ -190,7 +208,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
         return `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/${type.name}`;
       case "reference":
         if (type.package === "typescript") {
-          return `https://developer.mozilla.org/en-US/docs/Web/API/${type.name}`;
+          return `#`;
         }
         return getLink(type.name);
       default:
@@ -328,8 +346,24 @@ export async function getReferenceAPI(repo: string, ref: string) {
         }
         break;
       }
+      case ReflectionKind.Variable: {
+        md = `# ${declaration.name} <small>variable</small>\n\n`;
+        if (declaration.defaultValue) {
+          md += "```ts\n";
+          md += `const ${declaration.name} = ${declaration.defaultValue}\n`;
+          md += "```\n\n";
+        }
+        if (declaration.comment) {
+          md += commentToMarkdown(declaration.comment) + "\n\n";
+        }
+        break;
+      }
+      case ReflectionKind.Class: {
+        // TODO: Implement this
+        break;
+      }
       default: {
-        console.log("Unknown declaration kind", declaration.kind);
+        console.error("Unknown declaration kind", declaration.kind);
       }
     }
     return md;
@@ -490,7 +524,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
     );
   }
 
-  function getPackageNav(name: string) {
+  async function getPackageNav(name: string) {
     let pkg = api.children?.find((child) => child.name === name);
     if (!pkg) return [];
 
@@ -513,8 +547,17 @@ export async function getReferenceAPI(repo: string, ref: string) {
       for (let id of category.children) {
         let child = api.symbolIdMap[id];
         if (!child) continue;
+        let doc = await getDoc(pkg.name, child.qualifiedName);
+        let lowerTitle = doc?.attrs.title.toLowerCase() ?? "";
+        if (
+          !doc ||
+          lowerTitle.startsWith("unsafe_") ||
+          lowerTitle.startsWith("internal_")
+        )
+          continue;
 
         c.slugs.push(child.qualifiedName);
+
         c.children.push({
           attrs: {
             title: child.qualifiedName,
@@ -531,11 +574,11 @@ export async function getReferenceAPI(repo: string, ref: string) {
     return categories;
   }
 
-  function getReferenceNav() {
+  async function getReferenceNav() {
     let packages = getPackagesNames();
     let menu: MenuDoc[] = [];
     for (let pkg of packages) {
-      let children = getPackageNav(pkg.name);
+      let children = await getPackageNav(pkg.name);
       if (!children.length) continue;
       menu.push({
         attrs: {
