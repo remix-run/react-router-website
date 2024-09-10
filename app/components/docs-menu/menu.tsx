@@ -9,7 +9,7 @@ import type { MenuDoc } from "~/modules/gh-docs/.server/docs";
 import type { GuidesMenu, ReferenceMenu } from "./data.server";
 import invariant from "tiny-invariant";
 
-function useMenuData() {
+export function useMenuData() {
   let { menu } = useLoaderData() as { menu: GuidesMenu | ReferenceMenu };
   invariant(menu, "Expected `menu` in loader data");
   return menu;
@@ -145,9 +145,8 @@ function MenuSummary({
   children: React.ReactNode;
   as?: "summary" | "div";
 }) {
-  // "-mx-4 pl-4",
-
   const sharedClassName =
+    // -mx-4 so there's some nice padding on the hover but the text still lines up
     "-mx-4 rounded-md px-3 py-3 transition-colors duration-100";
   const wrappedChildren = (
     <div className="flex h-5 w-full items-center justify-between font-bold lg:text-sm">

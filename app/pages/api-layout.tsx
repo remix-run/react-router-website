@@ -2,7 +2,6 @@ import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import classNames from "classnames";
-import { getRepoDocsMenu } from "~/modules/gh-docs/.server";
 
 import docsStylesheet from "~/styles/docs.css?url";
 import { Header } from "~/components/docs-header/docs-header";
@@ -10,8 +9,13 @@ import { getHeaderData } from "~/components/docs-header/data.server";
 import { Footer } from "~/components/docs-footer";
 import { NavMenuDesktop } from "~/components/docs-menu/menu-desktop";
 import { NavMenuMobile } from "~/components/docs-menu/menu-mobile";
-import { loadReferenceMenu } from "~/components/docs-menu/data.server";
+import {
+  loadPackageNames,
+  loadReferenceMenu,
+} from "~/components/docs-menu/data.server";
 import invariant from "tiny-invariant";
+import { PackageSelect } from "~/components/package-select";
+import { Menu } from "~/components/docs-menu/menu";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: docsStylesheet }];
@@ -21,12 +25,13 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
   let { ref, pkg, "*": splat } = params;
   invariant(pkg, `Expected params.pkg`);
 
-  let [menu, header] = await Promise.all([
+  let [menu, header, pkgs] = await Promise.all([
     loadReferenceMenu(ref || "main", pkg),
     getHeaderData("en", ref || "main", splat),
+    loadPackageNames(ref || "main"),
   ]);
 
-  return json({ menu, header });
+  return json({ menu, header, pkgs });
 };
 
 export function headers() {
@@ -42,7 +47,16 @@ export default function DocsLayout() {
       </div>
 
       <div className="block lg:flex">
-        <NavMenuDesktop />
+        <NavMenuDesktop>
+          <div
+            // `-mx-1` to get it to line up with the text of the category
+            // <summary>s below
+            className="-mx-1 mb-3"
+          >
+            <PackageSelect />
+          </div>
+          <Menu />
+        </NavMenuDesktop>
         <div
           className={classNames(
             // add scroll margin to focused elements so that they aren't

@@ -1,7 +1,6 @@
 import classNames from "classnames";
-import { Menu } from "./menu";
 
-export function NavMenuDesktop() {
+export function NavMenuDesktop({ children }: { children: React.ReactNode }) {
   return (
     <div
       className={classNames(
@@ -10,9 +9,7 @@ export function NavMenuDesktop() {
         "h-[calc(100vh-var(--header-height))]"
       )}
     >
-      <div className="[&_*:focus]:scroll-mt-[6rem]">
-        <Menu />
-      </div>
+      <div className="[&_*:focus]:scroll-mt-[6rem]">{children}</div>
     </div>
   );
 }

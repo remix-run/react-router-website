@@ -5,6 +5,7 @@ import { Footer } from "../docs-footer";
 import { Menu } from "../docs-menu/menu";
 import { fakeMenu } from "./fake-menu";
 import { NavPill } from "../nav-pill";
+import { PackageSelect } from "../package-select";
 
 export async function loader() {
   return {
@@ -24,7 +25,15 @@ export async function loader() {
 export default function Playground() {
   return (
     <>
-      <Header />
+      <Demo label="Package Select">
+        <div className="w-52">
+          <PackageSelect
+            value="@react-router/dev"
+            pkgs={["react-router", "@react-router/dev"]}
+          />
+        </div>
+      </Demo>
+      {/* <Header /> */}
       {/* <Footer /> */}
       {/* <Demo label="DetailsPopup">
         <div className="min-h-28 relative">
