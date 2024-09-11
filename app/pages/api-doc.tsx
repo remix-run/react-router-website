@@ -5,6 +5,7 @@ import invariant from "tiny-invariant";
 
 import { CACHE_CONTROL } from "~/http";
 import type { loader as rootLoader } from "~/root";
+import type { loader as apiLoader } from "./api-layout";
 import { seo } from "~/seo";
 import { getRepoReferenceDoc } from "~/modules/gh-docs/.server";
 import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
@@ -30,61 +31,52 @@ export function headers({ parentHeaders }: HeadersArgs) {
   return parentHeaders;
 }
 
-// export const meta: MetaFunction<
-//   typeof loader,
-//   {
-//     root: typeof rootLoader;
-//     "routes/api_.$ref": typeof any;
-//   }
-// > = ({ data, matches, params }) => {
-//   if (!data) return [{ title: "Not Found" }];
-//   let parentMatch = matches.find((m) => m.id === "routes/api_.$ref");
-//   let parentData = parentMatch ? parentMatch.data : undefined;
-//   if (!parentData || !("latestVersion" in parentData)) return [];
+export const meta: MetaFunction<
+  typeof loader,
+  { root: typeof rootLoader; api: typeof apiLoader }
+> = ({ data, matches, params }) => {
+  invariant(data, "Expected data");
 
-//   let rootMatch = matches.find((m) => m.id === "root");
-//   let rootData = rootMatch ? rootMatch.data : undefined;
+  let api = matches.find((m) => m.id === "api");
+  invariant(api, `Expected api parent route`);
 
-//   let { latestVersion, releaseBranch, branches, currentGitHubRef } = parentData;
+  let { releaseBranch, branches, currentGitHubRef } = api.data.header;
 
-//   let titleRef =
-//     currentGitHubRef === releaseBranch
-//       ? `v${latestVersion}`
-//       : branches.includes(currentGitHubRef)
-//       ? `(${currentGitHubRef} branch)`
-//       : currentGitHubRef.startsWith("v")
-//       ? currentGitHubRef
-//       : `v${currentGitHubRef}`;
+  let titleRef =
+    currentGitHubRef === releaseBranch
+      ? ""
+      : branches.includes(currentGitHubRef)
+      ? `(${currentGitHubRef} branch)`
+      : currentGitHubRef.startsWith("v")
+      ? currentGitHubRef
+      : `v${currentGitHubRef}`;
 
-//   let title = data?.doc?.attrs?.title
-//     ? `${data.doc.attrs.title} ${titleRef}`
-//     : "";
+  let title = `${data.doc.attrs.title} ${titleRef}`;
 
-//   // seo: only want to index the main branch
-//   let isMainBranch = currentGitHubRef === releaseBranch;
+  let rootMatch = matches.find((m) => m.id === "root");
+  invariant(rootMatch, "Expected root match");
 
-//   let [meta] = seo({
-//     title: title,
-//     twitter: { title },
-//     openGraph: { title },
-//   });
+  // seo: only want to index the main branch
+  let isMainBranch = currentGitHubRef === releaseBranch;
+  let robots =
+    rootMatch.data.isProductionHost && isMainBranch
+      ? "index,follow"
+      : "noindex,nofollow";
 
-//   let robots =
-//     rootData &&
-//     "isProductionHost" in rootData &&
-//     rootData.isProductionHost &&
-//     isMainBranch
-//       ? "index,follow"
-//       : "noindex,nofollow";
+  let [meta] = seo({
+    title: title,
+    twitter: { title },
+    openGraph: { title },
+  });
 
-//   return [
-//     ...meta,
-//     { name: "docsearch:language", content: params.lang || "en" },
-//     { name: "docsearch:version", content: params.ref || "v6" },
-//     { name: "robots", content: robots },
-//     { name: "googlebot", content: robots },
-//   ];
-// };
+  return [
+    ...meta,
+    { name: "docsearch:language", content: params.lang || "en" },
+    { name: "docsearch:version", content: params.ref || "v6" },
+    { name: "robots", content: robots },
+    { name: "googlebot", content: robots },
+  ];
+};
 
 export default function ReferenceDoc() {
   let { doc } = useLoaderData<typeof loader>();
