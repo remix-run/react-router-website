@@ -45,19 +45,14 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   ];
 };
 
-export let loader = async ({ request }: LoaderFunctionArgs) => {
+export async function loader({ request }: LoaderFunctionArgs) {
   await middlewares(request);
 
   let colorScheme = await parseColorScheme(request);
   let isProductionHost = isHost("reactrouter.com", request);
 
-  return json(
-    { colorScheme, isProductionHost },
-    {
-      headers: {},
-    }
-  );
-};
+  return json({ colorScheme, isProductionHost });
+}
 
 export function headers(_: HeadersArgs) {
   return {
