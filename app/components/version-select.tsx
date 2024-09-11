@@ -17,13 +17,14 @@ export function VersionSelect() {
   const className =
     "border border-transparent bg-gray-100 hover:bg-gray-200 focus:border focus:border-gray-100 focus:bg-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:border-gray-400 dark:focus:bg-gray-700";
 
+  let label = currentGitHubRef === releaseBranch ? "latest" : currentGitHubRef;
   return (
     <DetailsMenu className="group relative">
       <summary
-        title={currentGitHubRef}
+        title={label}
         className={`_no-triangle whitespace-nowrap overflow-hidden w-24 relative flex h-[40px] cursor-pointer list-none items-center justify-between gap-3 rounded-l-full px-3 ${className}`}
       >
-        <div>{currentGitHubRef}</div>
+        <div>{label}</div>
         <svg aria-hidden className="h-[18px] w-[18px] text-gray-400">
           <use href={`${iconsHref}#dropdown-arrows`} />
         </svg>
@@ -33,18 +34,19 @@ export function VersionSelect() {
         {branches.map((branch) => (
           <VersionLink
             key={branch}
-            to={currentGitHubRef === branch ? "" : `/${branch}/${layoutId}`}
+            to={
+              releaseBranch === branch
+                ? `/${layoutId}`
+                : `/${branch}/${layoutId}`
+            }
           >
-            {releaseBranch === branch ? `main (${latestVersion})` : branch}
+            {releaseBranch === branch ? `latest (${latestVersion})` : branch}
           </VersionLink>
         ))}
 
         <PopupLabel label="Versions" />
         {versions.map((version) => (
-          <VersionLink
-            key={version}
-            to={currentGitHubRef === version ? "" : `/${version}/${layoutId}`}
-          >
+          <VersionLink key={version} to={`/${version}/${layoutId}`}>
             {version}
           </VersionLink>
         ))}
@@ -90,27 +92,17 @@ function VersionLink({
     );
   }
 
-  return to ? (
+  return (
     <Link
       className={classNames(
         className,
-        "before:bg-transparent",
         isActive
-          ? "text-red-brand"
-          : "hover:bg-gray-50 active:text-red-brand dark:text-gray-200 dark:hover:bg-gray-700 dark:active:text-red-brand"
+          ? "font-bold text-red-brand before:bg-red-brand"
+          : "hover:bg-gray-50 active:text-red-brand dark:text-gray-200 dark:hover:bg-gray-700 dark:active:text-red-brand before:bg-transparent"
       )}
       to={to}
     >
       {children}
     </Link>
-  ) : (
-    <span
-      className={classNames(
-        className,
-        "font-bold text-red-brand before:bg-red-brand"
-      )}
-    >
-      {children}
-    </span>
   );
 }
