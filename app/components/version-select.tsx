@@ -2,11 +2,11 @@ import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { DetailsPopup } from "./details-popup";
 import { PopupLabel } from "./popup-label";
-import { Link, useMatches } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import classNames from "classnames";
-import { useIsActivePath } from "../hooks/use-is-active-path";
 import { useHeaderData } from "./docs-header/use-header-data";
 import { useDocLayoutId } from "./use-doc-layout-id";
+import { useNavigation } from "~/hooks/use-navigation";
 
 export function VersionSelect() {
   let { versions, latestVersion, releaseBranch, branches, currentGitHubRef } =
@@ -70,7 +70,7 @@ function VersionLink({
   children: React.ReactNode;
 }) {
   let isExternal = to.startsWith("http");
-  let isActive = useIsActivePath(to);
+  let { isActive } = useNavigation(to);
   let className =
     "relative pl-4 group items-center flex py-1 before:mr-4 before:relative before:top-px before:block before:h-1.5 before:w-1.5 before:rounded-full before:content-['']";
 

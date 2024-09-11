@@ -1,6 +1,5 @@
 import type {
   HeadersArgs,
-  HeadersFunction,
   LinksFunction,
   LoaderFunctionArgs,
   MetaFunction,

@@ -31,7 +31,7 @@ export let loader = async ({ params, request }: LoaderFunctionArgs) => {
     : `docs/${params["*"] || "index"}`;
   let doc = await getRepoDoc(ref, slug);
 
-  if (!doc) new Response("Not Found", { status: 404 });
+  if (!doc) throw new Response("Not Found", { status: 404 });
 
   return { doc };
 };

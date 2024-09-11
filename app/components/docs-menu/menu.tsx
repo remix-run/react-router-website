@@ -8,6 +8,8 @@ import iconsHref from "~/icons.svg";
 import type { MenuDoc } from "~/modules/gh-docs/.server/docs";
 import type { GuidesMenu, ReferenceMenu } from "./data.server";
 import invariant from "tiny-invariant";
+import { useNavigation } from "~/hooks/use-navigation";
+import { useDelayedValue } from "~/hooks/use-delayed-value";
 
 export function useMenuData() {
   let { menu } = useLoaderData() as { menu: GuidesMenu | ReferenceMenu };
@@ -110,16 +112,16 @@ function MenuCategoryDetails({
   slugs,
   children,
 }: MenuCategoryDetailsType) {
-  const isActivePath = useIsActivePath(slugs ?? slug ?? []);
+  const isActive = useIsActivePath(slugs ?? slug ?? []);
   // By default only the active path is open
   const [isOpen, setIsOpen] = React.useState(true);
 
   // Auto open the details element, useful when navigating from the home page
   React.useEffect(() => {
-    if (isActivePath) {
+    if (isActive) {
       setIsOpen(true);
     }
-  }, [isActivePath]);
+  }, [isActive]);
 
   return (
     <details
@@ -188,7 +190,7 @@ function MenuCategoryLink({
   to: string;
   children: React.ReactNode;
 }) {
-  let isActive = useIsActivePath(to);
+  let { isActive } = useNavigation(to);
   return (
     <Link
       prefetch="intent"
@@ -206,20 +208,32 @@ function MenuCategoryLink({
 }
 
 function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
-  let isActive = useIsActivePath(to);
+  let { isActive, isPending } = useNavigation(to);
+  let slowNav = useDelayedValue(isPending);
 
   return (
-    <Link
-      prefetch="intent"
-      to={to}
-      className={classNames(
-        // link styles
-        "group my-1 flex items-center rounded-md border-transparent py-1.5 pl-4 lg:text-sm",
-        isActive
-          ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
-          : "text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"
-      )}
-      children={children}
-    />
+    <>
+      <Link
+        prefetch="intent"
+        to={to}
+        className={classNames(
+          // link styles
+          "relative group my-1 flex items-center justify-between rounded-md border-transparent py-1.5 pl-4 lg:text-sm",
+          isActive
+            ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
+            : "text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"
+        )}
+      >
+        {children}
+        {slowNav && !isActive && (
+          <svg
+            aria-hidden
+            className="hidden h-4 w-4 group-open:block animate-spin absolute -left-1"
+          >
+            <use href={`${iconsHref}#arrow-path`} />
+          </svg>
+        )}
+      </Link>
+    </>
   );
 }

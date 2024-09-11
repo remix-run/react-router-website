@@ -6,7 +6,7 @@ import {
 } from "@remix-run/react";
 
 // TODO: seems like RR already knows how to do something like this, need to look
-// into the call sites and see wtheck
+// into the call sites and see wtheck, also why do we need `string[]`?
 export function useIsActivePath(_to: string | string[]) {
   let navigation = useNavigation();
   let currentLocation = useLocation();
