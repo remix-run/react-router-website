@@ -31,9 +31,14 @@ export function headers({ parentHeaders }: HeadersArgs) {
   return parentHeaders;
 }
 
+// Note: this is basically identically to guide.tsx meta
 export const meta: MetaFunction<
   typeof loader,
-  { root: typeof rootLoader; api: typeof apiLoader }
+  {
+    root: typeof rootLoader;
+    // custom route id "api" in vite config
+    api: typeof apiLoader;
+  }
 > = ({ data, matches, params }) => {
   invariant(data, "Expected data");
 
@@ -71,7 +76,7 @@ export const meta: MetaFunction<
 
   return [
     ...meta,
-    { name: "docsearch:language", content: params.lang || "en" },
+    { name: "docsearch:language", content: "en" },
     { name: "docsearch:version", content: params.ref || "v6" },
     { name: "robots", content: robots },
     { name: "googlebot", content: robots },
