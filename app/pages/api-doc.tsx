@@ -1,10 +1,9 @@
-import type { HeadersFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { HeadersArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, type MetaFunction } from "@remix-run/react";
 import * as React from "react";
 import invariant from "tiny-invariant";
 
-import { CACHE_CONTROL, middlewares } from "~/http";
+import { CACHE_CONTROL } from "~/http";
 import type { loader as rootLoader } from "~/root";
 import { seo } from "~/seo";
 import { getRepoReferenceDoc } from "~/modules/gh-docs/.server";
@@ -15,8 +14,6 @@ import { LargeOnThisPage, SmallOnThisPage } from "../pages/guide";
 export { ErrorBoundary } from "../pages/guide";
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  await middlewares(request);
-
   let { ref = "main", pkg, "*": splat } = params;
   invariant(pkg, "expected `params.pkg`");
   invariant(splat, "expected `*` params");
@@ -25,15 +22,13 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
   if (!doc) throw new Response("", { status: 404 });
 
-  return json({ doc }, { headers: { "Cache-Control": CACHE_CONTROL.doc } });
+  return { doc };
 }
 
-export const headers: HeadersFunction = ({ loaderHeaders }) => {
-  // Inherit the caching headers from the loader so we don't cache 404s
-  let headers = new Headers(loaderHeaders);
-  headers.set("Vary", "Cookie");
-  return headers;
-};
+export function headers({ parentHeaders }: HeadersArgs) {
+  parentHeaders.set("Cache-Control", CACHE_CONTROL.doc);
+  return parentHeaders;
+}
 
 // export const meta: MetaFunction<
 //   typeof loader,
@@ -93,9 +88,9 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
 
 export default function ReferenceDoc() {
   let { doc } = useLoaderData<typeof loader>();
-  invariant(doc, "expected `doc`");
   let ref = React.useRef<HTMLDivElement>(null);
   useDelegatedReactRouterLinks(ref);
+
   return (
     <div className="xl:flex xl:w-full xl:justify-between xl:gap-8">
       {doc.headings.length > 3 ? (

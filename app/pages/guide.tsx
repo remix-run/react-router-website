@@ -3,6 +3,7 @@ import type {
   SerializeFrom,
   MetaFunction,
   HeadersFunction,
+  HeadersArgs,
 } from "@remix-run/node";
 import * as React from "react";
 import { json } from "@remix-run/node";
@@ -13,10 +14,9 @@ import {
   useRouteError,
   Link,
 } from "@remix-run/react";
-import invariant from "tiny-invariant";
 import type { Doc } from "~/modules/gh-docs/.server";
 import { getRepoDoc } from "~/modules/gh-docs/.server";
-import { CACHE_CONTROL, middlewares } from "~/http";
+import { CACHE_CONTROL } from "~/http";
 import { seo } from "~/seo";
 import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
 import iconsHref from "~/icons.svg";
@@ -24,32 +24,28 @@ import { type loader as rootLoader } from "~/root";
 import { type loader as langRefLoader } from "~/routes/$lang.$ref";
 
 export let loader = async ({ params, request }: LoaderFunctionArgs) => {
-  await middlewares(request);
   let ref = params.ref || "main";
 
-  try {
-    let slug = params["*"]?.endsWith("/changelog")
-      ? "CHANGELOG"
-      : `docs/${params["*"] || "index"}`;
-    let doc = await getRepoDoc(ref, slug);
-    if (!doc) throw null;
-    return json({ doc }, { headers: { "Cache-Control": CACHE_CONTROL.doc } });
-  } catch (_) {
-    throw new Response("", { status: 404 });
-  }
+  let slug = params["*"]?.endsWith("/changelog")
+    ? "CHANGELOG"
+    : `docs/${params["*"] || "index"}`;
+  let doc = await getRepoDoc(ref, slug);
+
+  if (!doc) new Response("Not Found", { status: 404 });
+
+  return { doc };
 };
 
-export const headers: HeadersFunction = ({ loaderHeaders }) => {
-  // Inherit the caching headers from the loader so we don't cache 404s
-  let headers = new Headers(loaderHeaders);
-  headers.set("Vary", "Cookie");
-  return headers;
-};
+export function headers({ parentHeaders }: HeadersArgs) {
+  parentHeaders.set("Cache-Control", CACHE_CONTROL.doc);
+  return parentHeaders;
+}
 
 export const meta: MetaFunction<
   typeof loader,
   {
     root: typeof rootLoader;
+    // TODO: figure this thing out
     "routes/$lang.$ref": typeof langRefLoader;
   }
 > = ({ data, matches, params }) => {

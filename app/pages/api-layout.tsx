@@ -1,5 +1,4 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import classNames from "classnames";
 
@@ -31,12 +30,8 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
     loadPackageNames(ref || "main"),
   ]);
 
-  return json({ menu, header, pkgs });
+  return { menu, header, pkgs };
 };
-
-export function headers() {
-  return { "Cache-Control": "max-age=300" };
-}
 
 export default function DocsLayout() {
   return (

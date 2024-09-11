@@ -1,54 +1,60 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import type { HeadersArgs, MetaFunction } from "@remix-run/node";
+import { Link } from "@remix-run/react";
 import classNames from "classnames";
-import semver from "semver";
-import {
-  headers,
-  loader as docLoader,
-  default as DocPage,
-  meta as docMeta,
-} from "./guide";
-import iconsHref from "~/icons.svg";
-import type { Stats } from "~/modules/stats";
+import { meta as docMeta } from "./guide";
+import { CACHE_CONTROL } from "~/http";
 
-export let loader = async ({ params, request }: LoaderFunctionArgs) => {
-  let is6dot4 =
-    params.ref === "local" ||
-    params.ref === "main" ||
-    params.ref === "dev" ||
-    semver.satisfies(params.ref || "", "^6.4", { includePrerelease: true });
-  if (is6dot4) {
-    // const stats = await getStats();
-    const stats = null;
-    return json({ is6dot4: true, stats });
-  }
-  return docLoader({ request, params, context: {} });
-};
+export function headers({ parentHeaders }: HeadersArgs) {
+  parentHeaders.set("Cache-Control", CACHE_CONTROL.doc);
+  return parentHeaders;
+}
 
-export { headers };
-
-export const meta: MetaFunction<typeof loader> = ({ data, ...rest }) => {
+export const meta: MetaFunction = ({ data, ...rest }) => {
   // fake a doc for the new custom page, it does all the SEO stuff internally,
   // easier than repeating here
-  if (data && "is6dot4" in data && data.is6dot4) {
-    data = {
-      doc: {
-        attrs: {
-          title: "Home",
-        },
-        children: [],
-        filename: "",
-        slug: "",
-        html: "",
-        headings: [],
+  let fakeData = {
+    doc: {
+      attrs: {
+        title: "Home",
       },
-    };
-  }
+      children: [],
+      filename: "",
+      slug: "",
+      html: "",
+      headings: [],
+    },
+  };
 
-  // @ts-expect-error This is made because of the stub I think
-  return docMeta({ data, ...rest });
+  // @ts-expect-error
+  return docMeta({ data: fakeData, ...rest });
 };
+
+export default function Index() {
+  return (
+    <div className="px-4 pb-4 pt-8 lg:mr-4 xl:pl-0">
+      <div className="my-4 grid max-w-[60ch] gap-y-10 md:max-w-none md:grid-cols-2 md:grid-rows-2 md:gap-x-8 md:gap-y-12">
+        {mainLinks.map(({ title, description, slug, className, svg }) => (
+          <Link
+            key={slug}
+            to={slug}
+            className="group relative flex flex-col gap-1 rounded-lg border-[3px] border-gray-50 p-4 pt-6 hover:border-gray-100 dark:border-gray-800 hover:dark:border-gray-600 md:p-6"
+          >
+            <h2
+              className={classNames(
+                className,
+                "text-2xl font-bold tracking-tight group-hover:underline"
+              )}
+            >
+              {title}
+            </h2>
+            <p>{description}</p>
+            {svg}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const mainLinks = [
   {
@@ -161,59 +167,3 @@ const mainLinks = [
     ),
   },
 ];
-
-export default function Index() {
-  // If we're not on 6.4 then we're not on a version where we expect the
-  // custom index page, so we'll serve the doc index markdown file instead
-  let loaderData = useLoaderData<typeof loader>();
-  if ("is6dot4" in loaderData && !loaderData.is6dot4) return <DocPage />;
-
-  let stats = "stats" in loaderData ? loaderData.stats : [];
-
-  return (
-    <div className="px-4 pb-4 pt-8 lg:mr-4 xl:pl-0">
-      <div className="my-4 grid max-w-[60ch] gap-y-10 md:max-w-none md:grid-cols-2 md:grid-rows-2 md:gap-x-8 md:gap-y-12">
-        {mainLinks.map(({ title, description, slug, className, svg }) => (
-          <Link
-            key={slug}
-            to={slug}
-            className="group relative flex flex-col gap-1 rounded-lg border-[3px] border-gray-50 p-4 pt-6 hover:border-gray-100 dark:border-gray-800 hover:dark:border-gray-600 md:p-6"
-          >
-            <h2
-              className={classNames(
-                className,
-                "text-2xl font-bold tracking-tight group-hover:underline"
-              )}
-            >
-              {title}
-            </h2>
-            <p>{description}</p>
-            {svg}
-          </Link>
-        ))}
-      </div>
-      {stats && (
-        <ul className="mt-8 grid grid-cols-1 gap-y-4 md:grid md:grid-cols-2">
-          {stats.map(({ svgId, count, label }: Stats) => (
-            <li key={svgId} className="flex gap-4">
-              <svg
-                aria-label="TODO GitHub Octocat logo"
-                className="mt-1 h-8 w-8 text-gray-200 dark:text-gray-600"
-              >
-                <use href={`${iconsHref}#${svgId}`} />
-              </svg>
-              <p className="flex flex-col">
-                <span className="text-3xl font-light tracking-tight">
-                  {count?.toLocaleString("en-US")}
-                </span>
-                <span className="text-gray-300 dark:text-gray-500">
-                  {label}
-                </span>
-              </p>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}

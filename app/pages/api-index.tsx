@@ -1,10 +1,9 @@
 import * as React from "react";
-import type { HeadersFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { HeadersArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
-import { CACHE_CONTROL, middlewares } from "~/http";
+import { CACHE_CONTROL } from "~/http";
 import { getPackageIndexDoc } from "~/modules/gh-docs/.server";
 import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
 import { LargeOnThisPage, SmallOnThisPage } from "./guide";
@@ -13,22 +12,18 @@ import type { loader as parentLoaderData } from "./api-layout";
 export { ErrorBoundary } from "./guide";
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  await middlewares(request);
-
   let { ref = "main", pkg } = params;
   invariant(pkg, "expected `params.pkg`");
 
   const doc = await getPackageIndexDoc(ref, pkg);
 
-  return json({ doc }, { headers: { "Cache-Control": CACHE_CONTROL.doc } });
+  return { doc };
 }
 
-export const headers: HeadersFunction = ({ loaderHeaders }) => {
-  // Inherit the caching headers from the loader so we don't cache 404s
-  let headers = new Headers(loaderHeaders);
-  headers.set("Vary", "Cookie");
-  return headers;
-};
+export function headers({ parentHeaders }: HeadersArgs) {
+  parentHeaders.set("Cache-Control", CACHE_CONTROL.doc);
+  return parentHeaders;
+}
 
 export default function APIIndex() {
   let { doc } = useLoaderData<typeof loader>();

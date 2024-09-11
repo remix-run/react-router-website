@@ -1,4 +1,6 @@
 import type {
+  HeadersArgs,
+  HeadersFunction,
   LinksFunction,
   LoaderFunctionArgs,
   MetaFunction,
@@ -52,13 +54,18 @@ export let loader = async ({ request }: LoaderFunctionArgs) => {
   return json(
     { colorScheme, isProductionHost },
     {
-      headers: {
-        "Cache-Control": CACHE_CONTROL.doc,
-        Vary: "Cookie",
-      },
+      headers: {},
     }
   );
 };
+
+export function headers(_: HeadersArgs) {
+  return {
+    // default all caching to deployments
+    "Cache-Control": CACHE_CONTROL.deploy,
+    Vary: "Cookie",
+  };
+}
 
 export default function App() {
   let colorScheme = useColorScheme();

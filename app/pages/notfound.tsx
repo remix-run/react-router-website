@@ -1,11 +1,13 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
 import { Link, isRouteErrorResponse, useRouteError } from "@remix-run/react";
-import { middlewares } from "~/http";
+import { CACHE_CONTROL } from "~/http";
 
-export let loader = async ({ request }: LoaderFunctionArgs) => {
-  await middlewares(request);
+export let loader = async () => {
   throw new Response("Not Found", { status: 404 });
 };
+
+export function headers() {
+  return { "Cache-Control": CACHE_CONTROL.none };
+}
 
 export default function Catchall() {
   return null;

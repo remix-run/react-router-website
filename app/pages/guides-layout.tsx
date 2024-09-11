@@ -1,5 +1,4 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import classNames from "classnames";
 
@@ -24,12 +23,8 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
     getHeaderData("en", ref || "main", splat),
   ]);
 
-  return json({ menu, header });
+  return { menu, header };
 };
-
-export function headers() {
-  return { "Cache-Control": "max-age=300" };
-}
 
 export default function DocsLayout() {
   return (
