@@ -10,7 +10,6 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
 } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { CACHE_CONTROL, whyDoWeNotHaveGoodMiddleWareYetRyan } from "./http";
