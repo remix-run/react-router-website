@@ -23,6 +23,7 @@ export default defineConfig({
           route("/__components", "components/_playground/playground.tsx");
           route("/color-scheme", "actions/color-scheme.ts");
 
+          route("/", "pages/home.tsx", { index: true });
           route("/brand", "pages/brand.tsx");
           route("/healthcheck", "pages/healthcheck.tsx");
 
