@@ -6,7 +6,7 @@ import invariant from "tiny-invariant";
 import { CACHE_CONTROL } from "~/http";
 import { getPackageIndexDoc } from "~/modules/gh-docs/.server";
 import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
-import { LargeOnThisPage, SmallOnThisPage } from "./guide";
+import { LargeOnThisPage, SmallOnThisPage } from "~/components/on-this-page";
 import type { loader as parentLoaderData } from "./api-layout";
 
 export { ErrorBoundary } from "./guide";

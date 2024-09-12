@@ -5,12 +5,12 @@ import invariant from "tiny-invariant";
 
 import { CACHE_CONTROL } from "~/http";
 import type { loader as rootLoader } from "~/root";
-import type { loader as apiLoader } from "./api-layout";
+import type { loader as apiLoader } from "~/pages/api-layout";
 import { seo } from "~/seo";
 import { getRepoReferenceDoc } from "~/modules/gh-docs/.server";
 import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
 
-import { LargeOnThisPage, SmallOnThisPage } from "../pages/guide";
+import { LargeOnThisPage, SmallOnThisPage } from "~/components/on-this-page";
 
 export { ErrorBoundary } from "../pages/guide";
 
