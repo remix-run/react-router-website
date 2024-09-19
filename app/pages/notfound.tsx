@@ -1,8 +1,20 @@
+import { type MetaFunction } from "@remix-run/react";
 import { Link, isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import { CACHE_CONTROL } from "~/http";
 
 export let loader = async () => {
+  // TODO: use `data` or whatever we end up with in single fetch instead of
+  // throwing here
   throw new Response("Not Found", { status: 404 });
+};
+
+export const meta: MetaFunction = () => {
+  let robots = "noindex, nofollow";
+  return [
+    { title: "Not Found | React Router" },
+    { name: "robots", content: robots },
+    { name: "googlebot", content: robots },
+  ];
 };
 
 export function headers() {
