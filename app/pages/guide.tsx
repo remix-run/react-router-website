@@ -14,8 +14,6 @@ import type {
   HeadersArgs,
 } from "@remix-run/node";
 
-import { type loader as rootLoader } from "~/root";
-import { type loader as guidesLoader } from "~/pages/guides-layout";
 import {
   getGuideMatchData,
   getDocTitle,
@@ -26,16 +24,14 @@ import {
 
 export { ErrorBoundary } from "~/components/doc-error-boundary";
 
-export let loader = async ({ params, request }: LoaderFunctionArgs) => {
+export let loader = async ({ params }: LoaderFunctionArgs) => {
   let ref = params.ref || "main";
-
   let slug = params["*"]?.endsWith("/changelog")
     ? "CHANGELOG"
     : `docs/${params["*"] || "index"}`;
+
   let doc = await getRepoDoc(ref, slug);
-
   if (!doc) throw new Response("Not Found", { status: 404 });
-
   return { doc };
 };
 

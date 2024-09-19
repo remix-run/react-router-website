@@ -45,7 +45,7 @@ export const meta: MetaFunction<typeof loader> = ({
 
   let guides = getApiMatchData(matches);
   let rootMatch = getRootMatchData(matches);
-  let title = getDocTitle(guides, params.pkg + " package");
+  let title = getDocTitle(guides, params.pkg + " API");
 
   let [meta] = seo({
     title: title,

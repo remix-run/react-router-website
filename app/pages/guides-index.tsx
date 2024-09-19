@@ -3,30 +3,37 @@ import { Link } from "@remix-run/react";
 import classNames from "classnames";
 import { meta as docMeta } from "~/pages/guide";
 import { CACHE_CONTROL } from "~/http";
+import {
+  getDocsSearch,
+  getDocTitle,
+  getGuideMatchData,
+  getRobots,
+  getRootMatchData,
+} from "~/ui/meta";
+import { seo } from "~/seo";
 
 export function headers({ parentHeaders }: HeadersArgs) {
   parentHeaders.set("Cache-Control", CACHE_CONTROL.doc);
   return parentHeaders;
 }
 
-export const meta: MetaFunction = ({ data, ...rest }) => {
-  // fake a doc for the new custom page, it does all the SEO stuff internally,
-  // easier than repeating here
-  let fakeData = {
-    doc: {
-      attrs: {
-        title: "Home",
-      },
-      children: [],
-      filename: "",
-      slug: "",
-      html: "",
-      headings: [],
-    },
-  };
+export const meta: MetaFunction = ({ matches, params }) => {
+  let guides = getGuideMatchData(matches);
+  let rootMatch = getRootMatchData(matches);
 
-  // @ts-expect-error
-  return docMeta({ data: fakeData, ...rest });
+  let title = getDocTitle(guides, "Guides");
+
+  let [meta] = seo({
+    title: title,
+    twitter: { title },
+    openGraph: { title },
+  });
+
+  return [
+    ...meta,
+    ...getDocsSearch(params.ref),
+    ...getRobots(rootMatch.isProductionHost, guides),
+  ];
 };
 
 export default function Index() {
