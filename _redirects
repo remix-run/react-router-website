@@ -3,6 +3,76 @@
 # /foo /bar 301
 # /foo/* /bar/* 301
 
+# v7 release catastrophe!
+/en/main                                     /guides
+/en/main/start/*                             /guides/start/*
+/en/main/upgrading/*                         /guides/upgrading/*
+/en/main/guides/*                            /guides/misc/*
+/en/main/routers/picking-a-router            /guides/discussion/picking-a-router
+/en/main/routers/create-browser-router       /api/react-router/createBrowserRouter
+/en/main/routers/create-hash-router          /api/react-router/createHashRouter
+/en/main/routers/create-memory-router        /api/react-router/createMemoryRouter
+/en/main/routers/create-static-handler       /api/react-router/createStaticHandler
+/en/main/routers/create-static-router        /api/react-router/createStaticRouter
+/en/main/routers/router-provider             /api/react-router/RouterProvider
+/en/main/routers/static-router-provider      /api/react-router/StaticRouterProvider
+/en/main/router-components/browser-router    /api/react-router/BrowserRouter
+/en/main/router-components/hash-router       /api/react-router/HashRouter
+/en/main/router-components/memory-router     /api/react-router/MemoryRouter
+/en/main/router-components/router            /api/react-router/Router
+/en/main/router-components/static-router     /api/react-router/StaticRouter
+/en/main/components/await                    /api/react-router/Await
+/en/main/components/form                     /api/react-router/Form
+/en/main/components/link                     /api/react-router/Link
+/en/main/components/nav-link                 /api/react-router/NavLink
+/en/main/components/navigate                 /api/react-router/Navigate
+/en/main/components/outlet                   /api/react-router/Outlet
+/en/main/components/route                    /api/react-router/Route
+/en/main/components/routes                   /api/react-router/Routes
+/en/main/components/scroll-restoration       /api/react-router/ScrollRestoration
+/en/main/hooks/use-action-data               /api/react-router/useActionData
+/en/main/hooks/use-async-error               /api/react-router/useAsyncError
+/en/main/hooks/use-async-value               /api/react-router/useAsyncValue
+/en/main/hooks/use-before-unload             /api/react-router/useBeforeUnload
+/en/main/hooks/use-blocker                   /api/react-router/useBlocker
+/en/main/hooks/use-fetcher                   /api/react-router/useFetcher
+/en/main/hooks/use-fetchers                  /api/react-router/useFetchers
+/en/main/hooks/use-form-action               /api/react-router/useFormAction
+/en/main/hooks/use-href                      /api/react-router/useHref
+/en/main/hooks/use-in-router-context         /api/react-router/useInRouterContext
+/en/main/hooks/use-link-click-handler        /api/react-router/useLinkClickHandler
+/en/main/hooks/use-link-press-handler        /api/react-router/useLinkPressHandler
+/en/main/hooks/use-loader-data               /api/react-router/useLoaderData
+/en/main/hooks/use-location                  /api/react-router/useLocation
+/en/main/hooks/use-match                     /api/react-router/useMatch
+/en/main/hooks/use-matches                   /api/react-router/useMatches
+/en/main/hooks/use-navigate                  /api/react-router/useNavigate
+/en/main/hooks/use-navigation-type           /api/react-router/useNavigationType
+/en/main/hooks/use-navigation                /api/react-router/useNavigation
+/en/main/hooks/use-outlet-context            /api/react-router/useOutletContext
+/en/main/hooks/use-outlet                    /api/react-router/useOutlet
+/en/main/hooks/use-params                    /api/react-router/useParams
+/en/main/hooks/use-prompt                    /api/react-router/usePrompt
+/en/main/hooks/use-resolved-path             /api/react-router/useResolvedPath
+/en/main/hooks/use-revalidator               /api/react-router/useRevalidator
+/en/main/hooks/use-route-error               /api/react-router/useRouteError
+/en/main/hooks/use-route-loader-data         /api/react-router/useRouteLoaderData
+/en/main/hooks/use-routes                    /api/react-router/useRoutes
+/en/main/hooks/use-search-params             /api/react-router/useSearchParams
+/en/main/hooks/use-submit                    /api/react-router/useSubmit
+/en/main/hooks/use-view-transition-state     /api/react-router/useViewTransitionState
+/en/main/utils/create-routes-from-children   /api/react-router/createRoutesFromChildren
+/en/main/utils/create-routes-from-elements   /api/react-router/createRoutesFromElements
+/en/main/utils/create-search-params          /api/react-router/createSearchParams
+/en/main/utils/defer                         /api/react-router/defer
+/en/main/utils/generate-path                 /api/react-router/generatePath
+/en/main/utils/is-route-error-response       /api/react-router/isRouteErrorResponse
+/en/main/utils/location                      /api/react-router/location
+/en/main/utils/match-path                    /api/react-router/matchPath
+/en/main/utils/match-routes                  /api/react-router/matchRoutes
+/en/main/utils/render-matches                /api/react-router/renderMatches
+/en/main/utils/resolve-path                  /api/react-router/resolvePath
+
 # API reference redirects
 /reference /en/main/reference
 
