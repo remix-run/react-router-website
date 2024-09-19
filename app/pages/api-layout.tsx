@@ -27,7 +27,7 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
 
   let [menu, header, pkgs] = await Promise.all([
     loadReferenceMenu(ref || "main", pkg),
-    getHeaderData("en", ref || "main", splat),
+    getHeaderData("en", ref, splat),
     loadPackageNames(ref || "main"),
   ]);
 

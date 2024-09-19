@@ -1,21 +1,28 @@
 import { NavLink, useNavigation, useParams } from "@remix-run/react";
 import classNames from "classnames";
 import { VersionSelect } from "./version-select";
+import { useHeaderData } from "./docs-header/use-header-data";
 
 export function NavPill() {
   let { ref } = useParams();
   let withRef = (path: string) => (ref ? `/${ref}/${path}` : `/${path}`);
 
+  let { isV7 } = useHeaderData();
+
   return (
     <div className="inline-block">
-      <div className="flex justify-between bg-gray-100 dark:bg-gray-800 rounded-full">
-        <VersionSelect />
-        <div className="bg-gray-200 dark:bg-gray-600 w-[1px] mr-2" />
-        <Segments>
-          <PillLink to={withRef("guides")}>Guides</PillLink>
-          <PillLink to={withRef("api")}>API</PillLink>
-        </Segments>
-      </div>
+      {isV7 ? (
+        <div className="flex justify-between bg-gray-100 dark:bg-gray-800 rounded-full">
+          <VersionSelect />
+          <div className="bg-gray-200 dark:bg-gray-600 w-[1px] mr-2" />
+          <Segments>
+            <PillLink to={withRef("guides")}>Guides</PillLink>
+            <PillLink to={withRef("api")}>API</PillLink>
+          </Segments>
+        </div>
+      ) : (
+        <VersionSelect independent />
+      )}
     </div>
   );
 }

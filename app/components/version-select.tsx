@@ -8,7 +8,12 @@ import { useHeaderData } from "./docs-header/use-header-data";
 import { useDocLayoutId } from "./use-doc-layout-id";
 import { useNavigation } from "~/hooks/use-navigation";
 
-export function VersionSelect() {
+export function VersionSelect({
+  // whether or not to show the guides/api links for pre/post v7
+  independent,
+}: {
+  independent?: boolean;
+}) {
   let { versions, latestVersion, releaseBranch, branches, currentGitHubRef } =
     useHeaderData();
   let layoutId = useDocLayoutId();
@@ -22,7 +27,11 @@ export function VersionSelect() {
     <DetailsMenu className="group relative">
       <summary
         title={label}
-        className={`_no-triangle whitespace-nowrap overflow-hidden w-24 relative flex h-[40px] cursor-pointer list-none items-center justify-between gap-3 rounded-l-full px-3 ${className}`}
+        className={classNames(
+          `_no-triangle whitespace-nowrap overflow-hidden w-24 relative flex h-[40px] cursor-pointer list-none items-center justify-between gap-3 px-3`,
+          className,
+          independent ? "rounded-full" : "rounded-l-full"
+        )}
       >
         <div>{label}</div>
         <svg aria-hidden className="h-[18px] w-[18px] text-gray-400">

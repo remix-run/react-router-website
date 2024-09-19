@@ -20,7 +20,7 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
 
   let [menu, header] = await Promise.all([
     loadGuidesMenu(ref || "main"),
-    getHeaderData("en", ref || "main", splat),
+    getHeaderData("en", ref, splat),
   ]);
 
   return { menu, header };
