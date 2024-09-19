@@ -1,13 +1,11 @@
-import { defer } from "@remix-run/node";
 import { Await, Link, useLoaderData } from "@remix-run/react";
 import { Suspense } from "react";
+
 import iconsHref from "~/icons.svg";
 import { getStats } from "~/modules/stats";
 
 export let loader = async () => {
-  return defer({
-    stats: getStats(),
-  });
+  return { stats: getStats() };
 };
 
 function Logo() {

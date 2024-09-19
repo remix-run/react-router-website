@@ -1,11 +1,6 @@
 import invariant from "tiny-invariant";
 import * as React from "react";
-import {
-  isRouteErrorResponse,
-  useLoaderData,
-  useParams,
-  useRouteError,
-} from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 
 import { getRepoDoc } from "~/modules/gh-docs/.server";
 import { CACHE_CONTROL } from "~/http";
@@ -18,8 +13,18 @@ import type {
   MetaFunction,
   HeadersArgs,
 } from "@remix-run/node";
+
 import { type loader as rootLoader } from "~/root";
-import { type loader as guidesLoader } from "./guides-layout";
+import { type loader as guidesLoader } from "~/pages/guides-layout";
+import {
+  getGuideMatchData,
+  getDocTitle,
+  getDocsSearch,
+  getRobots,
+  getRootMatchData,
+} from "~/ui/meta";
+
+export { ErrorBoundary } from "~/components/doc-error-boundary";
 
 export let loader = async ({ params, request }: LoaderFunctionArgs) => {
   let ref = params.ref || "main";
@@ -39,42 +44,17 @@ export function headers({ parentHeaders }: HeadersArgs) {
   return parentHeaders;
 }
 
-// Note: this is basically identically to api-doc.tsx meta
-export const meta: MetaFunction<
-  typeof loader,
-  {
-    root: typeof rootLoader;
-    // custom route id "guides" in vite config
-    guides: typeof guidesLoader;
-  }
-> = ({ data, matches, params }) => {
+export const meta: MetaFunction<typeof loader> = ({
+  data,
+  matches,
+  params,
+}) => {
   invariant(data, "Expected data");
 
-  let api = matches.find((m) => m.id === "guides");
-  invariant(api, `Expected api parent route`);
+  let guides = getGuideMatchData(matches);
+  let rootMatch = getRootMatchData(matches);
 
-  let { releaseBranch, branches, currentGitHubRef } = api.data.header;
-
-  let titleRef =
-    currentGitHubRef === releaseBranch
-      ? ""
-      : branches.includes(currentGitHubRef)
-      ? `(${currentGitHubRef} branch)`
-      : currentGitHubRef.startsWith("v")
-      ? currentGitHubRef
-      : `v${currentGitHubRef}`;
-
-  let title = `${data.doc.attrs.title} ${titleRef}`;
-
-  let rootMatch = matches.find((m) => m.id === "root");
-  invariant(rootMatch, "Expected root match");
-
-  // seo: only want to index the main branch
-  let isMainBranch = currentGitHubRef === releaseBranch;
-  let robots =
-    rootMatch.data.isProductionHost && isMainBranch
-      ? "index,follow"
-      : "noindex,nofollow";
+  let title = getDocTitle(guides, data.doc.attrs.title);
 
   let [meta] = seo({
     title: title,
@@ -84,10 +64,8 @@ export const meta: MetaFunction<
 
   return [
     ...meta,
-    { name: "docsearch:language", content: "en" },
-    { name: "docsearch:version", content: params.ref || "v6" },
-    { name: "robots", content: robots },
-    { name: "googlebot", content: robots },
+    ...getDocsSearch(params.ref),
+    ...getRobots(rootMatch.isProductionHost, guides),
   ];
 };
 
@@ -115,21 +93,4 @@ export default function DocPage() {
       </div>
     </div>
   );
-}
-export function ErrorBoundary() {
-  let error = useRouteError();
-  let params = useParams();
-
-  if (isRouteErrorResponse(error)) {
-    return (
-      <div className="flex h-[50vh] flex-col items-center justify-center">
-        <h1 className="text-9xl font-bold">404</h1>
-        <p className="text-lg">
-          There is no doc for <i className="text-gray-500">{params["*"]}</i>
-        </p>
-      </div>
-    );
-  }
-
-  throw error;
 }

@@ -1,7 +1,7 @@
 import type { HeadersArgs, MetaFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import classNames from "classnames";
-import { meta as docMeta } from "./guide";
+import { meta as docMeta } from "~/pages/guide";
 import { CACHE_CONTROL } from "~/http";
 
 export function headers({ parentHeaders }: HeadersArgs) {

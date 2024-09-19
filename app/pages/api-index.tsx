@@ -1,15 +1,30 @@
 import * as React from "react";
 import type { HeadersArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
+import {
+  MetaArgs,
+  MetaFunction,
+  useLoaderData,
+  useRouteLoaderData,
+} from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import { CACHE_CONTROL } from "~/http";
 import { getPackageIndexDoc } from "~/modules/gh-docs/.server";
 import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
 import { LargeOnThisPage, SmallOnThisPage } from "~/components/on-this-page";
-import type { loader as parentLoaderData } from "./api-layout";
 
-export { ErrorBoundary } from "./guide";
+import type { loader as parentLoaderData } from "./api-layout";
+import { seo } from "~/seo";
+import {
+  getApiMatchData,
+  getDocsSearch,
+  getDocTitle,
+  getGuideMatchData,
+  getRobots,
+  getRootMatchData,
+} from "~/ui/meta";
+
+export { ErrorBoundary } from "~/components/doc-error-boundary";
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   let { ref = "main", pkg } = params;
@@ -19,6 +34,31 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
   return { doc };
 }
+
+export const meta: MetaFunction<typeof loader> = ({
+  data,
+  matches,
+  params,
+}) => {
+  invariant(data, "Expected data");
+  invariant(params.pkg, "Expected params.pkg");
+
+  let guides = getApiMatchData(matches);
+  let rootMatch = getRootMatchData(matches);
+  let title = getDocTitle(guides, params.pkg + " package");
+
+  let [meta] = seo({
+    title: title,
+    twitter: { title },
+    openGraph: { title },
+  });
+
+  return [
+    ...meta,
+    ...getDocsSearch(params.ref),
+    ...getRobots(rootMatch.isProductionHost, guides),
+  ];
+};
 
 export function headers({ parentHeaders }: HeadersArgs) {
   parentHeaders.set("Cache-Control", CACHE_CONTROL.doc);

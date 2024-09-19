@@ -50,7 +50,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   let colorScheme = await parseColorScheme(request);
   let isProductionHost = isHost("reactrouter.com", request);
 
-  return json({ colorScheme, isProductionHost });
+  return { colorScheme, isProductionHost };
 }
 
 export function headers(_: HeadersArgs) {

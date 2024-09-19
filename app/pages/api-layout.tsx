@@ -1,4 +1,4 @@
-import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
+import invariant from "tiny-invariant";
 import { Outlet } from "@remix-run/react";
 import classNames from "classnames";
 
@@ -12,9 +12,10 @@ import {
   loadPackageNames,
   loadReferenceMenu,
 } from "~/components/docs-menu/data.server";
-import invariant from "tiny-invariant";
 import { PackageSelect } from "~/components/package-select";
 import { Menu } from "~/components/docs-menu/menu";
+
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: docsStylesheet }];
