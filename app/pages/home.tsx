@@ -1,11 +1,23 @@
+import { type MetaFunction } from "@remix-run/node";
 import { Await, Link, useLoaderData } from "@remix-run/react";
 import { Suspense } from "react";
 
 import iconsHref from "~/icons.svg";
 import { getStats } from "~/modules/stats";
+import { getRootMatchData } from "~/ui/meta";
 
 export let loader = async () => {
   return { stats: getStats() };
+};
+
+export const meta: MetaFunction = ({ data, matches }) => {
+  let { isProductionHost } = getRootMatchData(matches);
+  let robots = isProductionHost ? "index,follow" : "noindex, nofollow";
+  return [
+    { title: "React Router Official Documentation" },
+    { name: "robots", content: robots },
+    { name: "googlebot", content: robots },
+  ];
 };
 
 function Logo() {

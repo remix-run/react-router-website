@@ -28,22 +28,6 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return [
-    {
-      title: "React Router",
-    },
-    {
-      name: "robots",
-      content: data?.isProductionHost ? "index,follow" : "noindex, nofollow",
-    },
-    {
-      name: "googlebot",
-      content: data?.isProductionHost ? "index,follow" : "noindex, nofollow",
-    },
-  ];
-};
-
 export async function loader({ request }: LoaderFunctionArgs) {
   await middlewares(request);
 
