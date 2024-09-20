@@ -16,7 +16,6 @@ export function VersionSelect({
 }) {
   let { versions, latestVersion, releaseBranch, branches, currentGitHubRef } =
     useHeaderData();
-  let layoutId = useDocLayoutId();
 
   // This is the same default, hover, focus style as the ColorScheme trigger
   const className =

@@ -1,5 +1,4 @@
 import { type SerializeFrom } from "@remix-run/node";
-import invariant from "tiny-invariant";
 import {
   getRepoDocsMenu,
   getRepoDocsReferenceMenu,
@@ -20,7 +19,6 @@ export async function loadGuidesMenu(ref: string) {
 export async function loadReferenceMenu(ref: string, pkg: string) {
   let menu = await getRepoDocsReferenceMenu(ref);
   let pkgName = pkg === "react-router" ? pkg : `@react-router/${pkg}`;
-  console.log("pkgName", pkgName);
   let pkgMenu = menu.find((p) => p.attrs.title === pkgName);
   if (!pkgMenu) throw new Response("Not Found", { status: 404 });
   return pkgMenu.children;

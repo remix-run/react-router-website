@@ -2,7 +2,6 @@ import type {
   HeadersArgs,
   LinksFunction,
   LoaderFunctionArgs,
-  MetaFunction,
 } from "@remix-run/node";
 import {
   Link,
@@ -12,7 +11,6 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import { json } from "@remix-run/node";
 import { CACHE_CONTROL, middlewares } from "./http";
 
 import { parseColorScheme } from "./modules/color-scheme/server";

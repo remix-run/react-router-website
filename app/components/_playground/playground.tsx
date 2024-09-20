@@ -1,11 +1,5 @@
-import { DetailsPopup } from "../details-popup";
-import { PopupLabel } from "../popup-label";
 import { Header } from "../docs-header/docs-header";
-import { Footer } from "../docs-footer";
-import { Menu } from "../docs-menu/menu";
 import { fakeMenu } from "./fake-menu";
-import { NavPill } from "../nav-pill";
-import { PackageSelect } from "../package-select";
 
 export async function loader() {
   return {
@@ -49,17 +43,17 @@ export default function Playground() {
   );
 }
 
-function Demo({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="border-b last:border-none p-8">
-      <div className="mb-2 font-bold">{label}</div>
-      {children}
-    </div>
-  );
-}
+// function Demo({
+//   label,
+//   children,
+// }: {
+//   label: string;
+//   children: React.ReactNode;
+// }) {
+//   return (
+//     <div className="border-b last:border-none p-8">
+//       <div className="mb-2 font-bold">{label}</div>
+//       {children}
+//     </div>
+//   );
+// }
