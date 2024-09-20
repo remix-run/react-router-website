@@ -79,6 +79,7 @@ export function getRobots(
 export function getDocsSearch(refParam?: string) {
   return [
     { name: "docsearch:language", content: "en" },
+    // TODO: change this to v7 after launch and maybe look into how it works?
     { name: "docsearch:version", content: refParam || "v6" },
   ];
 }

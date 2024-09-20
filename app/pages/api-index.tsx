@@ -1,8 +1,7 @@
 import * as React from "react";
 import type { HeadersArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
-  MetaArgs,
-  MetaFunction,
+  type MetaFunction,
   useLoaderData,
   useRouteLoaderData,
 } from "@remix-run/react";
