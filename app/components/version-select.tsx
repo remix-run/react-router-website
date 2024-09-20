@@ -40,46 +40,59 @@ export function VersionSelect({
       </summary>
       <DetailsPopup className="w-40">
         <PopupLabel label="Branches" />
-        {branches.map((branch) => (
-          <VersionLink
-            key={branch}
-            to={
-              releaseBranch === branch
-                ? `/${layoutId}`
-                : `/${branch}/${layoutId}`
-            }
-          >
-            {releaseBranch === branch ? `latest (${latestVersion})` : branch}
-          </VersionLink>
-        ))}
+        <MainLink latestVersion={latestVersion} />
+        <DevLink />
+        {branches.includes("local") && <LocalLink />}
 
         <PopupLabel label="Versions" />
         {versions.map((version) => (
-          <VersionLink key={version} to={`/${version}/${layoutId}`}>
-            {version}
-          </VersionLink>
+          <VersionLink key={version} version={version} />
         ))}
-        <VersionLink key={"4/5.x"} to="https://v5.reactrouter.com/">
+
+        <RefLink key={"4/5.x"} to="https://v5.reactrouter.com/">
           v4/5.x
-        </VersionLink>
-        <VersionLink
+        </RefLink>
+        <RefLink
           key={"3.x"}
           to="https://github.com/remix-run/react-router/tree/v3.2.6/docs"
         >
           v3.x
-        </VersionLink>
+        </RefLink>
       </DetailsPopup>
     </DetailsMenu>
   );
 }
 
-function VersionLink({
-  to,
-  children,
-}: {
-  to: string;
-  children: React.ReactNode;
-}) {
+function useLayoutSegment() {
+  let layoutId = useDocLayoutId();
+  return layoutId === "api" ? "api" : "guides";
+}
+
+function MainLink({ latestVersion }: { latestVersion: string }) {
+  let layoutSegment = useLayoutSegment();
+  let isV7Link = latestVersion.startsWith("7");
+  let to = isV7Link ? `/${layoutSegment}` : "/en/main";
+  return <RefLink to={to}>latest ({latestVersion})</RefLink>;
+}
+
+function DevLink() {
+  let layoutSegment = useLayoutSegment();
+  return <RefLink to={`/dev/${layoutSegment}`}>dev</RefLink>;
+}
+
+function LocalLink() {
+  let layoutId = useDocLayoutId();
+  return <RefLink to={`/local/${layoutId}`}>local</RefLink>;
+}
+
+function VersionLink({ version }: { version: string }) {
+  let layoutSegment = useLayoutSegment();
+  let isV7 = version.startsWith("7");
+  let to = isV7 ? `/${layoutSegment}` : `/en/${version}`;
+  return <RefLink to={to}>{version}</RefLink>;
+}
+
+function RefLink({ to, children }: { to: string; children: React.ReactNode }) {
   let isExternal = to.startsWith("http");
   let { isActive } = useNavigation(to);
   let className =

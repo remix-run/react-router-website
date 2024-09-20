@@ -20,7 +20,9 @@ export function getApiMatchData(matches: any): APIData {
 }
 
 export function getGuideMatchData(matches: any): GuidesData {
-  let guides = matches.find((m: any) => m.id === "guides");
+  let guides = matches.find(
+    (m: any) => m.id === "guides" || m.id === "v6-guides"
+  );
   invariant(guides, `Expected guides parent route`);
   return guides.data;
 }
@@ -44,21 +46,28 @@ export function getRobots(
   isProductionHost: boolean,
   parentData: GuidesData | APIData
 ) {
-  let { releaseBranch, currentGitHubRef, refParam } = parentData.header;
+  let { latestVersion, releaseBranch, currentGitHubRef, refParam } =
+    parentData.header;
   let isMainBranch = currentGitHubRef === releaseBranch;
+  let postV7 = latestVersion.startsWith("7.");
   let robots = "noindex,nofollow";
-
-  // Since "main" is the default branch we pull docs from, we don't want to
-  // index the indentical pages that have "main" in the URL
-  //
-  // ✅ "/api/start/overview"
-  // ❌ "/api/main/start/overview"
-  //
-  // `isMainBranch` is true with "main" and an undefined `refParam`, so we have
-  // to explicitly check for the param to know if we should index
-  console.log(isMainBranch, refParam);
-  if (true && isMainBranch && refParam !== "main") {
-    robots = "index,follow";
+  if (postV7) {
+    // Since "main" is the default branch we pull docs from, we don't want to
+    // index the indentical pages that have "main" in the URL
+    //
+    // ✅ "/api/start/overview"
+    // ❌ "/api/main/start/overview"
+    //
+    // `isMainBranch` is true with "main" and an undefined `refParam`, so we have
+    // to explicitly check for the param to know if we should index
+    if (isProductionHost && isMainBranch && refParam !== "main") {
+      robots = "index,follow";
+    }
+  } else {
+    // TODO: delete this else block post v7 launch
+    if (isProductionHost && isMainBranch) {
+      robots = "index,follow";
+    }
   }
 
   return [

@@ -27,6 +27,20 @@ export default defineConfig({
           route("/brand", "pages/brand.tsx");
           route("/healthcheck", "pages/healthcheck.tsx");
 
+          // Pre v7 inline API docs
+          route(
+            "/en/:ref",
+            "pages/guides-layout.tsx",
+            { id: "v6-guides" },
+            () => {
+              route("", "pages/guides-index.tsx", {
+                index: true,
+                id: "v6-index",
+              });
+              route("*", "pages/guide.tsx", { id: "v6-guide" });
+            }
+          );
+
           route(
             "/:ref?/guides",
             "pages/guides-layout.tsx",
@@ -37,7 +51,8 @@ export default defineConfig({
             }
           );
 
-          route("/:ref?/api", "pages/api-redirect.ts");
+          // TODO: uncomment after v7
+          // route("/:ref?/api", "pages/api-redirect.ts");
 
           route(
             "/:ref?/api/:pkg",
