@@ -605,6 +605,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
       menu.push({
         attrs: {
           title: pkg.name,
+          href: pkg.href,
         },
         filename: pkg.href,
         slugs: children

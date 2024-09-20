@@ -16,11 +16,12 @@ export function PackageSelect() {
 
   let { pkg } = useParams();
   invariant(pkg, "Expected params.pkg");
+  let pkgName = pkg === "react-router" ? pkg : `@react-router/${pkg}`;
 
   return (
     <DetailsMenu className="relative">
       <summary className="relative flex cursor-pointer list-none items-center justify-between gap-3 border border-gray-100 dark:border-gray-600 px-3 py-1 rounded-full">
-        <span>{pkg}</span>
+        <span>{pkgName}</span>
         <svg aria-hidden className="h-[18px] w-[18px] text-gray-400">
           <use href={`${iconsHref}#dropdown-arrows`} />
         </svg>
@@ -28,18 +29,29 @@ export function PackageSelect() {
       <DetailsPopup>
         <div className="my-2">
           <PopupLabel label="Select a package" />
-          {pkgs
-            .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity))
-            .map((p) => (
-              <PackageLink key={p.name} pkg={p.name} active={p.name === pkg} />
-            ))}
+          {pkgs.map((p) => (
+            <PackageLink
+              key={p.href}
+              href={p.href}
+              name={p.name}
+              active={p.href === pkg}
+            />
+          ))}
         </div>
       </DetailsPopup>
     </DetailsMenu>
   );
 }
 
-function PackageLink({ pkg, active }: { pkg: string; active: boolean }) {
+function PackageLink({
+  name,
+  href,
+  active,
+}: {
+  name: string;
+  href: string;
+  active: boolean;
+}) {
   let className =
     "relative pl-4 group items-center flex py-1 before:mr-4 before:relative before:top-px before:block before:h-1.5 before:w-1.5 before:rounded-full before:content-['']";
   return active ? (
@@ -49,17 +61,18 @@ function PackageLink({ pkg, active }: { pkg: string; active: boolean }) {
         "font-bold text-red-brand before:bg-red-brand"
       )}
     >
-      {pkg}
+      {name}
     </span>
   ) : (
     <Link
-      to={pkg}
+      to={`../${href}`}
+      relative="path"
       className={classNames(
         className,
         "hover:bg-gray-50 active:text-red-brand dark:text-gray-200 dark:hover:bg-gray-700 dark:active:text-red-brand"
       )}
     >
-      {pkg}
+      {name}
     </Link>
   );
 }

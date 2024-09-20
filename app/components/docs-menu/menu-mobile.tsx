@@ -31,7 +31,7 @@ export function NavMenuMobile({
         </div>
       </summary>
       <div className="absolute h-[66vh] w-full overflow-auto overscroll-contain border-b bg-white p-3 shadow-2xl dark:border-gray-700 dark:bg-gray-900 dark:shadow-black">
-        <Menu menu={menu} />
+        <Menu />
       </div>
     </DetailsMenu>
   );

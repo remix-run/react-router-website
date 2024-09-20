@@ -2,7 +2,6 @@ import * as React from "react";
 import { Link, useLoaderData } from "@remix-run/react";
 import classNames from "classnames";
 
-import { useIsActivePath } from "~/hooks/use-is-active-path";
 import iconsHref from "~/icons.svg";
 
 import type { MenuDoc } from "~/modules/gh-docs/.server/docs";
@@ -59,11 +58,7 @@ function MenuCategory({ category }: { category: MenuDoc }) {
   }
 
   return (
-    <MenuCategoryDetails
-      className="group"
-      slug={category.slug}
-      slugs={category.slugs}
-    >
+    <MenuCategoryDetails className="group">
       <MenuSummary>
         {menuCategoryType === "linkAndDetails" ? (
           <MenuCategoryLink to={category.slug!}>
@@ -106,33 +101,11 @@ type MenuCategoryDetailsType = {
   onOpenChanged?: (isOpen: boolean) => void;
 };
 
-function MenuCategoryDetails({
-  className,
-  slug,
-  slugs,
-  children,
-}: MenuCategoryDetailsType) {
-  const isActive = useIsActivePath(slugs ?? slug ?? []);
-  // By default only the active path is open
-  const [isOpen, setIsOpen] = React.useState(true);
-
-  // Auto open the details element, useful when navigating from the home page
-  React.useEffect(() => {
-    if (isActive) {
-      setIsOpen(true);
-    }
-  }, [isActive]);
-
+function MenuCategoryDetails({ className, children }: MenuCategoryDetailsType) {
   return (
     <details
+      open={true}
       className={classNames(className, "relative flex cursor-pointer flex-col")}
-      open={isOpen}
-      onToggle={(e) => {
-        // Synchronize the DOM's state with React state to prevent the
-        // details element from being closed after navigation and re-evaluation
-        // of useIsActivePath
-        setIsOpen(e.currentTarget.open);
-      }}
     >
       {children}
     </details>

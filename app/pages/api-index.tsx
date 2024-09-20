@@ -19,18 +19,18 @@ import {
   getApiMatchData,
   getDocsSearch,
   getDocTitle,
-  getGuideMatchData,
   getRobots,
   getRootMatchData,
 } from "~/ui/meta";
 
 export { ErrorBoundary } from "~/components/doc-error-boundary";
 
-export async function loader({ params, request }: LoaderFunctionArgs) {
+export async function loader({ params }: LoaderFunctionArgs) {
   let { ref = "main", pkg } = params;
   invariant(pkg, "expected `params.pkg`");
 
-  const doc = await getPackageIndexDoc(ref, pkg);
+  let pkgName = pkg === "react-router" ? pkg : `@react-router/${pkg}`;
+  let doc = await getPackageIndexDoc(ref, pkgName);
 
   return { doc };
 }
