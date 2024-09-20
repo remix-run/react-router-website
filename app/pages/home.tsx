@@ -1,14 +1,14 @@
-import { type MetaFunction } from "@remix-run/node";
+import { LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
 import { Await, Link, useLoaderData } from "@remix-run/react";
 import { Suspense } from "react";
 
 import iconsHref from "~/icons.svg";
-import { getStats } from "~/modules/stats";
+import { getStats, Stats } from "~/modules/stats";
 import { getRootMatchData } from "~/ui/meta";
 
-export let loader = async () => {
+export function loader(_: LoaderFunctionArgs) {
   return { stats: getStats() };
-};
+}
 
 export const meta: MetaFunction = ({ data, matches }) => {
   let { isProductionHost } = getRootMatchData(matches);
@@ -138,24 +138,27 @@ export default function Home() {
           <Await resolve={stats} errorElement={null}>
             {(stats) => (
               <ul className="mt-8 grid grid-cols-1 gap-8 md:grid md:grid-cols-2">
-                {stats.map(({ svgId, count, label }) => (
-                  <li key={svgId} className="flex gap-4">
-                    <svg
-                      aria-label="TODO GitHub Octocat logo"
-                      className="mt-1 h-8 w-8 text-gray-200 dark:text-gray-600"
-                    >
-                      <use href={`${iconsHref}#${svgId}`} />
-                    </svg>
-                    <p className="flex flex-col">
-                      <span className="text-3xl font-light tracking-tight">
-                        {count?.toLocaleString("en-US")}
-                      </span>
-                      <span className="text-gray-300 dark:text-gray-500">
-                        {label}
-                      </span>
-                    </p>
-                  </li>
-                ))}
+                {/* TODO: single fetch bug? */}
+                {(stats as unknown as Stats[]).map(
+                  ({ svgId, count, label }) => (
+                    <li key={svgId} className="flex gap-4">
+                      <svg
+                        aria-label="TODO GitHub Octocat logo"
+                        className="mt-1 h-8 w-8 text-gray-200 dark:text-gray-600"
+                      >
+                        <use href={`${iconsHref}#${svgId}`} />
+                      </svg>
+                      <p className="flex flex-col">
+                        <span className="text-3xl font-light tracking-tight">
+                          {count?.toLocaleString("en-US")}
+                        </span>
+                        <span className="text-gray-300 dark:text-gray-500">
+                          {label}
+                        </span>
+                      </p>
+                    </li>
+                  )
+                )}
               </ul>
             )}
           </Await>
