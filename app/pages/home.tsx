@@ -7,7 +7,12 @@ import { getStats } from "~/modules/stats";
 import { getRootMatchData } from "~/ui/meta";
 
 export let loader = async () => {
-  return { stats: getStats() };
+  const stats = await getStats();
+  // replace with something better, just fixing types
+  if (!stats) {
+    throw new Error("Failed to load stats");
+  }
+  return { stats };
 };
 
 export const meta: MetaFunction = ({ data, matches }) => {

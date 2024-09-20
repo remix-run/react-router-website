@@ -5,6 +5,13 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 installGlobals({ nativeFetch: true });
 
+declare module "@remix-run/node" {
+  // or cloudflare, deno, etc.
+  interface Future {
+    unstable_singleFetch: true;
+  }
+}
+
 export default defineConfig({
   ssr: {
     noExternal: ["@docsearch/react"],
