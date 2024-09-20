@@ -3,6 +3,12 @@ import { defineConfig, splitVendorChunkPlugin } from "vite";
 import { installGlobals } from "@remix-run/node";
 import tsconfigPaths from "vite-tsconfig-paths";
 
+declare module "@remix-run/node" {
+  interface Future {
+    unstable_singleFetch: true;
+  }
+}
+
 installGlobals({ nativeFetch: true });
 
 export default defineConfig({
