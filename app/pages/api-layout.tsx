@@ -39,7 +39,9 @@ export default function DocsLayout() {
     <div className="[--header-height:theme(spacing.16)] [--nav-width:theme(spacing.72)] lg:m-auto lg:max-w-[90rem]">
       <div className="sticky top-0 z-20">
         <Header />
-        <NavMenuMobile />
+        <NavMenuMobile>
+          <PackageSelect />
+        </NavMenuMobile>
       </div>
 
       <div className="block lg:flex">
@@ -60,7 +62,7 @@ export default function DocsLayout() {
             "[&_*:focus]:scroll-mt-[8rem] lg:[&_*:focus]:scroll-mt-[5rem]",
             // Account for the left navbar
             "min-h-[80vh] lg:ml-3 lg:w-[calc(100%-var(--nav-width))]",
-            "lg:pl-6 xl:pl-10 2xl:pl-12 flex flex-col"
+            "flex flex-col lg:pl-6 xl:pl-10 2xl:pl-12"
           )}
         >
           <Outlet />

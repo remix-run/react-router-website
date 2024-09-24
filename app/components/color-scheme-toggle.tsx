@@ -25,7 +25,7 @@ export function ColorSchemeToggle() {
           <use href={`${iconsHref}#sun`} />
         </svg>
       </summary>
-      <DetailsPopup className="w-40">
+      <DetailsPopup className="w-40 right-0">
         <Form replace action="/color-scheme" method="post" preventScrollReset>
           <input
             type="hidden"
