@@ -21,7 +21,8 @@ export async function loader({ params }: LoaderFunctionArgs) {
   let { ref = "main", pkg, "*": splat } = params;
   invariant(pkg, "expected `params.pkg`");
   invariant(splat, "expected `*` params");
-  let doc = await getRepoReferenceDoc(ref, pkg, splat);
+  let pkgName = pkg === "react-router" ? pkg : `@react-router/${pkg}`;
+  let doc = await getRepoReferenceDoc(ref, pkgName, splat);
   if (!doc) throw new Response("", { status: 404 });
   return { doc };
 }
