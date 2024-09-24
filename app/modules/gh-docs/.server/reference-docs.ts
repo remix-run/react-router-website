@@ -27,7 +27,17 @@ global.referenceDocCache = new LRUCache<string, JSONOutput.ProjectReflection>({
 });
 
 async function loadProductionData(): Promise<JSONOutput.ProjectReflection> {
-  throw new Error("'loadProductionData' not implemented.");
+  // TODO: in the future we'll pull from the repo with raw github and create new
+  // versions of that file with each release, for now you have to generate the api-docs.json
+  // locally from the react-router repo and then copy it over here:
+  // 
+  // ```
+  // # from react-router
+  // $ npm run typedoc
+  // # from reactrouter-website
+  // $ npm run api:cp
+  // ```
+  return loadDevelopmentData();
 }
 
 async function loadDevelopmentData(): Promise<JSONOutput.ProjectReflection> {
