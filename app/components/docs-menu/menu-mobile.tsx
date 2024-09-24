@@ -3,7 +3,7 @@ import { useDoc } from "~/hooks/use-doc";
 import { DetailsMenu } from "~/modules/details-menu";
 import { Menu } from "./menu";
 
-export function NavMenuMobile({ children }: { children: React.ReactNode }) {
+export function NavMenuMobile({ children }: { children?: React.ReactNode }) {
   let doc = useDoc();
 
   return (
