@@ -27,7 +27,7 @@ export function VersionSelect({
       <summary
         title={label}
         className={classNames(
-          `_no-triangle whitespace-nowrap overflow-hidden w-24 relative flex h-[40px] cursor-pointer list-none items-center justify-between gap-3 px-3`,
+          `_no-triangle relative flex h-[40px] w-24 cursor-pointer list-none items-center justify-between gap-3 overflow-hidden whitespace-nowrap px-3`,
           className,
           independent ? "rounded-full" : "rounded-l-full"
         )}
@@ -119,7 +119,7 @@ function RefLink({ to, children }: { to: string; children: React.ReactNode }) {
         className,
         isActive
           ? "font-bold text-red-brand before:bg-red-brand"
-          : "hover:bg-gray-50 active:text-red-brand dark:text-gray-200 dark:hover:bg-gray-700 dark:active:text-red-brand before:bg-transparent"
+          : "before:bg-transparent hover:bg-gray-50 active:text-red-brand dark:text-gray-200 dark:hover:bg-gray-700 dark:active:text-red-brand"
       )}
       to={to}
     >

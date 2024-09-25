@@ -12,9 +12,9 @@ export function NavPill() {
   return (
     <div className="inline-block">
       {isV7 ? (
-        <div className="flex justify-between bg-gray-100 dark:bg-gray-800 rounded-full">
+        <div className="flex justify-between rounded-full bg-gray-100 dark:bg-gray-800">
           <VersionSelect />
-          <div className="bg-gray-200 dark:bg-gray-600 w-[1px] mr-2" />
+          <div className="mr-2 w-[1px] bg-gray-200 dark:bg-gray-600" />
           <Segments>
             <PillLink to={withRef("guides")}>Guides</PillLink>
             <PillLink to={withRef("api")}>API</PillLink>
@@ -28,7 +28,7 @@ export function NavPill() {
 }
 
 function Segments({ children }: { children: React.ReactNode }) {
-  return <div className="flex px-1 items-center gap-1">{children}</div>;
+  return <div className="flex items-center gap-1 px-1">{children}</div>;
 }
 
 export function PillLink({
@@ -49,7 +49,7 @@ export function PillLink({
       to={to}
       className={({ isActive, isPending }) =>
         classNames(
-          "rounded-full p-2 text-sm font-semibold min-w-12 text-center",
+          "min-w-12 rounded-full p-2 text-center text-sm font-semibold",
           isActive && !isNavigating
             ? activeClassName
             : isPending

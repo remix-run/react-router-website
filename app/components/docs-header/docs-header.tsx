@@ -7,8 +7,8 @@ import { NavPill } from "../nav-pill";
 
 export function Header() {
   return (
-    <div className="relative gap-2 z-20 flex h-16 w-full items-center justify-between border-b border-gray-50 bg-white px-4 text-gray-900 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 lg:px-8">
-      <div className="flex w-full items-center md:justify-between gap-2 md:gap-4 md:w-auto">
+    <div className="relative z-20 flex h-16 w-full items-center justify-between gap-2 border-b border-gray-50 bg-white px-4 text-gray-900 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 lg:px-8">
+      <div className="flex w-full items-center gap-2 md:w-auto md:justify-between md:gap-4">
         <LogoLink />
         <div className="flex items-center gap-2">
           <NavPill />
@@ -29,7 +29,7 @@ function LogoLink() {
   return (
     <Link
       to="/"
-      className="hidden md:flex items-center gap-1 text-gray-900 dark:text-white"
+      className="hidden items-center gap-1 text-gray-900 dark:text-white md:flex"
       onContextMenu={(event) => {
         event.preventDefault();
         navigate("/brand");
