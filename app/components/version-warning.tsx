@@ -12,7 +12,7 @@ export function VersionWarning() {
     : `Viewing docs for an older release`;
 
   return (
-    <div className="hidden lg:block text-center">
+    <div className="hidden text-center lg:block">
       <div className="animate-[bounce_500ms_2.5] bg-red-brand p-2 text-xs text-white">
         {warning}.{" "}
         <Link to="/en/main" className="underline">

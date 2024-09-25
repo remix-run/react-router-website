@@ -191,7 +191,7 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
         to={to}
         className={classNames(
           // link styles
-          "relative group my-1 flex items-center justify-between rounded-md border-transparent py-1.5 pl-4 lg:text-sm",
+          "group relative my-1 flex items-center justify-between rounded-md border-transparent py-1.5 pl-4 lg:text-sm",
           isActive
             ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
             : "text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"
@@ -201,7 +201,7 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
         {slowNav && !isActive && (
           <svg
             aria-hidden
-            className="hidden h-4 w-4 group-open:block animate-spin absolute -left-1"
+            className="absolute -left-1 hidden h-4 w-4 animate-spin group-open:block"
           >
             <use href={`${iconsHref}#arrow-path`} />
           </svg>
