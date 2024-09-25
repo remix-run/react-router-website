@@ -64,6 +64,6 @@ export const meta: MetaFunction<typeof loader> = ({
 };
 
 export default function DocPage() {
-  let { doc } = useLoaderData<typeof loader>(); 
+  let { doc } = useLoaderData<typeof loader>();
   return <DocLayout doc={doc} />;
 }
