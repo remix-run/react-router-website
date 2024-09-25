@@ -13,9 +13,12 @@ declare global {
 
 let NO_CACHE = process.env.NO_CACHE;
 
+// TODO: can make this lower when we make the api fetching dynamic
+let oneDay = 1000 * 60 * 60 * 24;
+
 global.referenceDocCache = new LRUCache<string, JSONOutput.ProjectReflection>({
   max: 10,
-  ttl: NO_CACHE ? 1 : 300000, // 5 minutes
+  ttl: NO_CACHE ? 1 : oneDay,
   allowStale: !NO_CACHE,
   noDeleteOnFetchRejection: true,
   fetchMethod: async (cacheKey) => {
@@ -30,7 +33,7 @@ async function loadProductionData(): Promise<JSONOutput.ProjectReflection> {
   // TODO: in the future we'll pull from the repo with raw github and create new
   // versions of that file with each release, for now you have to generate the api-docs.json
   // locally from the react-router repo and then copy it over here:
-  // 
+  //
   // ```
   // # from react-router
   // $ npm run typedoc
