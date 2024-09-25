@@ -9,6 +9,7 @@
 /           /en/main
 /guides     /en/main
 /api        /en/main
+/dev        /dev/guides
 /en/dev     /dev/guides
 /dev/api    /dev/api/react-router
 /local/api  /local/api/react-router
