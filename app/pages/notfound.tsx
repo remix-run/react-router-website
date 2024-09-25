@@ -1,11 +1,25 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import { type MetaFunction } from "@remix-run/react";
 import { Link, isRouteErrorResponse, useRouteError } from "@remix-run/react";
-import { whyDoWeNotHaveGoodMiddleWareYetRyan } from "~/http";
+import { CACHE_CONTROL } from "~/http";
 
-export let loader = async ({ request }: LoaderFunctionArgs) => {
-  await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
+export let loader = async () => {
+  // TODO: use `data` or whatever we end up with in single fetch instead of
+  // throwing here
   throw new Response("Not Found", { status: 404 });
 };
+
+export const meta: MetaFunction = () => {
+  let robots = "noindex, nofollow";
+  return [
+    { title: "Not Found | React Router" },
+    { name: "robots", content: robots },
+    { name: "googlebot", content: robots },
+  ];
+};
+
+export function headers() {
+  return { "Cache-Control": CACHE_CONTROL.none };
+}
 
 export default function Catchall() {
   return null;

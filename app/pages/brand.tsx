@@ -3,11 +3,7 @@ import classNames from "classnames";
 import type { FC } from "react";
 
 export const meta: MetaFunction = () => {
-  return [
-    {
-      title: "React Router Assets and Branding Guidelines",
-    },
-  ];
+  return [{ title: "React Router Assets and Branding Guidelines" }];
 };
 
 export default function Brand() {

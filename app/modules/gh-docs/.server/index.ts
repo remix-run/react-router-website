@@ -1,5 +1,6 @@
 import { getDoc, getMenu } from "./docs";
 import { getBranches } from "./branches";
+import { getReferenceAPI } from "./reference-docs";
 import { getLatestVersion, getTags } from "./tags";
 import invariant from "tiny-invariant";
 
@@ -29,8 +30,27 @@ export function getRepoDocsMenu(ref: string, lang: string) {
   return getMenu(REPO, fixupRefName(ref), lang);
 }
 
+export async function getRepoDocsReferenceMenu(ref: string) {
+  const api = await getReferenceAPI(REPO, ref);
+  return api.getReferenceNav();
+}
+
 export function getRepoDoc(ref: string, slug: string) {
   return getDoc(REPO, fixupRefName(ref), slug);
+}
+
+export async function getRepoReferenceDoc(
+  ref: string,
+  pkgName: string,
+  qualifiedName: string
+) {
+  const api = await getReferenceAPI(REPO, ref);
+  return api.getDoc(pkgName, qualifiedName);
+}
+
+export async function getPackageIndexDoc(ref: string, pkgName: string) {
+  const api = await getReferenceAPI(REPO, ref);
+  return api.getPackageIndexDoc(pkgName);
 }
 
 function fixupRefName(ref: string) {

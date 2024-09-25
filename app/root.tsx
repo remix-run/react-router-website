@@ -1,7 +1,7 @@
 import type {
+  HeadersArgs,
   LinksFunction,
   LoaderFunctionArgs,
-  MetaFunction,
 } from "@remix-run/node";
 import {
   Link,
@@ -11,8 +11,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import { json } from "@remix-run/node";
-import { CACHE_CONTROL, whyDoWeNotHaveGoodMiddleWareYetRyan } from "./http";
+import { CACHE_CONTROL, middlewares } from "./http";
 
 import { parseColorScheme } from "./modules/color-scheme/server";
 import {
@@ -27,38 +26,22 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return [
-    {
-      title: "React Router",
-    },
-    {
-      name: "robots",
-      content: data?.isProductionHost ? "index,follow" : "noindex, nofollow",
-    },
-    {
-      name: "googlebot",
-      content: data?.isProductionHost ? "index,follow" : "noindex, nofollow",
-    },
-  ];
-};
-
-export let loader = async ({ request }: LoaderFunctionArgs) => {
-  await whyDoWeNotHaveGoodMiddleWareYetRyan(request);
+export async function loader({ request }: LoaderFunctionArgs) {
+  await middlewares(request);
 
   let colorScheme = await parseColorScheme(request);
   let isProductionHost = isHost("reactrouter.com", request);
 
-  return json(
-    { colorScheme, isProductionHost },
-    {
-      headers: {
-        "Cache-Control": CACHE_CONTROL.doc,
-        Vary: "Cookie",
-      },
-    }
-  );
-};
+  return { colorScheme, isProductionHost };
+}
+
+export function headers(_: HeadersArgs) {
+  return {
+    // default all caching to deployments
+    "Cache-Control": CACHE_CONTROL.deploy,
+    Vary: "Cookie",
+  };
+}
 
 export default function App() {
   let colorScheme = useColorScheme();

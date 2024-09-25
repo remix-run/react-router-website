@@ -1,64 +1,146 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import type { HeadersArgs, MetaFunction } from "@remix-run/node";
+import { Link } from "@remix-run/react";
 import classNames from "classnames";
-import semver from "semver";
+import { CACHE_CONTROL } from "~/http";
 import {
-  headers,
-  loader as docLoader,
-  default as DocPage,
-  meta as docMeta,
-} from "~/routes/$lang.$ref.$";
-import iconsHref from "~/icons.svg";
-import type { Stats } from "~/modules/stats";
+  getDocsSearch,
+  getDocTitle,
+  getGuideMatchData,
+  getRobots,
+  getRootMatchData,
+} from "~/ui/meta";
+import { seo } from "~/seo";
+import { useHeaderDataFromMatches } from "~/components/docs-header/use-header-data";
 
-export let loader = async ({ params, request }: LoaderFunctionArgs) => {
-  let is6dot4 =
-    params.ref === "local" ||
-    params.ref === "main" ||
-    params.ref === "dev" ||
-    semver.satisfies(params.ref || "", "^6.4", { includePrerelease: true });
-  if (is6dot4) {
-    // const stats = await getStats();
-    const stats = null;
-    return json({ is6dot4: true, stats });
-  }
-  return docLoader({ request, params, context: {} });
+export function headers({ parentHeaders }: HeadersArgs) {
+  parentHeaders.set("Cache-Control", CACHE_CONTROL.doc);
+  return parentHeaders;
+}
+
+export const meta: MetaFunction = ({ matches, params }) => {
+  let guides = getGuideMatchData(matches);
+  let rootMatch = getRootMatchData(matches);
+
+  let title = getDocTitle(guides, "Guides");
+
+  let [meta] = seo({
+    title: title,
+    twitter: { title },
+    openGraph: { title },
+  });
+
+  return [
+    ...meta,
+    ...getDocsSearch(params.ref),
+    ...getRobots(rootMatch.isProductionHost, guides),
+  ];
 };
 
-export { headers };
+export default function Index() {
+  let { isV7 } = useHeaderDataFromMatches();
+  return (
+    <div className="px-4 pb-4 pt-8 lg:mr-4 xl:pl-0">
+      {isV7 ? <V7 /> : <V6 />}
+    </div>
+  );
+}
 
-export const meta: MetaFunction<typeof loader> = ({ data, ...rest }) => {
-  // fake a doc for the new custom page, it does all the SEO stuff internally,
-  // easier than repeating here
-  if (data && "is6dot4" in data && data.is6dot4) {
-    data = {
-      doc: {
-        attrs: {
-          title: "Home",
-        },
-        children: [],
-        filename: "",
-        slug: "",
-        html: "",
-        headings: [],
-      },
-    };
-  }
+function V7() {
+  let mainLinks = [
+    {
+      title: "I'm New!",
+      description: (
+        <div>
+          We recommend you go through the{" "}
+          <span className="underline">Getting Started</span> guides where you'll
+          get familiar with installation, routes, data handling, pending UI and
+          more.
+        </div>
+      ),
+      slug: "start/installation",
+      className: "text-red-brand",
+      svg: undefined,
+    },
+    {
+      title: "Upgrade to v7",
+      description: (
+        <div>
+          v7 is a non-breaking upgrade if you are caught up on all future flags.
+          While v7 includes new framework features, you can continue to use it
+          as you currently do. Head over to the{" "}
+          <span className="underline">Upgrade Guide</span> to get up to date
+          quickly.
+        </div>
+      ),
+      slug: "upgrading/v6",
+      className: "text-green-brand",
+      svg: undefined,
+    },
 
-  // @ts-expect-error This is made because of the stub I think
-  return docMeta({ data, ...rest });
-};
+    {
+      title: "New Framework Features",
+      description: (
+        <div>
+          v7 includes optional, incrementally-adoptable features like code
+          splitting, data loading, actions, server rendering, static
+          pre-rendering, pending states, optimistic UI, RSC and more. To enaable
+          these features, check out the{" "}
+          <span className="underline">Adopting Vite</span> guide.
+        </div>
+      ),
 
-const mainLinks = [
-  {
-    title: "What's New in 6.4?",
-    description:
-      "v6.4 is our most exciting release yet with new data abstractions for reads, writes, and navigation hooks to easily keep your UI in sync with your data. The new feature overview will catch you up.",
-    slug: "start/overview",
-    className: "text-green-brand",
-    // prettier-ignore
-    svg: (
+      slug: "upgrading/vite-router-provider",
+      className: "text-pink-brand",
+      svg: undefined,
+    },
+    {
+      title: "Upgrade from Remix",
+      description: (
+        <div>
+          Follow our checklist to quickly update your Remix application to React
+          Router and start taking advantage of new features like static
+          pre-rendering, typesafe routing and more.
+        </div>
+      ),
+      slug: "upgrading/remix",
+      className: "text-yellow-600 dark:text-yellow-brand",
+      svg: undefined,
+    },
+  ];
+  return (
+    <div className="my-4 grid max-w-[60ch] gap-y-10 md:max-w-none md:grid-cols-2 md:grid-rows-2 md:gap-x-8 md:gap-y-12">
+      {mainLinks.map(({ title, description, slug, className, svg }) => (
+        <Link
+          key={slug}
+          to={slug}
+          className="group relative flex flex-col gap-1 rounded-lg border-[3px] border-gray-50 p-4 pt-6 hover:border-gray-100 dark:border-gray-800 hover:dark:border-gray-600 md:p-6"
+        >
+          <h2
+            className={classNames(
+              className,
+              "text-2xl font-bold tracking-tight group-hover:underline"
+            )}
+          >
+            {title}
+          </h2>
+          {description}
+          {svg}
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function V6() {
+  let mainLinks = [
+    {
+      title: "What's New in 6.4?",
+      description:
+        "v6.4 is our most exciting release yet with new data abstractions for reads, writes, and navigation hooks to easily keep your UI in sync with your data. The new feature overview will catch you up.",
+      slug: "start/overview",
+      className: "text-green-brand",
+      // prettier-ignore
+      svg: (
       <div className="absolute top-[-35px] right-[-3px]">
         <svg width="107" height="85" viewBox="0 0 107 85" fill="none" xmlns="http://www.w3.org/2000/svg">
           <mask id="path-1-inside-1_1305_761" fill="white">
@@ -81,15 +163,15 @@ const mainLinks = [
         </svg>
       </div>
       ),
-  },
-  {
-    title: "I'm New",
-    description:
-      "Start with the tutorial. It will quickly introduce you to the primary features of React Router: from configuring routes, to loading and mutating data, to pending and optimistic UI.",
-    slug: "start/tutorial",
-    className: "text-red-brand",
-    // prettier-ignore
-    svg: (
+    },
+    {
+      title: "I'm New!",
+      description:
+        "Start with the tutorial. It will quickly introduce you to the primary features of React Router: from configuring routes, to loading and mutating data, to pending and optimistic UI.",
+      slug: "start/tutorial",
+      className: "text-red-brand",
+      // prettier-ignore
+      svg: (
       <div className="absolute top-[-30px] md:top-[-35px] right-[-8px]">
         <svg width="98" height="86" viewBox="0 0 98 86" fill="none" xmlns="http://www.w3.org/2000/svg">
           <mask id="path-1-inside-1_1306_720" fill="white">
@@ -108,15 +190,15 @@ const mainLinks = [
         </svg>
       </div>
     ),
-  },
-  {
-    title: "I'm on v5",
-    description:
-      "The migration guide will help you migrate incrementally and keep shipping along the way. Or, do it all in one yolo commit! Either way, we've got you covered to start using the new features right away.",
-    slug: "upgrading/v5",
-    className: "text-pink-brand",
-    // prettier-ignore
-    svg: (
+    },
+    {
+      title: "I'm on v5",
+      description:
+        "The migration guide will help you migrate incrementally and keep shipping along the way. Or, do it all in one yolo commit! Either way, we've got you covered to start using the new features right away.",
+      slug: "upgrading/v5",
+      className: "text-pink-brand",
+      // prettier-ignore
+      svg: (
       <div className="absolute top-[-30px] md:top-[-35px] right-[-7px]">
         <svg width="96" height="86" viewBox="0 0 96 86" fill="none" xmlns="http://www.w3.org/2000/svg">
           <mask id="path-1-inside-1_1306_721" fill="white">
@@ -139,15 +221,15 @@ const mainLinks = [
         </svg>
       </div>
     ),
-  },
-  {
-    title: "I'm Stuck!",
-    description:
-      "Running into a problem? Chances are you're not the first! Explore common questions about React Router v6.",
-    slug: "start/faq",
-    className: "text-yellow-600 dark:text-yellow-brand",
-    // prettier-ignore
-    svg: (
+    },
+    {
+      title: "I'm Stuck!",
+      description:
+        "Running into a problem? Chances are you're not the first! Explore common questions about React Router v6.",
+      slug: "start/faq",
+      className: "text-yellow-600 dark:text-yellow-brand",
+      // prettier-ignore
+      svg: (
       <div className="absolute top-[-30px] md:top-[-35px] right-[-16px]">
         <svg width="96" height="81" viewBox="0 0 96 81" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path className="fill-gray-50 dark:fill-gray-800 group-hover:fill-gray-100 dark:group-hover:fill-gray-700" fillRule="evenodd" clipRule="evenodd" d="M65.7841 8.89933C58.9684 3.50924 50.3558 0.291502 40.9917 0.291502C18.9003 0.291503 0.991697 18.2001 0.991697 40.2915C0.991698 62.3829 18.9003 80.2915 40.9917 80.2915C52.8792 80.2915 63.5556 75.1059 70.8821 66.8734C74.2015 65.9378 76.7373 66.4596 77.6437 70.1153C80.3926 81.2027 108.358 77.3893 89.4701 51.5577C83.761 43.7498 82.6847 37.5855 81.7077 31.9893C80.3411 24.162 79.1685 17.4462 65.7841 8.89933Z" />
@@ -159,61 +241,28 @@ const mainLinks = [
         </svg>
       </div>
     ),
-  },
-];
-
-export default function Index() {
-  // If we're not on 6.4 then we're not on a version where we expect the
-  // custom index page, so we'll serve the doc index markdown file instead
-  let loaderData = useLoaderData<typeof loader>();
-  if ("is6dot4" in loaderData && !loaderData.is6dot4) return <DocPage />;
-
-  let stats = "stats" in loaderData ? loaderData.stats : [];
-
+    },
+  ];
   return (
-    <div className="px-4 pb-4 pt-8 lg:mr-4 xl:pl-0">
-      <div className="my-4 grid max-w-[60ch] gap-y-10 md:max-w-none md:grid-cols-2 md:grid-rows-2 md:gap-x-8 md:gap-y-12">
-        {mainLinks.map(({ title, description, slug, className, svg }) => (
-          <Link
-            key={slug}
-            to={slug}
-            className="group relative flex flex-col gap-1 rounded-lg border-[3px] border-gray-50 p-4 pt-6 hover:border-gray-100 dark:border-gray-800 hover:dark:border-gray-600 md:p-6"
+    <div className="my-4 grid max-w-[60ch] gap-y-10 md:max-w-none md:grid-cols-2 md:grid-rows-2 md:gap-x-8 md:gap-y-12">
+      {mainLinks.map(({ title, description, slug, className, svg }) => (
+        <Link
+          key={slug}
+          to={slug}
+          className="group relative flex flex-col gap-1 rounded-lg border-[3px] border-gray-50 p-4 pt-6 hover:border-gray-100 dark:border-gray-800 hover:dark:border-gray-600 md:p-6"
+        >
+          <h2
+            className={classNames(
+              className,
+              "text-2xl font-bold tracking-tight group-hover:underline"
+            )}
           >
-            <h2
-              className={classNames(
-                className,
-                "text-2xl font-bold tracking-tight group-hover:underline"
-              )}
-            >
-              {title}
-            </h2>
-            <p>{description}</p>
-            {svg}
-          </Link>
-        ))}
-      </div>
-      {stats && (
-        <ul className="mt-8 grid grid-cols-1 gap-y-4 md:grid md:grid-cols-2">
-          {stats.map(({ svgId, count, label }: Stats) => (
-            <li key={svgId} className="flex gap-4">
-              <svg
-                aria-label="TODO GitHub Octocat logo"
-                className="mt-1 h-8 w-8 text-gray-200 dark:text-gray-600"
-              >
-                <use href={`${iconsHref}#${svgId}`} />
-              </svg>
-              <p className="flex flex-col">
-                <span className="text-3xl font-light tracking-tight">
-                  {count?.toLocaleString("en-US")}
-                </span>
-                <span className="text-gray-300 dark:text-gray-500">
-                  {label}
-                </span>
-              </p>
-            </li>
-          ))}
-        </ul>
-      )}
+            {title}
+          </h2>
+          <p>{description}</p>
+          {svg}
+        </Link>
+      ))}
     </div>
   );
 }
