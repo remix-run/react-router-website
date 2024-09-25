@@ -5,7 +5,7 @@ import iconsHref from "~/icons.svg";
 
 export function LargeOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
   return (
-    <div className="sticky top-36 order-1 mt-20 hidden max-h-[calc(100vh-9rem)] w-56 flex-shrink-0 self-start overflow-y-auto pb-10 xl:block">
+    <div className="sticky top-36 order-1 mt-20 hidden max-h-[calc(100vh-9rem)] w-56 min-w-min flex-shrink-0 self-start overflow-y-auto pb-10 xl:block">
       <nav className="mb-3 flex items-center font-semibold">On this page</nav>
       <ul className="md-toc flex flex-col flex-wrap gap-3 leading-[1.125]">
         {doc.headings.map((heading, i) => (
@@ -15,7 +15,9 @@ export function LargeOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
           >
             <Link
               to={`#${heading.slug}`}
-              dangerouslySetInnerHTML={{ __html: heading.html || "" }}
+              dangerouslySetInnerHTML={{
+                __html: heading.html || "",
+              }}
               className="block py-1 text-sm text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"
             />
           </li>

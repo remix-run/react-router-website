@@ -15,7 +15,7 @@ export let loader = async () => {
   return { stats };
 };
 
-export const meta: MetaFunction = ({ data, matches }) => {
+export const meta: MetaFunction = ({ matches }) => {
   let { isProductionHost } = getRootMatchData(matches);
   let robots = isProductionHost ? "index,follow" : "noindex, nofollow";
   return [
