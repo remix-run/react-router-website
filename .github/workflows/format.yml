@@ -3,7 +3,7 @@ name: 👔 Format
 on:
   push:
     branches:
-      - main
+      - testing-gh-actions
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

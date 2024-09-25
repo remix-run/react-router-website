@@ -3,7 +3,7 @@ name: ⬣ Lint
 on:
   push:
     branches:
-      - main
+      - testing-gh-actions
   pull_request:
 
 concurrency:
