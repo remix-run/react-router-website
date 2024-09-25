@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { unstable_data as data } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import classNames from "classnames";
 import semver from "semver";
@@ -21,7 +21,7 @@ export let loader = async ({ params, request }: LoaderFunctionArgs) => {
   if (is6dot4) {
     // const stats = await getStats();
     const stats = null;
-    return data({ is6dot4: true, stats });
+    return json({ is6dot4: true, stats });
   }
   return docLoader({ request, params, context: {} });
 };
