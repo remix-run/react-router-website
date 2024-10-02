@@ -108,26 +108,40 @@ function V7() {
     },
   ];
   return (
-    <div className="my-4 grid max-w-[60ch] gap-y-10 md:max-w-none md:grid-cols-2 md:grid-rows-2 md:gap-x-8 md:gap-y-12">
-      {mainLinks.map(({ title, description, slug, className, svg }) => (
-        <Link
-          key={slug}
-          to={slug}
-          className="group relative flex flex-col gap-1 rounded-lg border-[3px] border-gray-50 p-4 pt-6 hover:border-gray-100 dark:border-gray-800 hover:dark:border-gray-600 md:p-6"
-        >
-          <h2
-            className={classNames(
-              className,
-              "text-2xl font-bold tracking-tight group-hover:underline"
-            )}
+    <>
+      <div className="max-w-[40rem]">
+        <h1 className="text-xl font-bold">React Router v7 Pre-release</h1>
+        <p className="mb-2">
+          Welcome to the v7 pre-release docs. Please note a lot of information
+          here is incomplete and potentially inaccurate as we've been working
+          primarily on the code.
+        </p>
+        <p>
+          During this time we'll be updating these docs rapidly to get ready for
+          the final release. Thanks for your patience!
+        </p>
+      </div>
+      <div className="my-4 grid max-w-[60ch] gap-y-10 md:max-w-none md:grid-cols-2 md:grid-rows-2 md:gap-x-8 md:gap-y-12">
+        {mainLinks.map(({ title, description, slug, className, svg }) => (
+          <Link
+            key={slug}
+            to={slug}
+            className="group relative flex flex-col gap-1 rounded-lg border-[3px] border-gray-50 p-4 pt-6 hover:border-gray-100 dark:border-gray-800 hover:dark:border-gray-600 md:p-6"
           >
-            {title}
-          </h2>
-          {description}
-          {svg}
-        </Link>
-      ))}
-    </div>
+            <h2
+              className={classNames(
+                className,
+                "text-2xl font-bold tracking-tight group-hover:underline"
+              )}
+            >
+              {title}
+            </h2>
+            {description}
+            {svg}
+          </Link>
+        ))}
+      </div>
+    </>
   );
 }
 
