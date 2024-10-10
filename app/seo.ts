@@ -10,7 +10,7 @@ export const seo = getSeo({
     title: "React Router",
     card: "summary_large_image",
     image: {
-      url: "/ogimage.jpg",
+      url: "/ogimage.png",
       alt: "React Router logo",
     },
   },
