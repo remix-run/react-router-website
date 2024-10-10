@@ -8,9 +8,9 @@ export const seo = getSeo({
     site: "@remix_run",
     creator: "@remix_run",
     title: "React Router",
-    card: "summary",
+    card: "summary_large_image",
     image: {
-      url: "/twitterimage.jpg",
+      url: "/ogimage.png",
       alt: "React Router logo",
     },
   },
