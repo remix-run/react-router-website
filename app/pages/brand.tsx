@@ -18,9 +18,7 @@ export default function Brand() {
         tutorials.
       </p>
       <AssetHeader>Trademark Usage Agreement</AssetHeader>
-      <p>
-        The React Router name and logos are trademarks of Remix Software Inc.
-      </p>
+      <p>The React Router name and logos are trademarks of Shopify Inc.</p>
       <p>
         You may not use the React Router name or logos in any way that could
         mistakenly imply any official connection with or endorsement of Shopify
