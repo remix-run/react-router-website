@@ -106,39 +106,59 @@ function AssetsGrid({ children }: { children: React.ReactNode }) {
 /**
  * Creates the dark and light logos for a given asset.
  */
-function Logos(props: {
+function Logos({
+  title,
+  subTitle,
+  oneColor,
+}: {
   title: "Lockup" | "Wordmark" | "Logo";
   subTitle?: string;
   oneColor?: boolean;
 }) {
-  let filePath = `${BRAND_DIR}/React Router ${props.title}`;
-  if (props.subTitle) {
-    filePath += `/${props.subTitle}`;
+  let filePath = `${BRAND_DIR}/React Router ${title}`;
+  if (subTitle) {
+    filePath += `/${subTitle}`;
   }
-  if (props.oneColor) {
+  if (oneColor) {
     filePath += `/One Color`;
   }
 
+  let downloadFilePath = `rr_${title}`;
+  if (subTitle) {
+    downloadFilePath += `_${subTitle}`;
+  }
+  downloadFilePath = downloadFilePath.toLocaleLowerCase();
+
   return (
     <>
-      <LogoBox filePath={`${filePath}/Light`} theme="light" />
-      <LogoBox filePath={`${filePath}/Dark`} theme="dark" />
+      <LogoBox
+        filePath={`${filePath}/Light`}
+        theme="light"
+        downloadFilePath={downloadFilePath + "_light"}
+      />
+      <LogoBox
+        filePath={`${filePath}/Dark`}
+        theme="dark"
+        downloadFilePath={downloadFilePath + "_dark"}
+      />
     </>
   );
 }
 
 let background = {
-  dark: "bg-black bg-[linear-gradient(45deg,theme(colors.gray.700)_25%,transparent_25%,transparent_75%,theme(colors.gray.700)_75%,theme(colors.gray.700)),linear-gradient(45deg,theme(colors.gray.700)_25%,transparent_25%,transparent_75%,theme(colors.gray.700)_75%,theme(colors.gray.700))] bg-[length:16px_16px] bg-[position:0_0,8px_8px]",
   light:
-    "bg-white bg-[linear-gradient(45deg,theme(colors.gray.200)_25%,transparent_25%,transparent_75%,theme(colors.gray.200)_75%,theme(colors.gray.200)),linear-gradient(45deg,theme(colors.gray.200)_25%,transparent_25%,transparent_75%,theme(colors.gray.200)_75%,theme(colors.gray.200))] bg-[length:16px_16px] bg-[position:0_0,8px_8px]",
+    "bg-white bg-[linear-gradient(45deg,theme(colors.gray.100)_25%,transparent_25%,transparent_75%,theme(colors.gray.100)_75%,theme(colors.gray.100)),linear-gradient(45deg,theme(colors.gray.100)_25%,transparent_25%,transparent_75%,theme(colors.gray.100)_75%,theme(colors.gray.100))] bg-[length:24px_24px] bg-[position:0_0,12px_12px]",
+  dark: "bg-black bg-[linear-gradient(45deg,theme(colors.gray.800)_25%,transparent_25%,transparent_75%,theme(colors.gray.800)_75%,theme(colors.gray.800)),linear-gradient(45deg,theme(colors.gray.800)_25%,transparent_25%,transparent_75%,theme(colors.gray.800)_75%,theme(colors.gray.800))] bg-[length:24px_24px] bg-[position:0_0,12px_12px]",
 };
 
 function LogoBox({
   filePath,
   theme,
+  downloadFilePath,
 }: {
   filePath: string;
   theme: "dark" | "light";
+  downloadFilePath: string;
 }) {
   // replace / with - for the alt text
   const alt = filePath.replace(/\//g, " - ");
@@ -162,7 +182,7 @@ function LogoBox({
           <a
             className="uppercase underline opacity-50 hover:opacity-100"
             href={`${filePath}.${format}`}
-            download={true}
+            download={`${downloadFilePath}.${format}`}
             key={format}
           >
             {format}
