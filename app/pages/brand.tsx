@@ -128,9 +128,9 @@ function Logos(props: {
 }
 
 let background = {
-  dark: "bg-gray-600 bg-[linear-gradient(45deg,theme(colors.gray.700)_25%,transparent_25%,transparent_75%,theme(colors.gray.700)_75%,theme(colors.gray.700)),linear-gradient(45deg,theme(colors.gray.700)_25%,transparent_25%,transparent_75%,theme(colors.gray.700)_75%,theme(colors.gray.700))] bg-[length:16px_16px] bg-[position:0_0,8px_8px]",
+  dark: "bg-black bg-[linear-gradient(45deg,theme(colors.gray.700)_25%,transparent_25%,transparent_75%,theme(colors.gray.700)_75%,theme(colors.gray.700)),linear-gradient(45deg,theme(colors.gray.700)_25%,transparent_25%,transparent_75%,theme(colors.gray.700)_75%,theme(colors.gray.700))] bg-[length:16px_16px] bg-[position:0_0,8px_8px]",
   light:
-    "bg-[linear-gradient(45deg,theme(colors.gray.200)_25%,transparent_25%,transparent_75%,theme(colors.gray.200)_75%,theme(colors.gray.200)),linear-gradient(45deg,theme(colors.gray.200)_25%,transparent_25%,transparent_75%,theme(colors.gray.200)_75%,theme(colors.gray.200))] bg-[length:16px_16px] bg-[position:0_0,8px_8px]",
+    "bg-white bg-[linear-gradient(45deg,theme(colors.gray.200)_25%,transparent_25%,transparent_75%,theme(colors.gray.200)_75%,theme(colors.gray.200)),linear-gradient(45deg,theme(colors.gray.200)_25%,transparent_25%,transparent_75%,theme(colors.gray.200)_75%,theme(colors.gray.200))] bg-[length:16px_16px] bg-[position:0_0,8px_8px]",
 };
 
 function LogoBox({
