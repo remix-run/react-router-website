@@ -103,7 +103,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
         : _qualifiedName?.qualifiedName) ?? "";
     let symbol = getSymbol(qualifiedName);
     if (!symbol) {
-      console.error("No symbol found for", qualifiedName);
+      // console.error("No symbol found for", qualifiedName);
       return "#";
     }
     // find the package the qualifiedName belongs to
@@ -134,7 +134,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
       }
     }
     if (!pkg) {
-      console.error("No package found for", qualifiedName);
+      // console.error("No package found for", qualifiedName);
       return "#";
     }
 
@@ -398,7 +398,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
         break;
       }
       default: {
-        console.error("Unknown declaration kind", declaration.kind);
+        // console.error("Unknown declaration kind", declaration.kind);
       }
     }
     return md;
@@ -480,7 +480,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
         if (child.type) {
           formatted += `\n  ${child.name}: ${formatType(child.type)},`;
         } else {
-          console.error("No type for", child.name);
+          // console.error("No type for", child.name);
         }
       }
     }

@@ -22,12 +22,12 @@ export let links: LinksFunction = () => {
 };
 
 export let loader = async ({ params }: LoaderFunctionArgs) => {
-  let { ref, pkg, "*": splat } = params;
+  let { ref, pkg } = params;
   invariant(pkg, `Expected params.pkg`);
 
   let [menu, header, pkgs] = await Promise.all([
     loadReferenceMenu(ref || "main", pkg),
-    getHeaderData("en", ref, splat),
+    getHeaderData("en", ref),
     loadPackageNames(ref || "main"),
   ]);
 

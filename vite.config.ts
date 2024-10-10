@@ -53,6 +53,12 @@ export default defineConfig({
             }
           );
 
+          route("/v6/*", "pages/redirect-v6-doc.tsx");
+          route("/v7/api/:pkg/*", "pages/redirect-v7-doc.tsx");
+          route("/v7/guides/*", "pages/redirect-v7-doc.tsx", {
+            id: "v7-guides-redirect",
+          });
+
           route(
             "/:ref?/guides",
             "pages/guides-layout.tsx",

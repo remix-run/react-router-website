@@ -4,7 +4,6 @@ import { getReferenceAPI } from "./reference-docs";
 import { getLatestVersion, getTags } from "./tags";
 import invariant from "tiny-invariant";
 
-export { validateParams } from "./params";
 export { getRepoTarballStream } from "./repo-tarball";
 
 export type { Doc } from "./docs";

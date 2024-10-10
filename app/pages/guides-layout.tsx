@@ -16,11 +16,11 @@ export let links: LinksFunction = () => {
 };
 
 export let loader = async ({ params }: LoaderFunctionArgs) => {
-  let { ref, "*": splat } = params;
+  let { ref } = params;
 
   let [menu, header] = await Promise.all([
     loadGuidesMenu(ref || "main"),
-    getHeaderData("en", ref, splat),
+    getHeaderData("en", ref),
   ]);
 
   return { menu, header };
