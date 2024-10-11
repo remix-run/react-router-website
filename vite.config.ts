@@ -5,7 +5,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 declare module "@remix-run/node" {
   interface Future {
-    unstable_singleFetch: true;
+    v3_singleFetch: true;
   }
 }
 
