@@ -5,7 +5,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 declare module "@remix-run/node" {
   interface Future {
-    unstable_singleFetch: true;
+    v3_singleFetch: true;
   }
 }
 
@@ -26,9 +26,9 @@ export default defineConfig({
         v3_throwAbortReason: true,
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
-        unstable_singleFetch: true,
-        unstable_lazyRouteDiscovery: true,
-        unstable_optimizeDeps: true,
+        v3_singleFetch: true,
+        v3_lazyRouteDiscovery: true,
+        v3_optimizeDeps: true,
       },
       routes(defineRoutes) {
         return defineRoutes((route) => {
