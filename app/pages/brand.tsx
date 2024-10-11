@@ -51,25 +51,11 @@ export default function Brand() {
         <Logos title="Lockup" subTitle="Horizontal" />
         <Logos title="Lockup" subTitle="Horizontal" oneColor />
       </div>
-      <AssetSubHeader>Horizontal Stacked</AssetSubHeader>
-      <AssetsGrid>
-        <Logos title="Lockup" subTitle="Horizontal Stacked" />
-        <Logos title="Lockup" subTitle="Horizontal Stacked" oneColor />
-      </AssetsGrid>
+
       <AssetSubHeader>Vertically Stacked</AssetSubHeader>
       <AssetsGrid>
         <Logos title="Lockup" subTitle="Vertically Stacked" />
         <Logos title="Lockup" subTitle="Vertically Stacked" oneColor />
-      </AssetsGrid>
-
-      <AssetHeader>Wordmark</AssetHeader>
-      <AssetSubHeader>Horizontal</AssetSubHeader>
-      <AssetsGrid>
-        <Logos title="Wordmark" subTitle="Horizontal" />
-      </AssetsGrid>
-      <AssetSubHeader>Stacked</AssetSubHeader>
-      <AssetsGrid>
-        <Logos title="Wordmark" subTitle="Stacked" />
       </AssetsGrid>
 
       <AssetHeader>Logo</AssetHeader>
