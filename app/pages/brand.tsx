@@ -46,16 +46,14 @@ export default function Brand() {
       </p>
 
       <AssetHeader>Lockup</AssetHeader>
-      <AssetSubHeader>Horizontal</AssetSubHeader>
       <div className="grid grid-cols-2 gap-4 gap-x-6">
-        <Logos title="Lockup" subTitle="Horizontal" />
-        <Logos title="Lockup" subTitle="Horizontal" oneColor />
+        <Logos title="Lockup" />
+        <Logos title="Lockup" oneColor />
       </div>
 
-      <AssetSubHeader>Vertically Stacked</AssetSubHeader>
+      <AssetHeader>Wordmark</AssetHeader>
       <AssetsGrid>
-        <Logos title="Lockup" subTitle="Vertically Stacked" />
-        <Logos title="Lockup" subTitle="Vertically Stacked" oneColor />
+        <Logos title="Wordmark" />
       </AssetsGrid>
 
       <AssetHeader>Logo</AssetHeader>
@@ -72,14 +70,6 @@ function AssetHeader({ children }: { children: React.ReactNode }) {
     <h2 className="text-xl font-extrabold dark:text-gray-200 md:text-3xl">
       {children}
     </h2>
-  );
-}
-
-function AssetSubHeader({ children }: { children: React.ReactNode }) {
-  return (
-    <h3 className="text-lg font-extrabold dark:text-gray-200 md:text-2xl">
-      {children}
-    </h3>
   );
 }
 
