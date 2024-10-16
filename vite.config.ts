@@ -28,7 +28,7 @@ export default defineConfig({
         v3_relativeSplatPath: true,
         v3_singleFetch: true,
         v3_lazyRouteDiscovery: true,
-        v3_optimizeDeps: true,
+        unstable_optimizeDeps: true,
       },
       routes(defineRoutes) {
         return defineRoutes((route) => {
