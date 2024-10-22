@@ -50,7 +50,7 @@ let NO_CACHE = process.env.NO_CACHE;
 
 global.menuCache ??= new LRUCache<string, MenuDoc[]>({
   // let menuCache = new LRUCache<string, MenuDoc[]>({
-  max: 10,
+  max: 60,
   ttl: NO_CACHE ? 1 : 300000, // 5 minutes
   allowStale: !NO_CACHE,
   noDeleteOnFetchRejection: true,
