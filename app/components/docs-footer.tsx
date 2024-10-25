@@ -1,4 +1,4 @@
-import { Link, useParams } from "@remix-run/react";
+import { Link, useParams } from "react-router";
 import { useDoc } from "~/hooks/use-doc";
 import iconsHref from "~/icons.svg";
 

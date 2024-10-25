@@ -1,16 +1,11 @@
-import { type SerializeFrom } from "@remix-run/node";
 import {
   getRepoDocsMenu,
   getRepoDocsReferenceMenu,
 } from "~/modules/gh-docs/.server";
 
-export type GuidesMenu = Awaited<
-  SerializeFrom<ReturnType<typeof loadGuidesMenu>>
->;
+export type GuidesMenu = Awaited<ReturnType<typeof loadGuidesMenu>>;
 
-export type ReferenceMenu = Awaited<
-  SerializeFrom<ReturnType<typeof loadGuidesMenu>>
->;
+export type ReferenceMenu = Awaited<ReturnType<typeof loadGuidesMenu>>;
 
 export async function loadGuidesMenu(ref: string) {
   return getRepoDocsMenu(ref, "en");

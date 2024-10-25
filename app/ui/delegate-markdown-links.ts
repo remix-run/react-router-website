@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useNavigate } from "@remix-run/react";
+import { useNavigate } from "react-router";
 
 function useDelegatedReactRouterLinks(nodeRef: React.RefObject<HTMLElement>) {
   let navigate = useNavigate();

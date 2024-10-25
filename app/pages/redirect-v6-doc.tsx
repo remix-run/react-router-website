@@ -1,4 +1,4 @@
-import { redirect, type LoaderFunctionArgs } from "@remix-run/node";
+import { redirect, type LoaderFunctionArgs } from "react-router";
 import { getRepoTags } from "~/modules/gh-docs/.server";
 import * as semver from "semver";
 
