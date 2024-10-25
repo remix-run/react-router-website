@@ -62,7 +62,7 @@ function V7() {
       svg: undefined,
     },
     {
-      title: "Upgrade to v7",
+      title: "Upgrade from React Router v6",
       description: (
         <div>
           v7 is a non-breaking upgrade if you are caught up on all future flags.
@@ -76,7 +76,6 @@ function V7() {
       className: "text-green-brand",
       svg: undefined,
     },
-
     {
       title: "New Framework Features",
       description: (
@@ -94,7 +93,7 @@ function V7() {
       svg: undefined,
     },
     {
-      title: "Upgrade from Remix",
+      title: "Upgrade from Remix v2",
       description: (
         <div>
           Follow our checklist to quickly update your Remix application to React
