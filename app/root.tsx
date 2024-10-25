@@ -2,7 +2,7 @@ import type {
   HeadersArgs,
   LinksFunction,
   LoaderFunctionArgs,
-} from "react-router";
+} from "@remix-run/node";
 import {
   Link,
   Links,
@@ -10,7 +10,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "react-router";
+} from "@remix-run/react";
 import { CACHE_CONTROL, middlewares } from "./http";
 
 import { parseColorScheme } from "./modules/color-scheme/server";

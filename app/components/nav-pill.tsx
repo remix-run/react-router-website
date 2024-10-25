@@ -1,4 +1,4 @@
-import { NavLink, useNavigation, useParams } from "react-router";
+import { NavLink, useNavigation, useParams } from "@remix-run/react";
 import classNames from "classnames";
 import { VersionSelect } from "./version-select";
 import { useHeaderData } from "./docs-header/use-header-data";

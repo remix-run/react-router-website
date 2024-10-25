@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import * as React from "react";
-import { Form, useLocation } from "react-router";
+import { Form, useLocation } from "@remix-run/react";
 import { useColorScheme } from "~/modules/color-scheme/components";
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";

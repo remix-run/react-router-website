@@ -1,5 +1,5 @@
-import { type MetaFunction } from "react-router";
-import { Link, isRouteErrorResponse, useRouteError } from "react-router";
+import { type MetaFunction } from "@remix-run/react";
+import { Link, isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import { CACHE_CONTROL } from "~/http";
 
 export let loader = async () => {

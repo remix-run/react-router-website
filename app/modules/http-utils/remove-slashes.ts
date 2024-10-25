@@ -1,4 +1,4 @@
-import { redirect } from "react-router";
+import { redirect } from "@remix-run/node";
 
 export async function removeTrailingSlashes(request: Request) {
   let url = new URL(request.url);

@@ -2,7 +2,7 @@ import {
   useLocation,
   useNavigation as useNavigation_,
   useResolvedPath,
-} from "react-router";
+} from "@remix-run/react";
 
 export function useNavigation(to?: string, end?: boolean) {
   let navigation_ = useNavigation_();

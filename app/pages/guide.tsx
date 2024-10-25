@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { useLoaderData } from "react-router";
+import { useLoaderData } from "@remix-run/react";
 
 import { getRepoDoc } from "~/modules/gh-docs/.server";
 import { CACHE_CONTROL } from "~/http";
@@ -9,7 +9,7 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
   HeadersArgs,
-} from "react-router";
+} from "@remix-run/node";
 
 import {
   getGuideMatchData,

@@ -1,4 +1,8 @@
-import { isRouteErrorResponse, useParams, useRouteError } from "react-router";
+import {
+  isRouteErrorResponse,
+  useParams,
+  useRouteError,
+} from "@remix-run/react";
 
 export function ErrorBoundary() {
   let error = useRouteError();

@@ -2,7 +2,7 @@ import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { DetailsPopup } from "./details-popup";
 import { PopupLabel } from "./popup-label";
-import { Link } from "react-router";
+import { Link } from "@remix-run/react";
 import classNames from "classnames";
 import { useHeaderData } from "./docs-header/use-header-data";
 import { useDocLayoutId } from "./use-doc-layout-id";

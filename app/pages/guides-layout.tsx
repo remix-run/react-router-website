@@ -1,5 +1,5 @@
-import type { LinksFunction, LoaderFunctionArgs } from "react-router";
-import { Outlet } from "react-router";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
+import { Outlet } from "@remix-run/react";
 import classNames from "classnames";
 
 import docsStylesheet from "~/styles/docs.css?url";

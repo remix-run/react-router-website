@@ -1,4 +1,4 @@
-import { redirect } from "react-router";
+import { redirect } from "@remix-run/node";
 import type { Redirect } from "./get-redirects";
 
 export async function checkUrl(url: string, redirects: Redirect[]) {

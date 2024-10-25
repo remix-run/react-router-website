@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { Outlet } from "react-router";
+import { Outlet } from "@remix-run/react";
 import classNames from "classnames";
 
 import docsStylesheet from "~/styles/docs.css?url";
@@ -15,7 +15,7 @@ import {
 import { PackageSelect } from "~/components/package-select";
 import { Menu } from "~/components/docs-menu/menu";
 
-import type { LinksFunction, LoaderFunctionArgs } from "react-router";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 
 export let links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: docsStylesheet }];

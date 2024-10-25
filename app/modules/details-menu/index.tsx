@@ -1,4 +1,4 @@
-import { useLocation, useNavigation } from "react-router";
+import { useLocation, useNavigation } from "@remix-run/react";
 import * as React from "react";
 
 /**

@@ -1,9 +1,9 @@
-import { useLoaderData, useMatches } from "react-router";
+import { useLoaderData, useMatches } from "@remix-run/react";
 import type { HeaderData } from "./data.server";
 import invariant from "tiny-invariant";
 
 export function useHeaderData() {
-  let data = useLoaderData<{ header: HeaderData }>();
+  let data = useLoaderData() as { header: HeaderData };
   invariant(data && data.header, "Expected `header` in loader data");
   return data.header;
 }

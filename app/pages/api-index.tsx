@@ -1,10 +1,10 @@
 import * as React from "react";
-import type { HeadersArgs, LoaderFunctionArgs } from "react-router";
+import type { HeadersArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
   type MetaFunction,
   useLoaderData,
   useRouteLoaderData,
-} from "react-router";
+} from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import { CACHE_CONTROL } from "~/http";
