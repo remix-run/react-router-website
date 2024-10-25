@@ -1,5 +1,5 @@
-import { createCookie, redirect } from "@remix-run/node";
-import type { ActionFunction } from "@remix-run/node";
+import { createCookie, redirect } from "react-router";
+import type { ActionFunction } from "react-router";
 import type { ColorScheme } from "./types";
 
 let cookie = createCookie("color-scheme", {

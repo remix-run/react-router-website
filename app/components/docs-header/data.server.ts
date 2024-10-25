@@ -1,10 +1,7 @@
-import { type SerializeFrom } from "@remix-run/node";
 import { getRepoBranches, getRepoTags } from "~/modules/gh-docs/.server";
 import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
 
-export type HeaderData = Awaited<
-  SerializeFrom<ReturnType<typeof getHeaderData>>
->;
+export type HeaderData = Awaited<ReturnType<typeof getHeaderData>>;
 
 export async function getHeaderData(lang: string, ref?: string) {
   let githubRef = ref || "main";

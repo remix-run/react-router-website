@@ -1,9 +1,9 @@
-import { type MetaFunction } from "@remix-run/node";
-import { Await, Link, useLoaderData } from "@remix-run/react";
+import { type MetaFunction } from "react-router";
+import { Await, Link, useLoaderData } from "react-router";
 import { Suspense } from "react";
 
 import iconsHref from "~/icons.svg";
-import { getStats } from "~/modules/stats";
+import { getStats, type Stats } from "~/modules/stats";
 import { getRootMatchData } from "~/ui/meta";
 
 export let loader = async () => {
@@ -148,7 +148,7 @@ export default function Home() {
       <div>
         <Suspense fallback={null}>
           <Await resolve={stats} errorElement={null}>
-            {(stats) => (
+            {(stats: Stats[]) => (
               <ul className="mt-8 grid grid-cols-1 gap-8 md:grid md:grid-cols-2">
                 {/* TODO: single fetch bug? */}
                 {stats.map(({ svgId, count, label }) => (
