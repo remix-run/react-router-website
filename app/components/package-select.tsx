@@ -1,21 +1,15 @@
 import classNames from "classnames";
-import { Link, useLoaderData, useParams } from "@remix-run/react";
-import invariant from "tiny-invariant";
-import { type SerializeFrom } from "@remix-run/node";
+import { Link, useParams } from "@remix-run/react";
+
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { DetailsPopup } from "./details-popup";
 import { PopupLabel } from "./popup-label";
-import { type loadPackageNames } from "~/components/docs-menu/data.server";
+import { type Pkg } from "~/components/docs-menu/data.server";
 
-type Pkg = Awaited<SerializeFrom<ReturnType<typeof loadPackageNames>>>;
-
-export function PackageSelect() {
-  let { pkgs } = useLoaderData() as { pkgs: Pkg };
-  invariant(pkgs, "Expected loaderData.pkgs");
-
+export function PackageSelect({ pkgs }: { pkgs: Pkg[] }) {
   let { pkg } = useParams();
-  invariant(pkg, "Expected params.pkg");
+
   let pkgName = pkg === "react-router" ? pkg : `@react-router/${pkg}`;
 
   return (

@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { Outlet } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import classNames from "classnames";
 
 import docsStylesheet from "~/styles/docs.css?url";
@@ -35,12 +35,14 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 export default function DocsLayout() {
+  const { pkgs } = useLoaderData<typeof loader>();
+
   return (
     <div className="[--header-height:theme(spacing.16)] [--nav-width:theme(spacing.72)] lg:m-auto lg:max-w-[90rem]">
       <div className="sticky top-0 z-20">
         <Header />
         <NavMenuMobile>
-          <PackageSelect />
+          <PackageSelect pkgs={pkgs} />
         </NavMenuMobile>
       </div>
 
@@ -51,7 +53,7 @@ export default function DocsLayout() {
             // <summary>s below
             className="-mx-1 mb-3"
           >
-            <PackageSelect />
+            <PackageSelect pkgs={pkgs} />
           </div>
           <Menu />
         </NavMenuDesktop>
