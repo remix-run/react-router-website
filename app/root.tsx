@@ -21,6 +21,8 @@ import {
 import { isHost } from "./modules/http-utils/is-host";
 import iconsHref from "~/icons.svg";
 import stylesheet from "~/styles/tailwind.css?url";
+import React from "react";
+import { useCodeBlockCopyButton } from "./ui/utils";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -45,6 +47,9 @@ export function headers(_: HeadersArgs) {
 
 export default function App() {
   let colorScheme = useColorScheme();
+
+  let docsContainer = React.useRef<HTMLBodyElement>(null);
+  useCodeBlockCopyButton(docsContainer);
 
   return (
     <html
@@ -71,7 +76,10 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="bg-white text-black antialiased selection:bg-blue-200 selection:text-black dark:bg-gray-900 dark:text-white dark:selection:bg-blue-800 dark:selection:text-white">
+      <body
+        ref={docsContainer}
+        className="bg-white text-black antialiased selection:bg-blue-200 selection:text-black dark:bg-gray-900 dark:text-white dark:selection:bg-blue-800 dark:selection:text-white"
+      >
         <img
           src={iconsHref}
           alt=""
