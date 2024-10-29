@@ -21,7 +21,7 @@ import {
 import { isHost } from "./modules/http-utils/is-host";
 import iconsHref from "~/icons.svg";
 import stylesheet from "~/styles/tailwind.css?url";
-import React from "react";
+import { useRef } from "react";
 import { useCodeBlockCopyButton } from "./ui/utils";
 
 export const links: LinksFunction = () => [
@@ -48,7 +48,7 @@ export function headers(_: HeadersArgs) {
 export default function App() {
   let colorScheme = useColorScheme();
 
-  let docsContainer = React.useRef<HTMLBodyElement>(null);
+  let docsContainer = useRef<HTMLBodyElement>(null);
   useCodeBlockCopyButton(docsContainer);
 
   return (
