@@ -8,10 +8,7 @@ import { getHeaderData } from "~/components/docs-header/data.server";
 import { Footer } from "~/components/docs-footer";
 import { NavMenuDesktop } from "~/components/docs-menu/menu-desktop";
 import { NavMenuMobile } from "~/components/docs-menu/menu-mobile";
-import {
-  loadPackageNames,
-  loadReferenceMenu,
-} from "~/components/docs-menu/data.server";
+import { loadPackageData } from "~/components/docs-menu/data.server";
 import { PackageSelect } from "~/components/package-select";
 import { Menu } from "~/components/docs-menu/menu";
 
@@ -25,13 +22,12 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
   let { ref, pkg } = params;
   invariant(pkg, `Expected params.pkg`);
 
-  let [menu, header, pkgs] = await Promise.all([
-    loadReferenceMenu(ref || "main", pkg),
+  let [packageData, header] = await Promise.all([
+    loadPackageData(ref || "main", pkg),
     getHeaderData("en", ref),
-    loadPackageNames(ref || "main"),
   ]);
 
-  return { menu, header, pkgs };
+  return { header, ...packageData };
 };
 
 export default function DocsLayout() {
