@@ -15,10 +15,14 @@ export function LargeOnThisPage({
     const node = mdRef.current;
     if (!node) return;
 
-    const headings = node.querySelectorAll("h2");
+    const h2 = Array.from(node.querySelectorAll("h2"));
+    const h3 = Array.from(node.querySelectorAll("h3"));
+    const combinedHeadings = [...h2, ...h3].sort(
+      (a, b) => a.offsetTop - b.offsetTop
+    );
 
     function handleScroll() {
-      headings.forEach((h) => {
+      combinedHeadings.forEach((h) => {
         if (window.scrollY > h.offsetTop - 100) {
           setActiveHeading(h.id);
         }
