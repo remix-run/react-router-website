@@ -10,7 +10,6 @@ import invariant from "tiny-invariant";
 import { CACHE_CONTROL } from "~/http";
 import { getPackageIndexDoc } from "~/modules/gh-docs/.server";
 import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
-import { LargeOnThisPage, SmallOnThisPage } from "~/components/on-this-page";
 
 import type { loader as parentLoaderData } from "./api-layout";
 import { seo } from "~/seo";
@@ -71,16 +70,9 @@ export default function APIIndex() {
   invariant(doc, "expected `doc`");
   let ref = React.useRef<HTMLDivElement>(null);
   useDelegatedReactRouterLinks(ref);
+
   return (
     <div className="xl:flex xl:w-full xl:justify-between xl:gap-8">
-      {doc.headings.length > 3 ? (
-        <>
-          <SmallOnThisPage doc={doc} />
-          <LargeOnThisPage doc={doc} />
-        </>
-      ) : (
-        <div className="hidden xl:order-1 xl:block xl:w-56 xl:flex-shrink-0" />
-      )}
       <div className="min-w-0 px-4 pt-12 xl:mr-4 xl:flex-grow xl:pl-0 xl:pt-20">
         <div ref={ref} className="markdown w-full max-w-3xl pb-[33vh]">
           <div
