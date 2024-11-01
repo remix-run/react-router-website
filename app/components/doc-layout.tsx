@@ -12,7 +12,7 @@ export function DocLayout({ doc }: { doc: Doc }) {
       {doc.headings.length > 3 ? (
         <>
           <SmallOnThisPage doc={doc} />
-          <LargeOnThisPage doc={doc} />
+          <LargeOnThisPage doc={doc} mdRef={ref} />
         </>
       ) : (
         <div className="hidden xl:order-1 xl:block xl:w-56 xl:flex-shrink-0" />

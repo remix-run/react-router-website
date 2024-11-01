@@ -3,11 +3,19 @@ import { type Doc } from "~/modules/gh-docs/.server";
 import iconsHref from "~/icons.svg";
 import { useEffect, useState } from "react";
 
-export function LargeOnThisPage({ doc }: { doc: Doc }) {
+export function LargeOnThisPage({
+  doc,
+  mdRef,
+}: {
+  doc: Doc;
+  mdRef: React.RefObject<HTMLDivElement>;
+}) {
   const [activeHeading, setActiveHeading] = useState<string>("");
   useEffect(() => {
-    const container = document.getElementsByClassName("md-prose");
-    const headings = container[0].querySelectorAll("h2");
+    const node = mdRef.current;
+    if (!node) return;
+
+    const headings = node.querySelectorAll("h2");
 
     function handleScroll() {
       headings.forEach((h) => {
@@ -20,7 +28,7 @@ export function LargeOnThisPage({ doc }: { doc: Doc }) {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  });
+  }, [mdRef]);
   return (
     <div className="sticky top-36 order-1 mt-20 hidden max-h-[calc(100vh-9rem)] w-56 min-w-min flex-shrink-0 self-start overflow-y-auto pb-10 xl:block">
       <nav className="mb-3 flex items-center font-semibold">On this page</nav>
