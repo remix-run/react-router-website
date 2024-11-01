@@ -1,7 +1,7 @@
 import { Link } from "@remix-run/react";
 import { type Doc } from "~/modules/gh-docs/.server";
 import iconsHref from "~/icons.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 
 export function LargeOnThisPage({
@@ -11,31 +11,49 @@ export function LargeOnThisPage({
   doc: Doc;
   mdRef: React.RefObject<HTMLDivElement>;
 }) {
-  const [activeHeading, setActiveHeading] = useState<string>("");
+  const navRef = useRef<HTMLDivElement>(null);
+  const [activeHeading, setActiveHeading] = useState("");
+
   useEffect(() => {
     const node = mdRef.current;
     if (!node) return;
 
     const h2 = Array.from(node.querySelectorAll("h2"));
     const h3 = Array.from(node.querySelectorAll("h3"));
-    const combinedHeadings = [...h2, ...h3].sort(
-      (a, b) => a.offsetTop - b.offsetTop
-    );
+
+    const combinedHeadings = [...h2, ...h3]
+      .sort((a, b) => a.offsetTop - b.offsetTop)
+      // Iterate backwards through headings to find the last one above scroll position
+      .reverse();
 
     function handleScroll() {
-      combinedHeadings.forEach((h) => {
-        if (window.scrollY + 64 > h.offsetTop) {
-          setActiveHeading(h.id);
+      // bail if the nav is not visible
+      const node = navRef.current;
+      if (!node) return;
+      if (window.getComputedStyle(node).display !== "block") {
+        return;
+      }
+
+      for (const heading of combinedHeadings) {
+        // 100px arbitrary value to to offset the height of the header (h-16)
+        if (window.scrollY + 100 > heading.offsetTop) {
+          setActiveHeading(heading.id);
+          break;
         }
-      });
+      }
     }
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [mdRef]);
+
   return (
-    <div className="sticky top-36 order-1 mt-20 hidden max-h-[calc(100vh-9rem)] w-56 min-w-min flex-shrink-0 self-start overflow-y-auto pb-10 xl:block">
+    <div
+      ref={navRef}
+      className="sticky top-36 order-1 mt-20 hidden max-h-[calc(100vh-9rem)] w-56 min-w-min flex-shrink-0 self-start overflow-y-auto pb-10 xl:block"
+    >
       <nav className="mb-3 flex items-center font-semibold">On this page</nav>
       <ul className="md-toc flex flex-col flex-wrap gap-3 leading-[1.125]">
         {doc.headings.map((heading, i) => (

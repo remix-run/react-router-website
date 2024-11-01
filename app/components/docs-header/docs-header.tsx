@@ -7,7 +7,6 @@ import { NavPill } from "../nav-pill";
 
 export function Header() {
   return (
-    // Added 64px to scrollY to offset the height of the header (h-16)
     <div className="relative z-20 flex h-16 w-full items-center justify-between gap-2 border-b border-gray-50 bg-white px-4 text-gray-900 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100 lg:px-8">
       <div className="flex w-full items-center gap-2 md:w-auto md:justify-between md:gap-4">
         <LogoLink />

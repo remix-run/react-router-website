@@ -12,7 +12,12 @@ export function DocLayout({ doc }: { doc: Doc }) {
       {doc.headings.length > 3 ? (
         <>
           <SmallOnThisPage doc={doc} />
-          <LargeOnThisPage doc={doc} mdRef={ref} />
+          <LargeOnThisPage
+            doc={doc}
+            mdRef={ref}
+            // Auto reset the active heading tracking on new pages
+            key={doc.slug}
+          />
         </>
       ) : (
         <div className="hidden xl:order-1 xl:block xl:w-56 xl:flex-shrink-0" />
