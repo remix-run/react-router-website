@@ -1,5 +1,5 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Outlet } from "@remix-run/react";
+import { type ShouldRevalidateFunction, Outlet } from "@remix-run/react";
 import classNames from "classnames";
 
 import docsStylesheet from "~/styles/docs.css?url";
@@ -24,6 +24,12 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
   ]);
 
   return { menu, header };
+};
+
+export const shouldRevalidate: ShouldRevalidateFunction = ({
+  defaultShouldRevalidate,
+}) => {
+  return defaultShouldRevalidate;
 };
 
 export default function DocsLayout() {
