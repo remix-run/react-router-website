@@ -1,10 +1,10 @@
 import invariant from "tiny-invariant";
 import { type loader as rootLoader } from "~/root";
-import { type loader as guidesLoader } from "~/pages/guides-layout";
+import { type loader as docsLoader } from "~/pages/docs-layout";
 import { type loader as apiLoader } from "~/pages/api-layout";
 
 type APIData = Awaited<ReturnType<typeof apiLoader>>;
-type GuidesData = Awaited<ReturnType<typeof guidesLoader>>;
+type DocsData = Awaited<ReturnType<typeof docsLoader>>;
 type RootData = Awaited<ReturnType<typeof rootLoader>>;
 
 export function getRootMatchData(matches: any): RootData {
@@ -19,15 +19,13 @@ export function getApiMatchData(matches: any): APIData {
   return api.data;
 }
 
-export function getGuideMatchData(matches: any): GuidesData {
-  let guides = matches.find(
-    (m: any) => m.id === "guides" || m.id === "v6-guides"
-  );
-  invariant(guides, `Expected guides parent route`);
-  return guides.data;
+export function getDocMatchData(matches: any): DocsData {
+  let docs = matches.find((m: any) => m.id === "docs" || m.id === "v6-guides");
+  invariant(docs, `Expected "docs" parent route`);
+  return docs.data;
 }
 
-export function getDocTitle(api: APIData | GuidesData, title: string) {
+export function getDocTitle(api: APIData | DocsData, title: string) {
   let { releaseBranch, branches, currentGitHubRef } = api.header;
 
   let titleRef =
@@ -44,7 +42,7 @@ export function getDocTitle(api: APIData | GuidesData, title: string) {
 
 export function getRobots(
   isProductionHost: boolean,
-  parentData: GuidesData | APIData
+  parentData: DocsData | APIData
 ) {
   let { latestVersion, releaseBranch, currentGitHubRef, refParam } =
     parentData.header;

@@ -8,7 +8,7 @@ import { getHeaderData } from "~/components/docs-header/data.server";
 import { Footer } from "~/components/docs-footer";
 import { NavMenuDesktop } from "~/components/docs-menu/menu-desktop";
 import { NavMenuMobile } from "~/components/docs-menu/menu-mobile";
-import { loadGuidesMenu } from "~/components/docs-menu/data.server";
+import { loadDocsMenu } from "~/components/docs-menu/data.server";
 import { Menu } from "~/components/docs-menu/menu";
 
 export let links: LinksFunction = () => {
@@ -19,7 +19,7 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
   let { ref } = params;
 
   let [menu, header] = await Promise.all([
-    loadGuidesMenu(ref || "main"),
+    loadDocsMenu(ref || "main"),
     getHeaderData("en", ref),
   ]);
 

@@ -32,7 +32,7 @@ export function headers({ parentHeaders }: HeadersArgs) {
   return parentHeaders;
 }
 
-// Note: this is basically identically to guide.tsx meta
+// Note: this is basically identically to doc.tsx meta
 export const meta: MetaFunction<typeof loader> = ({
   data,
   matches,

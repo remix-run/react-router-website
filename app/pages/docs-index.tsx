@@ -5,7 +5,7 @@ import { CACHE_CONTROL } from "~/http";
 import {
   getDocsSearch,
   getDocTitle,
-  getGuideMatchData,
+  getDocMatchData,
   getRobots,
   getRootMatchData,
 } from "~/ui/meta";
@@ -18,10 +18,10 @@ export function headers({ parentHeaders }: HeadersArgs) {
 }
 
 export const meta: MetaFunction = ({ matches, params }) => {
-  let guides = getGuideMatchData(matches);
+  let docs = getDocMatchData(matches);
   let rootMatch = getRootMatchData(matches);
 
-  let title = getDocTitle(guides, "Guides");
+  let title = getDocTitle(docs, "Docs");
 
   let [meta] = seo({
     title: title,
@@ -32,7 +32,7 @@ export const meta: MetaFunction = ({ matches, params }) => {
   return [
     ...meta,
     ...getDocsSearch(params.ref),
-    ...getRobots(rootMatch.isProductionHost, guides),
+    ...getRobots(rootMatch.isProductionHost, docs),
   ];
 };
 
@@ -52,7 +52,7 @@ function V7() {
       description: (
         <div>
           We recommend you go through the{" "}
-          <span className="underline">Getting Started</span> guides where you'll
+          <span className="underline">Getting Started</span> docs where you'll
           get familiar with installation, routes, data handling, pending UI and
           more.
         </div>

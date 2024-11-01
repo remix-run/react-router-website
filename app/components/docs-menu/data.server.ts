@@ -3,11 +3,11 @@ import {
   getRepoDocsReferenceMenu,
 } from "~/modules/gh-docs/.server";
 
-export type GuidesMenu = Awaited<ReturnType<typeof loadGuidesMenu>>;
+export type DocsMenu = Awaited<ReturnType<typeof loadDocsMenu>>;
 
-export type ReferenceMenu = Awaited<ReturnType<typeof loadGuidesMenu>>;
+export type ReferenceMenu = Awaited<ReturnType<typeof loadDocsMenu>>;
 
-export async function loadGuidesMenu(ref: string) {
+export async function loadDocsMenu(ref: string) {
   return getRepoDocsMenu(ref, "en");
 }
 

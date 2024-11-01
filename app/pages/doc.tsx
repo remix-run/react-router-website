@@ -12,7 +12,7 @@ import type {
 } from "@remix-run/node";
 
 import {
-  getGuideMatchData,
+  getDocMatchData as getDocMatchData,
   getDocTitle,
   getDocsSearch,
   getRobots,
@@ -45,10 +45,10 @@ export const meta: MetaFunction<typeof loader> = ({
 }) => {
   invariant(data, "Expected data");
 
-  let guides = getGuideMatchData(matches);
+  let doc = getDocMatchData(matches);
   let rootMatch = getRootMatchData(matches);
 
-  let title = getDocTitle(guides, data.doc.attrs.title);
+  let title = getDocTitle(doc, data.doc.attrs.title);
 
   let [meta] = seo({
     title: title,
@@ -59,7 +59,7 @@ export const meta: MetaFunction<typeof loader> = ({
   return [
     ...meta,
     ...getDocsSearch(params.ref),
-    ...getRobots(rootMatch.isProductionHost, guides),
+    ...getRobots(rootMatch.isProductionHost, doc),
   ];
 };
 

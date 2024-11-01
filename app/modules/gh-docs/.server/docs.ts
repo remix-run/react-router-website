@@ -190,7 +190,8 @@ export async function getMenuFromStream(stream: NodeJS.ReadableStream) {
   let sortDocs = (a: MenuDoc, b: MenuDoc) =>
     (a.attrs.order || Infinity) - (b.attrs.order || Infinity);
 
-  // sort the parents and children
+  // sort three generations, we don't render farther than that, so we don't need
+  // recursion here unless somebody wants some interview practice
   tree.sort(sortDocs);
   for (let category of tree) {
     category.children.sort(sortDocs);

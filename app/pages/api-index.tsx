@@ -42,9 +42,9 @@ export const meta: MetaFunction<typeof loader> = ({
   invariant(data, "Expected data");
   invariant(params.pkg, "Expected params.pkg");
 
-  let guides = getApiMatchData(matches);
+  let docs = getApiMatchData(matches);
   let rootMatch = getRootMatchData(matches);
-  let title = getDocTitle(guides, params.pkg + " API");
+  let title = getDocTitle(docs, params.pkg + " API");
 
   let [meta] = seo({
     title: title,
@@ -55,7 +55,7 @@ export const meta: MetaFunction<typeof loader> = ({
   return [
     ...meta,
     ...getDocsSearch(params.ref),
-    ...getRobots(rootMatch.isProductionHost, guides),
+    ...getRobots(rootMatch.isProductionHost, docs),
   ];
 };
 

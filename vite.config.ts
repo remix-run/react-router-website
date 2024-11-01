@@ -42,14 +42,14 @@ export default defineConfig({
           // Pre v7 inline API docs
           route(
             "/en/:ref",
-            "pages/guides-layout.tsx",
+            "pages/docs-layout.tsx",
             { id: "v6-guides" },
             () => {
-              route("", "pages/guides-index.tsx", {
+              route("", "pages/docs-index.tsx", {
                 index: true,
                 id: "v6-index",
               });
-              route("*", "pages/guide.tsx", { id: "v6-guide" });
+              route("*", "pages/doc.tsx", { id: "v6-guide" });
             }
           );
 
@@ -59,15 +59,10 @@ export default defineConfig({
             id: "v7-guides-redirect",
           });
 
-          route(
-            "/:ref?/guides",
-            "pages/guides-layout.tsx",
-            { id: "guides" },
-            () => {
-              route("", "pages/guides-index.tsx", { index: true });
-              route("*", "pages/guide.tsx");
-            }
-          );
+          route("/:ref?/docs", "pages/docs-layout.tsx", { id: "docs" }, () => {
+            route("", "pages/docs-index.tsx", { index: true });
+            route("*", "pages/doc.tsx");
+          });
 
           // TODO: uncomment after v7
           // route("/:ref?/api", "pages/api-redirect.ts");

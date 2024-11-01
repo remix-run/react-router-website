@@ -16,7 +16,7 @@ export function NavPill() {
           <VersionSelect />
           <div className="mr-2 w-[1px] bg-gray-200 dark:bg-gray-600" />
           <Segments>
-            <PillLink to={withRef("guides")}>Guides</PillLink>
+            <PillLink to={withRef("docs")}>Docs</PillLink>
             <PillLink to={withRef("api")}>API</PillLink>
           </Segments>
         </div>

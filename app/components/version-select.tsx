@@ -9,7 +9,7 @@ import { useDocLayoutId } from "./use-doc-layout-id";
 import { useNavigation } from "~/hooks/use-navigation";
 
 export function VersionSelect({
-  // whether or not to show the guides/api links for pre/post v7
+  // whether or not to show the docs/api links for pre/post v7
   independent,
 }: {
   independent?: boolean;
@@ -64,7 +64,7 @@ export function VersionSelect({
 
 function useLayoutSegment() {
   let layoutId = useDocLayoutId();
-  return layoutId === "api" ? "api" : "guides";
+  return layoutId === "api" ? "api" : "docs";
 }
 
 function MainLink({ latestVersion }: { latestVersion: string }) {

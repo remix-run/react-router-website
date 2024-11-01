@@ -124,10 +124,10 @@ export default function Home() {
       <div className="flex w-96 gap-4">
         <Link
           reloadDocument
-          to="/guides"
+          to="/Docs"
           className="w-1/2 rounded-lg bg-red-500 px-6 py-3 text-center text-white shadow-lg hover:bg-red-600"
         >
-          Guides
+          Docs
         </Link>
         <Link
           reloadDocument
