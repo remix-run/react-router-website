@@ -2,6 +2,7 @@ import { Link } from "@remix-run/react";
 import { type Doc } from "~/modules/gh-docs/.server";
 import iconsHref from "~/icons.svg";
 import { useEffect, useState } from "react";
+import classNames from "classnames";
 
 export function LargeOnThisPage({
   doc,
@@ -47,12 +48,11 @@ export function LargeOnThisPage({
               dangerouslySetInnerHTML={{
                 __html: heading.html || "",
               }}
-              className={
-                (activeHeading == heading.slug
-                  ? "text-gray-900 dark:text-gray-50"
-                  : "") +
+              className={classNames(
+                activeHeading == heading.slug &&
+                  "text-gray-900 dark:text-gray-50",
                 " block py-1 text-sm text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50  dark:active:text-red-brand"
-              }
+              )}
             />
           </li>
         ))}
