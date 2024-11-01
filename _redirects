@@ -20,8 +20,8 @@
 # /en/main                                     /guides
 # /en/main/start/*                             /guides/start/*
 # /en/main/upgrading/*                         /guides/upgrading/*
-# /en/main/guides/*                            /guides/misc/*
-# /en/main/routers/picking-a-router            /guides/discussion/picking-a-router
+# /en/main/guides/*                            /guides/how-to/*
+# /en/main/routers/picking-a-router            /guides/explanation/picking-a-router
 # /en/main/routers/create-browser-router       /api/react-router/createBrowserRouter
 # /en/main/routers/create-hash-router          /api/react-router/createHashRouter
 # /en/main/routers/create-memory-router        /api/react-router/createMemoryRouter
