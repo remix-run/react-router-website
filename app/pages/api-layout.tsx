@@ -1,5 +1,9 @@
 import invariant from "tiny-invariant";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import {
+  type ShouldRevalidateFunction,
+  Outlet,
+  useLoaderData,
+} from "@remix-run/react";
 import classNames from "classnames";
 
 import docsStylesheet from "~/styles/docs.css?url";
@@ -28,6 +32,12 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
   ]);
 
   return { header, ...packageData };
+};
+
+export const shouldRevalidate: ShouldRevalidateFunction = ({
+  defaultShouldRevalidate,
+}) => {
+  return defaultShouldRevalidate;
 };
 
 export default function DocsLayout() {
