@@ -12,7 +12,7 @@ import type {
 } from "@remix-run/node";
 
 import {
-  getDocMatchData as getDocMatchData,
+  getDocMatchData,
   getDocTitle,
   getDocsSearch,
   getRobots,
