@@ -23,7 +23,7 @@ export function LargeOnThisPage({
 
     function handleScroll() {
       combinedHeadings.forEach((h) => {
-        if (window.scrollY > h.offsetTop - 100) {
+        if (window.scrollY + 64 > h.offsetTop) {
           setActiveHeading(h.id);
         }
       });
