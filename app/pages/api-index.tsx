@@ -2,6 +2,7 @@ import * as React from "react";
 import type { HeadersArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
   type MetaFunction,
+  Link,
   useLoaderData,
   useRouteLoaderData,
 } from "@remix-run/react";
@@ -89,7 +90,7 @@ export default function APIIndex() {
                   <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     {category.children.map((item) => (
                       <li key={item.filename}>
-                        <a href={item.filename}>{item.attrs.title}</a>
+                        <Link to={item.slug!}>{item.attrs.title}</Link>
                       </li>
                     ))}
                   </ul>
