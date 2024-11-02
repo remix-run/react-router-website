@@ -6,8 +6,9 @@ import { DetailsMenu } from "~/modules/details-menu";
 import { DetailsPopup } from "./details-popup";
 import { PopupLabel } from "./popup-label";
 import { type Pkg } from "~/components/docs-menu/data.server";
+import { type SerializeFrom } from "@remix-run/node";
 
-export function PackageSelect({ pkgs }: { pkgs: Pkg[] }) {
+export function PackageSelect({ pkgs }: { pkgs: SerializeFrom<Pkg[]> }) {
   let { pkg } = useParams();
 
   let pkgName = pkg === "react-router" ? pkg : `@react-router/${pkg}`;

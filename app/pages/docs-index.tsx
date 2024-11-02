@@ -51,7 +51,7 @@ function V7() {
       title: "I'm New!",
       description: (
         <div>
-          We recommend you go through the{" "}
+          We recommend you use React Router as your framework. Check out the{" "}
           <span className="underline">Getting Started</span> docs where you'll
           get familiar with installation, routes, data handling, pending UI and
           more.
@@ -77,18 +77,17 @@ function V7() {
       svg: undefined,
     },
     {
-      title: "New Framework Features",
+      title: "Framework or Library?",
       description: (
         <div>
-          v7 includes optional, incrementally-adoptable features like code
-          splitting, data loading, actions, server rendering, static
-          pre-rendering, pending states, optimistic UI, RSC and more. To enaable
-          these features, check out the{" "}
-          <span className="underline">Adopting Vite</span> guide.
+          React Router can be used maximally as a framework or minimally as a
+          set of declarative routing components just like previous versions. To
+          figure out how you'd like to use it, check out the{" "}
+          <span className="underline">Routing Strategies</span> guide.
         </div>
       ),
 
-      slug: "upgrading/vite-router-provider",
+      slug: "explanation/strategies",
       className: "text-pink-brand",
       svg: undefined,
     },
@@ -120,6 +119,7 @@ function V7() {
           the final release. Thanks for your patience!
         </p>
       </div>
+
       <div className="my-4 grid max-w-[60ch] gap-y-10 md:max-w-none md:grid-cols-2 md:grid-rows-2 md:gap-x-8 md:gap-y-12">
         {mainLinks.map(({ title, description, slug, className, svg }) => (
           <Link

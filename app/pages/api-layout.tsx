@@ -61,7 +61,7 @@ export default function DocsLayout() {
           >
             <PackageSelect pkgs={pkgs} />
           </div>
-          <Menu />
+          <Menu open />
         </NavMenuDesktop>
         <div
           className={classNames(

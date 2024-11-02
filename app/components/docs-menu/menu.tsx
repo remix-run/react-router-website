@@ -9,7 +9,6 @@ import type { DocsMenu, ReferenceMenu } from "./data.server";
 import invariant from "tiny-invariant";
 import { useNavigation } from "~/hooks/use-navigation";
 import { useDelayedValue } from "~/hooks/use-delayed-value";
-import { useHeaderData } from "~/components/docs-header/use-header-data";
 
 export function useMenuData() {
   let { menu } = useLoaderData() as { menu: DocsMenu | ReferenceMenu };
@@ -17,8 +16,7 @@ export function useMenuData() {
   return menu;
 }
 
-export function Menu() {
-  let { isV7 } = useHeaderData();
+export function Menu({ open }: { open: boolean }) {
   let menu = useMenuData();
 
   // github might be down but the menu but the doc could be cached in memory, so
@@ -33,7 +31,7 @@ export function Menu() {
     <nav>
       {menu.map((category, index) => (
         <div key={category.attrs.title} className="mb-3">
-          <MenuCategory category={category} open={isV7 ? index === 0 : true} />
+          <MenuCategory category={category} open={open} />
         </div>
       ))}
     </nav>
@@ -60,7 +58,7 @@ function MenuCategory({
       </MenuSummary>
 
       {category.children.sort(sortDocs).map((doc, index) => (
-        <div key={index}>
+        <React.Fragment key={index}>
           {doc.children.length > 0 ? (
             <>
               <MenuHeading label={doc.attrs.title} />
@@ -75,7 +73,7 @@ function MenuCategory({
               {doc.attrs.title} {doc.attrs.new && "🆕"}
             </MenuLink>
           )}
-        </div>
+        </React.Fragment>
       ))}
     </MenuCategoryDetails>
   );
@@ -83,7 +81,7 @@ function MenuCategory({
 
 function MenuHeading({ label }: { label: string }) {
   return (
-    <div className="mt-3 pb-2 pt-2 text-xs font-bold uppercase tracking-wider">
+    <div className="mx-2 mt-3 pb-2 pt-2 text-xs font-bold uppercase tracking-wider">
       {label}
     </div>
   );
@@ -126,7 +124,7 @@ function MenuSummary({ children }: { children: React.ReactNode }) {
     <summary
       className={classNames(
         sharedClassName,
-        "_no-triangle block cursor-pointer select-none",
+        "_no-triangle my-1 block cursor-pointer select-none",
         "outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-red-brand  dark:focus-visible:ring-gray-100",
         "hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 dark:active:bg-gray-700"
       )}
@@ -147,7 +145,7 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
       prefetch="intent"
       to={to}
       className={classNames(
-        "group relative flex items-center justify-between rounded-md border-transparent px-4 py-1.5 lg:text-sm",
+        "group relative flex items-center justify-between rounded-md border-transparent px-2 py-1.5 lg:text-sm",
         isActive
           ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
           : "text-gray-400 hover:text-gray-800 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"
