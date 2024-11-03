@@ -26,7 +26,7 @@ export function NavMenuMobile({ children }: { children?: React.ReactNode }) {
       </summary>
       <div className="absolute h-[66vh] w-full overflow-auto overscroll-contain border-b bg-white p-3 shadow-2xl dark:border-gray-700 dark:bg-gray-900 dark:shadow-black">
         {children}
-        <Menu />
+        <Menu open={false} />
       </div>
     </DetailsMenu>
   );

@@ -42,7 +42,7 @@ export default function DocsLayout() {
 
       <div className="block lg:flex">
         <NavMenuDesktop>
-          <Menu />
+          <Menu open={false} />
         </NavMenuDesktop>
         <div
           className={classNames(
