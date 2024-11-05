@@ -28,40 +28,8 @@ export default defineConfig({
         v3_relativeSplatPath: true,
         v3_singleFetch: true,
         v3_lazyRouteDiscovery: true,
+        unstable_routeConfig: true,
         unstable_optimizeDeps: true,
-      },
-      routes(defineRoutes) {
-        return defineRoutes((route) => {
-          route("/", "pages/splash.tsx", { index: true });
-          route("/brand", "pages/brand.tsx");
-          route("/healthcheck", "pages/healthcheck.tsx");
-          route("/color-scheme", "actions/color-scheme.ts");
-
-          route("/:ref?", "pages/docs-layout.tsx", { id: "docs" }, () => {
-            route("", "pages/docs-index.tsx", { index: true });
-            route("home", "pages/doc.tsx", { id: "home" });
-            route("*", "pages/doc.tsx");
-          });
-
-          route("/*", "pages/notfound.tsx");
-
-          if (process.env.NODE_ENV === "development") {
-            route("/__playground", "components/_playground/playground.tsx");
-          }
-
-          // short version URLs for changelogs and stuff
-          route("/v6/*", "pages/redirect-v6-doc.tsx");
-          route("/v7/*", "pages/redirect-v7-doc.tsx");
-
-          // v6 URLs before the api reference docs
-          route("/en/:ref", "pages/docs-layout.tsx", { id: "v6-docs" }, () => {
-            route("", "pages/docs-home.tsx", {
-              index: true,
-              id: "v6-index",
-            });
-            route("*", "pages/doc.tsx", { id: "v6-guide" });
-          });
-        });
       },
     }),
     tsconfigPaths(),
