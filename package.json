@@ -25,7 +25,6 @@
     "@remix-run/node": "2.14.0-pre.0",
     "@remix-run/react": "2.14.0-pre.0",
     "@remix-run/route-config": "^2.14.0-pre.0",
-    "@remix-run/routes-option-adapter": "^2.14.0-pre.0",
     "@remix-run/serve": "2.14.0-pre.0",
     "bcryptjs": "^2.4.3",
     "cheerio": "^1.0.0-rc.12",
