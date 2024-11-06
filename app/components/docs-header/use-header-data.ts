@@ -10,9 +10,7 @@ export function useHeaderData() {
 
 export function useHeaderDataFromMatches() {
   let matches = useMatches();
-  let match = matches.find(
-    (m) => m.id === "api" || m.id === "docs" || m.id === "v6-guides"
-  );
+  let match = matches.find((m) => m.id === "docs" || m.id === "v6-docs");
   invariant(match, `Expected "api" or "docs" parent route`);
   invariant(match.data, `Expected data in "api" or "docs" parent route`);
   return (match.data as any).header as HeaderData;

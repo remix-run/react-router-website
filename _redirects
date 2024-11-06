@@ -7,21 +7,21 @@
 # TODO: v7 release!
 # Remove these with v7 release
 /           /en/main
-/guides     /en/main
-/api        /en/main
-/dev        /dev/docs
-/en/dev     /dev/docs
-/dev/api    /dev/api/react-router
-/local/api  /local/api/react-router
+/en/dev     /dev
 
 ########################################################################
 # TODO: v7 release!
 # Uncomment these with v7 release
-# /en/main                                     /docs
-# /en/main/start/*                             /docs/start/*
-# /en/main/upgrading/*                         /docs/upgrading/*
-# /en/main/guides/*                            /docs/how-to/*
-# /en/main/routers/picking-a-router            /docs/explanation/picking-a-router
+# /en/main                                     /
+# /en/main/start/*                             /start/*
+# /en/main/upgrading/*                         /upgrading/*
+# /en/main/guides/*                            /how-to/*
+# /en/main/routers/picking-a-router            /explanation/picking-a-router
+
+########################################################################
+# TODO v7 release! redirect these all to the new API docs site, these are
+# wrong, they are from when we had the api docs in this site momentarily
+#
 # /en/main/routers/create-browser-router       /api/react-router/createBrowserRouter
 # /en/main/routers/create-hash-router          /api/react-router/createHashRouter
 # /en/main/routers/create-memory-router        /api/react-router/createMemoryRouter

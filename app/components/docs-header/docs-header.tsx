@@ -3,7 +3,7 @@ import iconsHref from "~/icons.svg";
 import { ColorSchemeToggle } from "../color-scheme-toggle";
 import classNames from "classnames";
 import { DocSearch } from "~/modules/docsearch";
-import { NavPill } from "../nav-pill";
+import { VersionNav } from "../version-nav";
 
 export function Header() {
   return (
@@ -11,7 +11,7 @@ export function Header() {
       <div className="flex w-full items-center gap-2 md:w-auto md:justify-between md:gap-4">
         <LogoLink />
         <div className="flex items-center gap-2">
-          <NavPill />
+          <VersionNav />
         </div>
       </div>
 

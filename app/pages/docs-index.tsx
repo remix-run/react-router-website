@@ -37,10 +37,10 @@ export const meta: MetaFunction = ({ matches, params }) => {
 };
 
 export default function Index() {
-  let { isV7 } = useHeaderDataFromMatches();
+  let { hasAPIDocs } = useHeaderDataFromMatches();
   return (
     <div className="px-4 pb-4 pt-8 lg:mr-4 xl:pl-0">
-      {isV7 ? <V7 /> : <V6 />}
+      {hasAPIDocs ? <V7 /> : <V6 />}
     </div>
   );
 }

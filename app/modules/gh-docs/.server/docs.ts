@@ -1,3 +1,4 @@
+import { type SerializeFrom } from "@remix-run/node";
 import { processMarkdown } from "~/modules/gh-docs/.server/md";
 import LRUCache from "lru-cache";
 import parseYamlHeader from "gray-matter";

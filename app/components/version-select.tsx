@@ -5,15 +5,9 @@ import { PopupLabel } from "./popup-label";
 import { Link } from "@remix-run/react";
 import classNames from "classnames";
 import { useHeaderData } from "./docs-header/use-header-data";
-import { useDocLayoutId } from "./use-doc-layout-id";
 import { useNavigation } from "~/hooks/use-navigation";
 
-export function VersionSelect({
-  // whether or not to show the docs/api links for pre/post v7
-  independent,
-}: {
-  independent?: boolean;
-}) {
+export function VersionSelect() {
   let { versions, latestVersion, releaseBranch, branches, currentGitHubRef } =
     useHeaderData();
 
@@ -27,9 +21,8 @@ export function VersionSelect({
       <summary
         title={label}
         className={classNames(
-          `_no-triangle relative flex h-[40px] w-24 cursor-pointer list-none items-center justify-between gap-3 overflow-hidden whitespace-nowrap px-3`,
-          className,
-          independent ? "rounded-full" : "rounded-l-full"
+          `_no-triangle relative flex h-[40px] w-24 cursor-pointer list-none items-center justify-between gap-3 overflow-hidden whitespace-nowrap rounded-full px-3`,
+          className
         )}
       >
         <div>{label}</div>
@@ -62,32 +55,23 @@ export function VersionSelect({
   );
 }
 
-function useLayoutSegment() {
-  let layoutId = useDocLayoutId();
-  return layoutId === "api" ? "api" : "docs";
-}
-
 function MainLink({ latestVersion }: { latestVersion: string }) {
-  let layoutSegment = useLayoutSegment();
   let isV7Link = latestVersion.startsWith("7");
-  let to = isV7Link ? `/${layoutSegment}` : "/en/main";
+  let to = isV7Link ? "/" : "/en/main";
   return <RefLink to={to}>latest ({latestVersion})</RefLink>;
 }
 
 function DevLink() {
-  let layoutSegment = useLayoutSegment();
-  return <RefLink to={`/dev/${layoutSegment}`}>dev</RefLink>;
+  return <RefLink to={`/dev`}>dev</RefLink>;
 }
 
 function LocalLink() {
-  let layoutId = useDocLayoutId();
-  return <RefLink to={`/local/${layoutId}`}>local</RefLink>;
+  return <RefLink to={`/local`}>local</RefLink>;
 }
 
 function VersionLink({ version }: { version: string }) {
-  let layoutSegment = useLayoutSegment();
   let isV7 = version.startsWith("7");
-  let to = isV7 ? `/${layoutSegment}` : `/en/${version}`;
+  let to = isV7 ? "/" : `/en/${version}`;
   return <RefLink to={to}>{version}</RefLink>;
 }
 

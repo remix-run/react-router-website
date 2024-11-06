@@ -1,9 +1,10 @@
 import { useRef } from "react";
 import { type Doc } from "~/modules/gh-docs/.server";
+import { type SerializeFrom } from "@remix-run/node";
 import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
 import { LargeOnThisPage, SmallOnThisPage } from "./on-this-page";
 
-export function DocLayout({ doc }: { doc: Doc }) {
+export function DocLayout({ doc }: { doc: SerializeFrom<Doc> }) {
   let ref = useRef<HTMLDivElement>(null);
   useDelegatedReactRouterLinks(ref);
 

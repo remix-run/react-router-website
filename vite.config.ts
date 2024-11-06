@@ -32,52 +32,34 @@ export default defineConfig({
       },
       routes(defineRoutes) {
         return defineRoutes((route) => {
-          route("/__components", "components/_playground/playground.tsx");
-          route("/color-scheme", "actions/color-scheme.ts");
-
           route("/", "pages/home.tsx", { index: true });
           route("/brand", "pages/brand.tsx");
           route("/healthcheck", "pages/healthcheck.tsx");
+          route("/color-scheme", "actions/color-scheme.ts");
 
-          // Pre v7 inline API docs
-          route(
-            "/en/:ref",
-            "pages/docs-layout.tsx",
-            { id: "v6-guides" },
-            () => {
-              route("", "pages/docs-index.tsx", {
-                index: true,
-                id: "v6-index",
-              });
-              route("*", "pages/doc.tsx", { id: "v6-guide" });
-            }
-          );
-
-          route("/v6/*", "pages/redirect-v6-doc.tsx");
-          route("/v7/api/:pkg/*", "pages/redirect-v7-doc.tsx");
-          route("/v7/docs/*", "pages/redirect-v7-doc.tsx", {
-            id: "v7-docs-redirect",
-          });
-
-          route("/:ref?/docs", "pages/docs-layout.tsx", { id: "docs" }, () => {
+          route("/:ref?", "pages/docs-layout.tsx", { id: "docs" }, () => {
             route("", "pages/docs-index.tsx", { index: true });
             route("*", "pages/doc.tsx");
           });
 
-          // TODO: uncomment after v7
-          // route("/:ref?/api", "pages/api-redirect.ts");
-
-          route(
-            "/:ref?/api/:pkg",
-            "pages/api-layout.tsx",
-            { id: "api" },
-            () => {
-              route("", "pages/api-index.tsx", { index: true });
-              route("*", "pages/api-doc.tsx");
-            }
-          );
-
           route("/*", "pages/notfound.tsx");
+
+          if (process.env.NODE_ENV === "development") {
+            route("/__playground", "components/_playground/playground.tsx");
+          }
+
+          // short version URLs for changelogs and stuff
+          route("/v6/*", "pages/redirect-v6-doc.tsx");
+          route("/v7/*", "pages/redirect-v7-doc.tsx");
+
+          // v6 URLs before the api reference docs
+          route("/en/:ref", "pages/docs-layout.tsx", { id: "v6-docs" }, () => {
+            route("", "pages/docs-index.tsx", {
+              index: true,
+              id: "v6-index",
+            });
+            route("*", "pages/doc.tsx", { id: "v6-guide" });
+          });
         });
       },
     }),

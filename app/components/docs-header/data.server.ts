@@ -22,7 +22,7 @@ export async function getHeaderData(lang: string, ref?: string) {
   let latestVersion = getLatestVersion(tags);
   let isLatest = githubRef === releaseBranch || githubRef === latestVersion;
 
-  let isV7 =
+  let hasAPIDocs =
     // We've shipped v7 and they're on the main branch (which doesn't show in
     // the URL anymore)
     (githubRef === "main" && latestVersion.startsWith("7.")) ||
@@ -30,6 +30,9 @@ export async function getHeaderData(lang: string, ref?: string) {
     githubRef.startsWith("7.") ||
     // they're looking at the next release
     ["dev", "nightly", "release-next", "local"].includes(githubRef);
+
+  // TODO: make this smarter before v8
+  let apiDocsRef = githubRef === "dev" || githubRef === "local" ? "dev" : "v7";
 
   return {
     // TODO: we'll need to add 7 in here when we're ready to start showing it
@@ -40,7 +43,8 @@ export async function getHeaderData(lang: string, ref?: string) {
     currentGitHubRef: githubRef,
     lang,
     isLatest,
-    isV7,
+    hasAPIDocs,
     refParam: ref,
+    apiDocsRef,
   };
 }
