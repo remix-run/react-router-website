@@ -155,7 +155,7 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
       {slowNav && !isActive && (
         <svg
           aria-hidden
-          className="absolute -left-1 hidden h-4 w-4 animate-spin group-open:block"
+          className="absolute -left-3 hidden h-4 w-4 animate-spin group-open:block"
         >
           <use href={`${iconsHref}#arrow-path`} />
         </svg>
