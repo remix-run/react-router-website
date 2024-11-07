@@ -16,7 +16,7 @@ export function useMenuData() {
   return menu;
 }
 
-export function Menu({ open }: { open: boolean }) {
+export function Menu() {
   let menu = useMenuData();
 
   // github might be down but the menu but the doc could be cached in memory, so
@@ -29,24 +29,18 @@ export function Menu({ open }: { open: boolean }) {
 
   return (
     <nav>
-      {menu.map((category, index) => (
+      {menu.map((category) => (
         <div key={category.attrs.title} className="mb-3">
-          <MenuCategory category={category} open={open} />
+          <MenuCategory category={category} />
         </div>
       ))}
     </nav>
   );
 }
 
-function MenuCategory({
-  category,
-  open = false,
-}: {
-  category: MenuDoc;
-  open?: boolean;
-}) {
+function MenuCategory({ category }: { category: MenuDoc }) {
   return (
-    <MenuCategoryDetails className="group" open={open}>
+    <MenuCategoryDetails className="group" slug={category.slug}>
       <MenuSummary>
         {category.attrs.title}
         <svg aria-hidden className="hidden h-5 w-5 group-open:block">
@@ -90,21 +84,35 @@ function MenuHeading({ label }: { label: string }) {
 type MenuCategoryDetailsType = {
   className?: string;
   slug?: string;
-  slugs?: string[];
   children: React.ReactNode;
-  onOpenChanged?: (isOpen: boolean) => void;
-  open?: boolean;
 };
 
 function MenuCategoryDetails({
   className,
+  slug,
   children,
-  open,
 }: MenuCategoryDetailsType) {
+  let { isActive } = useNavigation(slug);
+  // By default only the active path is open
+  const [isOpen, setIsOpen] = React.useState(isActive);
+
+  // Auto open the details element, necessary when navigating from the index page
+  React.useEffect(() => {
+    if (isActive) {
+      setIsOpen(true);
+    }
+  }, [isActive]);
+
   return (
     <details
       className={classNames(className, "relative flex flex-col")}
-      open={open}
+      open={isOpen}
+      onToggle={(e) => {
+        // Synchronize the DOM's state with React state to prevent the
+        // details element from being closed after navigation and re-evaluation
+        // of useIsActivePath
+        setIsOpen(e.currentTarget.open);
+      }}
     >
       {children}
     </details>
@@ -155,7 +163,7 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
       {slowNav && !isActive && (
         <svg
           aria-hidden
-          className="absolute -left-1 hidden h-4 w-4 animate-spin group-open:block"
+          className="absolute -left-3 hidden h-4 w-4 animate-spin group-open:block"
         >
           <use href={`${iconsHref}#arrow-path`} />
         </svg>

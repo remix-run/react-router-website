@@ -3,13 +3,12 @@ import { type Doc } from "~/modules/gh-docs/.server";
 import iconsHref from "~/icons.svg";
 import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
-import { type SerializeFrom } from "@remix-run/node";
 
 export function LargeOnThisPage({
   doc,
   mdRef,
 }: {
-  doc: SerializeFrom<Doc>;
+  doc: Doc;
   mdRef: React.RefObject<HTMLDivElement>;
 }) {
   const navRef = useRef<HTMLDivElement>(null);
@@ -80,7 +79,7 @@ export function LargeOnThisPage({
   );
 }
 
-export function SmallOnThisPage({ doc }: { doc: SerializeFrom<Doc> }) {
+export function SmallOnThisPage({ doc }: { doc: Doc }) {
   return (
     <details className="group flex flex-col lg:mt-4 xl:hidden">
       <summary className="_no-triangle flex cursor-pointer select-none items-center gap-2 border-b border-gray-50 bg-white px-2 py-3 text-sm font-medium hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 dark:active:bg-gray-700">
