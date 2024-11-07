@@ -30,7 +30,7 @@ export function Menu() {
   return (
     <nav>
       {menu.map((category) => (
-        <div key={category.attrs.title} className="mb-3">
+        <div key={category.attrs.title}>
           <MenuCategory category={category} />
         </div>
       ))}
@@ -51,31 +51,33 @@ function MenuCategory({ category }: { category: MenuDoc }) {
         </svg>
       </MenuSummary>
 
-      {category.children.sort(sortDocs).map((doc, index) => (
-        <React.Fragment key={index}>
-          {doc.children.length > 0 ? (
-            <>
-              <MenuHeading label={doc.attrs.title} />
-              {doc.children.sort(sortDocs).map((doc, index) => (
-                <MenuLink key={index} to={doc.slug!}>
-                  {doc.attrs.title} {doc.attrs.new && "🆕"}
-                </MenuLink>
-              ))}
-            </>
-          ) : (
-            <MenuLink key={index} to={doc.slug!}>
-              {doc.attrs.title} {doc.attrs.new && "🆕"}
-            </MenuLink>
-          )}
-        </React.Fragment>
-      ))}
+      <div className="mb-2">
+        {category.children.sort(sortDocs).map((doc, index) => (
+          <React.Fragment key={index}>
+            {doc.children.length > 0 ? (
+              <div className="mb-2">
+                <MenuHeading label={doc.attrs.title} />
+                {doc.children.sort(sortDocs).map((doc, index) => (
+                  <MenuLink key={index} to={doc.slug!}>
+                    {doc.attrs.title} {doc.attrs.new && "🆕"}
+                  </MenuLink>
+                ))}
+              </div>
+            ) : (
+              <MenuLink key={index} to={doc.slug!}>
+                {doc.attrs.title} {doc.attrs.new && "🆕"}
+              </MenuLink>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
     </MenuCategoryDetails>
   );
 }
 
 function MenuHeading({ label }: { label: string }) {
   return (
-    <div className="mx-2 mt-3 pb-2 pt-2 text-xs font-bold uppercase tracking-wider">
+    <div className="pb-2 pt-2 text-xs font-bold uppercase tracking-wider">
       {label}
     </div>
   );
@@ -132,7 +134,7 @@ function MenuSummary({ children }: { children: React.ReactNode }) {
     <summary
       className={classNames(
         sharedClassName,
-        "_no-triangle my-1 block cursor-pointer select-none",
+        "_no-triangle block cursor-pointer select-none",
         "outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-red-brand  dark:focus-visible:ring-gray-100",
         "hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 dark:active:bg-gray-700"
       )}
@@ -153,7 +155,7 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
       prefetch="intent"
       to={to}
       className={classNames(
-        "group relative flex items-center justify-between rounded-md border-transparent px-2 py-1.5 lg:text-sm",
+        "group relative -mx-2 flex items-center justify-between rounded-md border-transparent px-2 py-1.5 lg:text-sm",
         isActive
           ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
           : "text-gray-400 hover:text-gray-800 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"

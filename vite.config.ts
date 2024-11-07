@@ -32,13 +32,14 @@ export default defineConfig({
       },
       routes(defineRoutes) {
         return defineRoutes((route) => {
-          route("/", "pages/home.tsx", { index: true });
+          route("/", "pages/splash.tsx", { index: true });
           route("/brand", "pages/brand.tsx");
           route("/healthcheck", "pages/healthcheck.tsx");
           route("/color-scheme", "actions/color-scheme.ts");
 
           route("/:ref?", "pages/docs-layout.tsx", { id: "docs" }, () => {
             route("", "pages/docs-index.tsx", { index: true });
+            route("home", "pages/doc.tsx", { id: "home" });
             route("*", "pages/doc.tsx");
           });
 
@@ -54,7 +55,7 @@ export default defineConfig({
 
           // v6 URLs before the api reference docs
           route("/en/:ref", "pages/docs-layout.tsx", { id: "v6-docs" }, () => {
-            route("", "pages/docs-index.tsx", {
+            route("", "pages/docs-home.tsx", {
               index: true,
               id: "v6-index",
             });

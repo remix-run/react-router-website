@@ -22,7 +22,7 @@ export function DocLayout({ doc }: { doc: Doc }) {
       ) : (
         <div className="hidden xl:order-1 xl:block xl:w-56 xl:flex-shrink-0" />
       )}
-      <div className="min-w-0 px-4 pt-12 xl:mr-4 xl:flex-grow xl:pl-0 xl:pt-20">
+      <div className="min-w-0 px-4 pt-8 xl:mr-4 xl:flex-grow xl:pl-0">
         <div ref={ref} className="markdown w-full max-w-3xl pb-[33vh]">
           <div
             className="md-prose"

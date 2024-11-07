@@ -28,7 +28,7 @@ export const meta: MetaFunction = ({ matches }) => {
 function Logo() {
   return (
     <svg
-      className="mx-auto w-full max-w-[500px]"
+      className="mx-auto w-full max-w-[600px]"
       viewBox="0 0 1080 174"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -108,42 +108,45 @@ function Logo() {
 export default function Home() {
   let { stats } = useLoaderData<typeof loader>();
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-12 p-4 lg:p-8">
-      <h1 className="mt-12 w-full">
+    <div className="flex min-h-full w-full flex-col items-center justify-center gap-12 p-4 lg:p-8">
+      <h1 className="mt-16 w-full">
         <Logo />
       </h1>
-      <div className="max-w-lg text-center ">
-        <p className="text-2xl text-gray-500 dark:text-gray-200">
-          React Router is a stable,{" "}
-          <b className="text-black dark:text-white">user-obsessed</b>,{" "}
-          <b className="text-black dark:text-white">standards-focused</b>,
-          centerstack React frameworbrary you can{" "}
-          <b className="text-black dark:text-white">deploy anywhere</b>
+      <div className="max-w-lg text-center text-gray-500 dark:text-gray-200">
+        <p className="text-2xl">
+          A user-obsessed, standards-focused, multi-strategy router you can
+          deploy anywhere
         </p>
       </div>
       <div className="flex w-96 gap-4">
         <Link
-          reloadDocument
-          to="/Docs"
+          to="/home"
           className="w-1/2 rounded-lg bg-red-500 px-6 py-3 text-center text-white shadow-lg hover:bg-red-600"
         >
           Docs
         </Link>
-        <Link
-          reloadDocument
-          to="/api"
+        <a
+          href="https://api.reactrouter.com/v7"
           className="w-1/2 rounded-lg bg-red-500 px-6 py-3 text-center text-white shadow-lg hover:bg-red-600"
         >
           API Reference
-        </Link>
+        </a>
       </div>
-      <div className="max-w-lg text-center ">
-        <p className="mt-4 text-gray-500 dark:text-gray-300">
-          Version 7 is everything you know and love about React Router now with
-          optional, incrementally-adoptable features like code splitting, data
-          loading, mutations, server rendering, pending states, optimistic UI,
-          and more
-        </p>
+      <p className="max-w-xl">
+        React Router is a multi-strategy router for React. You can use it
+        maximally as a React framework or minimally as a library with your own
+        frontend tooling.
+      </p>
+      <div className="container">
+        <div className="flex w-full justify-evenly">
+          <div>
+            <h2>Library</h2>
+            <p></p>
+          </div>
+          <div>
+            <h2>Framework</h2>
+          </div>
+        </div>
       </div>
       <div>
         <Suspense fallback={null}>
