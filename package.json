@@ -22,10 +22,10 @@
   "dependencies": {
     "@docsearch/css": "^3.6.0",
     "@docsearch/react": "^3.6.0",
-    "@remix-run/node": "2.14.0-pre.0",
-    "@remix-run/react": "2.14.0-pre.0",
-    "@remix-run/route-config": "^2.14.0-pre.0",
-    "@remix-run/serve": "2.14.0-pre.0",
+    "@remix-run/node": "2.14.0",
+    "@remix-run/react": "2.14.0",
+    "@remix-run/route-config": "2.14.0",
+    "@remix-run/serve": "2.14.0",
     "bcryptjs": "^2.4.3",
     "cheerio": "^1.0.0-rc.12",
     "classnames": "^2.3.2",
@@ -60,8 +60,8 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "2.14.0-pre.0",
-    "@remix-run/eslint-config": "2.14.0-pre.0",
+    "@remix-run/dev": "2.14.0",
+    "@remix-run/eslint-config": "2.14.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/bcryptjs": "^2.4.2",
     "@types/eslint": "^8.56.6",
