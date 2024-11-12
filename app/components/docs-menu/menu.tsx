@@ -77,7 +77,7 @@ function MenuCategory({ category }: { category: MenuDoc }) {
 
 function MenuHeading({ label }: { label: string }) {
   return (
-    <div className="pb-2 pt-2 text-xs font-bold uppercase tracking-wider">
+    <div className="mx-2 pb-2 pt-2 text-xs font-bold uppercase tracking-wider">
       {label}
     </div>
   );
@@ -96,7 +96,7 @@ function MenuCategoryDetails({
 }: MenuCategoryDetailsType) {
   let { isActive } = useNavigation(slug);
   // By default only the active path is open
-  const [isOpen, setIsOpen] = React.useState(isActive);
+  const [isOpen, setIsOpen] = React.useState(true);
 
   // Auto open the details element, necessary when navigating from the index page
   React.useEffect(() => {
@@ -155,7 +155,7 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
       prefetch="intent"
       to={to}
       className={classNames(
-        "group relative -mx-2 flex items-center justify-between rounded-md border-transparent px-2 py-1.5 lg:text-sm",
+        "group relative -mx-2 flex items-center justify-between rounded-md border-transparent px-4 py-1.5 lg:text-sm",
         isActive
           ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
           : "text-gray-400 hover:text-gray-800 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"
