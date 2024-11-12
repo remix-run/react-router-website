@@ -1,37 +1,32 @@
 import { type RouteConfig, route, index } from "@remix-run/route-config";
 
 export const routes: RouteConfig = [
-  route("/__components", "components/_playground/playground.tsx"),
-  route("/color-scheme", "actions/color-scheme.ts"),
-
-  index("pages/home.tsx"),
+  index("pages/splash.tsx"),
   route("/brand", "pages/brand.tsx"),
   route("/healthcheck", "pages/healthcheck.tsx"),
+  route("/color-scheme", "actions/color-scheme.ts"),
 
-  // Pre v7 inline API docs
-  route("/en/:ref", "pages/docs-layout.tsx", { id: "v6-guides" }, [
-    index("pages/docs-index.tsx", { id: "v6-index" }),
-    route("*", "pages/doc.tsx", { id: "v6-guide" }),
-  ]),
-
-  route("/v6/*", "pages/redirect-v6-doc.tsx"),
-  route("/v7/api/:pkg/*", "pages/redirect-v7-doc.tsx"),
-  route("/v7/docs/*", "pages/redirect-v7-doc.tsx", {
-    id: "v7-docs-redirect",
-  }),
-
-  route("/:ref?/docs", "pages/docs-layout.tsx", { id: "docs" }, [
+  route("/:ref?", "pages/docs-layout.tsx", { id: "docs" }, [
     index("pages/docs-index.tsx"),
+    route("home", "pages/doc.tsx", { id: "home" }),
     route("*", "pages/doc.tsx"),
   ]),
 
-  // TODO: uncomment after v7
-  // route("/:ref?/api", "pages/api-redirect.ts"),
-
-  route("/:ref?/api/:pkg", "pages/api-layout.tsx", { id: "api" }, [
-    index("pages/api-index.tsx"),
-    route("*", "pages/api-doc.tsx"),
-  ]),
-
   route("/*", "pages/notfound.tsx"),
+
+  // short version URLs for changelogs and stuff
+  route("/v6/*", "pages/redirect-v6-doc.tsx"),
+  route("/v7/*", "pages/redirect-v7-doc.tsx"),
+
+  // v6 URLs before the api reference docs
+  route("/en/:ref", "pages/docs-layout.tsx", { id: "v6-docs" }, [
+    index("pages/docs-home.tsx", {
+      id: "v6-index",
+    }),
+    route("*", "pages/doc.tsx", { id: "v6-guide" }),
+  ]),
 ];
+
+if (process.env.NODE_ENV === "development") {
+  routes.push(route("/__playground", "components/_playground/playground.tsx"));
+}
