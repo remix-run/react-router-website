@@ -1,5 +1,4 @@
 import { vitePlugin as remix } from "@remix-run/dev";
-import { installGlobals } from "@remix-run/node";
 import { defineConfig, splitVendorChunkPlugin } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -8,8 +7,6 @@ declare module "@remix-run/node" {
     v3_singleFetch: true;
   }
 }
-
-installGlobals({ nativeFetch: true });
 
 export default defineConfig({
   ssr: {

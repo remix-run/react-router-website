@@ -27,8 +27,18 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 export const shouldRevalidate: ShouldRevalidateFunction = ({
+  currentParams,
+  nextParams,
   defaultShouldRevalidate,
 }) => {
+  // If both refs are defined and the same, the docs navigation is the same
+  if (
+    currentParams.ref &&
+    nextParams.ref &&
+    currentParams.ref === nextParams.ref
+  ) {
+    return false;
+  }
   return defaultShouldRevalidate;
 };
 
