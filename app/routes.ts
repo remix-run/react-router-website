@@ -1,4 +1,4 @@
-import { type RouteConfig, route, index } from "@remix-run/route-config";
+import { type RouteConfig, route, index } from "@react-router/dev/routes";
 
 export const routes: RouteConfig = [
   index("pages/splash.tsx"),

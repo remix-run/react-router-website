@@ -1,5 +1,5 @@
-import type { HeadersArgs, MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
+import type { HeadersArgs, MetaFunction } from "react-router";
+import { Link } from "react-router";
 import classNames from "classnames";
 import { CACHE_CONTROL } from "~/http";
 import {

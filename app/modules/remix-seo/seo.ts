@@ -1,4 +1,4 @@
-import type { LinkDescriptor, MetaDescriptor } from "@remix-run/node";
+import type { LinkDescriptor, MetaDescriptor } from "react-router";
 import merge from "lodash.merge";
 
 export function getSeo(defaultConfig: SeoProps) {

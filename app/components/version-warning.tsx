@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 import { useHeaderData } from "./docs-header/use-header-data";
 
 export function VersionWarning() {
