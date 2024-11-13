@@ -153,7 +153,7 @@ export default function Home() {
           <Await resolve={stats} errorElement={null}>
             {(stats) => (
               <ul className="mt-8 grid grid-cols-1 gap-8 md:grid md:grid-cols-2">
-                {/* TODO: single fetch bug? */}
+                {/* @ts-expect-error -- these types didn't make it into RR7, this needs to be fixed */}
                 {stats.map(({ svgId, count, label }) => (
                   <li key={svgId} className="flex gap-4">
                     <svg
