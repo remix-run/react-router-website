@@ -1,8 +1,4 @@
-import type {
-  HeadersArgs,
-  LinksFunction,
-  LoaderFunctionArgs,
-} from "@remix-run/node";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import {
   Link,
   Links,
@@ -37,7 +33,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return { colorScheme, isProductionHost };
 }
 
-export function headers(_: HeadersArgs) {
+export function headers() {
   return {
     // default all caching to deployments
     "Cache-Control": CACHE_CONTROL.deploy,
@@ -86,13 +82,13 @@ export default function App() {
           hidden
           // this img tag simply forces the icons to be loaded at a higher
           // priority than the scripts (chrome only for now)
-          // @ts-expect-error
+          // @ts-expect-error React forces you to set fetchpriority to lowercase
+          // eslint-disable-next-line react/no-unknown-property
           fetchpriority="high"
         />
         <Outlet />
         <ScrollRestoration />
-        {/* @ts-expect-error */}
-        <Scripts defer />
+        <Scripts />
       </body>
     </html>
   );

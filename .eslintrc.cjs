@@ -3,21 +3,31 @@
  */
 module.exports = {
   extends: [
-    "@remix-run/eslint-config",
-    "@remix-run/eslint-config/node",
-    "@remix-run/eslint-config/jest-testing-library",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
     "prettier",
   ],
-  // we're using vitest which has a very similar API to jest
-  // (so the linting plugins work nicely), but it means we have to explicitly
-  // set the jest version.
+  env: {
+    node: true,
+  },
+  plugins: ["@typescript-eslint", "react"],
   settings: {
-    jest: {
-      version: 27,
+    react: {
+      version: "detect",
     },
   },
   rules: {
     "no-unused-vars": "off",
+    "no-inner-declarations": "off",
+    "no-var": "off",
+    "prefer-const": "off",
+    "react/react-in-jsx-scope": "off", // Not needed in modern React
+    "react/prop-types": "off", // We use TypeScript instead
+    "react/no-unescaped-entities": "off",
     "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
   },
 };
