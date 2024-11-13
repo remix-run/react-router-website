@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@remix-run/react";
+import { Link, useNavigate } from "react-router";
 import iconsHref from "~/icons.svg";
 import { ColorSchemeToggle } from "../color-scheme-toggle";
 import classNames from "classnames";

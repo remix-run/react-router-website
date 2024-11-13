@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 import { type Doc } from "~/modules/gh-docs/.server";
 import iconsHref from "~/icons.svg";
 import { useEffect, useRef, useState } from "react";

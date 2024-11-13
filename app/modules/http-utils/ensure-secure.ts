@@ -1,4 +1,4 @@
-import { redirect } from "@remix-run/node";
+import { redirect } from "react-router";
 
 export async function ensureSecure(request: Request) {
   let proto = request.headers.get("x-forwarded-proto");

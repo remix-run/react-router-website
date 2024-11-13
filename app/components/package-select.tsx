@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { Link, useParams } from "@remix-run/react";
+import { Link, useParams } from "react-router";
 
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";

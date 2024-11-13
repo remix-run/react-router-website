@@ -1,4 +1,4 @@
-import { type LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { type LoaderFunctionArgs, redirect } from "react-router";
 
 export function loader({ request }: LoaderFunctionArgs) {
   let url = new URL(request.url);

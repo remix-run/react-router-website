@@ -1,5 +1,5 @@
 import { useLayoutEffect, useMemo } from "react";
-import { useNavigation, useRouteLoaderData } from "@remix-run/react";
+import { useNavigation, useRouteLoaderData } from "react-router";
 import type { loader as rootLoader } from "../../root";
 import type { ColorScheme } from "./types";
 
