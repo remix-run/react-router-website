@@ -1,5 +1,5 @@
 import type { LinksFunction, LoaderFunctionArgs } from "react-router";
-import { type ShouldRevalidateFunction, Outlet } from "react-router";
+import { Outlet } from "react-router";
 import classNames from "classnames";
 
 import docsStylesheet from "~/styles/docs.css?url";
@@ -24,22 +24,6 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
   ]);
 
   return { menu, header };
-};
-
-export const shouldRevalidate: ShouldRevalidateFunction = ({
-  currentParams,
-  nextParams,
-  defaultShouldRevalidate,
-}) => {
-  // If both refs are defined and the same, the docs navigation is the same
-  if (
-    currentParams.ref &&
-    nextParams.ref &&
-    currentParams.ref === nextParams.ref
-  ) {
-    return false;
-  }
-  return defaultShouldRevalidate;
 };
 
 export default function DocsLayout() {
