@@ -55,7 +55,7 @@ function MenuCategory({ category }: { category: MenuDoc }) {
         {category.children.sort(sortDocs).map((doc, index) => (
           <React.Fragment key={index}>
             {doc.children.length > 0 ? (
-              <div className="mb-2">
+              <div className="mb-2 ml-2">
                 <MenuHeading label={doc.attrs.title} />
                 {doc.children.sort(sortDocs).map((doc, index) => (
                   <MenuLink key={index} to={doc.slug!}>
@@ -77,7 +77,7 @@ function MenuCategory({ category }: { category: MenuDoc }) {
 
 function MenuHeading({ label }: { label: string }) {
   return (
-    <div className="mx-2 pb-2 pt-2 text-xs font-bold uppercase tracking-wider">
+    <div className="pb-2 pt-2 text-xs font-bold uppercase tracking-wider">
       {label}
     </div>
   );
