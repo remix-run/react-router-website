@@ -1,10 +1,9 @@
-import { type MetaFunction } from "react-router";
-import { Await, Link, useLoaderData } from "react-router";
+import { Await, Link } from "react-router";
 import { Suspense } from "react";
 
 import iconsHref from "~/icons.svg";
 import { getStats } from "~/modules/stats";
-import { getRootMatchData } from "~/ui/meta";
+import type { Route } from "./+types/splash";
 
 export let loader = async () => {
   const stats = await getStats();
@@ -15,8 +14,8 @@ export let loader = async () => {
   return { stats };
 };
 
-export const meta: MetaFunction = ({ matches }) => {
-  let { isProductionHost } = getRootMatchData(matches);
+export const meta: Route.MetaFunction = ({ matches }) => {
+  let { isProductionHost } = matches[0].data;
   let robots = isProductionHost ? "index,follow" : "noindex, nofollow";
   return [
     { title: "React Router Official Documentation" },
@@ -105,8 +104,7 @@ function Logo() {
   );
 }
 
-export default function Home() {
-  let { stats } = useLoaderData<typeof loader>();
+export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <div className="flex min-h-full w-full flex-col items-center justify-center gap-12 p-4 lg:p-8">
       <h1 className="mt-16 w-full">
@@ -150,10 +148,9 @@ export default function Home() {
       </div>
       <div>
         <Suspense fallback={null}>
-          <Await resolve={stats} errorElement={null}>
+          <Await resolve={loaderData.stats} errorElement={null}>
             {(stats) => (
               <ul className="mt-8 grid grid-cols-1 gap-8 md:grid md:grid-cols-2">
-                {/* @ts-expect-error -- these types didn't make it into RR7, this needs to be fixed */}
                 {stats.map(({ svgId, count, label }) => (
                   <li key={svgId} className="flex gap-4">
                     <svg

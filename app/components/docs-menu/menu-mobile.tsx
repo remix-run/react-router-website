@@ -1,7 +1,6 @@
 import iconsHref from "~/icons.svg";
 import { useDoc } from "~/hooks/use-doc";
 import { DetailsMenu } from "~/modules/details-menu";
-import { Menu } from "./menu";
 
 export function NavMenuMobile({ children }: { children?: React.ReactNode }) {
   let doc = useDoc();
@@ -26,7 +25,6 @@ export function NavMenuMobile({ children }: { children?: React.ReactNode }) {
       </summary>
       <div className="absolute h-[66vh] w-full overflow-auto overscroll-contain border-b bg-white p-3 shadow-2xl dark:border-gray-700 dark:bg-gray-900 dark:shadow-black">
         {children}
-        <Menu />
       </div>
     </DetailsMenu>
   );

@@ -1,30 +1,22 @@
 import * as React from "react";
-import { Link, useLoaderData } from "react-router";
+import { Link } from "react-router";
 import classNames from "classnames";
 
 import iconsHref from "~/icons.svg";
 
 import type { MenuDoc } from "~/modules/gh-docs/.server/docs";
-import type { DocsMenu, ReferenceMenu } from "./data.server";
-import invariant from "tiny-invariant";
 import { useNavigation } from "~/hooks/use-navigation";
 import { useDelayedValue } from "~/hooks/use-delayed-value";
 
-export function useMenuData() {
-  let { menu } = useLoaderData() as { menu: DocsMenu | ReferenceMenu };
-  invariant(menu, "Expected `menu` in loader data");
-  return menu;
-}
-
-export function Menu() {
-  let menu = useMenuData();
-
+export function Menu({ menu }: { menu?: MenuDoc[] }) {
   // github might be down but the menu but the doc could be cached in memory, so
   // prevent the whole page from blowing up and still render the doc
-  if (!menu) {
-    <div className="bold text-gray-300 dark:text-gray-400">
-      Failed to load menu
-    </div>;
+  if (menu === undefined) {
+    return (
+      <div className="bold text-gray-300 dark:text-gray-400">
+        Failed to load menu
+      </div>
+    );
   }
 
   return (
@@ -165,7 +157,7 @@ function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
       {slowNav && !isActive && (
         <svg
           aria-hidden
-          className="absolute -left-3 hidden h-4 w-4 animate-spin group-open:block"
+          className="absolute -left-1 hidden h-4 w-4 animate-spin group-open:block lg:-left-2"
         >
           <use href={`${iconsHref}#arrow-path`} />
         </svg>

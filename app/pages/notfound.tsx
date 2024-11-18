@@ -1,6 +1,6 @@
-import { type MetaFunction } from "react-router";
 import { Link, isRouteErrorResponse, useRouteError } from "react-router";
 import { CACHE_CONTROL } from "~/http";
+import type { Route } from "./+types/notfound";
 
 export let loader = async () => {
   // TODO: use `data` or whatever we end up with in single fetch instead of
@@ -8,7 +8,7 @@ export let loader = async () => {
   throw new Response("Not Found", { status: 404 });
 };
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   let robots = "noindex, nofollow";
   return [
     { title: "Not Found | React Router" },

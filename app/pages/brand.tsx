@@ -1,7 +1,7 @@
-import type { MetaFunction } from "react-router";
 import classNames from "classnames";
+import type { Route } from "./+types/brand";
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   return [{ title: "React Router Assets and Branding Guidelines" }];
 };
 
