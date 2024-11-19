@@ -1,4 +1,4 @@
-import type { LinksFunction, LoaderFunctionArgs } from "react-router";
+import type { LoaderFunctionArgs } from "react-router";
 import {
   Link,
   Links,
@@ -19,8 +19,9 @@ import iconsHref from "~/icons.svg";
 import stylesheet from "~/styles/tailwind.css?url";
 import { useRef } from "react";
 import { useCodeBlockCopyButton } from "./ui/utils";
+import type { Route } from "./+types/root";
 
-export const links: LinksFunction = () => [
+export const links: Route.LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 

@@ -1,21 +1,6 @@
-import invariant from "tiny-invariant";
-import { type loader as rootLoader } from "~/root";
 import { type loader as docsLoader } from "~/pages/docs-layout";
 
 type DocsData = Awaited<ReturnType<typeof docsLoader>>;
-type RootData = Awaited<ReturnType<typeof rootLoader>>;
-
-export function getRootMatchData(matches: any): RootData {
-  let root = matches.find((m: any) => m.id === "root");
-  invariant(root, `Expected root route`);
-  return root.data;
-}
-
-export function getDocMatchData(matches: any): DocsData {
-  let docs = matches.find((m: any) => m.id === "docs" || m.id === "v6-docs");
-  invariant(docs, `Expected "docs" parent route`);
-  return docs.data;
-}
 
 export function getDocTitle(api: DocsData, title: string) {
   let { releaseBranch, branches, currentGitHubRef } = api.header;

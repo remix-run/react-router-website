@@ -1,4 +1,3 @@
-import type { LinksFunction, LoaderFunctionArgs } from "react-router";
 import { Outlet } from "react-router";
 import classNames from "classnames";
 
@@ -10,12 +9,13 @@ import { NavMenuDesktop } from "~/components/docs-menu/menu-desktop";
 import { NavMenuMobile } from "~/components/docs-menu/menu-mobile";
 import { loadDocsMenu } from "~/components/docs-menu/data.server";
 import { Menu } from "~/components/docs-menu/menu";
+import type { Route } from "./+types/docs-layout";
 
-export let links: LinksFunction = () => {
+export let links: Route.LinksFunction = () => {
   return [{ rel: "stylesheet", href: docsStylesheet }];
 };
 
-export let loader = async ({ params }: LoaderFunctionArgs) => {
+export let loader = async ({ params }: Route.LoaderArgs) => {
   let { ref } = params;
 
   let [menu, header] = await Promise.all([
@@ -26,17 +26,20 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
   return { menu, header };
 };
 
-export default function DocsLayout() {
+export default function DocsLayout({ loaderData }: Route.ComponentProps) {
+  const { menu } = loaderData;
   return (
     <div className="[--header-height:theme(spacing.16)] [--nav-width:theme(spacing.72)] lg:m-auto lg:max-w-[90rem]">
       <div className="sticky top-0 z-20">
         <Header />
-        <NavMenuMobile />
+        <NavMenuMobile>
+          <Menu menu={menu} />
+        </NavMenuMobile>
       </div>
 
       <div className="block lg:flex">
         <NavMenuDesktop>
-          <Menu />
+          <Menu menu={menu} />
         </NavMenuDesktop>
         <div
           className={classNames(

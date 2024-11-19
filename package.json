@@ -22,8 +22,8 @@
   "dependencies": {
     "@docsearch/css": "^3.6.0",
     "@docsearch/react": "^3.6.0",
-    "@react-router/node": "7.0.0-pre.5",
-    "@react-router/serve": "7.0.0-pre.5",
+    "@react-router/node": "7.0.0-pre.6",
+    "@react-router/serve": "7.0.0-pre.6",
     "bcryptjs": "^2.4.3",
     "cheerio": "^1.0.0-rc.12",
     "classnames": "^2.3.2",
@@ -41,7 +41,7 @@
     "parse-numeric-range": "^1.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router": "7.0.0-pre.5",
+    "react-router": "7.0.0-pre.6",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",
     "rehype-stringify": "^10.0.0",
@@ -59,7 +59,7 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@react-router/dev": "7.0.0-pre.5",
+    "@react-router/dev": "7.0.0-pre.6",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/bcryptjs": "^2.4.2",
     "@types/eslint": "^8.56.6",

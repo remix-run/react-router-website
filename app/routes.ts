@@ -1,6 +1,6 @@
 import { type RouteConfig, route, index } from "@react-router/dev/routes";
 
-export const routes: RouteConfig = [
+const routes: RouteConfig = [
   index("pages/splash.tsx"),
   route("/brand", "pages/brand.tsx"),
   route("/healthcheck", "pages/healthcheck.tsx"),
@@ -30,3 +30,5 @@ export const routes: RouteConfig = [
 if (process.env.NODE_ENV === "development") {
   routes.push(route("/__playground", "components/_playground/playground.tsx"));
 }
+
+export default routes;

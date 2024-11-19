@@ -1,27 +1,21 @@
-import type { HeadersArgs, MetaFunction } from "react-router";
+import type { HeadersArgs } from "react-router";
 import { Link } from "react-router";
 import classNames from "classnames";
 import { CACHE_CONTROL } from "~/http";
-import {
-  getDocsSearch,
-  getDocTitle,
-  getDocMatchData,
-  getRobots,
-  getRootMatchData,
-} from "~/ui/meta";
+import { getDocsSearch, getDocTitle, getRobots } from "~/ui/meta";
 import { seo } from "~/seo";
-import { useHeaderDataFromMatches } from "~/components/docs-header/use-header-data";
+import type { Route } from "./+types/docs-home";
 
 export function headers({ parentHeaders }: HeadersArgs) {
   parentHeaders.set("Cache-Control", CACHE_CONTROL.doc);
   return parentHeaders;
 }
 
-export const meta: MetaFunction = ({ matches, params }) => {
-  let docs = getDocMatchData(matches);
-  let rootMatch = getRootMatchData(matches);
+export const meta: Route.MetaFunction = ({ matches, params }) => {
+  let [rootMatch, docMatch] = matches;
+  let doc = docMatch.data;
 
-  let title = getDocTitle(docs, "Docs");
+  let title = getDocTitle(doc, "Docs");
 
   let [meta] = seo({
     title: title,
@@ -32,15 +26,16 @@ export const meta: MetaFunction = ({ matches, params }) => {
   return [
     ...meta,
     ...getDocsSearch(params.ref),
-    ...getRobots(rootMatch.isProductionHost, docs),
+    ...getRobots(rootMatch.data.isProductionHost, doc),
   ];
 };
 
-export default function Index() {
-  let { hasAPIDocs } = useHeaderDataFromMatches();
+export default function Index({ matches }: Route.ComponentProps) {
+  const { data } = matches[1];
+
   return (
     <div className="px-4 pb-4 pt-8 lg:mr-4 xl:pl-0">
-      {hasAPIDocs ? <V7 /> : <V6 />}
+      {data.header.hasAPIDocs ? <V7 /> : <V6 />}
     </div>
   );
 }

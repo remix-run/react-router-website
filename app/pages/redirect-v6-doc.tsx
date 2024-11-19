@@ -1,8 +1,9 @@
-import { redirect, type LoaderFunctionArgs } from "react-router";
+import { redirect } from "react-router";
 import { getRepoTags } from "~/modules/gh-docs/.server";
 import * as semver from "semver";
+import type { Route } from "./+types/redirect-v6-doc";
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   let url = new URL(request.url);
   let [, s, ...rest] = url.pathname.split("/");
 
