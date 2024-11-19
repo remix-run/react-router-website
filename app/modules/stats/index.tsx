@@ -43,34 +43,32 @@ global.statCountsCache ??= new LRUCache<string, StatCounts>({
   },
 });
 
-export async function getStats(): Promise<Stats[] | undefined> {
+export async function getStats(): Promise<Stats[]> {
   let cacheKey = "ONE_STATS_KEY_TO_RULE_THEM_ALL";
   let statCounts = await statCountsCache.fetch(cacheKey);
 
-  return statCounts
-    ? [
-        {
-          count: statCounts.npmDownloads,
-          label: "Downloads on npm",
-          svgId: "stat-download",
-        },
-        {
-          count: statCounts.githubContributors,
-          label: "Contributors on GitHub",
-          svgId: "stat-users",
-        },
-        {
-          count: statCounts.githubStars,
-          label: "Stars on GitHub",
-          svgId: "stat-star",
-        },
-        {
-          count: statCounts.githubDependents,
-          label: "Dependents on GitHub",
-          svgId: "stat-box",
-        },
-      ]
-    : undefined;
+  return [
+    {
+      count: statCounts.npmDownloads,
+      label: "Downloads on npm",
+      svgId: "stat-download",
+    },
+    {
+      count: statCounts.githubContributors,
+      label: "Contributors on GitHub",
+      svgId: "stat-users",
+    },
+    {
+      count: statCounts.githubStars,
+      label: "Stars on GitHub",
+      svgId: "stat-star",
+    },
+    {
+      count: statCounts.githubDependents,
+      label: "Dependents on GitHub",
+      svgId: "stat-box",
+    },
+  ];
 }
 
 /**
