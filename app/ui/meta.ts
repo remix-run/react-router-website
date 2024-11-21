@@ -18,28 +18,19 @@ export function getDocTitle(api: DocsData, title: string) {
 }
 
 export function getRobots(isProductionHost: boolean, parentData: DocsData) {
-  let { latestVersion, releaseBranch, currentGitHubRef, refParam } =
-    parentData.header;
+  let { releaseBranch, currentGitHubRef, refParam } = parentData.header;
   let isMainBranch = currentGitHubRef === releaseBranch;
-  let postV7 = latestVersion.startsWith("7.");
   let robots = "noindex,nofollow";
-  if (postV7) {
-    // Since "main" is the default branch we pull docs from, we don't want to
-    // index the indentical pages that have "main" in the URL
-    //
-    // ✅ "/api/start/overview"
-    // ❌ "/api/main/start/overview"
-    //
-    // `isMainBranch` is true with "main" and an undefined `refParam`, so we have
-    // to explicitly check for the param to know if we should index
-    if (isProductionHost && isMainBranch && refParam !== "main") {
-      robots = "index,follow";
-    }
-  } else {
-    // TODO: delete this else block post v7 launch
-    if (isProductionHost && isMainBranch) {
-      robots = "index,follow";
-    }
+  // Since "main" is the default branch we pull docs from, we don't want to
+  // index the indentical pages that have "main" in the URL
+  //
+  // ✅ "/api/start/overview"
+  // ❌ "/api/main/start/overview"
+  //
+  // `isMainBranch` is true with "main" and an undefined `refParam`, so we have
+  // to explicitly check for the param to know if we shouldn't index
+  if (isProductionHost && isMainBranch && refParam !== "main") {
+    robots = "index,follow";
   }
 
   return [
@@ -51,7 +42,6 @@ export function getRobots(isProductionHost: boolean, parentData: DocsData) {
 export function getDocsSearch(refParam?: string) {
   return [
     { name: "docsearch:language", content: "en" },
-    // TODO: change this to v7 after launch and maybe look into how it works?
-    { name: "docsearch:version", content: refParam || "v6" },
+    { name: "docsearch:version", content: refParam || "v7" },
   ];
 }

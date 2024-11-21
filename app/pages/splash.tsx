@@ -46,7 +46,7 @@ const highlights: Highlight[] = [
   },
 ];
 
-const prefix = "local/"; // TODO
+const prefix = "/"; // TODO
 type Adventure = {
   title: string;
   description: string;

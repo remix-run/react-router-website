@@ -43,7 +43,6 @@ function EditLink() {
   if (doc.filename.match(/\.tsx?$/)) {
     editUrl = `${repoUrl}/edit/${params.ref}/${doc.filename}`;
   } else {
-    // TODO: deal with translations when we add them with params.lang
     editUrl = `${repoUrl}/edit/${params.ref}/${doc.slug}.md`;
   }
 
