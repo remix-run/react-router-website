@@ -4,19 +4,9 @@
 # /foo/* /bar/* 301
 
 ########################################################################
-# TODO: v7 release!
-# Remove these with v7 release
-# /           /en/main
-/en/dev     /dev
-
-########################################################################
-# TODO: v7 release!
-# Uncomment these with v7 release
-# /en/main                                     /
-# /en/main/start/*                             /start/*
-# /en/main/upgrading/*                         /upgrading/*
-# /en/main/guides/*                            /how-to/*
-# /en/main/routers/picking-a-router            /explanation/picking-a-router
+# v7 release redirects from v6 urls
+/en/main                                     /
+/en/main/guides/*                            /how-to/*
 
 ########################################################################
 # TODO v7 release! redirect these all to the new API docs site, these are
@@ -54,7 +44,6 @@
 # /en/main/hooks/use-href                      https://api.reactrouter.com/v7/functions/react_router.useHref.html
 # /en/main/hooks/use-in-router-context         https://api.reactrouter.com/v7/functions/react_router.useInRouterContext.html
 # /en/main/hooks/use-link-click-handler        https://api.reactrouter.com/v7/functions/react_router.useLinkClickHandler.html
-# /en/main/hooks/use-link-press-handler        https://api.reactrouter.com/v7/functions/react_router.useLinkPressHandler.html
 # /en/main/hooks/use-loader-data               https://api.reactrouter.com/v7/functions/react_router.useLoaderData.html
 # /en/main/hooks/use-location                  https://api.reactrouter.com/v7/functions/react_router.useLocation.html
 # /en/main/hooks/use-match                     https://api.reactrouter.com/v7/functions/react_router.useMatch.html
