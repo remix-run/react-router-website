@@ -36,7 +36,7 @@ const highlights: Highlight[] = [
     icon: "box",
     title: "Bridge to React 19",
     description:
-      "All new bundling, server rendering, pre-rendering, and streaming features allow you to start adopting React 19 incrementally.",
+      "All new bundling, server rendering, pre-rendering, and streaming features allow you bridge the gap from React 18 to 19 incrementally.",
   },
   {
     icon: "cd",
@@ -57,27 +57,26 @@ const adventures: Adventure[] = [
   {
     title: "I'm new!",
     description:
-      "Check out the Framework getting started guides to get setup quickly and acquainted with React Router’s feature set",
+      "Get the most out of React Router v7’s latest framework features",
     linkText: "Start Here",
     linkTo: prefix + "start/framework/installation",
   },
   {
     title: "I'm on v6",
-    description: "Get your app upgraded to v7 in just a few steps",
-    linkText: "Start Here",
+    description: "Upgrade to v7 in just a few steps",
+    linkText: "Upgrade Now",
     linkTo: prefix + "upgrading/v6",
   },
   {
     title: "I want to adopt framework features",
     description:
-      "Check out the Framework getting started guides to get setup quickly and acquainted with React Router’s feature set",
-    linkText: "Start Here",
+      "Learn how to adopt the new framework features in your existing React Router app",
+    linkText: "Adopt Framework Features",
     linkTo: prefix + "upgrading/component-routes",
   },
   {
     title: "I'm stuck",
-    description:
-      "Head over to Github discussions to get help from the community on the issue you’re facing.Head over to Github discussions to get help from the community on the issue you’re facing.",
+    description: "Join GitHub discussions for help",
     linkText: "Get Help",
     linkTo: "https://rmx.as/discord",
   },
