@@ -7,73 +7,68 @@
 # v7 release redirects from v6 urls
 /en/main                                     /
 /en/main/guides/*                            /how-to/*
-
-########################################################################
-# TODO v7 release! redirect these all to the new API docs site, these are
-# wrong, they are from when we had the api docs in this site momentarily
-#
-# /en/main/routers/create-browser-router       https://api.reactrouter.com/v7/functions/react_router.createBrowserRouter.html
-# /en/main/routers/create-hash-router          https://api.reactrouter.com/v7/functions/react_router.createHashRouter.html
-# /en/main/routers/create-memory-router        https://api.reactrouter.com/v7/functions/react_router.createMemoryRouter.html
-# /en/main/routers/create-static-handler       https://api.reactrouter.com/v7/functions/react_router.createStaticHandler
-# /en/main/routers/create-static-router        https://api.reactrouter.com/v7/functions/react_router.createStaticRouter
-# /en/main/routers/router-provider             https://api.reactrouter.com/v7/functions/react_router.RouterProvider
-# /en/main/routers/static-router-provider      https://api.reactrouter.com/v7/functions/react_router.StaticRouterProvider
-# /en/main/router-components/browser-router    https://api.reactrouter.com/v7/functions/react_router.BrowserRouter.html
-# /en/main/router-components/hash-router       https://api.reactrouter.com/v7/functions/react_router.HashRouter.html
-# /en/main/router-components/memory-router     https://api.reactrouter.com/v7/functions/react_router.MemoryRouter.html
-# /en/main/router-components/router            https://api.reactrouter.com/v7/functions/react_router.Router.html
-# /en/main/router-components/static-router     https://api.reactrouter.com/v7/functions/react_router.StaticRouter.html
-# /en/main/components/await                    https://api.reactrouter.com/v7/functions/react_router.Await.html
-# /en/main/components/form                     https://api.reactrouter.com/v7/functions/react_router.Form.html
-# /en/main/components/link                     https://api.reactrouter.com/v7/functions/react_router.Link.html
-# /en/main/components/nav-link                 https://api.reactrouter.com/v7/functions/react_router.NavLink.html
-# /en/main/components/navigate                 https://api.reactrouter.com/v7/functions/react_router.Navigate.html
-# /en/main/components/outlet                   https://api.reactrouter.com/v7/functions/react_router.Outlet.html
-# /en/main/components/route                    https://api.reactrouter.com/v7/functions/react_router.Route.html
-# /en/main/components/routes                   https://api.reactrouter.com/v7/functions/react_router.Routes.html
-# /en/main/components/scroll-restoration       https://api.reactrouter.com/v7/functions/react_router.ScrollRestoration.html
-# /en/main/hooks/use-action-data               https://api.reactrouter.com/v7/functions/react_router.useActionData.html
-# /en/main/hooks/use-async-error               https://api.reactrouter.com/v7/functions/react_router.useAsyncError.html
-# /en/main/hooks/use-async-value               https://api.reactrouter.com/v7/functions/react_router.useAsyncValue.html
-# /en/main/hooks/use-before-unload             https://api.reactrouter.com/v7/functions/react_router.useBeforeUnload.html
-# /en/main/hooks/use-blocker                   https://api.reactrouter.com/v7/functions/react_router.useBlocker.html
-# /en/main/hooks/use-fetcher                   https://api.reactrouter.com/v7/functions/react_router.useFetcher.html
-# /en/main/hooks/use-fetchers                  https://api.reactrouter.com/v7/functions/react_router.useFetchers.html
-# /en/main/hooks/use-form-action               https://api.reactrouter.com/v7/functions/react_router.useFormAction.html
-# /en/main/hooks/use-href                      https://api.reactrouter.com/v7/functions/react_router.useHref.html
-# /en/main/hooks/use-in-router-context         https://api.reactrouter.com/v7/functions/react_router.useInRouterContext.html
-# /en/main/hooks/use-link-click-handler        https://api.reactrouter.com/v7/functions/react_router.useLinkClickHandler.html
-# /en/main/hooks/use-loader-data               https://api.reactrouter.com/v7/functions/react_router.useLoaderData.html
-# /en/main/hooks/use-location                  https://api.reactrouter.com/v7/functions/react_router.useLocation.html
-# /en/main/hooks/use-match                     https://api.reactrouter.com/v7/functions/react_router.useMatch.html
-# /en/main/hooks/use-matches                   https://api.reactrouter.com/v7/functions/react_router.useMatches.html
-# /en/main/hooks/use-navigate                  https://api.reactrouter.com/v7/functions/react_router.useNavigate.html
-# /en/main/hooks/use-navigation-type           https://api.reactrouter.com/v7/functions/react_router.useNavigationType.html
-# /en/main/hooks/use-navigation                https://api.reactrouter.com/v7/functions/react_router.useNavigation.html
-# /en/main/hooks/use-outlet-context            https://api.reactrouter.com/v7/functions/react_router.useOutletContext.html
-# /en/main/hooks/use-outlet                    https://api.reactrouter.com/v7/functions/react_router.useOutlet.html
-# /en/main/hooks/use-params                    https://api.reactrouter.com/v7/functions/react_router.useParams.html
-# /en/main/hooks/use-prompt                    https://api.reactrouter.com/v7/functions/react_router.unstable_usePrompt.html
-# /en/main/hooks/use-resolved-path             https://api.reactrouter.com/v7/functions/react_router.useResolvedPath.html
-# /en/main/hooks/use-revalidator               https://api.reactrouter.com/v7/functions/react_router.useRevalidator.html
-# /en/main/hooks/use-route-error               https://api.reactrouter.com/v7/functions/react_router.useRouteError.html
-# /en/main/hooks/use-route-loader-data         https://api.reactrouter.com/v7/functions/react_router.useRouteLoaderData.html
-# /en/main/hooks/use-routes                    https://api.reactrouter.com/v7/functions/react_router.useRoutes.html
-# /en/main/hooks/use-search-params             https://api.reactrouter.com/v7/functions/react_router.useSearchParams.html
-# /en/main/hooks/use-submit                    https://api.reactrouter.com/v7/functions/react_router.useSubmit.html
-# /en/main/hooks/use-view-transition-state     https://api.reactrouter.com/v7/functions/react_router.useViewTransitionState.html
-# /en/main/utils/create-routes-from-children   https://api.reactrouter.com/v7/functions/react_router.createRoutesFromChildren.html
-# /en/main/utils/create-routes-from-elements   https://api.reactrouter.com/v7/functions/react_router.createRoutesFromElements.html
-# /en/main/utils/create-search-params          https://api.reactrouter.com/v7/functions/react_router.createSearchParams.html
-# /en/main/utils/defer                         https://api.reactrouter.com/v7/functions/react_router.data.html
-# /en/main/utils/generate-path                 https://api.reactrouter.com/v7/functions/react_router.generatePath.html
-# /en/main/utils/is-route-error-response       https://api.reactrouter.com/v7/functions/react_router.isRouteErrorResponse.html
-# /en/main/utils/location                      https://api.reactrouter.com/v7/interfaces/react_router.Location.html
-# /en/main/utils/match-path                    https://api.reactrouter.com/v7/functions/react_router.matchPath.html
-# /en/main/utils/match-routes                  https://api.reactrouter.com/v7/functions/react_router.matchRoutes.html
-# /en/main/utils/render-matches                https://api.reactrouter.com/v7/functions/react_router.renderMatches.html
-# /en/main/utils/resolve-path                  https://api.reactrouter.com/v7/functions/react_router.resolvePath.html
+/en/main/routers/create-browser-router       https://api.reactrouter.com/v7/functions/react_router.createBrowserRouter.html
+/en/main/routers/create-hash-router          https://api.reactrouter.com/v7/functions/react_router.createHashRouter.html
+/en/main/routers/create-memory-router        https://api.reactrouter.com/v7/functions/react_router.createMemoryRouter.html
+/en/main/routers/create-static-handler       https://api.reactrouter.com/v7/functions/react_router.createStaticHandler
+/en/main/routers/create-static-router        https://api.reactrouter.com/v7/functions/react_router.createStaticRouter
+/en/main/routers/router-provider             https://api.reactrouter.com/v7/functions/react_router.RouterProvider
+/en/main/routers/static-router-provider      https://api.reactrouter.com/v7/functions/react_router.StaticRouterProvider
+/en/main/router-components/browser-router    https://api.reactrouter.com/v7/functions/react_router.BrowserRouter.html
+/en/main/router-components/hash-router       https://api.reactrouter.com/v7/functions/react_router.HashRouter.html
+/en/main/router-components/memory-router     https://api.reactrouter.com/v7/functions/react_router.MemoryRouter.html
+/en/main/router-components/router            https://api.reactrouter.com/v7/functions/react_router.Router.html
+/en/main/router-components/static-router     https://api.reactrouter.com/v7/functions/react_router.StaticRouter.html
+/en/main/components/await                    https://api.reactrouter.com/v7/functions/react_router.Await.html
+/en/main/components/form                     https://api.reactrouter.com/v7/functions/react_router.Form.html
+/en/main/components/link                     https://api.reactrouter.com/v7/functions/react_router.Link.html
+/en/main/components/nav-link                 https://api.reactrouter.com/v7/functions/react_router.NavLink.html
+/en/main/components/navigate                 https://api.reactrouter.com/v7/functions/react_router.Navigate.html
+/en/main/components/outlet                   https://api.reactrouter.com/v7/functions/react_router.Outlet.html
+/en/main/components/route                    https://api.reactrouter.com/v7/functions/react_router.Route.html
+/en/main/components/routes                   https://api.reactrouter.com/v7/functions/react_router.Routes.html
+/en/main/components/scroll-restoration       https://api.reactrouter.com/v7/functions/react_router.ScrollRestoration.html
+/en/main/hooks/use-action-data               https://api.reactrouter.com/v7/functions/react_router.useActionData.html
+/en/main/hooks/use-async-error               https://api.reactrouter.com/v7/functions/react_router.useAsyncError.html
+/en/main/hooks/use-async-value               https://api.reactrouter.com/v7/functions/react_router.useAsyncValue.html
+/en/main/hooks/use-before-unload             https://api.reactrouter.com/v7/functions/react_router.useBeforeUnload.html
+/en/main/hooks/use-blocker                   https://api.reactrouter.com/v7/functions/react_router.useBlocker.html
+/en/main/hooks/use-fetcher                   https://api.reactrouter.com/v7/functions/react_router.useFetcher.html
+/en/main/hooks/use-fetchers                  https://api.reactrouter.com/v7/functions/react_router.useFetchers.html
+/en/main/hooks/use-form-action               https://api.reactrouter.com/v7/functions/react_router.useFormAction.html
+/en/main/hooks/use-href                      https://api.reactrouter.com/v7/functions/react_router.useHref.html
+/en/main/hooks/use-in-router-context         https://api.reactrouter.com/v7/functions/react_router.useInRouterContext.html
+/en/main/hooks/use-link-click-handler        https://api.reactrouter.com/v7/functions/react_router.useLinkClickHandler.html
+/en/main/hooks/use-loader-data               https://api.reactrouter.com/v7/functions/react_router.useLoaderData.html
+/en/main/hooks/use-location                  https://api.reactrouter.com/v7/functions/react_router.useLocation.html
+/en/main/hooks/use-match                     https://api.reactrouter.com/v7/functions/react_router.useMatch.html
+/en/main/hooks/use-matches                   https://api.reactrouter.com/v7/functions/react_router.useMatches.html
+/en/main/hooks/use-navigate                  https://api.reactrouter.com/v7/functions/react_router.useNavigate.html
+/en/main/hooks/use-navigation-type           https://api.reactrouter.com/v7/functions/react_router.useNavigationType.html
+/en/main/hooks/use-navigation                https://api.reactrouter.com/v7/functions/react_router.useNavigation.html
+/en/main/hooks/use-outlet-context            https://api.reactrouter.com/v7/functions/react_router.useOutletContext.html
+/en/main/hooks/use-outlet                    https://api.reactrouter.com/v7/functions/react_router.useOutlet.html
+/en/main/hooks/use-params                    https://api.reactrouter.com/v7/functions/react_router.useParams.html
+/en/main/hooks/use-prompt                    https://api.reactrouter.com/v7/functions/react_router.unstable_usePrompt.html
+/en/main/hooks/use-resolved-path             https://api.reactrouter.com/v7/functions/react_router.useResolvedPath.html
+/en/main/hooks/use-revalidator               https://api.reactrouter.com/v7/functions/react_router.useRevalidator.html
+/en/main/hooks/use-route-error               https://api.reactrouter.com/v7/functions/react_router.useRouteError.html
+/en/main/hooks/use-route-loader-data         https://api.reactrouter.com/v7/functions/react_router.useRouteLoaderData.html
+/en/main/hooks/use-routes                    https://api.reactrouter.com/v7/functions/react_router.useRoutes.html
+/en/main/hooks/use-search-params             https://api.reactrouter.com/v7/functions/react_router.useSearchParams.html
+/en/main/hooks/use-submit                    https://api.reactrouter.com/v7/functions/react_router.useSubmit.html
+/en/main/hooks/use-view-transition-state     https://api.reactrouter.com/v7/functions/react_router.useViewTransitionState.html
+/en/main/utils/create-routes-from-children   https://api.reactrouter.com/v7/functions/react_router.createRoutesFromChildren.html
+/en/main/utils/create-routes-from-elements   https://api.reactrouter.com/v7/functions/react_router.createRoutesFromElements.html
+/en/main/utils/create-search-params          https://api.reactrouter.com/v7/functions/react_router.createSearchParams.html
+/en/main/utils/defer                         https://api.reactrouter.com/v7/functions/react_router.data.html
+/en/main/utils/generate-path                 https://api.reactrouter.com/v7/functions/react_router.generatePath.html
+/en/main/utils/is-route-error-response       https://api.reactrouter.com/v7/functions/react_router.isRouteErrorResponse.html
+/en/main/utils/location                      https://api.reactrouter.com/v7/interfaces/react_router.Location.html
+/en/main/utils/match-path                    https://api.reactrouter.com/v7/functions/react_router.matchPath.html
+/en/main/utils/match-routes                  https://api.reactrouter.com/v7/functions/react_router.matchRoutes.html
+/en/main/utils/render-matches                https://api.reactrouter.com/v7/functions/react_router.renderMatches.html
+/en/main/utils/resolve-path                  https://api.reactrouter.com/v7/functions/react_router.resolvePath.html
 
 # API reference redirects
 /reference /en/main/reference
