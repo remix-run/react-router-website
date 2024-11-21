@@ -89,7 +89,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <section className="from-23% via-82% flex w-full flex-col items-center gap-y-12 bg-gradient-to-b from-[#CCD2DE] via-[#D9DDE6] to-[#FAFBFD] to-100% py-[96px] md:py-[160px]">
         <h1>
           <img
-            src="/splash/hero-3d-logo.png"
+            src="/splash/hero-3d-logo.webp"
             alt="React Router logo, nine dots in an upward triangle (one on top, two in the middle, three on the bottom) with a path of three highlighted and connected from top to bottom, next to the text React Router"
             className="aspect-[32/5] w-[360px] md:w-[480px] lg:w-[640px] 2xl:w-[960px]"
           />
