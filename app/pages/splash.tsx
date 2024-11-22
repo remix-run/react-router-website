@@ -84,7 +84,7 @@ const adventures: Adventure[] = [
 export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <main className="flex min-h-full w-full flex-col items-center justify-center">
-      <section className="from-23% via-82% flex w-full flex-col items-center gap-y-12 bg-gradient-to-b from-[#CCD2DE] via-[#D9DDE6] to-[#FAFBFD] to-100% py-[96px] md:py-[160px]">
+      <section className="from-23% via-82% flex w-full flex-col items-center gap-y-12 bg-gradient-to-b from-[#CCD2DE] via-[#D9DDE6] to-[#FAFBFD] to-100% pt-[96px] md:pt-[160px]">
         <h1>
           <img
             src="/splash/hero-3d-logo.webp"
@@ -96,8 +96,14 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           A user‑obsessed, standards‑focused, multi‑strategy router you can
           deploy anywhere.
         </p>
+        <Link
+          to="/home"
+          className="flex items-center p-8 pb-[96px] font-bold underline"
+        >
+          Read the docs
+        </Link>
       </section>
-      <section className="flex w-full flex-col items-center gap-y-24 bg-gradient-to-b from-[#FAFBFD] to-white px-12 pb-12 md:gap-y-16 lg:gap-y-12">
+      <section className="flex w-full flex-col items-center gap-y-24 bg-gradient-to-b from-[#FAFBFD] to-white px-12 py-12 md:gap-y-16 lg:gap-y-12">
         <div className="grid gap-x-16 gap-y-6 md:grid-flow-col">
           <img
             src="/splash/v7-badge-1.svg"

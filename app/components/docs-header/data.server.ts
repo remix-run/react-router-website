@@ -3,8 +3,12 @@ import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
 
 export type HeaderData = Awaited<ReturnType<typeof getHeaderData>>;
 
-export async function getHeaderData(lang: string, ref?: string) {
-  let githubRef = ref || "main";
+export async function getHeaderData(
+  lang: string,
+  ref: string,
+  refParam?: string
+) {
+  let githubRef = ref;
   let branchesInMenu = ["main", "dev"];
   let [tags, branches] = await Promise.all([getRepoTags(), getRepoBranches()]);
   if (!tags || !branches)
@@ -44,7 +48,8 @@ export async function getHeaderData(lang: string, ref?: string) {
     lang,
     isLatest,
     hasAPIDocs,
-    refParam: ref,
+    refParam,
+    ref,
     apiDocsRef,
   };
 }

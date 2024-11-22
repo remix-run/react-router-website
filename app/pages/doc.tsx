@@ -14,16 +14,24 @@ export { ErrorBoundary } from "~/components/doc-error-boundary";
 export let loader = async ({ request, params }: Route.LoaderArgs) => {
   let url = new URL(request.url);
   let splat = params["*"];
-  let ref = semver.valid(splat) ? splat : splat === "dev" ? "dev" : "main";
-  if (params.ref) {
-    // old v6 URL
-    ref = params.ref;
-  }
+  let firstSegment = splat?.split("/")[0];
+  let refParam = params.ref
+    ? params.ref
+    : firstSegment === "dev" ||
+      firstSegment === "local" ||
+      semver.valid(firstSegment)
+    ? firstSegment
+    : undefined;
+
+  let ref = refParam || "main";
 
   let slug = url.pathname.endsWith("/changelog")
     ? "CHANGELOG"
     : url.pathname.endsWith("/home")
     ? `docs/index`
+    : refParam
+    ? // remove the refParam
+      `docs/${params["*"].split("/").splice(1).join("/")}`
     : `docs/${params["*"]}`;
 
   try {

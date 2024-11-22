@@ -19,15 +19,20 @@ export let links: Route.LinksFunction = () => {
 export let loader = async ({ params }: Route.LoaderArgs) => {
   // @ts-expect-error doesn't have potential child types
   let splat = params["*"];
-  let ref = semver.valid(splat) ? splat : splat === "dev" ? "dev" : "main";
-  if (params.ref) {
-    // old v6 URL
-    ref = params.ref;
-  }
+  let firstSegment = splat?.split("/")[0];
+  let refParam = params.ref
+    ? params.ref
+    : firstSegment === "dev" ||
+      firstSegment === "local" ||
+      semver.valid(firstSegment)
+    ? firstSegment
+    : undefined;
+
+  let ref = refParam || "main";
 
   let [menu, header] = await Promise.all([
     loadDocsMenu(ref),
-    getHeaderData("en", ref),
+    getHeaderData("en", ref, refParam),
   ]);
 
   return { menu, header };

@@ -7,6 +7,7 @@ import iconsHref from "~/icons.svg";
 import type { MenuDoc } from "~/modules/gh-docs/.server/docs";
 import { useNavigation } from "~/hooks/use-navigation";
 import { useDelayedValue } from "~/hooks/use-delayed-value";
+import { useHeaderData } from "../docs-header/use-header-data";
 
 export function Menu({ menu }: { menu?: MenuDoc[] }) {
   // github might be down but the menu but the doc could be cached in memory, so
@@ -31,6 +32,8 @@ export function Menu({ menu }: { menu?: MenuDoc[] }) {
 }
 
 function MenuCategory({ category }: { category: MenuDoc }) {
+  let { refParam } = useHeaderData();
+  let prefix = refParam ? `/${refParam}/` : "/";
   return (
     <MenuCategoryDetails className="group" slug={category.slug}>
       <MenuSummary>
@@ -50,13 +53,13 @@ function MenuCategory({ category }: { category: MenuDoc }) {
               <div className="mb-2 ml-2">
                 <MenuHeading label={doc.attrs.title} />
                 {doc.children.sort(sortDocs).map((doc, index) => (
-                  <MenuLink key={index} to={doc.slug!}>
+                  <MenuLink key={index} to={prefix + doc.slug!}>
                     {doc.attrs.title} {doc.attrs.new && "🆕"}
                   </MenuLink>
                 ))}
               </div>
             ) : (
-              <MenuLink key={index} to={doc.slug!}>
+              <MenuLink key={index} to={prefix + doc.slug!}>
                 {doc.attrs.title} {doc.attrs.new && "🆕"}
               </MenuLink>
             )}
