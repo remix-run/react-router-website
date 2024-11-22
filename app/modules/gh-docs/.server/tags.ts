@@ -11,9 +11,12 @@ export async function getTags(repo: string) {
 }
 
 export function getLatestVersion(tags: string[]) {
-  return tags.filter((tag) =>
-    semver.satisfies(tag, "*", { includePrerelease: false })
-  )[0];
+  return (
+    tags
+      .filter((tag) => semver.satisfies(tag, "*", { includePrerelease: false }))
+      // TODO: DELETE THIS -- temporary fix since v7 docs aren't quite ready yet
+      .filter((tag) => !tag.startsWith("7."))[0]
+  );
 }
 
 declare global {

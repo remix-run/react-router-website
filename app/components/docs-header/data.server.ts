@@ -35,8 +35,8 @@ export async function getHeaderData(lang: string, ref?: string) {
   let apiDocsRef = githubRef === "dev" || githubRef === "local" ? "dev" : "v7";
 
   return {
-    // TODO: don't hard-code 6.28.0, look it up
-    versions: [getLatestVersion(tags), "6.28.0"],
+    // TODO: we'll need to add 7 in here when we're ready to start showing it
+    versions: [getLatestVersion(tags)],
     latestVersion,
     releaseBranch,
     branches: branchesInMenu,
