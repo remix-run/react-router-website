@@ -61,12 +61,6 @@ function ExternalLinks() {
         title="Chat on Discord"
         svgSize="24x24"
       />
-      <HeaderSvgLink
-        href="https://remix.run"
-        svgId="remix"
-        svgLabel="Stylized text saying “Made by Remix” with an right pointing arrow."
-        svgSize="122x17"
-      />
     </div>
   );
 }
