@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
 import classNames from "classnames";
 
-import docsStylesheet from "~/styles/docs.css?url";
+import "~/styles/docs.css";
 import { Header } from "~/components/docs-header/docs-header";
 import { getHeaderData } from "~/components/docs-header/data.server";
 import { Footer } from "~/components/docs-footer";
@@ -11,10 +11,6 @@ import { loadDocsMenu } from "~/components/docs-menu/data.server";
 import { Menu } from "~/components/docs-menu/menu";
 import type { Route } from "./+types/docs-layout";
 import semver from "semver";
-
-export let links: Route.LinksFunction = () => {
-  return [{ rel: "stylesheet", href: docsStylesheet }];
-};
 
 export let loader = async ({ params }: Route.LoaderArgs) => {
   // @ts-expect-error doesn't have potential child types
