@@ -26,9 +26,12 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
     ? `docs/index`
     : `docs/${params["*"]}`;
 
-  let doc = await getRepoDoc(ref, slug);
-  if (!doc) throw new Response("Not Found", { status: 404 });
-  return { doc };
+  try {
+    let doc = await getRepoDoc(ref, slug);
+    return { doc };
+  } catch (_) {
+    throw new Response("Not Found", { status: 404 });
+  }
 };
 
 export function headers({ parentHeaders }: HeadersArgs) {
@@ -36,7 +39,10 @@ export function headers({ parentHeaders }: HeadersArgs) {
   return parentHeaders;
 }
 
-export const meta: Route.MetaFunction = ({ data, matches, params }) => {
+export const meta: Route.MetaFunction = ({ error, data, matches, params }) => {
+  if (error || !data.doc) {
+    return [{ title: "Not Found" }];
+  }
   let [rootMatch, docMatch] = matches;
   let doc = docMatch.data;
 
