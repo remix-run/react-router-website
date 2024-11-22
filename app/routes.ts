@@ -6,13 +6,12 @@ const routes: RouteConfig = [
   route("/healthcheck", "pages/healthcheck.tsx"),
   route("/color-scheme", "actions/color-scheme.ts"),
 
-  route("/:ref?", "pages/docs-layout.tsx", { id: "docs" }, [
-    index("pages/docs-index.tsx"),
+  route("", "pages/docs-layout.tsx", { id: "docs" }, [
     route("home", "pages/doc.tsx", { id: "home" }),
     route("*", "pages/doc.tsx"),
   ]),
 
-  route("/*", "pages/notfound.tsx"),
+  route("/:ref", "pages/docs-index.tsx", { id: "docs-index" }),
 
   // short version URLs for changelogs and stuff
   route("/v6/*", "pages/redirect-v6-doc.tsx"),

@@ -1,6 +1,7 @@
 import { getRepoDoc } from "~/modules/gh-docs/.server";
 import { CACHE_CONTROL } from "~/http";
 import { seo } from "~/seo";
+import semver from "semver";
 
 import type { HeadersArgs } from "react-router";
 
@@ -10,11 +11,20 @@ import type { Route } from "./+types/doc";
 
 export { ErrorBoundary } from "~/components/doc-error-boundary";
 
-export let loader = async ({ params }: Route.LoaderArgs) => {
-  let ref = params.ref || "main";
-  let slug = params["*"]?.endsWith("/changelog")
+export let loader = async ({ request, params }: Route.LoaderArgs) => {
+  let url = new URL(request.url);
+  let splat = params["*"];
+  let ref = semver.valid(splat) ? splat : splat === "dev" ? "dev" : "main";
+  if (params.ref) {
+    // old v6 URL
+    ref = params.ref;
+  }
+
+  let slug = url.pathname.endsWith("/changelog")
     ? "CHANGELOG"
-    : `docs/${params["*"] || "index"}`;
+    : url.pathname.endsWith("/home")
+    ? `docs/index`
+    : `docs/${params["*"]}`;
 
   let doc = await getRepoDoc(ref, slug);
   if (!doc) throw new Response("Not Found", { status: 404 });

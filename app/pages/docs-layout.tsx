@@ -10,16 +10,23 @@ import { NavMenuMobile } from "~/components/docs-menu/menu-mobile";
 import { loadDocsMenu } from "~/components/docs-menu/data.server";
 import { Menu } from "~/components/docs-menu/menu";
 import type { Route } from "./+types/docs-layout";
+import semver from "semver";
 
 export let links: Route.LinksFunction = () => {
   return [{ rel: "stylesheet", href: docsStylesheet }];
 };
 
 export let loader = async ({ params }: Route.LoaderArgs) => {
-  let { ref } = params;
+  // @ts-expect-error doesn't have potential child types
+  let splat = params["*"];
+  let ref = semver.valid(splat) ? splat : splat === "dev" ? "dev" : "main";
+  if (params.ref) {
+    // old v6 URL
+    ref = params.ref;
+  }
 
   let [menu, header] = await Promise.all([
-    loadDocsMenu(ref || "main"),
+    loadDocsMenu(ref),
     getHeaderData("en", ref),
   ]);
 

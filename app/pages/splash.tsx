@@ -56,10 +56,9 @@ type Adventure = {
 const adventures: Adventure[] = [
   {
     title: "I'm new!",
-    description:
-      "Get the most out of React Router v7’s latest framework features",
+    description: "Learn how to get the most out of React Router",
     linkText: "Start Here",
-    linkTo: prefix + "start/framework/installation",
+    linkTo: prefix + "home",
   },
   {
     title: "I'm on v6",
