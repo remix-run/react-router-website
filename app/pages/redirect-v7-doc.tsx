@@ -8,11 +8,10 @@ export async function loader({ request }: Route.LoaderArgs) {
   let [, s, ...rest] = url.pathname.split("/");
 
   let versions = await getRepoTags();
-  versions.push("7.0.0");
-  versions.push("7.0.1");
   let latest = semver.maxSatisfying(versions, `${s}.x`, {
     includePrerelease: false,
   });
+
   if (latest) {
     return redirect(`/${latest}/${rest.join("/")}${url.search}`);
   }

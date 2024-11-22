@@ -1,5 +1,8 @@
 import { getRepoBranches, getRepoTags } from "~/modules/gh-docs/.server";
-import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
+import {
+  getLatestV6Version,
+  getLatestVersion,
+} from "~/modules/gh-docs/.server/tags";
 
 export type HeaderData = Awaited<ReturnType<typeof getHeaderData>>;
 
@@ -39,8 +42,7 @@ export async function getHeaderData(
   let apiDocsRef = githubRef === "dev" || githubRef === "local" ? "dev" : "v7";
 
   return {
-    // TODO: don't hard-code 6.28.0, look it up
-    versions: [getLatestVersion(tags), "6.28.0"],
+    versions: [getLatestVersion(tags), getLatestV6Version(tags)],
     latestVersion,
     releaseBranch,
     branches: branchesInMenu,

@@ -46,7 +46,6 @@ const highlights: Highlight[] = [
   },
 ];
 
-const prefix = "/"; // TODO
 type Adventure = {
   title: string;
   description: string;
@@ -58,20 +57,20 @@ const adventures: Adventure[] = [
     title: "I'm new!",
     description: "Learn how to get the most out of React Router",
     linkText: "Start Here",
-    linkTo: prefix + "home",
+    linkTo: "./home",
   },
   {
     title: "I'm on v6",
     description: "Upgrade to v7 in just a few steps",
     linkText: "Upgrade Now",
-    linkTo: prefix + "upgrading/v6",
+    linkTo: "./upgrading/v6",
   },
   {
     title: "I want to adopt framework features",
     description:
       "Learn how to adopt the new framework features in your existing React Router app",
     linkText: "Adopt Framework Features",
-    linkTo: prefix + "upgrading/component-routes",
+    linkTo: "./upgrading/component-routes",
   },
   {
     title: "I'm stuck",

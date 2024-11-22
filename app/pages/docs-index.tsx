@@ -3,5 +3,9 @@ import type { Route } from "./+types/docs-index";
 
 export function loader({ request }: Route.LoaderArgs) {
   let url = new URL(request.url);
-  return redirect(url.pathname + "/home");
+  if (!url.pathname.endsWith("/")) {
+    url.pathname += "/";
+  }
+
+  return redirect(url.pathname + "home");
 }

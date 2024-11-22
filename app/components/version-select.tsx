@@ -71,7 +71,7 @@ function LocalLink() {
 
 function VersionLink({ version }: { version: string }) {
   let isV7 = version.startsWith("7");
-  let to = isV7 ? `/${version}/home` : `/en/${version}`;
+  let to = isV7 ? `/${version}/home` : `/${version}`;
   return <RefLink to={to}>{version}</RefLink>;
 }
 
