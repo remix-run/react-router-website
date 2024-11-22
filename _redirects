@@ -73,8 +73,8 @@
 /en/main/utils/resolve-path                  https://api.reactrouter.com/v7/functions/react_router.resolvePath.html
 /en/main/route/route                         https://api.reactrouter.com/v7/types/react_router.RouteObject.html
 /en/main/route/action                        https://api.reactrouter.com/v7/interfaces/react_router.ActionFunction.html
-/en/main/route/error-element                 https://api.reactrouter.com/v7/interfaces/react_router.ErrorElement.html
-/en/main/route/hydrate-fallback-element      https://api.reactrouter.com/v7/interfaces/react_router.NonIndexRouteObject.html#errorElement
+/en/main/route/error-element                 https://api.reactrouter.com/v7/interfaces/react_router.NonIndexRouteObject.html#errorElement
+/en/main/route/hydrate-fallback-element      https://api.reactrouter.com/v7/interfaces/react_router.NonIndexRouteObject.html#hydrateFallbackElement
 /en/main/route/lazy                          https://api.reactrouter.com/v7/interfaces/react_router.LazyRouteFunction.html
 /en/main/route/loader                        https://api.reactrouter.com/v7/types/react_router.LoaderFunction.html   
 /en/main/route/should-revalidate             https://api.reactrouter.com/v7/interfaces/react_router.ShouldRevalidateFunction.html
