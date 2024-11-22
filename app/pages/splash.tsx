@@ -126,7 +126,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </dl>
       </section>
       <section className="flex flex-col gap-y-12 p-12">
-        <h2 className="mx-[-10px] text-center text-3xl font-semibold text-gray-800">
+        <h2 className="mx-[-10px] text-center text-3xl font-semibold text-gray-800 dark:text-white">
           Choose Your Adventure:
         </h2>
         <div className="grid max-w-[1200px] gap-6 md:grid-cols-2 2xl:grid-cols-4">
@@ -134,13 +134,15 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             <Link
               key={title}
               to={linkTo}
-              className="flex flex-col justify-between gap-y-6 rounded-lg border border-[#D9D9D9] p-8 hover:bg-gray-50"
+              className="flex flex-col justify-between gap-y-6 rounded-lg border border-[#D9D9D9] p-8 hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               <div className="flex flex-col gap-y-4">
                 <h3 className="text-2xl font-semibold">{title}</h3>
-                <p className="text-[#757575]">{description}</p>
+                <p className="text-[#757575] dark:text-gray-300">
+                  {description}
+                </p>
               </div>
-              <p className="flex h-10 place-content-center place-items-center rounded-lg bg-gray-900 text-gray-50">
+              <p className="flex h-10 place-content-center place-items-center rounded-lg bg-gray-900 text-gray-50 dark:bg-white dark:text-gray-900">
                 {linkText}
               </p>
             </Link>
