@@ -18,11 +18,6 @@ export let links: Route.LinksFunction = () => {
 export let loader = async ({ params }: Route.LoaderArgs) => {
   let { ref } = params;
 
-  // TODO: DELETE THIS -- temporary fix since v7 docs aren't quite ready yet
-  if (ref === "main") {
-    ref = "6.28.0";
-  }
-
   let [menu, header] = await Promise.all([
     loadDocsMenu(ref || "main"),
     getHeaderData("en", ref),
