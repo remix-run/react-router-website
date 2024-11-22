@@ -28,6 +28,9 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
 
   try {
     let doc = await getRepoDoc(ref, slug);
+    if (!doc) {
+      throw new Response("Not Found", { status: 404 });
+    }
     return { doc };
   } catch (_) {
     throw new Response("Not Found", { status: 404 });
