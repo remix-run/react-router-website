@@ -10,6 +10,8 @@ export let loader = async () => {
   return { stats };
 };
 
+// TODO: target="_blank" for discord?
+
 export const meta: Route.MetaFunction = ({ matches }) => {
   let { isProductionHost } = matches[0].data;
   let robots = isProductionHost ? "index,follow" : "noindex, nofollow";
@@ -19,6 +21,29 @@ export const meta: Route.MetaFunction = ({ matches }) => {
     { name: "googlebot", content: robots },
   ];
 };
+
+type QuickLink = {
+  icon: string;
+  title: string;
+  to: string;
+};
+const quicklinks: QuickLink[] = [
+  {
+    icon: "atom",
+    title: "Docs",
+    to: "home",
+  },
+  {
+    icon: "github-outline",
+    title: "GitHub",
+    to: "https://github.com/remix-run/react-router",
+  },
+  {
+    icon: "discord-outline",
+    title: "Discord",
+    to: "https://rmx.as/discord",
+  },
+];
 
 type Highlight = {
   icon: string;
@@ -57,20 +82,20 @@ const adventures: Adventure[] = [
     title: "I'm new!",
     description: "Learn how to get the most out of React Router",
     linkText: "Start Here",
-    linkTo: "./home",
+    linkTo: "home",
   },
   {
     title: "I'm on v6",
     description: "Upgrade to v7 in just a few steps",
     linkText: "Upgrade Now",
-    linkTo: "./upgrading/v6",
+    linkTo: "upgrading/v6",
   },
   {
     title: "I want to adopt framework features",
     description:
       "Learn how to adopt the new framework features in your existing React Router app",
     linkText: "Adopt Framework Features",
-    linkTo: "./upgrading/component-routes",
+    linkTo: "upgrading/component-routes",
   },
   {
     title: "I'm stuck",
@@ -95,12 +120,28 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           A user‑obsessed, standards‑focused, multi‑strategy router you can
           deploy anywhere.
         </p>
-        <Link
-          to="/home"
-          className="flex items-center p-8 pb-[96px] font-bold underline"
-        >
-          Read the docs
-        </Link>
+        <div className="flex flex-col text-gray-700 md:h-[72px] md:w-[460px] md:flex-row">
+          {quicklinks.map(({ icon, title, to }, i) => (
+            <Link
+              key={title}
+              to={to}
+              className={
+                "flex gap-x-2 border border-gray-200 px-9 py-6 hover:bg-gray-50" +
+                (i === 0
+                  ? " rounded-t-lg border-b-0 md:rounded-l-lg md:rounded-tr-none md:border-b md:border-r-0"
+                  : "") +
+                (i === 2
+                  ? " rounded-b-lg border-t-0 md:rounded-r-lg md:rounded-bl-none md:border-l-0 md:border-t"
+                  : "")
+              }
+            >
+              <svg className="h-6 w-6">
+                <use href={`${iconsHref}#${icon}`} />
+              </svg>
+              {title}
+            </Link>
+          ))}
+        </div>
       </section>
       <section className="flex w-full flex-col items-center gap-y-24 bg-gradient-to-b from-[#FAFBFD] to-white px-12 py-12 md:gap-y-16 lg:gap-y-12">
         <div className="grid gap-x-16 gap-y-6 md:grid-flow-col">
