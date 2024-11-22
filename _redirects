@@ -6,9 +6,9 @@
 ########################################################################
 # v7 release redirects from v6 urls
 /en/main                                     /
-/en/main/start/*                             /en/6.28.0/start/*
-/en/main/upgrading/*                         /en/6.28.0/upgrading/*
-/en/main/guides/*                            /en/6.28.0/guides/*
+/en/main/start/*                             /6.28.0/start/*
+/en/main/upgrading/*                         /6.28.0/upgrading/*
+/en/main/guides/*                            /6.28.0/guides/*
 /en/main/routers/create-browser-router       https://api.reactrouter.com/v7/functions/react_router.createBrowserRouter.html
 /en/main/routers/create-hash-router          https://api.reactrouter.com/v7/functions/react_router.createHashRouter.html
 /en/main/routers/create-memory-router        https://api.reactrouter.com/v7/functions/react_router.createMemoryRouter.html
