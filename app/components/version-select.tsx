@@ -57,7 +57,7 @@ export function VersionSelect() {
 
 function MainLink({ latestVersion }: { latestVersion: string }) {
   let isV7Link = latestVersion.startsWith("7");
-  let to = isV7Link ? "/" : "/en/main";
+  let to = isV7Link ? "/home" : "/en/main";
   return <RefLink to={to}>latest ({latestVersion})</RefLink>;
 }
 
@@ -71,7 +71,7 @@ function LocalLink() {
 
 function VersionLink({ version }: { version: string }) {
   let isV7 = version.startsWith("7");
-  let to = isV7 ? "/" : `/en/${version}`;
+  let to = isV7 ? "/home" : `/en/${version}`;
   return <RefLink to={to}>{version}</RefLink>;
 }
 
