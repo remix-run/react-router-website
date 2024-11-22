@@ -195,7 +195,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           ))}
         </div>
       </section>
-      <section className="grid w-full place-content-center bg-gray-50 p-12">
+      <section className="grid w-full place-content-center p-12">
         <Suspense fallback={null}>
           <Await resolve={loaderData.stats} errorElement={null}>
             {(stats) => (
@@ -218,7 +218,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           </Await>
         </Suspense>
       </section>
-      <section className="grid h-[205px] w-full place-content-center place-items-center gap-y-6 bg-gray-900 p-12">
+      <section className="grid h-[205px] w-full place-content-center place-items-center gap-y-6 bg-gray-50 p-12">
         <img src="/splash/shopify-badge.svg" className="h-[68px] w-[190px]" />
         <p className="text-sm text-gray-400">© 2024 Shopify, Inc.</p>
       </section>
