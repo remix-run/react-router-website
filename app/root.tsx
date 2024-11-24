@@ -23,6 +23,8 @@ import "~/styles/tailwind.css";
 // FIXUP: Importing in `root` because we have a bug where the styles get offloaded
 // see: https://github.com/remix-run/react-router-website/issues/139
 import "~/styles/docs.css";
+import "@docsearch/css/dist/style.css";
+import "~/styles/docsearch.css";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await middlewares(request);
