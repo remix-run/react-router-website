@@ -1,7 +1,6 @@
 import { Outlet } from "react-router";
 import classNames from "classnames";
 
-import "~/styles/docs.css";
 import { Header } from "~/components/docs-header/docs-header";
 import { getHeaderData } from "~/components/docs-header/data.server";
 import { Footer } from "~/components/docs-footer";

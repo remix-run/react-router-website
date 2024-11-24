@@ -16,14 +16,13 @@ import {
 } from "./modules/color-scheme/components";
 import { isHost } from "./modules/http-utils/is-host";
 import iconsHref from "~/icons.svg";
-import stylesheet from "~/styles/tailwind.css?url";
 import { useRef } from "react";
 import { useCodeBlockCopyButton } from "./ui/utils";
-import type { Route } from "./+types/root";
 
-export const links: Route.LinksFunction = () => [
-  { rel: "stylesheet", href: stylesheet },
-];
+import "~/styles/tailwind.css";
+// FIXUP: Importing in `root` because we have a bug where the styles get offloaded
+// see: https://github.com/remix-run/react-router-website/issues/139
+import "~/styles/docs.css";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await middlewares(request);
