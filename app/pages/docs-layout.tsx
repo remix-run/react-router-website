@@ -10,6 +10,8 @@ import { loadDocsMenu } from "~/components/docs-menu/data.server";
 import { Menu } from "~/components/docs-menu/menu";
 import type { Route } from "./+types/docs-layout";
 import semver from "semver";
+import { useRef } from "react";
+import { useCodeBlockCopyButton } from "~/ui/utils";
 
 export let loader = async ({ params }: Route.LoaderArgs) => {
   // @ts-expect-error doesn't have potential child types
@@ -35,6 +37,10 @@ export let loader = async ({ params }: Route.LoaderArgs) => {
 
 export default function DocsLayout({ loaderData }: Route.ComponentProps) {
   const { menu } = loaderData;
+
+  let docsContainer = useRef<HTMLDivElement>(null);
+  useCodeBlockCopyButton(docsContainer);
+
   return (
     <div className="[--header-height:theme(spacing.16)] [--nav-width:theme(spacing.72)] lg:m-auto lg:max-w-[90rem]">
       <div className="sticky top-0 z-20">
@@ -49,6 +55,7 @@ export default function DocsLayout({ loaderData }: Route.ComponentProps) {
           <Menu menu={menu} />
         </NavMenuDesktop>
         <div
+          ref={docsContainer}
           className={classNames(
             // add scroll margin to focused elements so that they aren't
             // obscured by the sticky header

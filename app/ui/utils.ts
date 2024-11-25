@@ -12,7 +12,7 @@ export function useHydrated() {
   return hydrated;
 }
 
-export function useCodeBlockCopyButton(ref: React.RefObject<HTMLBodyElement>) {
+export function useCodeBlockCopyButton(ref: React.RefObject<HTMLElement>) {
   let location = useLocation();
   useEffect(() => {
     let container = ref.current;
