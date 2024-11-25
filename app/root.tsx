@@ -18,13 +18,14 @@ import { isHost } from "./modules/http-utils/is-host";
 import iconsHref from "~/icons.svg";
 import { useRef } from "react";
 import { useCodeBlockCopyButton } from "./ui/utils";
+import { DocSearch } from "./modules/docsearch";
 
 import "~/styles/tailwind.css";
-// FIXUP: Importing in `root` because we have a bug where the styles get offloaded
-// see: https://github.com/remix-run/react-router-website/issues/139
-import "~/styles/docs.css";
 import "@docsearch/css/dist/style.css";
 import "~/styles/docsearch.css";
+// FIXUP: Styles need to all be imported in root until this is fixed:
+// https://github.com/remix-run/react-router/issues/12382
+import "~/styles/docs.css";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await middlewares(request);
@@ -88,7 +89,9 @@ export default function App() {
           // eslint-disable-next-line react/no-unknown-property
           fetchpriority="high"
         />
-        <Outlet />
+        <DocSearch>
+          <Outlet />
+        </DocSearch>
         <ScrollRestoration />
         <Scripts />
       </body>

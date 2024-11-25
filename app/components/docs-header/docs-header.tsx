@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router";
 import iconsHref from "~/icons.svg";
 import { ColorSchemeToggle } from "../color-scheme-toggle";
 import classNames from "classnames";
-import { DocSearch } from "~/modules/docsearch";
+import { DocSearchButton } from "~/modules/docsearch";
 import { VersionNav } from "../version-nav";
 
 export function Header() {
@@ -16,7 +16,7 @@ export function Header() {
       </div>
 
       <div className="flex gap-2 md:gap-4">
-        <DocSearchSection />
+        <DocSearchButton />
         <ColorSchemeToggle />
         <ExternalLinks />
       </div>
@@ -98,13 +98,5 @@ function HeaderSvgLink({
         <use href={`${iconsHref}#${svgId}`} />
       </svg>
     </a>
-  );
-}
-
-function DocSearchSection() {
-  return (
-    <div className="lg:bg-white lg:dark:bg-gray-900">
-      <DocSearch />
-    </div>
   );
 }

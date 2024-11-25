@@ -20,8 +20,8 @@
     "/public/build"
   ],
   "dependencies": {
-    "@docsearch/css": "^3.6.0",
-    "@docsearch/react": "^3.6.0",
+    "@docsearch/css": "^3.8.0",
+    "@docsearch/react": "^3.8.0",
     "@react-router/node": "7.0.1",
     "@react-router/serve": "7.0.1",
     "bcryptjs": "^2.4.3",
