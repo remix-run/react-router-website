@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "react-router dev",
     "build": "react-router build",
+    "format:biome": "biome check --write .",
     "format": "prettier --write . && npm run lint:fix",
+    "lint:biome": "biome check .",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "lint:fix": "npm run lint -- --fix",
     "start": "react-router-serve ./build/server/index.js",
