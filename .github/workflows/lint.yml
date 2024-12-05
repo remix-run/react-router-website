@@ -11,6 +11,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  biome:
+    name: ⬣ Biome Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: 22
+
+      - name: 📥 Install deps
+        run: npm ci
+      
+      - name: 🔬 Biome Lint
+        run: npx biome lint .
+
   lint:
     name: ⬣ Lint
     runs-on: ubuntu-latest
