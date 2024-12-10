@@ -24,7 +24,6 @@
     "@docsearch/react": "^3.8.0",
     "@react-router/node": "7.0.1",
     "@react-router/serve": "7.0.1",
-    "bcryptjs": "^2.4.3",
     "cheerio": "^1.0.0-rc.12",
     "classnames": "^2.3.2",
     "escape-goat": "^4.0.0",
@@ -61,7 +60,6 @@
   "devDependencies": {
     "@react-router/dev": "7.0.1",
     "@testing-library/jest-dom": "^5.16.5",
-    "@types/bcryptjs": "^2.4.2",
     "@types/eslint": "^8.56.6",
     "@types/follow-redirects": "^1.14.1",
     "@types/gunzip-maybe": "^1.4.0",
