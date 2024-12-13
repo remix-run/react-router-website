@@ -5,6 +5,7 @@ import { LargeOnThisPage, SmallOnThisPage } from "./on-this-page";
 
 export function DocLayout({ doc }: { doc: Doc }) {
   let ref = useRef<HTMLDivElement>(null);
+
   useDelegatedReactRouterLinks(ref);
 
   return (

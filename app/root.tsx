@@ -83,9 +83,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           hidden
           // this img tag simply forces the icons to be loaded at a higher
           // priority than the scripts (chrome only for now)
-          // @ts-expect-error React forces you to set fetchpriority to lowercase
-          // eslint-disable-next-line react/no-unknown-property
-          fetchpriority="high"
+          fetchPriority="high"
         />
         <DocSearch>{children}</DocSearch>
         <ScrollRestoration />

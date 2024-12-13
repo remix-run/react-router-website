@@ -9,7 +9,7 @@ export function LargeOnThisPage({
   mdRef,
 }: {
   doc: Doc;
-  mdRef: React.RefObject<HTMLDivElement>;
+  mdRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const navRef = useRef<HTMLDivElement>(null);
   const [activeHeading, setActiveHeading] = useState("");
