@@ -25,7 +25,7 @@ global.statCountsCache ??= new LRUCache<string, StatCounts>({
   ttl: 1000 * 60 * 60, // 1 hour
   allowStale: true,
   noDeleteOnFetchRejection: true,
-  fetchMethod: async (key) => {
+  fetchMethod: async () => {
     console.log("Fetching fresh stats");
     let [npmDownloads, githubContributors, githubStars, githubDependents] =
       await Promise.all([

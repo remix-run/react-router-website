@@ -5,7 +5,7 @@ import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { DetailsPopup } from "./details-popup";
 import { PopupLabel } from "./popup-label";
-import { type Pkg } from "~/components/docs-menu/data.server";
+import type { Pkg } from "~/components/docs-menu/data.server";
 
 export function PackageSelect({ pkgs }: { pkgs: Pkg[] }) {
   let { pkg } = useParams();

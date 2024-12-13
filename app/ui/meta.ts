@@ -1,4 +1,4 @@
-import { type loader as docsLoader } from "~/pages/docs-layout";
+import type { loader as docsLoader } from "~/pages/docs-layout";
 
 type DocsData = Awaited<ReturnType<typeof docsLoader>>;
 
