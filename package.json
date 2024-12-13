@@ -35,7 +35,7 @@
     "front-matter": "^4.0.2",
     "gray-matter": "^4.0.3",
     "gunzip-maybe": "^1.4.2",
-    "isbot": "^3.6.10",
+    "isbot": "^5.1.17",
     "iso-639-1": "^2.1.15",
     "lodash.merge": "^4.6.2",
     "lru-cache": "^7.18.3",
