@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { type Doc } from "~/modules/gh-docs/.server";
+import type { Doc } from "~/modules/gh-docs/.server";
 import iconsHref from "~/icons.svg";
 import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";

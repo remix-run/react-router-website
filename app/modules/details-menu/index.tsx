@@ -52,22 +52,22 @@ export let DetailsMenu = React.forwardRef<
       ref={forwardedRef}
       open={open ?? isOpen}
       onToggle={(event) => {
-        onToggle && onToggle(event);
+        if (onToggle) onToggle(event);
         if (event.defaultPrevented) return;
         setIsOpen(event.currentTarget.open);
       }}
       onMouseDown={(event) => {
-        onMouseDown && onMouseDown(event);
+        if (onMouseDown) onMouseDown(event);
         if (event.defaultPrevented) return;
         if (isOpen) clickRef.current = true;
       }}
       onTouchStart={(event) => {
-        onTouchStart && onTouchStart(event);
+        if (onTouchStart) onTouchStart(event);
         if (event.defaultPrevented) return;
         if (isOpen) clickRef.current = true;
       }}
       onFocus={(event) => {
-        onFocus && onFocus(event);
+        if (onFocus) onFocus(event);
         if (event.defaultPrevented) return;
         if (isOpen) focusRef.current = true;
       }}
