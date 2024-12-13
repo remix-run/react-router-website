@@ -32,7 +32,7 @@ let docSearchProps = {
 
 const DocSearchContext = createContext<{
   onOpen: () => void;
-  searchButtonRef: React.RefObject<HTMLButtonElement>;
+  searchButtonRef: React.RefObject<HTMLButtonElement | null>;
 } | null>(null);
 
 /**
@@ -63,6 +63,7 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
     onOpen,
     onClose,
     onInput,
+    // @ts-expect-error docsearch types are not updated for react 19
     searchButtonRef,
   });
 
