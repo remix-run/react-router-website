@@ -9,6 +9,7 @@
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "lint:fix": "npm run lint -- --fix",
     "start": "react-router-serve ./build/server/index.js",
+    "preview": "cross-env NODE_ENV=production dotenv react-router-serve ./build/server/index.js",
     "test": "vitest",
     "typecheck": "react-router typegen && tsc",
     "push:stage": "git tag -f stage && git push origin stage -f"
@@ -82,6 +83,7 @@
     "c8": "^7.13.0",
     "cross-env": "^7.0.3",
     "cssnano": "^6.1.1",
+    "dotenv-cli": "^7.4.4",
     "eslint": "^8.39.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.7.0",

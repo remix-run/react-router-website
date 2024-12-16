@@ -1,28 +1,18 @@
 import {
-  Suspense,
   createContext,
-  lazy,
+  use,
   useCallback,
-  useContext,
   useMemo,
   useRef,
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { useDocSearchKeyboardEvents } from "@docsearch/react/dist/esm";
 import type { DocSearchProps } from "@docsearch/react";
-
-let OriginalDocSearchModal = lazy(() =>
-  import("@docsearch/react").then((module) => ({
-    default: module.DocSearchModal,
-  }))
-);
-
-let OriginalDocSearchButton = lazy(() =>
-  import("@docsearch/react").then((module) => ({
-    default: module.DocSearchButton,
-  }))
-);
+import {
+  DocSearchModal as OriginalDocSearchModal,
+  DocSearchButton as OriginalDocSearchButton,
+  useDocSearchKeyboardEvents,
+} from "@docsearch/react";
 
 let docSearchProps = {
   appId: "RB6LOUCOL0",
@@ -76,26 +66,24 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <DocSearchContext.Provider value={contextValue}>
+    <DocSearchContext value={contextValue}>
       {children}
       {isOpen
         ? createPortal(
-            <Suspense fallback={null}>
-              <OriginalDocSearchModal
-                initialScrollY={window.scrollY}
-                onClose={onClose}
-                {...docSearchProps}
-              />
-            </Suspense>,
+            <OriginalDocSearchModal
+              initialScrollY={window.scrollY}
+              onClose={onClose}
+              {...docSearchProps}
+            />,
             document.body
           )
         : null}
-    </DocSearchContext.Provider>
+    </DocSearchContext>
   );
 }
 
 export function DocSearchButton() {
-  const docSearchContext = useContext(DocSearchContext);
+  const docSearchContext = use(DocSearchContext);
 
   if (!docSearchContext) {
     throw new Error("DocSearch must be used within a DocSearchModal");
@@ -103,9 +91,5 @@ export function DocSearchButton() {
 
   const { onOpen, searchButtonRef } = docSearchContext;
 
-  return (
-    <Suspense fallback={<div className="h-10" />}>
-      <OriginalDocSearchButton ref={searchButtonRef} onClick={onOpen} />
-    </Suspense>
-  );
+  return <OriginalDocSearchButton ref={searchButtonRef} onClick={onOpen} />;
 }

@@ -1,5 +1,5 @@
 import { reactRouter } from "@react-router/dev/vite";
-import { defineConfig, splitVendorChunkPlugin } from "vite";
+import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
@@ -10,5 +10,6 @@ export default defineConfig({
     port: 3000,
     host: "0.0.0.0",
   },
-  plugins: [splitVendorChunkPlugin(), reactRouter(), tsconfigPaths()],
+
+  plugins: [reactRouter(), tsconfigPaths()],
 });
