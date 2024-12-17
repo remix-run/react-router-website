@@ -1,6 +1,7 @@
 import { reactRouter } from "@react-router/dev/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import babel from "vite-plugin-babel";
 
 export default defineConfig(({ isSsrBuild }) => ({
   build: {
@@ -13,5 +14,18 @@ export default defineConfig(({ isSsrBuild }) => ({
   ssr: {
     noExternal: ["@docsearch/react"],
   },
-  plugins: [reactRouter(), tsconfigPaths()],
+  plugins: [
+    babel({
+      filter: /app\/.*\.[jt]sx?$/,
+      babelConfig: {
+        presets: [
+          "@babel/preset-typescript",
+          ["@babel/preset-react", { runtime: "automatic" }],
+        ],
+        plugins: ["babel-plugin-react-compiler"],
+      },
+    }),
+    reactRouter(),
+    tsconfigPaths(),
+  ],
 }));
