@@ -31,7 +31,7 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
     ? `docs/index`
     : refParam
     ? // remove the refParam
-      `docs/${params["*"].split("/").splice(1).join("/")}`
+      `docs/${params["*"].replace(`${refParam}/`, "")}`
     : `docs/${params["*"]}`;
 
   try {
