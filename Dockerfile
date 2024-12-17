@@ -1,47 +1,30 @@
-# base node image
-FROM node:20-alpine as base
+FROM node:20-alpine AS development-dependencies-env
+COPY . /app
+WORKDIR /app
+RUN npm ci
 
-# set for base and all layer that inherit from it
-ENV NODE_ENV production
+FROM node:20-alpine AS production-dependencies-env
+COPY ./package.json package-lock.json .npmrc /app/
+WORKDIR /app
+RUN npm ci --omit=dev
 
-# Install all node_modules, including dev dependencies
-FROM base as deps
-
-WORKDIR /myapp
-
-ADD package.json package-lock.json .npmrc ./
-RUN npm install --production=false
-
-# Setup production node_modules
-FROM base as production-deps
-
-WORKDIR /myapp
-
-COPY --from=deps /myapp/node_modules /myapp/node_modules
-ADD package.json package-lock.json .npmrc ./
-RUN npm prune --production
-
-# Build the app
-FROM base as build
-
-WORKDIR /myapp
-
-COPY --from=deps /myapp/node_modules /myapp/node_modules
-
-ADD . .
+FROM node:20-alpine AS build-env
+COPY . /app/
+COPY --from=development-dependencies-env /app/node_modules /app/node_modules
+WORKDIR /app
 RUN npm run build
 
-# Finally, build the production image with minimal footprint
-FROM base
+FROM node:20-alpine
+COPY ./package.json package-lock.json server.js /app/
+
 
 ENV PORT="8080"
 ENV NODE_ENV="production"
 
-WORKDIR /myapp
+COPY --from=production-dependencies-env /app/node_modules /app/node_modules
+COPY --from=build-env /app/build /app/build
+COPY --from=build-env /app/start.sh /app/start.sh
 
-COPY --from=production-deps /myapp/node_modules /myapp/node_modules
-COPY --from=build /myapp/build /myapp/build
-COPY --from=build /myapp/package.json /myapp/package.json
-COPY --from=build /myapp/start.sh /myapp/start.sh
 
-CMD ["npm", "start"]
+WORKDIR /app
+CMD ["npm", "run", "start"]
