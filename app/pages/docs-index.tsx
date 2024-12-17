@@ -7,5 +7,9 @@ export function loader({ request }: Route.LoaderArgs) {
     url.pathname += "/";
   }
 
-  return redirect(url.pathname + "home");
+  if (url.pathname.startsWith("7")) {
+    return redirect(url.pathname + "home");
+  } else {
+    return redirect("/en" + url.pathname);
+  }
 }
