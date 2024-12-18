@@ -2,7 +2,7 @@ import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { DetailsPopup } from "./details-popup";
 import { PopupLabel } from "./popup-label";
-import { Link } from "react-router";
+import { Link, useParams } from "react-router";
 import classNames from "classnames";
 import { useHeaderData } from "./docs-header/use-header-data";
 import { useNavigation } from "~/hooks/use-navigation";
@@ -10,6 +10,12 @@ import { useNavigation } from "~/hooks/use-navigation";
 export function VersionSelect() {
   let { versions, latestVersion, releaseBranch, branches, currentGitHubRef } =
     useHeaderData();
+  let { "*": splat } = useParams();
+
+  let slug = "";
+  if (splat && !currentGitHubRef.startsWith("6")) {
+    slug = splat?.replace(new RegExp(`^${currentGitHubRef}/`), "");
+  }
 
   // This is the same default, hover, focus style as the ColorScheme trigger
   const className =
@@ -32,9 +38,9 @@ export function VersionSelect() {
       </summary>
       <DetailsPopup className="w-40">
         <PopupLabel label="Branches" />
-        <MainLink latestVersion={latestVersion} />
-        <DevLink />
-        {branches.includes("local") && <LocalLink />}
+        <MainLink latestVersion={latestVersion} slug={slug} />
+        <DevLink slug={slug} />
+        {branches.includes("local") && <LocalLink slug={slug} />}
 
         <PopupLabel label="Versions" />
         {versions.map((version) => (
@@ -55,18 +61,23 @@ export function VersionSelect() {
   );
 }
 
-function MainLink({ latestVersion }: { latestVersion: string }) {
-  let isV7Link = latestVersion.startsWith("7");
-  let to = isV7Link ? "/home" : "/en/main";
+function MainLink({
+  latestVersion,
+  slug,
+}: {
+  latestVersion: string;
+  slug: string;
+}) {
+  let to = slug || "/home";
   return <RefLink to={to}>latest ({latestVersion})</RefLink>;
 }
 
-function DevLink() {
-  return <RefLink to={`/dev`}>dev</RefLink>;
+function DevLink({ slug }: { slug: string }) {
+  return <RefLink to={`/dev/${slug}`}>dev</RefLink>;
 }
 
-function LocalLink() {
-  return <RefLink to={`/local`}>local</RefLink>;
+function LocalLink({ slug }: { slug: string }) {
+  return <RefLink to={`/local/${slug}`}>local</RefLink>;
 }
 
 function VersionLink({ version }: { version: string }) {
