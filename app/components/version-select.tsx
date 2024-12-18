@@ -68,7 +68,7 @@ function MainLink({
   latestVersion: string;
   slug: string;
 }) {
-  let to = slug || "home";
+  let to = slug || "/home";
   return <RefLink to={to}>latest ({latestVersion})</RefLink>;
 }
 

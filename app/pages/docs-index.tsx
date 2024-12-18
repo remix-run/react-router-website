@@ -7,7 +7,7 @@ export function loader({ request }: Route.LoaderArgs) {
     url.pathname += "/";
   }
 
-  if (url.pathname.startsWith("6")) {
+  if (url.pathname.match(/^\/?(6)/)) {
     return redirect("/en" + url.pathname);
   } else {
     return redirect(url.pathname + "home");
