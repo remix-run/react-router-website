@@ -1,6 +1,7 @@
-import { Link, useParams } from "react-router";
+import { Link } from "react-router";
 import { useDoc } from "~/hooks/use-doc";
 import iconsHref from "~/icons.svg";
+import { useHeaderData } from "./docs-header/use-header-data";
 
 export function Footer() {
   return (
@@ -31,8 +32,9 @@ export function Footer() {
 
 function EditLink() {
   let doc = useDoc();
-  let params = useParams();
-  let isEditableRef = params.ref === "main" || params.ref === "dev";
+  let { ref } = useHeaderData();
+
+  let isEditableRef = ref === "main" || ref === "dev";
 
   if (!doc || !isEditableRef || !doc.filename) {
     return null;
@@ -41,9 +43,9 @@ function EditLink() {
   let editUrl: string;
   let repoUrl = "https://github.com/remix-run/react-router";
   if (doc.filename.match(/\.tsx?$/)) {
-    editUrl = `${repoUrl}/edit/${params.ref}/${doc.filename}`;
+    editUrl = `${repoUrl}/edit/${ref}/${doc.filename}`;
   } else {
-    editUrl = `${repoUrl}/edit/${params.ref}/${doc.slug}.md`;
+    editUrl = `${repoUrl}/edit/${ref}/${doc.slug}.md`;
   }
 
   return (
