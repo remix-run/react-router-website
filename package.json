@@ -4,12 +4,12 @@
   "type": "module",
   "scripts": {
     "dev": "cross-env NODE_ENV=development node server.js",
-    "build": "react-router build",
+    "build": "cross-env NODE_ENV=development react-router build",
     "format": "prettier --write . && npm run lint:fix",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "start": "node server.js",
-    "preview": "dotenv node server.js",
+    "start": "cross-env NODE_ENV=production node server.js",
+    "preview": "cross-env NODE_ENV=production dotenv node server.js",
     "test": "vitest",
     "typecheck": "react-router typegen && tsc",
     "push:stage": "git tag -f stage && git push origin stage -f"
