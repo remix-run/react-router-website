@@ -14,7 +14,6 @@ import { useRef } from "react";
 import { useCodeBlockCopyButton } from "~/ui/utils";
 
 export let loader = async ({ params }: Route.LoaderArgs) => {
-  // @ts-expect-error doesn't have potential child types
   let splat = params["*"];
   let firstSegment = splat?.split("/")[0];
   let refParam = params.ref
