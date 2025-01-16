@@ -1,4 +1,3 @@
-import { useLocation } from "react-router";
 import { useEffect, useState } from "react";
 
 let hydrating = true;
@@ -15,7 +14,6 @@ export function useHydrated() {
 export function useCodeBlockCopyButton(
   ref: React.RefObject<HTMLElement | null>
 ) {
-  let location = useLocation();
   useEffect(() => {
     let container = ref.current;
     if (!container) return;
@@ -72,5 +70,5 @@ export function useCodeBlockCopyButton(
         window.clearTimeout(props.to);
       }
     };
-  }, [ref, location.pathname]);
+  });
 }
