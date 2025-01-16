@@ -4,6 +4,9 @@
 # /foo/* /bar/* 301
 
 ########################################################################
+
+/new/* https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default
+
 # v7 release redirects from v6 urls
 /en/main                                     /
 /en/main/start/*                             /6.28.0/start/*
@@ -90,4 +93,3 @@
 /core/* https://v5.reactrouter.com/core/*
 /web/* https://v5.reactrouter.com/web/*
 /native/* https://v5.reactrouter.com/native/*
-
