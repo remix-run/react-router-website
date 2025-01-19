@@ -121,7 +121,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             />
             <img
               src="/splash/hero-3d-logo.webp"
-              alt="React Router logo, nine dots in an upward triangle (one on top, two in the middle, three on the bottom) with a path of three highlighted and connected from top to bottom, next to the text React Router"
+              alt="React Router logo, six dots in an upward triangle (one on top, two in the middle, three on the bottom) with a path of three highlighted and connected from top to bottom, next to the text React Router"
               className="aspect-[32/5] w-[360px] md:w-[480px] lg:w-[640px] 2xl:w-[960px]"
             />
           </picture>

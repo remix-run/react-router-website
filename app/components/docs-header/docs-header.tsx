@@ -36,7 +36,7 @@ function LogoLink() {
       }}
     >
       <svg
-        aria-label="React Router logo, nine dots in an upward triangle (one on top, two in the middle, three on the bottom) with a path of three highlighted and connected from top to bottom, next to the text React Router"
+        aria-label="React Router logo, six dots in an upward triangle (one on top, two in the middle, three on the bottom) with a path of three highlighted and connected from top to bottom, next to the text React Router"
         className="h-14 w-40"
       >
         <use href={`${iconsHref}#logo`} />
