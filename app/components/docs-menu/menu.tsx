@@ -22,7 +22,7 @@ export function Menu({ menu }: { menu?: MenuDoc[] }) {
 
   return (
     <nav>
-      <HeaderMenuLink to="changelog">Changelog</HeaderMenuLink>
+      <HeaderMenuLink to="start/changelog">Changelog</HeaderMenuLink>
       {menu.map((category) => (
         <div key={category.attrs.title}>
           <MenuCategory category={category} />
