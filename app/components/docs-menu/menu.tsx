@@ -22,6 +22,7 @@ export function Menu({ menu }: { menu?: MenuDoc[] }) {
 
   return (
     <nav>
+      <HeaderMenuLink to="start/changelog">Changelog</HeaderMenuLink>
       {menu.map((category) => (
         <div key={category.attrs.title}>
           <MenuCategory category={category} />
@@ -131,7 +132,7 @@ function MenuSummary({ children }: { children: React.ReactNode }) {
         sharedClassName,
         "_no-triangle block cursor-pointer select-none",
         "outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-red-brand  dark:focus-visible:ring-gray-100",
-        "hover:bg-gray-50 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-gray-800 dark:active:bg-gray-700"
+        "hover:bg-gray-50 active:bg-gray-100 dark:bg-gray-900 dark:hover:bg-gray-800 dark:active:bg-gray-700"
       )}
     >
       <div className="flex h-5 w-full items-center justify-between font-bold">
@@ -141,26 +142,67 @@ function MenuSummary({ children }: { children: React.ReactNode }) {
   );
 }
 
+function HeaderMenuLink({
+  to,
+  children,
+}: {
+  to: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <LinkWithSpinner
+      to={to}
+      className={(isActive) =>
+        classNames(
+          "relative -mx-4 flex items-center justify-between rounded-md px-4 py-3 font-bold",
+          isActive
+            ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
+            : "hover:bg-gray-50 active:text-red-brand dark:hover:bg-gray-800 dark:active:text-red-brand"
+        )
+      }
+    >
+      {children}
+    </LinkWithSpinner>
+  );
+}
+
 function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
+  return (
+    <LinkWithSpinner
+      to={to}
+      className={(isActive) =>
+        classNames(
+          "relative -mx-2 flex items-center justify-between rounded-md px-4 py-1.5 lg:text-sm",
+          isActive
+            ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
+            : "text-gray-400 hover:text-gray-800 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"
+        )
+      }
+    >
+      {children}
+    </LinkWithSpinner>
+  );
+}
+
+function LinkWithSpinner({
+  to,
+  children,
+  className,
+}: {
+  to: string;
+  children: React.ReactNode;
+  className: (isActive: boolean) => string;
+}) {
   let { isActive, isPending } = useNavigation(to);
   let slowNav = useDelayedValue(isPending);
 
   return (
-    <Link
-      prefetch="intent"
-      to={to}
-      className={classNames(
-        "group relative -mx-2 flex items-center justify-between rounded-md border-transparent px-4 py-1.5 lg:text-sm",
-        isActive
-          ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
-          : "text-gray-400 hover:text-gray-800 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand"
-      )}
-    >
+    <Link prefetch="intent" to={to} className={className(isActive)}>
       {children}
       {slowNav && !isActive && (
         <svg
           aria-hidden
-          className="absolute -left-1 hidden h-4 w-4 animate-spin group-open:block lg:-left-2"
+          className="absolute -left-1 h-4 w-4 animate-spin lg:-left-2"
         >
           <use href={`${iconsHref}#arrow-path`} />
         </svg>
