@@ -9,6 +9,7 @@ const routes: RouteConfig = [
   route("", "pages/docs-layout.tsx", { id: "docs" }, [
     route("home", "pages/doc.tsx", { id: "home" }),
     route("*", "pages/doc.tsx"),
+    route("_sidebar", "api/sidebar.ts"),
   ]),
 
   route("/:ref", "pages/docs-index.tsx", { id: "docs-index" }),

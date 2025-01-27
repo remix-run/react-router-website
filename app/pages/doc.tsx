@@ -3,7 +3,7 @@ import { CACHE_CONTROL } from "~/http";
 import { seo } from "~/seo";
 import semver from "semver";
 
-import type { HeadersArgs } from "react-router";
+import { type HeadersArgs } from "react-router";
 
 import { getDocTitle, getDocsSearch, getRobots } from "~/ui/meta";
 import { DocLayout } from "~/components/doc-layout";
@@ -39,6 +39,7 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
     if (!doc) {
       throw new Response("Not Found", { status: 404 });
     }
+
     return { doc };
   } catch (_) {
     throw new Response("Not Found", { status: 404 });
