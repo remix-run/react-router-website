@@ -13,7 +13,7 @@ import semver from "semver";
 import { useRef } from "react";
 import { useCodeBlockCopyButton } from "~/ui/utils";
 
-export async function loader({ params }: Route.LoaderArgs) {
+export let loader = async ({ params }: Route.LoaderArgs) => {
   let splat = params["*"];
   let firstSegment = splat?.split("/")[0];
   let refParam = params.ref
@@ -32,7 +32,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   ]);
 
   return { menu, header };
-}
+};
 
 export default function DocsLayout({ loaderData }: Route.ComponentProps) {
   const { menu } = loaderData;
