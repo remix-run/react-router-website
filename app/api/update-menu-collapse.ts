@@ -1,0 +1,53 @@
+import { setMenuCollapseState } from "~/modules/menu-collapse.server";
+import type { Route } from "./+types/update-menu-collapse";
+import type { Info as RootInfo } from "../+types/root";
+import { useRouteLoaderData, useSubmit } from "react-router";
+import invariant from "tiny-invariant";
+import { useCallback } from "react";
+
+export async function action({ request }: Route.ActionArgs) {
+  let formData = await request.formData();
+
+  let category = formData.get("category");
+  if (!category || typeof category !== "string") {
+    return new Response("Name is required", { status: 400 });
+  }
+
+  let open = formData.get("open");
+  if (open !== "true" && open !== "false") {
+    return new Response("Open must be true or false", { status: 400 });
+  }
+
+  let parsedOpen = open === "true";
+
+  setMenuCollapseState(category, parsedOpen);
+  return parsedOpen;
+}
+
+export function useMenuCollapse(category?: string) {
+  const submit = useSubmit();
+  const rootLoaderData = useRouteLoaderData<RootInfo["loaderData"]>("root");
+
+  invariant(rootLoaderData, "No root loader data found");
+
+  const isCollapsed = category
+    ? rootLoaderData.menuCollapseState[category] ?? true
+    : true;
+
+  const submitMenuCollapse = useCallback(
+    (open: boolean) => {
+      if (!category) return;
+      submit(
+        { category, open: String(open) },
+        {
+          navigate: false,
+          method: "post",
+          action: "/_update-menu-collapse",
+        }
+      );
+    },
+    [category, submit]
+  );
+
+  return [isCollapsed, submitMenuCollapse] as const;
+}
