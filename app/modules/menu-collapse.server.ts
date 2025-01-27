@@ -12,6 +12,7 @@ type MenuCollapseState = {
 
 let storage = createCookieSessionStorage<MenuCollapseState>({
   cookie: {
+    secrets: ["doesn't matter it's just menu collapse state"],
     name: "_menu-collapse-state",
     maxAge: 60 * 60 * 24 * 365,
     httpOnly: true,

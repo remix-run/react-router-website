@@ -91,19 +91,15 @@ function MenuCategoryDetails({
   slug,
   children,
 }: MenuCategoryDetailsType) {
-  const [isMenuCollapsed, submitMenuCollapse] = useMenuCollapse(slug!);
+  const [isOpen, submitMenuCollapse] = useMenuCollapse(slug!);
 
+  // Auto open the details element if on the active path
   let { isActive } = useNavigation(slug);
-
-  // By default only the active path is open
-  const [isOpen, setIsOpen] = React.useState(isMenuCollapsed);
-
-  // Auto open the details element, necessary when navigating from the index page
   React.useEffect(() => {
     if (isActive) {
-      setIsOpen(true);
+      submitMenuCollapse(true);
     }
-  }, [isActive]);
+  }, [isActive, submitMenuCollapse]);
 
   return (
     <details
@@ -111,11 +107,6 @@ function MenuCategoryDetails({
       open={isOpen}
       onToggle={(e) => {
         const open = e.currentTarget.open;
-        // Synchronize the DOM's state with React state to prevent the
-        // details element from being closed after navigation and re-evaluation
-        // of useIsActivePath
-        setIsOpen(open);
-
         submitMenuCollapse(open);
       }}
     >

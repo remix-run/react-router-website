@@ -3,7 +3,7 @@ import type { Route } from "./+types/update-menu-collapse";
 import type { Info as RootInfo } from "../+types/root";
 import { useRouteLoaderData, useSubmit } from "react-router";
 import invariant from "tiny-invariant";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 export async function action({ request }: Route.ActionArgs) {
   let formData = await request.formData();
@@ -25,19 +25,22 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export function useMenuCollapse(category?: string) {
-  const submit = useSubmit();
   const rootLoaderData = useRouteLoaderData<RootInfo["loaderData"]>("root");
-
   invariant(rootLoaderData, "No root loader data found");
 
-  const isCollapsed = category
+  const isMenuOpen = category
     ? rootLoaderData.menuCollapseState[category] ?? true
     : true;
+  const [isOpen, setIsOpen] = useState(isMenuOpen);
+  const submit = useSubmit();
 
   const submitMenuCollapse = useCallback(
     (open: boolean) => {
+      // fire and forget, assume that the submit will succeed and just update the ephemeral state
+      setIsOpen(open);
+
       if (!category) return;
-      submit(
+      return submit(
         { category, open: String(open) },
         {
           navigate: false,
@@ -49,5 +52,5 @@ export function useMenuCollapse(category?: string) {
     [category, submit]
   );
 
-  return [isCollapsed, submitMenuCollapse] as const;
+  return [isOpen, submitMenuCollapse] as const;
 }
