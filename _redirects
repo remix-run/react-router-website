@@ -5,7 +5,7 @@
 
 ########################################################################
 
-/new/* https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default
+/new/* https://stackblitz.com/github/remix-run/react-router-templates/tree/main/minimal
 
 # v7 release redirects from v6 urls
 /en/main                                     /
