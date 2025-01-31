@@ -12,14 +12,14 @@ export function useHydrated() {
 }
 
 export function useCodeBlockCopyButton(
-  ref: React.RefObject<HTMLElement | null>
+  ref: React.RefObject<HTMLElement | null>,
 ) {
   useEffect(() => {
     let container = ref.current;
     if (!container) return;
 
     let codeBlocks = container.querySelectorAll(
-      "[data-code-block][data-lang]:not([data-nocopy])"
+      "[data-code-block][data-lang]:not([data-nocopy])",
     );
     let buttons = new Map<
       HTMLButtonElement,

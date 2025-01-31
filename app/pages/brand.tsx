@@ -142,7 +142,7 @@ function LogoBox({
       <div
         className={classNames(
           `flex aspect-[16/9] items-center justify-center rounded-md`,
-          background[theme]
+          background[theme],
         )}
       >
         <img

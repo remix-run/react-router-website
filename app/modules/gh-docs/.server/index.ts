@@ -41,7 +41,7 @@ export function getRepoDoc(ref: string, slug: string) {
 export async function getRepoReferenceDoc(
   ref: string,
   pkgName: string,
-  qualifiedName: string
+  qualifiedName: string,
 ) {
   const api = await getReferenceAPI(REPO, ref);
   return api.getDoc(pkgName, qualifiedName);

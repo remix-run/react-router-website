@@ -66,14 +66,14 @@ global.menuCache ??= new LRUCache<string, MenuDoc[]>({
 export async function getMenu(
   repo: string,
   ref: string,
-  lang: string
+  lang: string,
 ): Promise<MenuDoc[] | undefined> {
   return menuCache.fetch(`${repo}:${ref}`);
 }
 
 function parseAttrs(
   md: string,
-  filename: string
+  filename: string,
 ): { content: string; attrs: Doc["attrs"] } {
   let { data, content } = parseYamlHeader(md);
   return {
@@ -134,7 +134,7 @@ function createTableOfContentsFromHeadings(html: string) {
 export async function getDoc(
   repo: string,
   ref: string,
-  slug: string
+  slug: string,
 ): Promise<Doc | undefined> {
   let key = `${repo}:${ref}:${slug}`;
   let doc = await docCache.fetch(key);

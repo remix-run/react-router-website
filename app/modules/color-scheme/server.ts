@@ -43,7 +43,7 @@ export let action: ActionFunction = async ({ request }) => {
 };
 
 export function safeRedirect(
-  to: FormDataEntryValue | string | null | undefined
+  to: FormDataEntryValue | string | null | undefined,
 ) {
   if (!to || typeof to !== "string") {
     return "/";

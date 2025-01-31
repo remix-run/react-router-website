@@ -13,7 +13,7 @@ import tar from "tar";
  */
 export async function getRepoTarballStream(
   repo: string,
-  ref: string
+  ref: string,
 ): Promise<NodeJS.ReadableStream> {
   if (ref === "local") {
     return getLocalTarballStream();
@@ -41,12 +41,12 @@ export async function getRepoTarballStream(
 export async function getLocalTarballStream(): Promise<NodeJS.ReadableStream> {
   invariant(
     process.env.LOCAL_REPO_RELATIVE_PATH,
-    "Expected LOCAL_REPO_RELATIVE_PATH"
+    "Expected LOCAL_REPO_RELATIVE_PATH",
   );
   let localDocsPath = path.join(
     process.cwd(),
     process.env.LOCAL_REPO_RELATIVE_PATH,
-    "docs"
+    "docs",
   );
   await tar.c({ gzip: true, file: ".local.tgz" }, [localDocsPath]);
   return fs.createReadStream(".local.tgz");

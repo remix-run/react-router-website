@@ -22,7 +22,7 @@ export interface ProcessorOptions {
 let processor: Awaited<ReturnType<typeof getProcessor>>;
 export async function processMarkdown(
   content: string,
-  options?: ProcessorOptions
+  options?: ProcessorOptions,
 ) {
   processor = processor || (await getProcessor(options));
   let { attributes, body: raw } = parseFrontMatter(content);
@@ -65,7 +65,7 @@ export async function getProcessor(options?: ProcessorOptions) {
 
 type InternalPlugin<
   Input extends string | Unist.Node | undefined,
-  Output
+  Output,
 > = Unified.Plugin<[ProcessorOptions?], Input, Output>;
 
 export async function loadPlugins() {
@@ -75,7 +75,7 @@ export async function loadPlugins() {
   ]);
 
   const stripLinkExtPlugin: InternalPlugin<UnistNode.Root, UnistNode.Root> = (
-    options = {}
+    options = {},
   ) => {
     return async function transformer(tree: UnistNode.Root) {
       visit(tree, "link", (node, index, parent) => {
@@ -107,7 +107,7 @@ export async function loadPlugins() {
       theme = theme || toShikiTheme(themeJson as any);
       highlighter = highlighter || (await getHighlighter({ themes: [theme] }));
       let fgColor = convertFakeHexToCustomProp(
-        highlighter.getForegroundColor(theme.name) || ""
+        highlighter.getForegroundColor(theme.name) || "",
       );
       let langs: Shiki.Lang[] = [
         "js",
@@ -174,7 +174,7 @@ export async function loadPlugins() {
                         children: [content],
                       }
                     : content;
-                }
+                },
               );
 
               children.push({
@@ -205,7 +205,7 @@ export async function loadPlugins() {
                 },
                 children,
               };
-            }
+            },
           );
 
           let nodeValue = {

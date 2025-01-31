@@ -2,7 +2,7 @@ import * as React from "react";
 import { useNavigate } from "react-router";
 
 function useDelegatedReactRouterLinks(
-  nodeRef: React.RefObject<HTMLElement | null>
+  nodeRef: React.RefObject<HTMLElement | null>,
 ) {
   let navigate = useNavigate();
 

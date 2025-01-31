@@ -28,7 +28,7 @@ export function VersionSelect() {
         title={label}
         className={classNames(
           `_no-triangle relative flex h-[40px] w-24 cursor-pointer list-none items-center justify-between gap-3 overflow-hidden whitespace-nowrap rounded-full px-3`,
-          className
+          className,
         )}
       >
         <div>{label}</div>
@@ -100,7 +100,7 @@ function RefLink({ to, children }: { to: string; children: React.ReactNode }) {
           className,
           "after:absolute after:right-4 after:top-1 after:block after:-rotate-45 after:opacity-50 after:content-['→']",
           // Same as !isActive styles on <Link> below
-          "hover:bg-gray-50 active:text-red-brand dark:text-gray-200 dark:hover:bg-gray-700 dark:active:text-red-brand"
+          "hover:bg-gray-50 active:text-red-brand dark:text-gray-200 dark:hover:bg-gray-700 dark:active:text-red-brand",
         )}
       >
         {children}
@@ -114,7 +114,7 @@ function RefLink({ to, children }: { to: string; children: React.ReactNode }) {
         className,
         isActive
           ? "font-bold text-red-brand before:bg-red-brand"
-          : "before:bg-transparent hover:bg-gray-50 active:text-red-brand dark:text-gray-200 dark:hover:bg-gray-700 dark:active:text-red-brand"
+          : "before:bg-transparent hover:bg-gray-50 active:text-red-brand dark:text-gray-200 dark:hover:bg-gray-700 dark:active:text-red-brand",
       )}
       to={to}
     >
