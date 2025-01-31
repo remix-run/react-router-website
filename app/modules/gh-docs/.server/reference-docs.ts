@@ -5,7 +5,6 @@ import type { JSONOutput } from "typedoc";
 import { processMarkdown } from "~/modules/gh-docs/.server/md";
 
 import type { Doc, MenuDoc } from "./docs";
-import { format } from "path";
 
 declare global {
   var referenceDocCache: LRUCache<string, JSONOutput.ProjectReflection>;

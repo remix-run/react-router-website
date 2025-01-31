@@ -40,6 +40,7 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
       throw new Response("Not Found", { status: 404 });
     }
     return { doc };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (_) {
     throw new Response("Not Found", { status: 404 });
   }
