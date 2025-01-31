@@ -9,7 +9,7 @@ if (env !== "test" && !GH_TOKEN) {
     throw new Error("No GH_TOKEN provided");
   }
   console.warn(
-    "\nNo GH_TOKEN provided. You can increase the rate limit from 60/hr to 1000/hr by adding a token to your .env file.\n"
+    "\nNo GH_TOKEN provided. You can increase the rate limit from 60/hr to 1000/hr by adding a token to your .env file.\n",
   );
 }
 

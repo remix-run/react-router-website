@@ -70,7 +70,7 @@ let ColorSchemeButton = React.forwardRef<
         "flex w-full items-center gap-4 px-4 py-1",
         colorScheme === props.value
           ? "text-red-brand"
-          : "hover:bg-gray-50 active:text-red-brand dark:hover:bg-gray-700 dark:active:text-red-brand"
+          : "hover:bg-gray-50 active:text-red-brand dark:hover:bg-gray-700 dark:active:text-red-brand",
       )}
     >
       <svg className="h-[18px] w-[18px]">

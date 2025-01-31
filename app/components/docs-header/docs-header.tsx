@@ -87,7 +87,7 @@ function HeaderSvgLink({
       href={href}
       className={classNames(
         `hidden text-gray-400 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 md:block`,
-        className
+        className,
       )}
       title={title}
     >

@@ -19,10 +19,10 @@ export let loader = async ({ params }: Route.LoaderArgs) => {
   let refParam = params.ref
     ? params.ref
     : firstSegment === "dev" ||
-      firstSegment === "local" ||
-      semver.valid(firstSegment)
-    ? firstSegment
-    : undefined;
+        firstSegment === "local" ||
+        semver.valid(firstSegment)
+      ? firstSegment
+      : undefined;
 
   let ref = refParam || "main";
 
@@ -61,7 +61,7 @@ export default function DocsLayout({ loaderData }: Route.ComponentProps) {
             "[&_*:focus]:scroll-mt-[8rem] lg:[&_*:focus]:scroll-mt-[5rem]",
             // Account for the left navbar
             "min-h-[80vh] lg:ml-3 lg:w-[calc(100%-var(--nav-width))]",
-            "flex flex-col lg:pl-6 xl:pl-10 2xl:pl-12"
+            "flex flex-col lg:pl-6 xl:pl-10 2xl:pl-12",
           )}
         >
           <Outlet />

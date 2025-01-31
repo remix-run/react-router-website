@@ -9,10 +9,10 @@ export function getDocTitle(api: DocsData, title: string) {
     currentGitHubRef === releaseBranch
       ? ""
       : branches.includes(currentGitHubRef)
-      ? `(${currentGitHubRef} branch)`
-      : currentGitHubRef.startsWith("v")
-      ? currentGitHubRef
-      : `v${currentGitHubRef}`;
+        ? `(${currentGitHubRef} branch)`
+        : currentGitHubRef.startsWith("v")
+          ? currentGitHubRef
+          : `v${currentGitHubRef}`;
 
   return `${title} ${titleRef}`;
 }

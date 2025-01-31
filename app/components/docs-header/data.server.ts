@@ -9,7 +9,7 @@ export type HeaderData = Awaited<ReturnType<typeof getHeaderData>>;
 export async function getHeaderData(
   lang: string,
   ref: string,
-  refParam?: string
+  refParam?: string,
 ) {
   let githubRef = ref;
   let branchesInMenu = ["main", "dev"];

@@ -125,7 +125,7 @@ function V7() {
             <h2
               className={classNames(
                 className,
-                "text-2xl font-bold tracking-tight group-hover:underline"
+                "text-2xl font-bold tracking-tight group-hover:underline",
               )}
             >
               {title}
@@ -262,7 +262,7 @@ function V6() {
           <h2
             className={classNames(
               className,
-              "text-2xl font-bold tracking-tight group-hover:underline"
+              "text-2xl font-bold tracking-tight group-hover:underline",
             )}
           >
             {title}

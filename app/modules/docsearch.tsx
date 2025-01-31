@@ -62,7 +62,7 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
       onOpen,
       searchButtonRef,
     }),
-    [onOpen, searchButtonRef]
+    [onOpen, searchButtonRef],
   );
 
   return (
@@ -75,7 +75,7 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
               onClose={onClose}
               {...docSearchProps}
             />,
-            document.body
+            document.body,
           )
         : null}
     </DocSearchContext>

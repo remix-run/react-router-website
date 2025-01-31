@@ -60,7 +60,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
     return [[node.qualifiedName, { node, id }]];
   };
   let symbolMapByQualifiedName = new Map<string, Qualified>(
-    Object.keys(api.symbolIdMap).map(mapper).flat(1)
+    Object.keys(api.symbolIdMap).map(mapper).flat(1),
   );
 
   function getSymbol(qualifiedName: string) {
@@ -85,21 +85,21 @@ export async function getReferenceAPI(repo: string, ref: string) {
     }
     if (!symbol) {
       symbol = symbolMapByQualifiedName.get(
-        qualifiedName.replace(/^(unstable|unsafe|internal)_/, "")
+        qualifiedName.replace(/^(unstable|unsafe|internal)_/, ""),
       );
     }
     return symbol;
   }
 
   function getLink(
-    _qualifiedName: string | number | JSONOutput.ReflectionSymbolId | undefined
+    _qualifiedName: string | number | JSONOutput.ReflectionSymbolId | undefined,
   ) {
     let qualifiedName =
       (typeof _qualifiedName === "string"
         ? _qualifiedName
         : typeof _qualifiedName === "number"
-        ? api.symbolIdMap[_qualifiedName].qualifiedName
-        : _qualifiedName?.qualifiedName) ?? "";
+          ? api.symbolIdMap[_qualifiedName].qualifiedName
+          : _qualifiedName?.qualifiedName) ?? "";
     let symbol = getSymbol(qualifiedName);
     if (!symbol) {
       // console.error("No symbol found for", qualifiedName);
@@ -107,7 +107,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
     }
     // find the package the qualifiedName belongs to
     let pkg = api.children?.find((child) =>
-      child.children?.some((child) => child.name === qualifiedName)
+      child.children?.some((child) => child.name === qualifiedName),
     );
     if (!pkg) {
       let split = qualifiedName.split(".");
@@ -116,7 +116,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
         popped.push(split.pop());
         const splitName = split.join(".");
         pkg = api.children?.find((child) =>
-          child.children?.some((child) => child.name === splitName)
+          child.children?.some((child) => child.name === splitName),
         );
       }
       if (pkg) {
@@ -154,7 +154,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
   async function getDoc(
     pkgName: string,
     qualifiedName: string,
-    shouldProcessMarkdown = true
+    shouldProcessMarkdown = true,
   ): Promise<Doc | null> {
     let pkg = getPackage(pkgName);
     let symbol = getSymbol(qualifiedName);
@@ -165,17 +165,17 @@ export async function getReferenceAPI(repo: string, ref: string) {
       pkg.children?.find(
         (child) =>
           child.name === "UNSAFE_" + qualifiedName ||
-          child.name === "unsafe_" + qualifiedName
+          child.name === "unsafe_" + qualifiedName,
       ) ||
       pkg.children?.find(
         (child) =>
           child.name === "UNSTABLE_" + qualifiedName ||
-          child.name === "unstable_" + qualifiedName
+          child.name === "unstable_" + qualifiedName,
       ) ||
       pkg.children?.find(
         (child) =>
           child.name === "INTERNAL_" + qualifiedName ||
-          child.name === "internal_" + qualifiedName
+          child.name === "internal_" + qualifiedName,
       ) ||
       null;
 
@@ -256,7 +256,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
   }
 
   function declarationToMarkdown(
-    declaration: JSONOutput.DeclarationReflection
+    declaration: JSONOutput.DeclarationReflection,
   ) {
     let md = "";
     switch (declaration.kind) {
@@ -409,7 +409,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
         return `${formatType(type.elementType)}[]`;
       case "conditional":
         return `${formatType(type.checkType)} ? ${formatType(
-          type.extendsType
+          type.extendsType,
         )} : ${formatType(type.falseType)}`;
       case "indexedAccess":
         return `${formatType(type.objectType)}[${formatType(type.indexType)}]`;
@@ -426,7 +426,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
         return JSON.stringify(type.value);
       case "mapped":
         return `{ [${type.parameter} in ${formatType(
-          type.parameterType
+          type.parameterType,
         )}]: ${formatType(type.templateType)} }`;
       case "namedTupleMember":
         return `${type.name}: ${formatType(type.element)}`;
@@ -471,7 +471,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
   function formatTypeDeclaration(
     declaration:
       | JSONOutput.ReferenceReflection
-      | JSONOutput.DeclarationReflection
+      | JSONOutput.DeclarationReflection,
   ) {
     let formatted = "{ ";
     if (declaration.children) {
@@ -487,7 +487,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
   }
 
   function formatSignature(
-    sig: JSONOutput.SignatureReflection | JSONOutput.TypeParameterReflection
+    sig: JSONOutput.SignatureReflection | JSONOutput.TypeParameterReflection,
   ) {
     switch (sig.kind) {
       case ReflectionKind.CallSignature: {
@@ -534,7 +534,7 @@ export async function getReferenceAPI(repo: string, ref: string) {
   }
 
   function inlineTagToMarkdown(
-    inlineTag: JSONOutput.InlineTagDisplayPart
+    inlineTag: JSONOutput.InlineTagDisplayPart,
   ): string {
     switch (inlineTag.tag) {
       case "@link":

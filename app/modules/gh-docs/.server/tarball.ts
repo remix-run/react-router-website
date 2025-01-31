@@ -11,7 +11,7 @@ type ProcessFile = ({
 
 export function createTarFileProcessor(
   stream: NodeJS.ReadableStream,
-  pattern: RegExp = /docs\/(.+)\.md$/
+  pattern: RegExp = /docs\/(.+)\.md$/,
 ) {
   return (processFile: ProcessFile) =>
     processFilesFromRepoTarball(stream, pattern, processFile);
@@ -20,7 +20,7 @@ export function createTarFileProcessor(
 async function processFilesFromRepoTarball(
   stream: NodeJS.ReadableStream,
   pattern: RegExp = /docs\/(.+)\.md$/,
-  processFile: ProcessFile
+  processFile: ProcessFile,
 ): Promise<void> {
   return new Promise((accept, reject) => {
     stream

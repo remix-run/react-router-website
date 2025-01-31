@@ -52,7 +52,7 @@ function PackageLink({
     <span
       className={classNames(
         className,
-        "font-bold text-red-brand before:bg-red-brand"
+        "font-bold text-red-brand before:bg-red-brand",
       )}
     >
       {name}
@@ -63,7 +63,7 @@ function PackageLink({
       relative="path"
       className={classNames(
         className,
-        "hover:bg-gray-50 active:text-red-brand dark:text-gray-200 dark:hover:bg-gray-700 dark:active:text-red-brand"
+        "hover:bg-gray-50 active:text-red-brand dark:text-gray-200 dark:hover:bg-gray-700 dark:active:text-red-brand",
       )}
     >
       {name}

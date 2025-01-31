@@ -8,7 +8,7 @@ describe("handleRedirects", () => {
   beforeAll(async () => {
     vi.mock(
       "../../../../_redirects?raw",
-      async () => await import("./__fixtures__/_redirects?raw")
+      async () => await import("./__fixtures__/_redirects?raw"),
     );
     redirects = await getRedirects();
   });
@@ -40,7 +40,7 @@ describe("handleRedirects", () => {
   it("redirects splats to other domains", async () => {
     let response = await checkUrl("/core/one/two", redirects);
     expect(response?.headers.get("location")).toBe(
-      "https://v5.reactrouter.com/core/one/two"
+      "https://v5.reactrouter.com/core/one/two",
     );
   });
 });

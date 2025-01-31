@@ -18,21 +18,21 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
   let refParam = params.ref
     ? params.ref
     : firstSegment === "dev" ||
-      firstSegment === "local" ||
-      semver.valid(firstSegment)
-    ? firstSegment
-    : undefined;
+        firstSegment === "local" ||
+        semver.valid(firstSegment)
+      ? firstSegment
+      : undefined;
 
   let ref = refParam || "main";
 
   let slug = url.pathname.endsWith("/changelog")
     ? "CHANGELOG"
     : url.pathname.endsWith("/home")
-    ? `docs/index`
-    : refParam
-    ? // remove the refParam
-      `docs/${params["*"].replace(`${refParam}/`, "")}`
-    : `docs/${params["*"]}`;
+      ? `docs/index`
+      : refParam
+        ? // remove the refParam
+          `docs/${params["*"].replace(`${refParam}/`, "")}`
+        : `docs/${params["*"]}`;
 
   try {
     let doc = await getRepoDoc(ref, slug);

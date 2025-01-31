@@ -12,14 +12,14 @@ export async function getTags(repo: string) {
 
 export function getLatestVersion(tags: string[]) {
   return tags.filter((tag) =>
-    semver.satisfies(tag, "*", { includePrerelease: false })
+    semver.satisfies(tag, "*", { includePrerelease: false }),
   )[0];
 }
 
 export function getLatestV6Version(tags: string[]) {
   return (
     tags.filter((tag) =>
-      semver.satisfies(tag, "6.x", { includePrerelease: false })
+      semver.satisfies(tag, "6.x", { includePrerelease: false }),
     )[0] ?? "v6"
   );
 }
@@ -49,7 +49,7 @@ export async function getAllReleases(
   repo: string,
   primaryPackage: string,
   page = 1,
-  releases: string[] = []
+  releases: string[] = [],
 ): Promise<string[]> {
   console.log("Fetching fresh releases, page", page);
   const { data, headers, status } = await octokit.rest.repos.listReleases({
@@ -77,7 +77,7 @@ export async function getAllReleases(
             // After changesets, we look for react-router@6.4.0
             release.tag_name.split("@")[0] === primaryPackage ||
             // pre-changesets, tag_name started with "v"
-            release.tag_name.startsWith("v6")
+            release.tag_name.startsWith("v6"),
         );
       })
       .map((release) => {
@@ -88,7 +88,7 @@ export async function getAllReleases(
             : // with changesets its like react-router@6.4.0
               release.tag_name.split("@")[1] || "unknown"
         );
-      })
+      }),
   );
 
   let parsed = parseLinkHeader(headers.link);
@@ -98,7 +98,7 @@ export async function getAllReleases(
       repo,
       primaryPackage,
       page + 1,
-      releases
+      releases,
     );
   }
 

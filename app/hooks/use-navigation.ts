@@ -13,7 +13,7 @@ export function useNavigation(to?: string, end?: boolean) {
 
   let navigation = Object.assign(
     { isActive: false, isPending: false },
-    navigation_
+    navigation_,
   );
 
   if (toPathname) {

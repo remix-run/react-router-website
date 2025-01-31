@@ -17,7 +17,7 @@ if (DEVELOPMENT) {
   const viteDevServer = await import("vite").then((vite) =>
     vite.createServer({
       server: { middlewareMode: true },
-    })
+    }),
   );
   app.use(viteDevServer.middlewares);
   app.use(async (req, res, next) => {
@@ -35,7 +35,7 @@ if (DEVELOPMENT) {
   console.log("Starting production server");
   app.use(
     "/assets",
-    express.static("build/client/assets", { immutable: true, maxAge: "1y" })
+    express.static("build/client/assets", { immutable: true, maxAge: "1y" }),
   );
   app.use(
     // browser 1 hour, server 1 year
@@ -43,10 +43,10 @@ if (DEVELOPMENT) {
       setHeaders: (res) => {
         res.setHeader(
           "Cache-Control",
-          "public, max-age=3600, s-maxage=31536000"
+          "public, max-age=3600, s-maxage=31536000",
         );
       },
-    })
+    }),
   );
   app.use(await import(BUILD_PATH).then((mod) => mod.app));
 }
