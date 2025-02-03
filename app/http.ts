@@ -7,11 +7,6 @@ export const CACHE_CONTROL = {
   // github
   doc: "public, max-age=300, stale-while-revalidate=604800",
 
-  // cache "forever", our deploy scripts mark the entire cache as stale so this
-  // will be expired between deploys, good for pages that don't rely on any
-  // loader data, just the source code components
-  deploy: "public, max-age=31536000",
-
   // don't cache at all
   none: "no-store, no-cache, must-revalidate, max-age=0",
 };

@@ -38,7 +38,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export function headers() {
   return {
     // default all caching to deployments
-    "Cache-Control": CACHE_CONTROL.deploy,
+    "Cache-Control": CACHE_CONTROL.doc,
     Vary: "Cookie",
   };
 }
