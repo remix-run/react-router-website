@@ -135,6 +135,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             <Link
               key={title}
               to={to}
+              prefetch="intent"
               className={
                 "flex gap-x-2 border border-gray-200 px-9 py-6 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:text-gray-700" +
                 (i === 0
@@ -190,6 +191,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             <Link
               key={title}
               to={linkTo}
+              prefetch="intent"
               className="flex flex-col justify-between gap-y-6 rounded-lg border border-[#D9D9D9] p-8 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700"
             >
               <div className="flex flex-col gap-y-4">
