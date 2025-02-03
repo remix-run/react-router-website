@@ -13,6 +13,8 @@ import semver from "semver";
 import { useRef } from "react";
 import { useCodeBlockCopyButton } from "~/ui/utils";
 
+import docsCss from "~/styles/docs.css?url";
+
 export let loader = async ({ params }: Route.LoaderArgs) => {
   let splat = params["*"];
   let firstSegment = splat?.split("/")[0];
@@ -42,6 +44,7 @@ export default function DocsLayout({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="[--header-height:theme(spacing.16)] [--nav-width:theme(spacing.72)] lg:m-auto lg:max-w-[90rem]">
+      <link rel="stylesheet" href={docsCss} />
       <div className="sticky top-0 z-20">
         <Header />
         <NavMenuMobile>
@@ -61,7 +64,7 @@ export default function DocsLayout({ loaderData }: Route.ComponentProps) {
             "[&_*:focus]:scroll-mt-[8rem] lg:[&_*:focus]:scroll-mt-[5rem]",
             // Account for the left navbar
             "min-h-[80vh] lg:ml-3 lg:w-[calc(100%-var(--nav-width))]",
-            "flex flex-col lg:pl-6 xl:pl-10 2xl:pl-12",
+            "flex flex-col lg:pl-6 xl:pl-10 2xl:pl-12"
           )}
         >
           <Outlet />
