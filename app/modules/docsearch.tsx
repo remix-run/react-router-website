@@ -20,6 +20,13 @@ let docSearchProps = {
   apiKey: "b50c5d7d9f4610c9785fa945fdc97476",
 } satisfies DocSearchProps;
 
+// TODO:
+// - Add "version" to meta tag for v6 docs (~app/ui/meta.ts)
+// - Allow v6 docs to be crawled (~app/root.tsx)
+// - pass version to searchParameters facetFilters via prop
+//
+// NOTE: facet has to be set in the algolia dashboard under "Configuration" | "Filtering and Faceting" | "Facets"
+
 const DocSearchContext = createContext<{
   onOpen: () => void;
   searchButtonRef: React.RefObject<HTMLButtonElement | null>;
@@ -32,7 +39,13 @@ const DocSearchContext = createContext<{
  * If you need a DocSearch button to appear, use the DocSearch component
  * Modified from https://github.com/algolia/docsearch/blob/main/packages/docsearch-react/src/DocSearch.tsx
  */
-export function DocSearch({ children }: { children: React.ReactNode }) {
+export function DocSearch({
+  children,
+  version = "v7",
+}: {
+  children: React.ReactNode;
+  version?: "v7" | "v6";
+}) {
   const searchButtonRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -62,7 +75,7 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
       onOpen,
       searchButtonRef,
     }),
-    [onOpen, searchButtonRef],
+    [onOpen, searchButtonRef]
   );
 
   return (
@@ -73,9 +86,12 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
             <OriginalDocSearchModal
               initialScrollY={window.scrollY}
               onClose={onClose}
+              searchParameters={{
+                facetFilters: [`version:${version}`],
+              }}
               {...docSearchProps}
             />,
-            document.body,
+            document.body
           )
         : null}
     </DocSearchContext>

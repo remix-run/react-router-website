@@ -29,6 +29,8 @@ export function getRobots(isProductionHost: boolean, parentData: DocsData) {
   //
   // `isMainBranch` is true with "main" and an undefined `refParam`, so we have
   // to explicitly check for the param to know if we shouldn't index
+  //
+  // TODO: I believe we need the v6 docs to be able to be indexed for docsearch crawler to find them. I could be wrong
   if (isProductionHost && isMainBranch && refParam !== "main") {
     robots = "index,follow";
   }
@@ -40,8 +42,14 @@ export function getRobots(isProductionHost: boolean, parentData: DocsData) {
 }
 
 export function getDocsSearch(refParam?: string) {
+  console.log({ refParam });
   return [
     { name: "docsearch:language", content: "en" },
+    // TODO: this `refParam` for the v6 docs doesn't always exist
+    // For example, this valid URL is what most users are hitting: http://localhost:3000/6.29.0/start/overview
+    // this results in `refParam` being `undefined`
+    //
+    // Another thing to decide -- do we just want to do "v6" vs "v7", or do we want want search to be super version specific?
     { name: "docsearch:version", content: refParam || "v7" },
   ];
 }
