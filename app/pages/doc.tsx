@@ -51,7 +51,7 @@ export function headers({ parentHeaders }: HeadersArgs) {
   return parentHeaders;
 }
 
-export function meta({ error, data, matches }: Route.MetaArgs) {
+export function meta({ error, data, matches, location }: Route.MetaArgs) {
   if (error || !data.doc) {
     return [{ title: "Not Found" }];
   }
@@ -66,7 +66,13 @@ export function meta({ error, data, matches }: Route.MetaArgs) {
     openGraph: { title },
   });
 
-  let { docSearchVersion } = doc.header;
+  // a bit hacky but avoids double indexing v6 docs
+  //
+  // ✅ "/6.29.0/start/examples"
+  // ❌ "/en/6.29.0/start/examples"
+  let docSearchVersion = location.pathname.startsWith("/en/")
+    ? null
+    : doc.header.docSearchVersion;
 
   return [
     ...meta,
