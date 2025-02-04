@@ -70,9 +70,11 @@ export function meta({ error, data, matches, location }: Route.MetaArgs) {
   //
   // ✅ "/6.29.0/start/examples"
   // ❌ "/en/6.29.0/start/examples"
-  let docSearchVersion = location.pathname.startsWith("/en/")
-    ? null
-    : doc.header.docSearchVersion;
+  // let docSearchVersion = location.pathname.startsWith("/en/")
+  //   ? null
+  //   : doc.header.docSearchVersion;
+
+  let docSearchVersion = doc.header.docSearchVersion;
 
   return [
     ...meta,
