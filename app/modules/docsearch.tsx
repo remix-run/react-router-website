@@ -7,12 +7,14 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
+import { useMatches } from "react-router";
 import type { DocSearchProps } from "@docsearch/react";
 import {
   DocSearchModal as OriginalDocSearchModal,
   DocSearchButton as OriginalDocSearchButton,
   useDocSearchKeyboardEvents,
 } from "@docsearch/react";
+import type { HeaderData } from "~/components/docs-header/data.server";
 
 let docSearchProps = {
   appId: "RB6LOUCOL0",
@@ -65,6 +67,8 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
     [onOpen, searchButtonRef],
   );
 
+  const version = useDocSearchFacetVersion();
+
   return (
     <DocSearchContext value={contextValue}>
       {children}
@@ -73,6 +77,11 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
             <OriginalDocSearchModal
               initialScrollY={window.scrollY}
               onClose={onClose}
+              // NOTE: to use the facet for search, it has to be set in the algolia dashboard:
+              // "Configuration" > "Filtering and Faceting" > "Facets"
+              searchParameters={{
+                facetFilters: [`version:${version}`],
+              }}
               {...docSearchProps}
             />,
             document.body,
@@ -92,4 +101,23 @@ export function DocSearchButton() {
   const { onOpen, searchButtonRef } = docSearchContext;
 
   return <OriginalDocSearchButton ref={searchButtonRef} onClick={onOpen} />;
+}
+
+/*
+ * Returns the version to use for the DocSearch facet
+ */
+function useDocSearchFacetVersion() {
+  let matches = useMatches();
+
+  let headerMatch = matches.find(
+    ({ data }) => data && typeof data === "object" && "header" in data,
+  )?.data as { header: HeaderData } | undefined;
+
+  //  Users can cmd+k on any page, so always assume v7 if there's no further context
+  let version: HeaderData["docSearchVersion"] = "v7";
+  if (headerMatch?.header && headerMatch.header.ref.startsWith("6")) {
+    version = "v6";
+  }
+
+  return version;
 }

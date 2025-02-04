@@ -2,7 +2,7 @@ import type { HeadersArgs } from "react-router";
 import { Link } from "react-router";
 import classNames from "classnames";
 import { CACHE_CONTROL } from "~/http";
-import { getDocsSearch, getDocTitle, getRobots } from "~/ui/meta";
+import { getSearchMetaTags, getDocTitle } from "~/ui/meta";
 import { seo } from "~/seo";
 import type { Route } from "./+types/docs-home";
 
@@ -11,7 +11,7 @@ export function headers({ parentHeaders }: HeadersArgs) {
   return parentHeaders;
 }
 
-export const meta: Route.MetaFunction = ({ matches, params }) => {
+export function meta({ matches }: Route.MetaArgs) {
   let [rootMatch, docMatch] = matches;
   let doc = docMatch.data;
 
@@ -23,12 +23,13 @@ export const meta: Route.MetaFunction = ({ matches, params }) => {
     openGraph: { title },
   });
 
+  let { docSearchVersion } = doc.header;
+
   return [
     ...meta,
-    ...getDocsSearch(params.ref),
-    ...getRobots(rootMatch.data.isProductionHost, doc),
+    ...getSearchMetaTags(rootMatch.data.isProductionHost, docSearchVersion),
   ];
-};
+}
 
 export default function Index({ matches }: Route.ComponentProps) {
   const { data } = matches[1];

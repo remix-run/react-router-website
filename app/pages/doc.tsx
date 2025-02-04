@@ -5,7 +5,7 @@ import semver from "semver";
 
 import type { HeadersArgs } from "react-router";
 
-import { getDocTitle, getDocsSearch, getRobots } from "~/ui/meta";
+import { getDocTitle, getSearchMetaTags } from "~/ui/meta";
 import { DocLayout } from "~/components/doc-layout";
 import type { Route } from "./+types/doc";
 
@@ -51,7 +51,7 @@ export function headers({ parentHeaders }: HeadersArgs) {
   return parentHeaders;
 }
 
-export const meta: Route.MetaFunction = ({ error, data, matches, params }) => {
+export function meta({ error, data, matches }: Route.MetaArgs) {
   if (error || !data.doc) {
     return [{ title: "Not Found" }];
   }
@@ -68,10 +68,12 @@ export const meta: Route.MetaFunction = ({ error, data, matches, params }) => {
 
   return [
     ...meta,
-    ...getDocsSearch(params.ref),
-    ...getRobots(rootMatch.data.isProductionHost, doc),
+    ...getSearchMetaTags(
+      rootMatch.data.isProductionHost,
+      doc.header.docSearchVersion,
+    ),
   ];
-};
+}
 
 export default function DocPage({ loaderData }: Route.ComponentProps) {
   return <DocLayout doc={loaderData.doc} />;
