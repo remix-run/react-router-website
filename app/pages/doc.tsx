@@ -5,7 +5,7 @@ import semver from "semver";
 
 import type { HeadersArgs } from "react-router";
 
-import { getDocTitle, getDocsSearch, getRobots } from "~/ui/meta";
+import { getDocTitle, getSearchMetaTags } from "~/ui/meta";
 import { DocLayout } from "~/components/doc-layout";
 import type { Route } from "./+types/doc";
 
@@ -70,8 +70,7 @@ export function meta({ error, data, matches }: Route.MetaArgs) {
 
   return [
     ...meta,
-    ...getDocsSearch(docSearchVersion),
-    ...getRobots(rootMatch.data.isProductionHost, docSearchVersion),
+    ...getSearchMetaTags(rootMatch.data.isProductionHost, docSearchVersion),
   ];
 }
 

@@ -18,7 +18,7 @@ export function getDocTitle(api: DocsData, title: string) {
   return `${title} ${titleRef}`;
 }
 
-export function getRobots(
+export function getSearchMetaTags(
   isProductionHost: boolean,
   docSearchVersion: HeaderData["docSearchVersion"],
 ) {
@@ -27,18 +27,17 @@ export function getRobots(
     robots = "index,follow";
   }
 
-  return [
+  let tags = [
     { name: "robots", content: robots },
     { name: "googlebot", content: robots },
   ];
-}
 
-export function getDocsSearch(
-  docSearchVersion: HeaderData["docSearchVersion"],
-) {
-  if (!docSearchVersion) return [];
-  return [
-    { name: "docsearch:language", content: "en" },
-    { name: "docsearch:version", content: docSearchVersion },
-  ];
+  if (docSearchVersion) {
+    tags.push(
+      { name: "docsearch:language", content: "en" },
+      { name: "docsearch:version", content: docSearchVersion },
+    );
+  }
+
+  return tags;
 }

@@ -2,7 +2,7 @@ import type { HeadersArgs } from "react-router";
 import { Link } from "react-router";
 import classNames from "classnames";
 import { CACHE_CONTROL } from "~/http";
-import { getDocsSearch, getDocTitle, getRobots } from "~/ui/meta";
+import { getSearchMetaTags, getDocTitle } from "~/ui/meta";
 import { seo } from "~/seo";
 import type { Route } from "./+types/docs-home";
 
@@ -27,8 +27,7 @@ export function meta({ matches }: Route.MetaArgs) {
 
   return [
     ...meta,
-    ...getDocsSearch(docSearchVersion),
-    ...getRobots(rootMatch.data.isProductionHost, docSearchVersion),
+    ...getSearchMetaTags(rootMatch.data.isProductionHost, docSearchVersion),
   ];
 }
 
