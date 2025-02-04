@@ -7,23 +7,20 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
+import { useMatches } from "react-router";
 import type { DocSearchProps } from "@docsearch/react";
 import {
   DocSearchModal as OriginalDocSearchModal,
   DocSearchButton as OriginalDocSearchButton,
   useDocSearchKeyboardEvents,
 } from "@docsearch/react";
+import type { HeaderData } from "~/components/docs-header/data.server";
 
 let docSearchProps = {
   appId: "RB6LOUCOL0",
   indexName: "reactrouter",
   apiKey: "b50c5d7d9f4610c9785fa945fdc97476",
 } satisfies DocSearchProps;
-
-// TODO:
-// - pass version to searchParameters facetFilters via prop
-//
-// NOTE: facet has to be set in the algolia dashboard under "Configuration" | "Filtering and Faceting" | "Facets"
 
 const DocSearchContext = createContext<{
   onOpen: () => void;
@@ -37,13 +34,7 @@ const DocSearchContext = createContext<{
  * If you need a DocSearch button to appear, use the DocSearch component
  * Modified from https://github.com/algolia/docsearch/blob/main/packages/docsearch-react/src/DocSearch.tsx
  */
-export function DocSearch({
-  children,
-  version = "v7",
-}: {
-  children: React.ReactNode;
-  version?: "v7" | "v6";
-}) {
+export function DocSearch({ children }: { children: React.ReactNode }) {
   const searchButtonRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -76,6 +67,8 @@ export function DocSearch({
     [onOpen, searchButtonRef],
   );
 
+  const version = useDocSearchFacetVersion();
+
   return (
     <DocSearchContext value={contextValue}>
       {children}
@@ -84,6 +77,8 @@ export function DocSearch({
             <OriginalDocSearchModal
               initialScrollY={window.scrollY}
               onClose={onClose}
+              // NOTE: to use the facet for search, it has to be set in the algolia dashboard:
+              // "Configuration" > "Filtering and Faceting" > "Facets"
               searchParameters={{
                 facetFilters: [`version:${version}`],
               }}
@@ -106,4 +101,23 @@ export function DocSearchButton() {
   const { onOpen, searchButtonRef } = docSearchContext;
 
   return <OriginalDocSearchButton ref={searchButtonRef} onClick={onOpen} />;
+}
+
+/*
+ * Returns the version to use for the DocSearch facet
+ */
+function useDocSearchFacetVersion() {
+  let matches = useMatches();
+
+  let headerMatch = matches.find(
+    ({ data }) => data && typeof data === "object" && "header" in data,
+  )?.data as { header: HeaderData } | undefined;
+
+  //  Users can cmd+k on any page, so always assume v7 if there's no further context
+  let version: HeaderData["docSearchVersion"] = "v7";
+  if (headerMatch?.header && headerMatch.header.ref.startsWith("6")) {
+    version = "v6";
+  }
+
+  return version;
 }
