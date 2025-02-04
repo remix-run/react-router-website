@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - v6-search
     paths-ignore:
       - "README.md"
 
