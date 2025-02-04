@@ -41,8 +41,21 @@ export async function getHeaderData(
   // TODO: make this smarter before v8
   let apiDocsRef = githubRef === "dev" || githubRef === "local" ? "dev" : "v7";
 
+  let latestV6Version = getLatestV6Version(tags);
+
+  // Set the version for docsearch to use as a facet filter so that the search
+  // results are context aware
+  // This value is also used for determining whether the docs should have
+  // robots="index,follow"
+  let docSearchVersion: "v7" | "v6" | null = null;
+  if (githubRef === "main" && latestVersion.startsWith("7.")) {
+    docSearchVersion = "v7";
+  } else if (refParam === latestV6Version) {
+    docSearchVersion = "v6";
+  }
+
   return {
-    versions: [getLatestVersion(tags), getLatestV6Version(tags)],
+    versions: [latestVersion, latestV6Version],
     latestVersion,
     releaseBranch,
     branches: branchesInMenu,
@@ -53,5 +66,6 @@ export async function getHeaderData(
     refParam,
     ref,
     apiDocsRef,
-  };
+    docSearchVersion,
+  } as const;
 }

@@ -21,8 +21,6 @@ let docSearchProps = {
 } satisfies DocSearchProps;
 
 // TODO:
-// - Add "version" to meta tag for v6 docs (~app/ui/meta.ts)
-// - Allow v6 docs to be crawled (~app/root.tsx)
 // - pass version to searchParameters facetFilters via prop
 //
 // NOTE: facet has to be set in the algolia dashboard under "Configuration" | "Filtering and Faceting" | "Facets"
@@ -75,7 +73,7 @@ export function DocSearch({
       onOpen,
       searchButtonRef,
     }),
-    [onOpen, searchButtonRef]
+    [onOpen, searchButtonRef],
   );
 
   return (
@@ -91,7 +89,7 @@ export function DocSearch({
               }}
               {...docSearchProps}
             />,
-            document.body
+            document.body,
           )
         : null}
     </DocSearchContext>

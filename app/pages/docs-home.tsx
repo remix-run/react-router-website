@@ -11,7 +11,7 @@ export function headers({ parentHeaders }: HeadersArgs) {
   return parentHeaders;
 }
 
-export const meta: Route.MetaFunction = ({ matches, params }) => {
+export function meta({ matches }: Route.MetaArgs) {
   let [rootMatch, docMatch] = matches;
   let doc = docMatch.data;
 
@@ -23,12 +23,14 @@ export const meta: Route.MetaFunction = ({ matches, params }) => {
     openGraph: { title },
   });
 
+  let { docSearchVersion } = doc.header;
+
   return [
     ...meta,
-    ...getDocsSearch(params.ref),
-    ...getRobots(rootMatch.data.isProductionHost, doc),
+    ...getDocsSearch(docSearchVersion),
+    ...getRobots(rootMatch.data.isProductionHost, docSearchVersion),
   ];
-};
+}
 
 export default function Index({ matches }: Route.ComponentProps) {
   const { data } = matches[1];

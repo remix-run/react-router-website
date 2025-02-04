@@ -51,7 +51,7 @@ export function headers({ parentHeaders }: HeadersArgs) {
   return parentHeaders;
 }
 
-export const meta: Route.MetaFunction = ({ error, data, matches, params }) => {
+export function meta({ error, data, matches }: Route.MetaArgs) {
   if (error || !data.doc) {
     return [{ title: "Not Found" }];
   }
@@ -66,12 +66,14 @@ export const meta: Route.MetaFunction = ({ error, data, matches, params }) => {
     openGraph: { title },
   });
 
+  let { docSearchVersion } = doc.header;
+
   return [
     ...meta,
-    ...getDocsSearch(params.ref),
-    ...getRobots(rootMatch.data.isProductionHost, doc),
+    ...getDocsSearch(docSearchVersion),
+    ...getRobots(rootMatch.data.isProductionHost, docSearchVersion),
   ];
-};
+}
 
 export default function DocPage({ loaderData }: Route.ComponentProps) {
   return <DocLayout doc={loaderData.doc} />;
