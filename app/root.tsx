@@ -21,9 +21,6 @@ import { DocSearch } from "./modules/docsearch";
 import "~/styles/tailwind.css";
 import "@docsearch/css/dist/style.css";
 import "~/styles/docsearch.css";
-// FIXUP: Styles need to all be imported in root until this is fixed:
-// https://github.com/remix-run/react-router/issues/12382
-import "~/styles/docs.css";
 import type { Route } from "./+types/root";
 
 export async function loader({ request }: LoaderFunctionArgs) {
