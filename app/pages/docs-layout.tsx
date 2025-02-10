@@ -22,9 +22,16 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
   }
 
   // the /:ref param should only be used for v6 docs
-  // if ref is not a v6 ref, redirect to the /home of that ref
-  if (params.ref && !url.pathname.match(/^\/?(6)/)) {
-    throw redirect(url.pathname + "home");
+  if (params.ref) {
+    // if the ref is not a valid semver, this is 404
+    if (!semver.valid(params.ref)) {
+      throw new Response("Not Found", { status: 404 });
+    }
+
+    // if ref is not a v6 ref, redirect to the /home of that ref
+    if (!url.pathname.match(/^\/?(6)/)) {
+      throw redirect(url.pathname + "home");
+    }
   }
 
   let splat = params["*"];

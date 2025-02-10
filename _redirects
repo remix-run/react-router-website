@@ -89,6 +89,7 @@
 /reference /en/main/reference
 
 # removed `/docs` prefix
+/docs /home
 /docs/en/v6/* /en/v6.3.0/*
 /docs/* /*
 
