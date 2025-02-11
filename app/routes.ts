@@ -8,21 +8,20 @@ const routes: RouteConfig = [
 
   route("", "pages/docs-layout.tsx", { id: "docs" }, [
     route("home", "pages/doc.tsx", { id: "home" }),
+    route("changelog", "pages/doc.tsx", { id: "changelog" }),
     route("*", "pages/doc.tsx"),
   ]),
 
-  route("/:ref", "pages/docs-index.tsx", { id: "docs-index" }),
-
   // short version URLs for changelogs and stuff
-  route("/v6/*", "pages/redirect-v6-doc.tsx"),
-  route("/v7/*", "pages/redirect-v7-doc.tsx"),
+  route("/v6/*", "pages/redirect-major-version.tsx", { id: "v6-redirect" }),
+  route("/v7/*", "pages/redirect-major-version.tsx", { id: "v7-redirect" }),
 
-  // v6 URLs before the api reference docs
-  route("/en/:ref", "pages/docs-layout.tsx", { id: "v6-docs" }, [
+  // This route primarily exists to support the old v6 index page and to
+  // redirect to the new docs at /home
+  route("/:ref", "pages/docs-layout.tsx", { id: "v6-index-layout" }, [
     index("pages/docs-home.tsx", {
       id: "v6-index",
     }),
-    route("*", "pages/doc.tsx", { id: "v6-guide" }),
   ]),
 ];
 

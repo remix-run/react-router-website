@@ -82,10 +82,14 @@
 /en/main/route/loader                        https://api.reactrouter.com/v7/types/react_router.LoaderFunction.html   
 /en/main/route/should-revalidate             https://api.reactrouter.com/v7/interfaces/react_router.ShouldRevalidateFunction.html
 
+# catchall for remaining v6 docs with lang prefix
+/en/* /*
+
 # API reference redirects
 /reference /en/main/reference
 
 # removed `/docs` prefix
+/docs /home
 /docs/en/v6/* /en/v6.3.0/*
 /docs/* /*
 

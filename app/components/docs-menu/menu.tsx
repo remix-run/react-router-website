@@ -9,7 +9,13 @@ import { useNavigation } from "~/hooks/use-navigation";
 import { useDelayedValue } from "~/hooks/use-delayed-value";
 import { useHeaderData } from "../docs-header/use-header-data";
 
-export function Menu({ menu }: { menu?: MenuDoc[] }) {
+export function Menu({
+  menu,
+  changelogHref,
+}: {
+  menu?: MenuDoc[];
+  changelogHref?: string;
+}) {
   // github might be down but the menu but the doc could be cached in memory, so
   // prevent the whole page from blowing up and still render the doc
   if (menu === undefined) {
@@ -22,7 +28,9 @@ export function Menu({ menu }: { menu?: MenuDoc[] }) {
 
   return (
     <nav>
-      <HeaderMenuLink to="start/changelog">Changelog</HeaderMenuLink>
+      {changelogHref ? (
+        <HeaderMenuLink to={changelogHref}>Changelog</HeaderMenuLink>
+      ) : null}
       {menu.map((category) => (
         <div key={category.attrs.title}>
           <MenuCategory category={category} />
