@@ -24,7 +24,11 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
   // the /:ref param should only be used for v6 docs
   if (params.ref) {
     // if the ref is not a valid semver, this is 404
-    if (!semver.valid(params.ref)) {
+    if (
+      params.ref !== "local" &&
+      params.ref !== "dev" &&
+      !semver.valid(params.ref)
+    ) {
       throw new Response("Not Found", { status: 404 });
     }
 
