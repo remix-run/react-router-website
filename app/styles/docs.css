@@ -1,4 +1,5 @@
 /*****************************************************************************/
+
 /* syntax highlighting */
 :root {
   --base00: theme("colors.gray.50");
@@ -572,5 +573,50 @@
 .md-toc {
   & :where(li code) {
     @apply rounded-sm bg-gray-100/50 px-1.5 pb-0.5 pt-px text-xs text-gray-600 group-hover:text-gray-100 dark:bg-gray-800/50 dark:text-gray-300;
+  }
+}
+
+.availability-small {
+  @apply flex items-center gap-1 list-none m-0 px-2 relative -top-10 float-right bg-gray-50 rounded-full z-10 !important;
+
+  li {
+    @apply flex;
+  }
+
+  li a {
+    @apply no-underline shadow-none p-1 !important;
+  }
+
+  li a.yes {
+    @apply text-green-600;
+  }
+
+  li a.no {
+    @apply opacity-10;
+  }
+
+  svg {
+    @apply size-4;
+  }
+}
+
+.availability-main {
+  @apply inline-flex text-sm items-center gap-2 list-none m-0 p-1 bg-gray-50 rounded-full !important;
+
+  li a {
+    @apply flex items-center gap-2 px-3 py-1;
+    @apply no-underline shadow-none !important;
+  }
+
+  li a.yes {
+    @apply text-green-600;
+  }
+
+  li a.no {
+    @apply opacity-10;
+  }
+
+  svg {
+    @apply size-5;
   }
 }
