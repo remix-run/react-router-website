@@ -574,3 +574,28 @@
     @apply rounded-sm bg-gray-100/50 px-1.5 pb-0.5 pt-px text-xs text-gray-600 group-hover:text-gray-100 dark:bg-gray-800/50 dark:text-gray-300;
   }
 }
+
+ul.compat {
+  @apply flex items-center list-none gap-1 text-xs px-0 mb-4;
+}
+
+.compat li code {
+  @apply bg-transparent text-xs !important;
+}
+
+.compat a {
+  @apply shadow-none !important;
+  @apply no-underline flex items-center rounded-full px-2 py-0.5;
+}
+
+.compat .compat-yes {
+  @apply bg-green-brand/20 dark:bg-green-900/40;
+}
+
+.compat .compat-no {
+  @apply bg-red-brand/10 dark:bg-red-900/30;
+}
+
+.compat .info {
+  @apply text-blue-brand hover:underline font-bold tracking-tight p-0 !important;
+}

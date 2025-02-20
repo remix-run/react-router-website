@@ -34,6 +34,7 @@
     "front-matter": "^4.0.2",
     "gray-matter": "^4.0.3",
     "gunzip-maybe": "^1.4.2",
+    "hast-util-from-html": "^2.0.3",
     "isbot": "^3.6.10",
     "iso-639-1": "^2.1.15",
     "lodash.merge": "^4.6.2",

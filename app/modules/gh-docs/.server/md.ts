@@ -26,8 +26,13 @@ export async function processMarkdown(
 ) {
   processor = processor || (await getProcessor(options));
   let { attributes, body: raw } = parseFrontMatter(content);
-  let vfile = await processor.process(raw);
-  let html = vfile.value.toString();
+
+  // Create a new VFile with the content and add frontmatter to its data
+  let result = await processor.process({
+    value: raw,
+    data: { matter: attributes }, // This will be available to all plugins
+  });
+  let html = result.value.toString();
   return { attributes, raw, html };
 }
 
@@ -37,6 +42,7 @@ export async function getProcessor(options?: ProcessorOptions) {
     { default: remarkGfm },
     { default: remarkParse },
     { default: remarkRehype },
+    { default: compatTokens },
     { default: rehypeSlug },
     { default: rehypeStringify },
     { default: rehypeAutolinkHeadings },
@@ -46,6 +52,7 @@ export async function getProcessor(options?: ProcessorOptions) {
     import("remark-gfm"),
     import("remark-parse"),
     import("remark-rehype"),
+    import("./compat-tokens"),
     import("rehype-slug"),
     import("rehype-stringify"),
     import("rehype-autolink-headings"),
@@ -58,6 +65,7 @@ export async function getProcessor(options?: ProcessorOptions) {
     .use(plugins.remarkCodeBlocksShiki, options)
     .use(remarkGfm)
     .use(remarkRehype, { allowDangerousHtml: true })
+    .use(compatTokens, { baseUrl: "../../home" })
     .use(rehypeStringify, { allowDangerousHtml: true })
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings);
@@ -99,7 +107,7 @@ export async function loadPlugins() {
   const remarkCodeBlocksShiki: InternalPlugin<
     UnistNode.Root,
     UnistNode.Root
-  > = (options) => {
+  > = options => {
     let theme: Awaited<ReturnType<typeof toShikiTheme>>;
     let highlighter: Awaited<ReturnType<typeof getHighlighter>>;
 
@@ -126,7 +134,7 @@ export async function loadPlugins() {
       let langSet = new Set(langs);
       let transformTasks: Array<() => Promise<void>> = [];
 
-      visit(tree, "code", (node) => {
+      visit(tree, "code", node => {
         if (
           !node.lang ||
           !node.value ||
@@ -286,7 +294,7 @@ export async function loadPlugins() {
         }
       });
 
-      await Promise.all(transformTasks.map((exec) => exec()));
+      await Promise.all(transformTasks.map(exec => exec()));
 
       function getThemedTokens({
         code,
