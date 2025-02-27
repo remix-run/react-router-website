@@ -11,7 +11,9 @@ export async function getTags(repo: string) {
 }
 
 export function getLatestVersion(tags: string[]) {
-  return tags.filter((tag) =>
+  let sortedTags = [...tags].sort(semver.rcompare);
+
+  return sortedTags.filter((tag) =>
     semver.satisfies(tag, "*", { includePrerelease: false }),
   )[0];
 }
