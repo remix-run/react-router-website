@@ -18,7 +18,7 @@ function createCompatList(
   baseUrl: string = "../../home",
 ): Element {
   // Define all possible items in the desired order
-  const allItems = ["routes.ts", "RouterProvider", "Routes"];
+  const allItems = ["framework", "data", "declarative"];
 
   const html = `
     <ul class="compat">
@@ -28,12 +28,7 @@ function createCompatList(
           const isAvailable = availableItems.includes(item);
           const className = isAvailable ? "compat-yes" : "compat-no";
           const icon = isAvailable ? "✅" : "🚫";
-          const code = item.includes("<")
-            ? item
-            : item.endsWith(".ts")
-              ? `<code>${item}</code>`
-              : `<code>&lt;${item}&gt;</code>`;
-          return `<li><a href="${baseUrl}" class="${className}">${icon} ${code}</a></li>`;
+          return `<li><a href="${baseUrl}" class="${className}">${icon} ${item}</a></li>`;
         })
         .join("\n")}
     </ul>
