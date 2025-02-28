@@ -7,7 +7,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-import { CACHE_CONTROL, middlewares } from "./http";
+import { CACHE_CONTROL } from "./http";
 
 import { parseColorScheme } from "./modules/color-scheme/server";
 import {
@@ -23,9 +23,17 @@ import "@docsearch/css/dist/style.css";
 import "~/styles/docsearch.css";
 import type { Route } from "./+types/root";
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  await middlewares(request);
+import { ensureSecure } from "~/modules/http-utils/ensure-secure";
+import { handleRedirects } from "~/modules/redirects/.server";
+import { removeTrailingSlashes } from "~/modules/http-utils/remove-slashes";
 
+export const unstable_middleware: Route.unstable_MiddlewareFunction[] = [
+  ensureSecure,
+  removeTrailingSlashes,
+  handleRedirects,
+];
+
+export async function loader({ request }: LoaderFunctionArgs) {
   let colorScheme = await parseColorScheme(request);
   let isProductionHost = isHost("reactrouter.com", request);
 
