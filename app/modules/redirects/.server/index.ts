@@ -1,4 +1,4 @@
-import type { Route } from "../../../+types/root";
+import { type unstable_MiddlewareFunction } from "react-router";
 import { checkUrl } from "./check-url";
 import { getRedirects } from "./get-redirects";
 
@@ -15,15 +15,11 @@ import { getRedirects } from "./get-redirects";
  *
  * @param request Web Fetch Request to possibly redirect
  */
-export const handleRedirects: Route.unstable_MiddlewareFunction = async (
-  { request },
-  next
-) => {
+export const handleRedirects: unstable_MiddlewareFunction = async ({
+  request,
+}) => {
   let redirects = await getRedirects();
   let url = new URL(request.url);
   let response = await checkUrl(url.pathname, redirects);
   if (response) throw response;
-  // FIXME: Update RR to auto-bubble the internal response if `next` isn't
-  // called so we can omit the return value
-  return next();
 };
