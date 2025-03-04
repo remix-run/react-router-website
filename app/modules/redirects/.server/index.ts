@@ -1,3 +1,4 @@
+import { type unstable_MiddlewareFunction } from "react-router";
 import { checkUrl } from "./check-url";
 import { getRedirects } from "./get-redirects";
 
@@ -14,9 +15,11 @@ import { getRedirects } from "./get-redirects";
  *
  * @param request Web Fetch Request to possibly redirect
  */
-export async function handleRedirects(request: Request): Promise<void> {
+export const handleRedirects: unstable_MiddlewareFunction<
+  void | Response
+> = async ({ request }) => {
   let redirects = await getRedirects();
   let url = new URL(request.url);
   let response = await checkUrl(url.pathname, redirects);
   if (response) throw response;
-}
+};
