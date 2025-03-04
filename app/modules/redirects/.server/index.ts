@@ -15,9 +15,9 @@ import { getRedirects } from "./get-redirects";
  *
  * @param request Web Fetch Request to possibly redirect
  */
-export const handleRedirects: unstable_MiddlewareFunction = async ({
-  request,
-}) => {
+export const handleRedirects: unstable_MiddlewareFunction<
+  void | Response
+> = async ({ request }) => {
   let redirects = await getRedirects();
   let url = new URL(request.url);
   let response = await checkUrl(url.pathname, redirects);
