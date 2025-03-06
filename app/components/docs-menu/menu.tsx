@@ -8,6 +8,7 @@ import type { MenuDoc } from "~/modules/gh-docs/.server/docs";
 import { useNavigation } from "~/hooks/use-navigation";
 import { useDelayedValue } from "~/hooks/use-delayed-value";
 import { useHeaderData } from "../docs-header/use-header-data";
+import { useMenuCollapse } from "~/api/update-menu-collapse";
 
 export function Menu({
   menu,
@@ -98,26 +99,23 @@ function MenuCategoryDetails({
   slug,
   children,
 }: MenuCategoryDetailsType) {
-  let { isActive } = useNavigation(slug);
-  // By default only the active path is open
-  const [isOpen, setIsOpen] = React.useState(true);
+  const [isOpen, submitMenuCollapse] = useMenuCollapse(slug!);
 
-  // Auto open the details element, necessary when navigating from the index page
+  // Auto open the details element if on the active path
+  let { isActive } = useNavigation(slug);
   React.useEffect(() => {
     if (isActive) {
-      setIsOpen(true);
+      submitMenuCollapse(true);
     }
-  }, [isActive]);
+  }, [isActive, submitMenuCollapse]);
 
   return (
     <details
       className={classNames(className, "relative flex flex-col")}
       open={isOpen}
       onToggle={(e) => {
-        // Synchronize the DOM's state with React state to prevent the
-        // details element from being closed after navigation and re-evaluation
-        // of useIsActivePath
-        setIsOpen(e.currentTarget.open);
+        const open = e.currentTarget.open;
+        submitMenuCollapse(open);
       }}
     >
       {children}

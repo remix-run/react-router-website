@@ -16,7 +16,7 @@ import { useCodeBlockCopyButton } from "~/ui/utils";
 import docsCss from "~/styles/docs.css?url";
 import { preload } from "react-dom";
 
-export let loader = async ({ request, params }: Route.LoaderArgs) => {
+export async function loader({ request, params }: Route.LoaderArgs) {
   let url = new URL(request.url);
   if (!url.pathname.endsWith("/")) {
     url.pathname += "/";
@@ -57,7 +57,7 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
   ]);
 
   return { menu, header };
-};
+}
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
   preload(docsCss, { as: "style" });

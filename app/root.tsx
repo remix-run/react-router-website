@@ -1,4 +1,3 @@
-import type { LoaderFunctionArgs } from "react-router";
 import {
   Link,
   Links,
@@ -17,19 +16,26 @@ import {
 import { isHost } from "./modules/http-utils/is-host";
 import iconsHref from "~/icons.svg";
 import { DocSearch } from "./modules/docsearch";
+import type { Route } from "./+types/root";
+import {
+  menuCollapseContext,
+  menuCollapseStateMiddleware,
+} from "./modules/menu-collapse.server";
 
 import "~/styles/tailwind.css";
 import "@docsearch/css/dist/style.css";
 import "~/styles/docsearch.css";
-import type { Route } from "./+types/root";
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export let unstable_middleware = [menuCollapseStateMiddleware];
+
+export async function loader({ request, context }: Route.LoaderArgs) {
   await middlewares(request);
 
   let colorScheme = await parseColorScheme(request);
   let isProductionHost = isHost("reactrouter.com", request);
+  const menuCollapseState = menuCollapseContext(context).get();
 
-  return { colorScheme, isProductionHost };
+  return { colorScheme, isProductionHost, menuCollapseState };
 }
 
 export function headers() {

@@ -5,6 +5,8 @@ const routes: RouteConfig = [
   route("/brand", "pages/brand.tsx"),
   route("/healthcheck", "pages/healthcheck.tsx"),
   route("/color-scheme", "actions/color-scheme.ts"),
+  // Update the menu collapse session
+  route("_update-menu-collapse", "api/update-menu-collapse.ts"),
 
   route("", "pages/docs-layout.tsx", { id: "docs" }, [
     route("home", "pages/doc.tsx", { id: "home" }),

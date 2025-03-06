@@ -4,7 +4,6 @@ import { seo } from "~/seo";
 import semver from "semver";
 
 import type { HeadersArgs } from "react-router";
-
 import { getDocTitle, getSearchMetaTags } from "~/ui/meta";
 import { DocLayout } from "~/components/doc-layout";
 import type { Route } from "./+types/doc";
