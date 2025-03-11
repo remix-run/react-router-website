@@ -1,4 +1,3 @@
-import type { LoaderFunctionArgs } from "react-router";
 import {
   Link,
   Links,
@@ -7,7 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-import { CACHE_CONTROL, middlewares } from "./http";
+import { CACHE_CONTROL } from "./http";
 
 import { parseColorScheme } from "./modules/color-scheme/server";
 import {
@@ -23,9 +22,17 @@ import "@docsearch/css/dist/style.css";
 import "~/styles/docsearch.css";
 import type { Route } from "./+types/root";
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  await middlewares(request);
+import { ensureSecure } from "~/modules/http-utils/ensure-secure";
+import { handleRedirects } from "~/modules/redirects/.server";
+import { removeTrailingSlashes } from "~/modules/http-utils/remove-slashes";
 
+export const unstable_middleware: Route.unstable_MiddlewareFunction[] = [
+  ensureSecure,
+  removeTrailingSlashes,
+  handleRedirects,
+];
+
+export async function loader({ request }: Route.LoaderArgs) {
   let colorScheme = await parseColorScheme(request);
   let isProductionHost = isHost("reactrouter.com", request);
 
@@ -94,7 +101,7 @@ export default function App() {
   return <Outlet />;
 }
 
-export function ErrorBoundary({ error }: { error: Error }) {
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   console.error(error);
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center">
