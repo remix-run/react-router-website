@@ -1,4 +1,3 @@
-import type { LoaderFunctionArgs } from "react-router";
 import {
   Link,
   Links,
@@ -33,7 +32,7 @@ export const unstable_middleware: Route.unstable_MiddlewareFunction[] = [
   handleRedirects,
 ];
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   let colorScheme = await parseColorScheme(request);
   let isProductionHost = isHost("reactrouter.com", request);
 
@@ -102,7 +101,7 @@ export default function App() {
   return <Outlet />;
 }
 
-export function ErrorBoundary({ error }: { error: Error }) {
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   console.error(error);
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center">
