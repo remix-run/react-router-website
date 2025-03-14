@@ -580,7 +580,7 @@
   @apply flex items-center gap-1 list-none m-0 px-2 relative -top-10 float-right bg-gray-50 dark:bg-gray-800 rounded-full z-10 !important;
 
   li {
-    @apply flex;
+    @apply flex m-0 p-0 !important;
   }
 
   li a {
@@ -602,6 +602,10 @@
 
 .availability-main {
   @apply inline-flex text-sm items-center gap-2 list-none m-0 p-1 bg-gray-50 dark:bg-gray-800 rounded-full !important;
+
+  li {
+    @apply m-0 p-0 !important;
+  }
 
   li a {
     @apply flex items-center gap-2 px-3 py-1;
