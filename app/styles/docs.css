@@ -577,7 +577,7 @@
 }
 
 .availability-small {
-  @apply flex items-center gap-1 list-none m-0 px-2 relative -top-10 float-right bg-gray-50 rounded-full z-10 !important;
+  @apply flex items-center gap-1 list-none m-0 px-2 relative -top-10 float-right bg-gray-50 dark:bg-gray-800 rounded-full z-10 !important;
 
   li {
     @apply flex;
@@ -588,11 +588,11 @@
   }
 
   li a.yes {
-    @apply text-green-600;
+    @apply text-green-600 dark:text-green-400;
   }
 
   li a.no {
-    @apply opacity-10;
+    @apply opacity-20;
   }
 
   svg {
@@ -601,7 +601,7 @@
 }
 
 .availability-main {
-  @apply inline-flex text-sm items-center gap-2 list-none m-0 p-1 bg-gray-50 rounded-full !important;
+  @apply inline-flex text-sm items-center gap-2 list-none m-0 p-1 bg-gray-50 dark:bg-gray-800 rounded-full !important;
 
   li a {
     @apply flex items-center gap-2 px-3 py-1;
@@ -609,11 +609,11 @@
   }
 
   li a.yes {
-    @apply text-green-600;
+    @apply text-green-600 dark:text-green-400;
   }
 
   li a.no {
-    @apply opacity-10;
+    @apply opacity-20;
   }
 
   svg {
