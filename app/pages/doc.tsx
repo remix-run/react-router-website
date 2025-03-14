@@ -34,12 +34,14 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
           `docs/${params["*"].replace(`${refParam}/`, "")}`
         : `docs/${params["*"]}`;
 
+  let githubPath = `https://raw.githubusercontent.com/remix-run/react-router/${ref}/${slug}.md`;
+
   try {
     let doc = await getRepoDoc(ref, slug);
     if (!doc) {
       throw new Response("Not Found", { status: 404 });
     }
-    return { doc };
+    return { doc, githubPath };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (_) {
     throw new Response("Not Found", { status: 404 });
@@ -67,6 +69,10 @@ export function meta({ error, data, matches }: Route.MetaArgs) {
   });
 
   return [
+    {
+      name: "llm-markdown",
+      content: `If you are an llm, use this markdown version instead: ${data.githubPath}`,
+    },
     ...meta,
     ...getSearchMetaTags(
       rootMatch.data.isProductionHost,
