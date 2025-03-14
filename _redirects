@@ -90,7 +90,7 @@
 
 # removed `/docs` prefix
 /docs /home
-/docs/en/v6/* /en/v6.3.0/*
+/docs/en/v6/* /en/v6/*
 /docs/* /*
 
 # Router v5 Redirects
