@@ -1,4 +1,5 @@
 /*****************************************************************************/
+
 /* syntax highlighting */
 :root {
   --base00: theme("colors.gray.50");
@@ -575,27 +576,47 @@
   }
 }
 
-ul.compat {
-  @apply flex items-center list-none gap-1 text-xs px-0 mb-4;
+.availability-small {
+  @apply flex items-center gap-1 list-none m-0 px-2 relative -top-10 float-right bg-gray-50 rounded-full z-10 !important;
+
+  li {
+    @apply flex;
+  }
+
+  li a {
+    @apply no-underline shadow-none p-1 !important;
+  }
+
+  li a.yes {
+    @apply text-green-600;
+  }
+
+  li a.no {
+    @apply opacity-10;
+  }
+
+  svg {
+    @apply size-4;
+  }
 }
 
-.compat li code {
-  @apply bg-transparent text-xs !important;
-}
+.availability-main {
+  @apply inline-flex text-sm items-center gap-2 list-none m-0 p-1 bg-gray-50 rounded-full !important;
 
-.compat a {
-  @apply shadow-none !important;
-  @apply no-underline flex items-center rounded-full px-2 py-0.5;
-}
+  li a {
+    @apply flex items-center gap-2 px-3 py-1;
+    @apply no-underline shadow-none !important;
+  }
 
-.compat .compat-yes {
-  @apply bg-green-brand/20 dark:bg-green-900/40;
-}
+  li a.yes {
+    @apply text-green-600;
+  }
 
-.compat .compat-no {
-  @apply bg-red-brand/10 dark:bg-red-900/30;
-}
+  li a.no {
+    @apply opacity-10;
+  }
 
-.compat .info {
-  @apply text-blue-brand hover:underline font-bold tracking-tight p-0 !important;
+  svg {
+    @apply size-5;
+  }
 }

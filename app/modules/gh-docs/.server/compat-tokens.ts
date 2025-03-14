@@ -1,110 +1,102 @@
 import type { Plugin } from "unified";
-import type { Root, Element } from "hast";
+import type { Root, Paragraph, Text, HTML } from "mdast";
+import type { Element } from "hast";
 import { visit } from "unist-util-visit";
 import { fromHtml } from "hast-util-from-html";
+import { toHtml } from "hast-util-to-html";
 import { toString } from "hast-util-to-string";
 
 interface CompatOptions {
   baseUrl?: string;
 }
 
-interface Frontmatter {
-  availability?: string[];
-  "availability-props"?: Record<string, string[]>;
-}
-
 function createCompatList(
   availableItems: string[],
   baseUrl: string = "../../home",
 ): Element {
-  // Define all possible items in the desired order
-  const allItems = ["framework", "data", "declarative"];
-
   const html = `
-    <ul class="compat">
-      <li><a href="${baseUrl}" class="info">Availability:</a></li>
-      ${allItems
-        .map(item => {
-          const isAvailable = availableItems.includes(item);
-          const className = isAvailable ? "compat-yes" : "compat-no";
-          const icon = isAvailable ? "✅" : "🚫";
-          return `<li><a href="${baseUrl}" class="${className}">${icon} ${item}</a></li>`;
-        })
-        .join("\n")}
+    <ul class="availability-main">
+      <li>
+        <a href="${baseUrl}" className="${availableItems.includes("framework") ? "yes" : "no"}" title="${availableItems.includes("framework") ? "Available with Framework" : "Not available with Framework"}"><svg><use href="/_docs/mode-icons.svg#framework"/></svg> Framework</a>
+      </li>
+      <li>
+        <a href="${baseUrl}" className="${availableItems.includes("data") ? "yes" : "no"}" title="${availableItems.includes("data") ? "Available with Data" : "Not available with Data"}"><svg><use href="/_docs/mode-icons.svg#data"/></svg> Data</a>
+      </li>
+      <li>
+        <a href="${baseUrl}" className="${availableItems.includes("declarative") ? "yes" : "no"}" title="${availableItems.includes("declarative") ? "Available with Declarative" : "Not available with Declarative"}"><svg><use href="/_docs/mode-icons.svg#declarative"/></svg> Declarative</a>
+      </li>
     </ul>
   `
     .split("\n")
-    .map(line => line.trim())
+    .map(line => line.replace(/^\s+/, ""))
     .filter(Boolean)
     .join("");
 
   return fromHtml(html, { fragment: true }).children[0] as Element;
 }
 
-function normalizePropertyName(name: string): string {
-  return name.replace(/[^\w]/g, "");
+function createSmallCompatList(
+  availableItems: string[],
+  baseUrl: string = "../../home",
+): Element {
+  const html = `
+    <ul class="availability-small">
+      <li>
+        <a href="${baseUrl}" className="${availableItems.includes("framework") ? "yes" : "no"}" title="${availableItems.includes("framework") ? "Available with Framework" : "Not available with Framework"}"><svg><use href="/_docs/mode-icons.svg#framework"/></svg></a>
+      </li>
+      <li>
+        <a href="${baseUrl}" className="${availableItems.includes("data") ? "yes" : "no"}" title="${availableItems.includes("data") ? "Available with Data" : "Not available with Data"}"><svg><use href="/_docs/mode-icons.svg#data"/></svg></a>
+      </li>
+      <li>
+        <a href="${baseUrl}" className="${availableItems.includes("declarative") ? "yes" : "no"}" title="${availableItems.includes("declarative") ? "Available with Declarative" : "Not available with Declarative"}"><svg><use href="/_docs/mode-icons.svg#declarative"/></svg></a>
+      </li>
+    </ul>
+  `
+    .split("\n")
+    .map(line => line.replace(/^\s+/, ""))
+    .filter(Boolean)
+    .join("");
+
+  return fromHtml(html, { fragment: true }).children[0] as Element;
 }
 
-const rehypeCompatLists: Plugin<[CompatOptions?], Root> = (options = {}) => {
+const MODES_REGEX = /^\[MODES:\s*([^\]]+)\]$/;
+const MODES_SMALL_REGEX = /^\[modes:\s*([^\]]+)\]$/;
+
+const remarkCompatLists: Plugin<[CompatOptions?], Root> = (options = {}) => {
   const baseUrl = options.baseUrl || "../../home";
 
-  return (tree, file) => {
-    const frontmatter = file.data.matter as Frontmatter | undefined;
-    if (!frontmatter?.availability) return; // Early return if no availability metadata
+  return tree => {
+    visit(tree, "paragraph", (node, index, parent) => {
+      if (!parent || typeof index === "undefined" || node.children.length !== 1)
+        return;
 
-    const availability = frontmatter.availability || [];
-    const availabilityProps = frontmatter["availability-props"] || {};
+      const child = node.children[0];
+      if (child.type !== "text") return;
 
-    // Track if we've inserted the main compatibility list
-    let mainCompatInserted = false;
+      const text = child.value.trim();
+      const matchBig = text.match(MODES_REGEX);
+      const matchSmall = text.match(MODES_SMALL_REGEX);
 
-    visit(tree, "element", (node, index, parent) => {
-      // console.log(1);
-      if (!parent || typeof index === "undefined") return;
-      // console.log(2);
+      if (matchBig || matchSmall) {
+        const modes = (matchBig || matchSmall)![1]
+          .split(",")
+          .map(mode => mode.trim())
+          .filter(Boolean);
 
-      // Handle main heading compatibility list
-      if (!mainCompatInserted && node.tagName === "h1") {
-        console.log("Before splice", parent.children.length);
-        // const compatList = createCompatList(availability, baseUrl);
-        const compatList = createCompatList(availability, baseUrl);
-        parent.children.splice(index + 1, 0, compatList);
-        mainCompatInserted = true;
-        console.log("After splice:", parent.children.length);
-        return true; // Explicitly continue traversal
-      }
+        const compatList = matchBig
+          ? createCompatList(modes, baseUrl)
+          : createSmallCompatList(modes, baseUrl);
 
-      // Handle property-level compatibility lists
-      if (node.tagName === "h3") {
-        const headingText = toString(node);
-        const propName = normalizePropertyName(headingText);
-        console.log("H3 found:", {
-          original: headingText,
-          normalized: propName,
-          availableKeys: Object.keys(availabilityProps),
-          normalizedKeys: Object.keys(availabilityProps).map(k =>
-            normalizePropertyName(k),
-          ),
+        // Replace the paragraph node with our HTML node
+        parent.children.splice(index, 1, {
+          type: "html",
+          value: toHtml(compatList),
         });
-
-        for (const [key, value] of Object.entries(availabilityProps)) {
-          console.log("Comparing:", {
-            propName,
-            key,
-            normalizedKey: normalizePropertyName(key),
-            arrayValue: value,
-            matches: normalizePropertyName(key) === propName,
-          });
-          if (normalizePropertyName(key) === propName) {
-            const compatList = createCompatList(value, baseUrl);
-            parent.children.splice(index + 1, 0, compatList);
-            console.log("Added compat list for", key);
-            break;
-          }
-        }
+        return index + 1;
       }
     });
   };
 };
 
-export default rehypeCompatLists;
+export default remarkCompatLists;

@@ -64,8 +64,8 @@ export async function getProcessor(options?: ProcessorOptions) {
     .use(plugins.stripLinkExtPlugin, options)
     .use(plugins.remarkCodeBlocksShiki, options)
     .use(remarkGfm)
-    .use(remarkRehype, { allowDangerousHtml: true })
     .use(compatTokens, { baseUrl: "../../home" })
+    .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeStringify, { allowDangerousHtml: true })
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings);
