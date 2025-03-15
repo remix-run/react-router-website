@@ -28,7 +28,7 @@ function createCompatList(
     </ul>
   `
     .split("\n")
-    .map(line => line.replace(/^\s+/, ""))
+    .map((line) => line.replace(/^\s+/, ""))
     .filter(Boolean)
     .join("");
 
@@ -53,7 +53,7 @@ function createSmallCompatList(
     </ul>
   `
     .split("\n")
-    .map(line => line.replace(/^\s+/, ""))
+    .map((line) => line.replace(/^\s+/, ""))
     .filter(Boolean)
     .join("");
 
@@ -66,7 +66,7 @@ const MODES_SMALL_REGEX = /^\[modes:\s*([^\]]+)\]$/;
 const remarkCompatLists: Plugin<[CompatOptions?], Root> = () => {
   const baseUrl = "../../start/modes";
 
-  return tree => {
+  return (tree) => {
     visit(tree, "paragraph", (node, index, parent) => {
       if (!parent || typeof index === "undefined" || node.children.length !== 1)
         return;
@@ -81,7 +81,7 @@ const remarkCompatLists: Plugin<[CompatOptions?], Root> = () => {
       if (matchBig || matchSmall) {
         const modes = (matchBig || matchSmall)![1]
           .split(",")
-          .map(mode => mode.trim())
+          .map((mode) => mode.trim())
           .filter(Boolean);
 
         const compatList = matchBig
