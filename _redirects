@@ -7,6 +7,8 @@
 
 /new/* https://stackblitz.com/github/remix-run/react-router-templates/tree/main/minimal
 
+/start/library/*                             /start/declarative/*
+
 # v7 release redirects from v6 urls
 /en/main                                     /
 /en/main/start/*                             /6.28.0/start/*

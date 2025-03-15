@@ -12,7 +12,7 @@ interface CompatOptions {
 
 function createCompatList(
   availableItems: string[],
-  baseUrl: string = "../../home",
+  baseUrl: string = "../../start/modes",
 ): Element {
   const html = `
     <ul class="availability-main">
@@ -28,7 +28,7 @@ function createCompatList(
     </ul>
   `
     .split("\n")
-    .map((line) => line.replace(/^\s+/, ""))
+    .map(line => line.replace(/^\s+/, ""))
     .filter(Boolean)
     .join("");
 
@@ -37,7 +37,7 @@ function createCompatList(
 
 function createSmallCompatList(
   availableItems: string[],
-  baseUrl: string = "../../home",
+  baseUrl: string = "../../start/modes",
 ): Element {
   const html = `
     <ul class="availability-small">
@@ -53,7 +53,7 @@ function createSmallCompatList(
     </ul>
   `
     .split("\n")
-    .map((line) => line.replace(/^\s+/, ""))
+    .map(line => line.replace(/^\s+/, ""))
     .filter(Boolean)
     .join("");
 
@@ -63,10 +63,10 @@ function createSmallCompatList(
 const MODES_REGEX = /^\[MODES:\s*([^\]]+)\]$/;
 const MODES_SMALL_REGEX = /^\[modes:\s*([^\]]+)\]$/;
 
-const remarkCompatLists: Plugin<[CompatOptions?], Root> = (options = {}) => {
-  const baseUrl = options.baseUrl || "../../home";
+const remarkCompatLists: Plugin<[CompatOptions?], Root> = () => {
+  const baseUrl = "../../start/modes";
 
-  return (tree) => {
+  return tree => {
     visit(tree, "paragraph", (node, index, parent) => {
       if (!parent || typeof index === "undefined" || node.children.length !== 1)
         return;
@@ -81,7 +81,7 @@ const remarkCompatLists: Plugin<[CompatOptions?], Root> = (options = {}) => {
       if (matchBig || matchSmall) {
         const modes = (matchBig || matchSmall)![1]
           .split(",")
-          .map((mode) => mode.trim())
+          .map(mode => mode.trim())
           .filter(Boolean);
 
         const compatList = matchBig

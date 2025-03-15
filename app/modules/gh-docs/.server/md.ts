@@ -64,7 +64,7 @@ export async function getProcessor(options?: ProcessorOptions) {
     .use(plugins.stripLinkExtPlugin, options)
     .use(plugins.remarkCodeBlocksShiki, options)
     .use(remarkGfm)
-    .use(compatTokens, { baseUrl: "../../home" })
+    .use(compatTokens)
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeStringify, { allowDangerousHtml: true })
     .use(rehypeSlug)
@@ -107,7 +107,7 @@ export async function loadPlugins() {
   const remarkCodeBlocksShiki: InternalPlugin<
     UnistNode.Root,
     UnistNode.Root
-  > = (options) => {
+  > = options => {
     let theme: Awaited<ReturnType<typeof toShikiTheme>>;
     let highlighter: Awaited<ReturnType<typeof getHighlighter>>;
 
@@ -134,7 +134,7 @@ export async function loadPlugins() {
       let langSet = new Set(langs);
       let transformTasks: Array<() => Promise<void>> = [];
 
-      visit(tree, "code", (node) => {
+      visit(tree, "code", node => {
         if (
           !node.lang ||
           !node.value ||
@@ -294,7 +294,7 @@ export async function loadPlugins() {
         }
       });
 
-      await Promise.all(transformTasks.map((exec) => exec()));
+      await Promise.all(transformTasks.map(exec => exec()));
 
       function getThemedTokens({
         code,
