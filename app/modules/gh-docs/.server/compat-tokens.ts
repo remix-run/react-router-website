@@ -4,7 +4,6 @@ import type { Element } from "hast";
 import { visit } from "unist-util-visit";
 import { fromHtml } from "hast-util-from-html";
 import { toHtml } from "hast-util-to-html";
-import { toString } from "hast-util-to-string";
 
 interface CompatOptions {
   baseUrl?: string;
