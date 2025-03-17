@@ -588,11 +588,11 @@
   }
 
   li a.yes {
-    @apply text-green-600 dark:text-green-400;
+    @apply text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200;
   }
 
   li a.no {
-    @apply opacity-20;
+    @apply opacity-20 hover:opacity-40;
   }
 
   svg {
@@ -613,11 +613,11 @@
   }
 
   li a.yes {
-    @apply text-green-600 dark:text-green-400;
+    @apply text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200;
   }
 
   li a.no {
-    @apply opacity-20;
+    @apply opacity-20 hover:opacity-40;
   }
 
   svg {
