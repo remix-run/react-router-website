@@ -233,8 +233,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </Suspense>
       </section>
       <section className="grid h-[205px] w-full place-content-center place-items-center gap-y-6 bg-gray-50 p-12 dark:bg-black">
-        <img src="/splash/shopify-badge.svg" className="h-[68px] w-[190px]" />
-        <p className="text-sm text-gray-400">© 2024 Shopify, Inc.</p>
+        <a href="https://shopify.com" target="_blank" rel="noopener noreferrer">
+          <img src="/splash/shopify-badge.svg" alt="Developed by Shopify" className="h-[68px] w-[190px]" />
+        </a>
+        <p className="text-sm text-gray-400">© 2025 Shopify, Inc.</p>
       </section>
     </main>
   );
