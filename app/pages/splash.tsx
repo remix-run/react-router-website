@@ -234,9 +234,15 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       </section>
       <section className="grid h-[205px] w-full place-content-center place-items-center gap-y-6 bg-gray-50 p-12 dark:bg-black">
         <a href="https://shopify.com" target="_blank" rel="noopener noreferrer">
-          <img src="/splash/shopify-badge.svg" alt="Developed by Shopify" className="h-[68px] w-[190px]" />
+          <img
+            src="/splash/shopify-badge.svg"
+            alt="Developed by Shopify"
+            className="h-[68px] w-[190px]"
+          />
         </a>
-        <p className="text-sm text-gray-400">© {new Date().getFullYear()} Shopify, Inc.</p>
+        <p className="text-sm text-gray-400">
+          © {new Date().getFullYear()} Shopify, Inc.
+        </p>
       </section>
     </main>
   );
