@@ -236,7 +236,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <a href="https://shopify.com" target="_blank" rel="noopener noreferrer">
           <img src="/splash/shopify-badge.svg" alt="Developed by Shopify" className="h-[68px] w-[190px]" />
         </a>
-        <p className="text-sm text-gray-400">© 2025 Shopify, Inc.</p>
+        <p className="text-sm text-gray-400">© {new Date().getFullYear()} Shopify, Inc.</p>
       </section>
     </main>
   );
