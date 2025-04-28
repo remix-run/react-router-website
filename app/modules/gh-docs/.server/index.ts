@@ -3,6 +3,7 @@ import { getBranches } from "./branches";
 import { getReferenceAPI } from "./reference-docs";
 import { getLatestVersion, getTags } from "./tags";
 import invariant from "tiny-invariant";
+import semver from "semver";
 
 export { getRepoTarballStream } from "./repo-tarball";
 
@@ -53,11 +54,15 @@ export async function getPackageIndexDoc(ref: string, pkgName: string) {
 }
 
 function fixupRefName(ref: string) {
-  return ["dev", "main", "release-next", "local"].includes(ref) ||
-    // when we switched to changesets the `v` went away, so we use that as a way
-    // to know if we need to add hte `react-router@` prefix for interacting w/
-    // github.
-    ref.startsWith("v")
-    ? ref
-    : `react-router@${ref}`;
+  if (["dev", "main", "release-next", "local"].includes(ref)) {
+    return ref;
+  }
+
+  // pre changesets, tags were like v6.2.0, so add a "v" to the ref from the URL
+  if (semver.lt(ref, "6.4.0")) {
+    return `v${ref}`;
+  }
+
+  // add react-router@ because that's what the tags are called after changesets
+  return `react-router@${ref}`;
 }

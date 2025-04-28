@@ -43,6 +43,15 @@ export function Menu({
 function MenuCategory({ category }: { category: MenuDoc }) {
   let { refParam } = useHeaderData();
   let prefix = refParam ? `/${refParam}/` : "/";
+
+  if (category.children.length === 0) {
+    return (
+      <MenuLink to={prefix + category.slug!}>
+        {category.attrs.title} {category.attrs.new && "🆕"}
+      </MenuLink>
+    );
+  }
+
   return (
     <MenuCategoryDetails className="group" slug={category.slug}>
       <MenuSummary>
