@@ -72,7 +72,7 @@ When you're happy with it, merge your branch into `main` and push.
 
 ## CSS Notes
 
-You'll want the [tailwind VSCode plugin](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) fer sure, the hints are amazing.
+You'll want the [tailwind VSCode plugin](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) for sure, the hints are amazing.
 
 The color scheme has various shades but we also have a special "brand" rule for each of our brand colors so we don't have to know the specific number of that color like this: `<div className="text-pink-brand" />`.
 
