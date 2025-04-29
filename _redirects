@@ -14,6 +14,8 @@
 /en/main/start/*                             /6.28.0/start/*
 /en/main/upgrading/*                         /6.28.0/upgrading/*
 /en/main/guides/*                            /6.28.0/guides/*
+/en/main/routers/picking-a-router            /start/modes
+
 /en/main/routers/create-browser-router       https://api.reactrouter.com/v7/functions/react_router.createBrowserRouter.html
 /en/main/routers/create-hash-router          https://api.reactrouter.com/v7/functions/react_router.createHashRouter.html
 /en/main/routers/create-memory-router        https://api.reactrouter.com/v7/functions/react_router.createMemoryRouter.html
