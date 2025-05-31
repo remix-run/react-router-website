@@ -27,7 +27,7 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
   let slug = url.pathname.endsWith("/changelog")
     ? "CHANGELOG"
     : url.pathname.endsWith("/home")
-      ? `docs/index`
+      ? "docs/index"
       : refParam
         ? // remove the refParam
           `docs/${splat.replace(`${refParam}/`, "")}`
@@ -81,5 +81,5 @@ export function meta({ error, data, matches }: Route.MetaArgs) {
 }
 
 export default function DocPage({ loaderData }: Route.ComponentProps) {
-  return <DocLayout doc={loaderData.doc} />;
+  return <DocLayout doc={loaderData.doc} githubPath={loaderData.githubPath} />;
 }
