@@ -15,7 +15,7 @@ interface StatCounts {
 }
 
 declare global {
-  var statCountsCache: LRUCache<string, StatCounts>;
+  const statCountsCache: LRUCache<string, StatCounts>;
 }
 
 global.statCountsCache ??= new LRUCache<string, StatCounts>({
