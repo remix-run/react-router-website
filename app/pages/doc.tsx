@@ -1,12 +1,15 @@
+import { useRef } from "react";
 import { getRepoDoc } from "~/modules/gh-docs/.server";
 import { CACHE_CONTROL } from "~/http";
 import { seo } from "~/seo";
 import semver from "semver";
+import { getDocTitle, getSearchMetaTags } from "~/ui/meta";
+
+import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
+import { CopyPageDropdown } from "~/components/copy-page-dropdown";
+import { LargeOnThisPage, SmallOnThisPage } from "~/components/on-this-page";
 
 import type { HeadersArgs } from "react-router";
-
-import { getDocTitle, getSearchMetaTags } from "~/ui/meta";
-import { DocLayout } from "~/components/doc-layout";
 import type { Route } from "./+types/doc";
 
 export { ErrorBoundary } from "~/components/doc-error-boundary";
@@ -40,7 +43,11 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
     if (!doc) {
       throw new Response("Not Found", { status: 404 });
     }
-    return { doc, githubPath };
+    let githubEditPath =
+      ref === "main" || ref === "dev"
+        ? `https://github.com/remix-run/react-router/edit/${ref}/${doc.filename}`
+        : undefined;
+    return { doc, githubPath, githubEditPath };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (_) {
     throw new Response("Not Found", { status: 404 });
@@ -81,5 +88,34 @@ export function meta({ error, data, matches }: Route.MetaArgs) {
 }
 
 export default function DocPage({ loaderData }: Route.ComponentProps) {
-  return <DocLayout doc={loaderData.doc} githubPath={loaderData.githubPath} />;
+  let ref = useRef<HTMLDivElement>(null);
+  const { doc, githubPath, githubEditPath } = loaderData;
+
+  useDelegatedReactRouterLinks(ref);
+
+  return (
+    <div className="xl:flex xl:w-full xl:justify-between xl:gap-8">
+      <div className="min-w-0 px-4 pt-8 xl:order-1 xl:flex-grow xl:pl-0">
+        {/* FIXME: this is not the correct spot for this -- need to consult with Tim because original design may not quite work */}
+        <CopyPageDropdown
+          githubPath={githubPath}
+          githubEditPath={githubEditPath}
+        />
+        <div ref={ref} className="markdown w-full max-w-3xl pb-[33vh] isolate">
+          <div
+            className="md-prose"
+            dangerouslySetInnerHTML={{ __html: doc.html }}
+          />
+        </div>
+      </div>
+
+      <div className="hidden self-start pt-10 xl:order-2 xl:block xl:w-56 xl:flex-shrink-0">
+        {doc.headings.length > 3 && (
+          <LargeOnThisPage doc={doc} mdRef={ref} key={doc.slug} />
+        )}
+      </div>
+
+      {doc.headings.length > 3 && <SmallOnThisPage doc={doc} />}
+    </div>
+  );
 }
