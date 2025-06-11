@@ -14,7 +14,7 @@ export { ErrorBoundary } from "~/components/doc-error-boundary";
 export let loader = async ({ request, params }: Route.LoaderArgs) => {
   let url = new URL(request.url);
   let splat = params["*"] ?? "";
-  let firstSegment = splat?.split("/")[0];
+  let firstSegment = splat.split("/")[0];
   let refParam =
     firstSegment === "dev" ||
     firstSegment === "local" ||
