@@ -13,13 +13,12 @@ export { ErrorBoundary } from "~/components/doc-error-boundary";
 
 export let loader = async ({ request, params }: Route.LoaderArgs) => {
   let url = new URL(request.url);
-  let splat = params["*"];
-  let firstSegment = splat?.split("/")[0];
-  let refParam = params.ref
-    ? params.ref
-    : firstSegment === "dev" ||
-        firstSegment === "local" ||
-        semver.valid(firstSegment)
+  let splat = params["*"] ?? "";
+  let firstSegment = splat.split("/")[0];
+  let refParam =
+    firstSegment === "dev" ||
+    firstSegment === "local" ||
+    semver.valid(firstSegment)
       ? firstSegment
       : undefined;
 
@@ -31,8 +30,8 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
       ? `docs/index`
       : refParam
         ? // remove the refParam
-          `docs/${params["*"].replace(`${refParam}/`, "")}`
-        : `docs/${params["*"]}`;
+          `docs/${splat.replace(`${refParam}/`, "")}`
+        : `docs/${splat}`;
 
   let githubPath = `https://raw.githubusercontent.com/remix-run/react-router/${ref}/${slug}.md`;
 
@@ -54,7 +53,7 @@ export function headers({ parentHeaders }: HeadersArgs) {
 }
 
 export function meta({ error, data, matches }: Route.MetaArgs) {
-  if (error || !data.doc) {
+  if (error || !data?.doc) {
     return [{ title: "Not Found" }];
   }
   let [rootMatch, docMatch] = matches;
