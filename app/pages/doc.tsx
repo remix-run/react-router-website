@@ -6,11 +6,11 @@ import semver from "semver";
 import { getDocTitle, getSearchMetaTags } from "~/ui/meta";
 
 import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
-import { CopyPageDropdown } from "~/components/copy-page-dropdown";
 import { LargeOnThisPage, SmallOnThisPage } from "~/components/on-this-page";
 
 import type { HeadersArgs } from "react-router";
 import type { Route } from "./+types/doc";
+import { CopyPageDropdown } from "~/components/copy-page-dropdown";
 
 export { ErrorBoundary } from "~/components/doc-error-boundary";
 
@@ -94,28 +94,28 @@ export default function DocPage({ loaderData }: Route.ComponentProps) {
   useDelegatedReactRouterLinks(ref);
 
   return (
-    <div className="xl:flex xl:w-full xl:justify-between xl:gap-8">
-      <div className="min-w-0 px-4 pt-8 xl:order-1 xl:flex-grow xl:pl-0">
-        {/* FIXME: this is not the correct spot for this -- need to consult with Tim because original design may not quite work */}
+    <div className="xl:flex xl:w-full xl:justify-between xl:gap-8 xl:flex-row-reverse">
+      <div className="sticky top-28 hidden w-56 min-w-min flex-shrink-0 self-start pb-10 xl:block">
         <CopyPageDropdown
           githubPath={githubPath}
           githubEditPath={githubEditPath}
         />
-        <div ref={ref} className="markdown w-full max-w-3xl pb-[33vh] isolate">
+        {doc.headings.length > 3 ? (
+          <>
+            <div className="h-5" />
+            <LargeOnThisPage doc={doc} mdRef={ref} />
+          </>
+        ) : null}
+      </div>
+      {doc.headings.length > 3 ? <SmallOnThisPage doc={doc} /> : null}
+      <div className="min-w-0 px-4 pt-8 xl:mr-4 xl:flex-grow xl:pl-0">
+        <div ref={ref} className="markdown w-full max-w-3xl pb-[33vh]">
           <div
             className="md-prose"
             dangerouslySetInnerHTML={{ __html: doc.html }}
           />
         </div>
       </div>
-
-      <div className="hidden self-start pt-10 xl:order-2 xl:block xl:w-56 xl:flex-shrink-0">
-        {doc.headings.length > 3 && (
-          <LargeOnThisPage doc={doc} mdRef={ref} key={doc.slug} />
-        )}
-      </div>
-
-      {doc.headings.length > 3 && <SmallOnThisPage doc={doc} />}
     </div>
   );
 }
