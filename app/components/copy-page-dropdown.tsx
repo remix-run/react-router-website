@@ -11,31 +11,31 @@ export function CopyPageDropdown({
   githubEditPath?: string;
 }) {
   return (
-    <DetailsMenu className="relative inline-block group select-none">
-      <summary className="_no-triangle cursor-pointer flex text-sm text-gray-300 group hover:text-gray-700 focus-visible:text-gray-700">
-        <div className="flex py-[10px] pl-4 pr-3 items-center gap-2 border border-gray-100 rounded-tl-[30px] rounded-bl-[30px] ">
-          <svg className="size-[18px]">
+    <DetailsMenu className="relative inline-block group select-none w-full">
+      <summary className="_no-triangle cursor-pointer flex text-sm text-gray-300 group hover:text-gray-700 focus-visible:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50 dark:focus-visible:text-gray-50 w-fit">
+        <div className="flex py-2 pl-4 pr-3 items-center gap-2 border border-gray-100 dark:border-gray-700 rounded-tl-full rounded-bl-full">
+          <svg className="size-5">
             <use href={`${iconsHref}#copy`} />
           </svg>
           <span>Copy Page</span>
         </div>
-        <div className="flex py-[10px] pr-4 pl-[10px] items-center gap-2 border border-gray-100 rounded-tr-[30px] rounded-br-[30px] border-l-0 text-gray-300 group-open:text-gray-700">
-          <svg className="size-[18px]">
+        <div className="flex py-2 pr-4 pl-2 items-center gap-2 border border-gray-100 dark:border-gray-700 rounded-tr-full rounded-br-full border-l-0 text-gray-300 group-open:text-gray-700 dark:text-gray-400 dark:group-open:text-gray-50 dark:focus-visible:text-gray-50">
+          <svg className="size-5">
             <use href={`${iconsHref}#dropdown-arrows`} />
           </svg>
         </div>
       </summary>
 
-      <div className="absolute right-0 z-10 mt-1 rounded-xl border border-gray-100 bg-white shadow-lg p-4 flex flex-col gap-4 min-w-max">
+      <div className="absolute right-0 z-10 mt-1 rounded-xl border border-gray-100 bg-white shadow-lg p-4 flex flex-col gap-4 w-full min-w-fit dark:border-gray-700 dark:bg-gray-900">
         <CopyButton
           githubPath={githubPath}
-          className="flex w-full items-start gap-3 text-gray-400 hover:text-gray-700 focus-visible:text-gray-700"
+          className="flex w-full items-start gap-3 text-gray-400 hover:text-gray-700 focus-visible:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50 dark:focus-visible:text-gray-50"
         />
 
         {githubEditPath && (
           <a
             href={githubEditPath}
-            className="flex w-full items-start gap-3 text-gray-400 hover:text-gray-700 focus-visible:text-gray-700"
+            className="flex w-full items-start gap-3 text-gray-400 hover:text-gray-700 focus-visible:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50 dark:focus-visible:text-gray-50"
           >
             <MenuItem
               icon="edit"
@@ -66,7 +66,7 @@ function CopyButton({
         <MenuItem
           icon="copy"
           title={copiedTitle}
-          description="Copy Page as Markdown for LLMs"
+          description="Copy Page as Markdown"
         />
       </a>
     );
@@ -98,7 +98,7 @@ function CopyButton({
       <MenuItem
         icon="copy"
         title={copiedTitle}
-        description="Copy Page as Markdown for LLMs"
+        description="Copy Page as Markdown"
       />
     </button>
   );
@@ -115,10 +115,10 @@ function MenuItem({
 }) {
   return (
     <>
-      <svg className="size-[18px]">
+      <svg className="size-5">
         <use href={`${iconsHref}#${icon}`} />
       </svg>
-      <div className="flex flex-col items-start">
+      <div className="flex flex-col items-start text-left">
         <span>{title}</span>
         <span className="text-xs">{description}</span>
       </div>
