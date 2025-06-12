@@ -5,12 +5,12 @@ import { seo } from "~/seo";
 import semver from "semver";
 import { getDocTitle, getSearchMetaTags } from "~/ui/meta";
 
-import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
+import { CopyPageDropdown } from "~/components/copy-page-dropdown";
 import { LargeOnThisPage, SmallOnThisPage } from "~/components/on-this-page";
+import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
 
 import type { HeadersArgs } from "react-router";
 import type { Route } from "./+types/doc";
-import { CopyPageDropdown } from "~/components/copy-page-dropdown";
 
 export { ErrorBoundary } from "~/components/doc-error-boundary";
 
