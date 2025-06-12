@@ -1,9 +1,9 @@
 import iconsHref from "~/icons.svg";
-import { useDoc } from "~/hooks/use-doc";
+import { useDocRouteLoaderData } from "~/hooks/use-doc";
 import { DetailsMenu } from "~/modules/details-menu";
 
 export function NavMenuMobile({ children }: { children?: React.ReactNode }) {
-  let doc = useDoc();
+  let doc = useDocRouteLoaderData()?.doc;
 
   return (
     <DetailsMenu className="group relative flex h-full flex-col lg:hidden ">

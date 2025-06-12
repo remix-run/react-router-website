@@ -129,4 +129,10 @@
     <path d="M601.2 300C601.2 266.863 574.283 240 541.08 240C507.877 240 480.96 266.863 480.96 300C480.96 333.138 507.877 360 541.08 360C574.283 360 601.2 333.138 601.2 300Z" fill="currentColor"/>
   </svg>
 
+
+  <symbol id="copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <rect width="13" height="13" x="9" y="9" rx="2" ry="2" vector-effect="non-scaling-stroke"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" vector-effect="non-scaling-stroke"/>
+  </symbol>
+
 </svg>

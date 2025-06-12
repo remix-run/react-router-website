@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import type { Doc } from "~/modules/gh-docs/.server";
 import iconsHref from "~/icons.svg";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import classNames from "classnames";
 
 export function LargeOnThisPage({
@@ -11,28 +11,27 @@ export function LargeOnThisPage({
   doc: Doc;
   mdRef: React.RefObject<HTMLDivElement | null>;
 }) {
-  const navRef = useRef<HTMLDivElement>(null);
   const [activeHeading, setActiveHeading] = useState("");
 
   useEffect(() => {
     const node = mdRef.current;
     if (!node) return;
+    // The breakpoint for this component is at xl, which is 1280px
+    // sorry this is hardcoded 🙃
+    const xlQuery = window.matchMedia("(min-width: 1280px)");
 
-    const h2 = Array.from(node.querySelectorAll("h2"));
-    const h3 = Array.from(node.querySelectorAll("h3"));
-
-    const combinedHeadings = [...h2, ...h3]
-      .sort((a, b) => a.offsetTop - b.offsetTop)
-      // Iterate backwards through headings to find the last one above scroll position
-      .reverse();
-
-    function handleScroll() {
-      // bail if the nav is not visible
-      const node = navRef.current;
-      if (!node) return;
-      if (window.getComputedStyle(node).display !== "block") {
+    const handleScroll = () => {
+      if (!xlQuery.matches) {
         return;
       }
+
+      const h2 = Array.from(node.querySelectorAll("h2"));
+      const h3 = Array.from(node.querySelectorAll("h3"));
+
+      const combinedHeadings = [...h2, ...h3]
+        .sort((a, b) => a.offsetTop - b.offsetTop)
+        // Iterate backwards through headings to find the last one above scroll position
+        .reverse();
 
       for (const heading of combinedHeadings) {
         // 100px arbitrary value to to offset the height of the header (h-16)
@@ -41,7 +40,7 @@ export function LargeOnThisPage({
           break;
         }
       }
-    }
+    };
 
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -50,10 +49,7 @@ export function LargeOnThisPage({
   }, [mdRef]);
 
   return (
-    <div
-      ref={navRef}
-      className="sticky top-36 order-1 mt-20 hidden max-h-[calc(100vh-9rem)] w-56 min-w-min flex-shrink-0 self-start overflow-y-auto pb-10 xl:block"
-    >
+    <div className="max-h-[calc(100vh-9rem)] overflow-y-auto">
       <nav className="mb-3 flex items-center font-semibold">On this page</nav>
       <ul className="md-toc flex flex-col flex-wrap gap-3 leading-[1.125]">
         {doc.headings.map((heading, i) => (
@@ -69,7 +65,7 @@ export function LargeOnThisPage({
               className={classNames(
                 activeHeading == heading.slug &&
                   "text-gray-900 dark:text-gray-50",
-                " block py-1 text-sm text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50  dark:active:text-red-brand",
+                "block py-1 text-sm text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50  dark:active:text-red-brand",
               )}
             />
           </li>

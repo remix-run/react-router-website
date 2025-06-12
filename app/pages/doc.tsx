@@ -1,12 +1,15 @@
+import { useRef } from "react";
 import { getRepoDoc } from "~/modules/gh-docs/.server";
 import { CACHE_CONTROL } from "~/http";
 import { seo } from "~/seo";
 import semver from "semver";
+import { getDocTitle, getSearchMetaTags } from "~/ui/meta";
+
+import { CopyPageDropdown } from "~/components/copy-page-dropdown";
+import { LargeOnThisPage, SmallOnThisPage } from "~/components/on-this-page";
+import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
 
 import type { HeadersArgs } from "react-router";
-
-import { getDocTitle, getSearchMetaTags } from "~/ui/meta";
-import { DocLayout } from "~/components/doc-layout";
 import type { Route } from "./+types/doc";
 
 export { ErrorBoundary } from "~/components/doc-error-boundary";
@@ -27,7 +30,7 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
   let slug = url.pathname.endsWith("/changelog")
     ? "CHANGELOG"
     : url.pathname.endsWith("/home")
-      ? `docs/index`
+      ? "docs/index"
       : refParam
         ? // remove the refParam
           `docs/${splat.replace(`${refParam}/`, "")}`
@@ -40,7 +43,11 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
     if (!doc) {
       throw new Response("Not Found", { status: 404 });
     }
-    return { doc, githubPath };
+    let githubEditPath =
+      ref === "main" || ref === "dev"
+        ? `https://github.com/remix-run/react-router/edit/${ref}/${doc.filename}`
+        : undefined;
+    return { doc, githubPath, githubEditPath };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (_) {
     throw new Response("Not Found", { status: 404 });
@@ -81,5 +88,34 @@ export function meta({ error, data, matches }: Route.MetaArgs) {
 }
 
 export default function DocPage({ loaderData }: Route.ComponentProps) {
-  return <DocLayout doc={loaderData.doc} />;
+  let ref = useRef<HTMLDivElement>(null);
+  const { doc, githubPath, githubEditPath } = loaderData;
+
+  useDelegatedReactRouterLinks(ref);
+
+  return (
+    <div className="xl:flex xl:w-full xl:justify-between xl:gap-8 xl:flex-row-reverse">
+      <div className="sticky top-28 hidden w-56 min-w-min flex-shrink-0 self-start pb-10 xl:block">
+        <CopyPageDropdown
+          githubPath={githubPath}
+          githubEditPath={githubEditPath}
+        />
+        {doc.headings.length > 3 ? (
+          <>
+            <div className="h-5" />
+            <LargeOnThisPage doc={doc} mdRef={ref} />
+          </>
+        ) : null}
+      </div>
+      {doc.headings.length > 3 ? <SmallOnThisPage doc={doc} /> : null}
+      <div className="min-w-0 px-4 pt-8 xl:mr-4 xl:flex-grow xl:pl-0">
+        <div ref={ref} className="markdown w-full max-w-3xl pb-[33vh]">
+          <div
+            className="md-prose"
+            dangerouslySetInnerHTML={{ __html: doc.html }}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }
