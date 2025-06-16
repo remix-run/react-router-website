@@ -9,7 +9,7 @@ import { CopyPageDropdown } from "~/components/copy-page-dropdown";
 import { LargeOnThisPage, SmallOnThisPage } from "~/components/on-this-page";
 import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
 
-import type { HeadersArgs } from "react-router";
+import { redirect, type HeadersArgs } from "react-router";
 import type { Route } from "./+types/doc";
 
 export { ErrorBoundary } from "~/components/doc-error-boundary";
@@ -17,6 +17,7 @@ export { ErrorBoundary } from "~/components/doc-error-boundary";
 export let loader = async ({ request, params }: Route.LoaderArgs) => {
   let url = new URL(request.url);
   let splat = params["*"] ?? "";
+  let hasMdExtension = url.pathname.endsWith(".md");
   let firstSegment = splat.split("/")[0];
   let refParam =
     firstSegment === "dev" ||
@@ -27,16 +28,36 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
 
   let ref = refParam || "main";
 
-  let slug = url.pathname.endsWith("/changelog")
-    ? "CHANGELOG"
-    : url.pathname.endsWith("/home")
-      ? "docs/index"
-      : refParam
-        ? // remove the refParam
-          `docs/${splat.replace(`${refParam}/`, "")}`
-        : `docs/${splat}`;
+  let isHomePage =
+    url.pathname.endsWith("/home") || url.pathname.endsWith("/home.md");
+  let isChangelogPage =
+    url.pathname.endsWith("/changelog") ||
+    url.pathname.endsWith("/changelog.md");
 
-  let githubPath = `https://raw.githubusercontent.com/remix-run/react-router/${ref}/${slug}.md`;
+  let slug;
+  if (isChangelogPage) {
+    slug = "CHANGELOG";
+  } else if (isHomePage) {
+    slug = "docs/index";
+  } else {
+    // Build the docs path, removing refParam if present
+    let docsPath = refParam ? splat.replace(`${refParam}/`, "") : splat;
+    slug = `docs/${docsPath}`;
+  }
+
+  let ghSlug;
+  if (isChangelogPage || isHomePage) {
+    ghSlug = `${slug}.md`;
+  } else {
+    ghSlug = hasMdExtension ? slug : `${slug}.md`;
+  }
+
+  let githubPath = `https://raw.githubusercontent.com/remix-run/react-router/${ref}/${ghSlug}`;
+
+  // If the page is a markdown file, redirect to the raw GitHub file
+  if (hasMdExtension) {
+    return redirect(githubPath);
+  }
 
   try {
     let doc = await getRepoDoc(ref, slug);
@@ -82,7 +103,7 @@ export function meta({ error, data, matches }: Route.MetaArgs) {
     ...meta,
     ...getSearchMetaTags(
       rootMatch.data.isProductionHost,
-      doc.header.docSearchVersion,
+      doc.header.docSearchVersion
     ),
   ];
 }
