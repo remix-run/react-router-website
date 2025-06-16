@@ -1,3 +1,4 @@
+import { preload } from "react-dom";
 import { Outlet, redirect } from "react-router";
 import classNames from "classnames";
 
@@ -14,9 +15,14 @@ import { useRef } from "react";
 import { useCodeBlockCopyButton } from "~/ui/utils";
 
 import docsCss from "~/styles/docs.css?url";
-import { preload } from "react-dom";
+import {
+  menuCollapseStateContext,
+  menuCollapseStateMiddleware,
+} from "~/actions/menu-collapse";
 
-export let loader = async ({ request, params }: Route.LoaderArgs) => {
+export let unstable_middleware = [menuCollapseStateMiddleware];
+
+export async function loader({ request, params, context }: Route.LoaderArgs) {
   let url = new URL(request.url);
   if (!url.pathname.endsWith("/")) {
     url.pathname += "/";
@@ -56,8 +62,16 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
     getHeaderData("en", ref, refParam),
   ]);
 
-  return { menu, header };
-};
+  // Thinking the collapsing should only apply on the if ref is main
+
+  // console.log("currentGitHubRef", header.currentGitHubRef);
+
+  return {
+    menu,
+    header,
+    menuCollapseState: context.get(menuCollapseStateContext),
+  };
+}
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
   preload(docsCss, { as: "style" });

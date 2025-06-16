@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router";
+import { Link, useFetcher, useMatches, useSubmit } from "react-router";
 import classNames from "classnames";
 
 import iconsHref from "~/icons.svg";
@@ -107,16 +107,7 @@ function MenuCategoryDetails({
   slug,
   children,
 }: MenuCategoryDetailsType) {
-  let { isActive } = useNavigation(slug);
-  // By default only the active path is open
-  const [isOpen, setIsOpen] = React.useState(true);
-
-  // Auto open the details element, necessary when navigating from the index page
-  React.useEffect(() => {
-    if (isActive) {
-      setIsOpen(true);
-    }
-  }, [isActive]);
+  const [isOpen, submitMenuCollapse] = useMenuCollapse(slug!);
 
   return (
     <details
@@ -126,12 +117,58 @@ function MenuCategoryDetails({
         // Synchronize the DOM's state with React state to prevent the
         // details element from being closed after navigation and re-evaluation
         // of useIsActivePath
-        setIsOpen(e.currentTarget.open);
+        const open = e.currentTarget.open;
+        submitMenuCollapse(open);
       }}
     >
       {children}
     </details>
   );
+}
+
+function useMenuCollapse(category: string) {
+  const matches = useMatches();
+
+  const layoutData = matches.find(
+    (match) =>
+      typeof match.data === "object" &&
+      match.data !== null &&
+      "menuCollapseState" in match.data,
+  )?.data as { menuCollapseState: Record<string, boolean> } | undefined;
+
+  const isMenuOpen = layoutData
+    ? (layoutData.menuCollapseState[category] ?? true)
+    : true;
+
+  const [isOpen, setIsOpen] = React.useState(isMenuOpen);
+  const submit = useSubmit();
+
+  const submitMenuCollapse = React.useCallback(
+    (open: boolean) => {
+      // fire and forget, assume that the submit will succeed and just update the ephemeral state
+      setIsOpen(open);
+
+      return submit(
+        { category, open },
+        {
+          navigate: false,
+          method: "post",
+          action: "/menu-collapse",
+        },
+      );
+    },
+    [category, submit],
+  );
+
+  // Auto open the details element, necessary when navigating from the index page
+  let { isActive } = useNavigation(category);
+  React.useEffect(() => {
+    if (isActive) {
+      submitMenuCollapse(true);
+    }
+  }, [isActive, submitMenuCollapse]);
+
+  return [isOpen, submitMenuCollapse] as const;
 }
 
 let sortDocs = (a: MenuDoc, b: MenuDoc) =>

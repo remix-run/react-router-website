@@ -22,7 +22,7 @@ function serializeColorScheme(colorScheme: "dark" | "light" | "system") {
   }
 }
 
-export function validateColorScheme(formValue: any): formValue is ColorScheme {
+function validateColorScheme(formValue: any): formValue is ColorScheme {
   return (
     formValue === "dark" || formValue === "light" || formValue === "system"
   );
@@ -42,9 +42,7 @@ export let action: ActionFunction = async ({ request }) => {
   });
 };
 
-export function safeRedirect(
-  to: FormDataEntryValue | string | null | undefined,
-) {
+function safeRedirect(to: FormDataEntryValue | string | null | undefined) {
   if (!to || typeof to !== "string") {
     return "/";
   }
