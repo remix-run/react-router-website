@@ -4,9 +4,10 @@ const routes: RouteConfig = [
   index("pages/splash.tsx"),
   route("/brand", "pages/brand.tsx"),
   route("/healthcheck", "pages/healthcheck.tsx"),
-  route("/color-scheme", "actions/color-scheme.ts"),
+  route("/color-scheme", "actions/color-scheme/route.ts"),
 
   route("", "pages/docs-layout.tsx", { id: "docs" }, [
+    route("/menu-collapse", "actions/menu-collapse/route.ts"),
     route("home", "pages/doc.tsx", { id: "home" }),
     route("changelog", "pages/doc.tsx", { id: "changelog" }),
     route("*", "pages/doc.tsx"),

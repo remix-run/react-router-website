@@ -8,11 +8,11 @@ import {
 } from "react-router";
 import { CACHE_CONTROL } from "./http";
 
-import { parseColorScheme } from "./modules/color-scheme/server";
+import { parseColorScheme } from "./actions/color-scheme/server";
 import {
   ColorSchemeScript,
   useColorScheme,
-} from "./modules/color-scheme/components";
+} from "./actions/color-scheme/components";
 import { isHost } from "./modules/http-utils/is-host";
 import iconsHref from "~/icons.svg";
 import { DocSearch } from "./modules/docsearch";

@@ -1,7 +1,27 @@
 import { useLayoutEffect, useMemo } from "react";
 import { useNavigation, useRouteLoaderData } from "react-router";
 import type { loader as rootLoader } from "../../root";
-import type { ColorScheme } from "./types";
+import type { ColorScheme } from "./server";
+
+export function getColorScheme(formData: FormData): ColorScheme | null {
+  let colorScheme = formData.get("colorScheme");
+
+  if (
+    colorScheme === "dark" ||
+    colorScheme === "light" ||
+    colorScheme === "system"
+  ) {
+    return colorScheme;
+  }
+
+  return null;
+}
+
+export function validateColorScheme(formValue: any): formValue is ColorScheme {
+  return (
+    formValue === "dark" || formValue === "light" || formValue === "system"
+  );
+}
 
 export function useColorScheme(): ColorScheme {
   let rootLoaderData = useRouteLoaderData<typeof rootLoader>("root");
@@ -10,10 +30,7 @@ export function useColorScheme(): ColorScheme {
   }
 
   let { formData } = useNavigation();
-  let optimisticColorScheme =
-    formData && formData.has("colorScheme")
-      ? (formData.get("colorScheme") as ColorScheme)
-      : null;
+  let optimisticColorScheme = formData ? getColorScheme(formData) : null;
   return optimisticColorScheme || rootLoaderData.colorScheme;
 }
 

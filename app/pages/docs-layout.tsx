@@ -1,3 +1,4 @@
+import { preload } from "react-dom";
 import { Outlet, redirect } from "react-router";
 import classNames from "classnames";
 
@@ -13,10 +14,16 @@ import semver from "semver";
 import { useRef } from "react";
 import { useCodeBlockCopyButton } from "~/ui/utils";
 
-import docsCss from "~/styles/docs.css?url";
-import { preload } from "react-dom";
+import {
+  menuCollapseContext,
+  menuCollapseStateMiddleware,
+} from "~/actions/menu-collapse/server";
 
-export let loader = async ({ request, params }: Route.LoaderArgs) => {
+import docsCss from "~/styles/docs.css?url";
+
+export let unstable_middleware = [menuCollapseStateMiddleware];
+
+export async function loader({ request, params, context }: Route.LoaderArgs) {
   let url = new URL(request.url);
   if (!url.pathname.endsWith("/")) {
     url.pathname += "/";
@@ -56,8 +63,19 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
     getHeaderData("en", ref, refParam),
   ]);
 
-  return { menu, header };
-};
+  // Only retain the menu collapse state on the main branch to avoid bleeding
+  // to other branches
+  let menuCollapseState =
+    header.currentGitHubRef === "main"
+      ? menuCollapseContext(context).get()
+      : {};
+
+  return {
+    menu,
+    header,
+    menuCollapseState,
+  };
+}
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
   preload(docsCss, { as: "style" });

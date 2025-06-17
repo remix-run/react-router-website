@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import * as React from "react";
 import { Form, useLocation } from "react-router";
-import { useColorScheme } from "~/modules/color-scheme/components";
+import { useColorScheme } from "~/actions/color-scheme/components";
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { DetailsPopup } from "./details-popup";
