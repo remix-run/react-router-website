@@ -126,7 +126,7 @@ function MenuCategoryDetails({
 function useMenuCollapse(category?: string) {
   const menuCollapseState = useDocsLayoutRouteLoaderData()?.menuCollapseState;
   const [isOpen, setIsOpen] = React.useState(
-    () => menuCollapseState?.[category ?? ""] ?? true,
+    menuCollapseState?.[category ?? ""] ?? true,
   );
   const submit = useSubmit();
 
@@ -149,7 +149,7 @@ function useMenuCollapse(category?: string) {
     [category, submit],
   );
 
-  // Auto open the details element, necessary when navigating from the index page or a document request on a page in a collapsed menu
+  // Auto-expand when navigating to a page within this category
   let { isActive } = useNavigation(category);
   React.useEffect(() => {
     if (isActive) {

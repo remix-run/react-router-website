@@ -11,6 +11,7 @@ let cookie = createCookie("menu-collapse", {
   sameSite: "lax",
 });
 
+// Default behavior: missing categories are treated as "open" (true)
 type MenuCollapseState = Record<string, boolean>;
 
 let menuCollapseStateContext = unstable_createContext<MenuCollapseState>({});

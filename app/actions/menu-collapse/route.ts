@@ -16,6 +16,8 @@ export async function action({ request, context }: Route.ActionArgs) {
   let parsedOpen = open === "true";
 
   let menuCollapse = menuCollapseContext(context);
+  // This action is responsible for setting the menu collapse state.
+  // Middleware is responsible for writing it to the cookie.
   menuCollapse.set(category, parsedOpen);
 
   return parsedOpen;
