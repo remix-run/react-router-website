@@ -14,11 +14,12 @@ import semver from "semver";
 import { useRef } from "react";
 import { useCodeBlockCopyButton } from "~/ui/utils";
 
-import docsCss from "~/styles/docs.css?url";
 import {
-  menuCollapseStateContext,
+  menuCollapseContext,
   menuCollapseStateMiddleware,
-} from "~/actions/menu-collapse";
+} from "~/actions/menu-collapse/server";
+
+import docsCss from "~/styles/docs.css?url";
 
 export let unstable_middleware = [menuCollapseStateMiddleware];
 
@@ -62,14 +63,17 @@ export async function loader({ request, params, context }: Route.LoaderArgs) {
     getHeaderData("en", ref, refParam),
   ]);
 
-  // Thinking the collapsing should only apply on the if ref is main
-
-  // console.log("currentGitHubRef", header.currentGitHubRef);
+  // Only retain the menu collapse state on the main branch to avoid bleeding
+  // to other branches
+  let menuCollapseState =
+    header.currentGitHubRef === "main"
+      ? menuCollapseContext(context).get()
+      : {};
 
   return {
     menu,
     header,
-    menuCollapseState: context.get(menuCollapseStateContext),
+    menuCollapseState,
   };
 }
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link, useFetcher, useMatches, useSubmit } from "react-router";
+import { Link, useSubmit } from "react-router";
 import classNames from "classnames";
 
 import iconsHref from "~/icons.svg";
@@ -8,6 +8,7 @@ import type { MenuDoc } from "~/modules/gh-docs/.server/docs";
 import { useNavigation } from "~/hooks/use-navigation";
 import { useDelayedValue } from "~/hooks/use-delayed-value";
 import { useHeaderData } from "../docs-header/use-header-data";
+import { useDocsLayoutRouteLoaderData } from "~/hooks/use-docs-layout";
 
 export function Menu({
   menu,
@@ -107,18 +108,14 @@ function MenuCategoryDetails({
   slug,
   children,
 }: MenuCategoryDetailsType) {
-  const [isOpen, submitMenuCollapse] = useMenuCollapse(slug!);
+  const [isOpen, submitMenuCollapse] = useMenuCollapse(slug);
 
   return (
     <details
       className={classNames(className, "relative flex flex-col")}
       open={isOpen}
       onToggle={(e) => {
-        // Synchronize the DOM's state with React state to prevent the
-        // details element from being closed after navigation and re-evaluation
-        // of useIsActivePath
-        const open = e.currentTarget.open;
-        submitMenuCollapse(open);
+        submitMenuCollapse(e.currentTarget.open);
       }}
     >
       {children}
@@ -126,27 +123,19 @@ function MenuCategoryDetails({
   );
 }
 
-function useMenuCollapse(category: string) {
-  const matches = useMatches();
-
-  const layoutData = matches.find(
-    (match) =>
-      typeof match.data === "object" &&
-      match.data !== null &&
-      "menuCollapseState" in match.data,
-  )?.data as { menuCollapseState: Record<string, boolean> } | undefined;
-
-  const isMenuOpen = layoutData
-    ? (layoutData.menuCollapseState[category] ?? true)
-    : true;
-
-  const [isOpen, setIsOpen] = React.useState(isMenuOpen);
+function useMenuCollapse(category?: string) {
+  const menuCollapseState = useDocsLayoutRouteLoaderData()?.menuCollapseState;
+  const [isOpen, setIsOpen] = React.useState(
+    () => menuCollapseState?.[category ?? ""] ?? true,
+  );
   const submit = useSubmit();
 
   const submitMenuCollapse = React.useCallback(
     (open: boolean) => {
-      // fire and forget, assume that the submit will succeed and just update the ephemeral state
+      // Fire and forget, assume that the submit will succeed and just update
       setIsOpen(open);
+
+      if (!category) return;
 
       return submit(
         { category, open },
@@ -160,7 +149,7 @@ function useMenuCollapse(category: string) {
     [category, submit],
   );
 
-  // Auto open the details element, necessary when navigating from the index page
+  // Auto open the details element, necessary when navigating from the index page or a document request on a page in a collapsed menu
   let { isActive } = useNavigation(category);
   React.useEffect(() => {
     if (isActive) {
