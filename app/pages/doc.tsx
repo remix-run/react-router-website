@@ -103,7 +103,7 @@ export function meta({ error, data, matches }: Route.MetaArgs) {
     ...meta,
     ...getSearchMetaTags(
       rootMatch.data.isProductionHost,
-      doc.header.docSearchVersion
+      doc.header.docSearchVersion,
     ),
   ];
 }
