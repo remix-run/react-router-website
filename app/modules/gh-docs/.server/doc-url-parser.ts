@@ -1,7 +1,37 @@
 import semver from "semver";
 
-function isRefBranch(ref: string): boolean {
-  return ["dev", "main", "release-next", "local"].includes(ref);
+export function parseDocUrl(url: URL, splat: string) {
+  // Remove the .md extension if there is one
+  splat = splat.replace(/\.md$/, "");
+  let pathname = url.pathname.replace(/\.md$/, "");
+
+  let firstSegment = splat.split("/")[0];
+
+  let ref = "main";
+  if (
+    firstSegment === "dev" ||
+    firstSegment === "local" ||
+    semver.valid(firstSegment)
+  ) {
+    ref = firstSegment;
+  }
+
+  let slug: string;
+  if (pathname.endsWith("/changelog")) {
+    slug = "CHANGELOG";
+  } else if (pathname.endsWith("/home")) {
+    slug = "docs/index";
+  } else {
+    // Build the docs path, removing refParam if present
+    let docsPath = splat.replace(`${ref}/`, "");
+    slug = `docs/${docsPath}`;
+  }
+
+  return {
+    ref,
+    slug,
+    ...generateGitHubPaths(ref, slug),
+  };
 }
 
 /**
@@ -24,66 +54,28 @@ export function fixupRefName(ref: string): string {
   return `react-router@${ref}`;
 }
 
+function isRefBranch(ref: string): boolean {
+  return ["dev", "main", "release-next", "local"].includes(ref);
+}
+
 /**
  * Generates the correct GitHub raw URL based on the ref type
  * - For main/dev/local: uses the ref directly
  * - For semantic versions: uses refs/tags/{version}
  */
-function generateGitHubRawUrl(ref: string, filePath: string): string {
+function generateGitHubPaths(ref: string, slug: string) {
   let baseUrl = "https://raw.githubusercontent.com/remix-run/react-router";
 
   // For main, dev, local, or any non-semver ref, use directly
   if (isRefBranch(ref)) {
-    return `${baseUrl}/${ref}/${filePath}`;
+    return {
+      githubPath: `${baseUrl}/${ref}/${slug}.md`,
+      githubEditPath: `https://github.com/remix-run/react-router/edit/${ref}/${slug}.md`,
+    };
   }
 
   // For semantic versions, use refs/tags/ structure
-  return `${baseUrl}/refs/tags/${fixupRefName(ref)}/${filePath}`;
-}
-
-export function parseDocUrl(url: URL, splat: string) {
-  let hasMdExtension = url.pathname.endsWith(".md");
-  let firstSegment = splat.split("/")[0];
-  let refParam =
-    firstSegment === "dev" ||
-    firstSegment === "local" ||
-    semver.valid(firstSegment)
-      ? firstSegment
-      : undefined;
-
-  let ref = refParam || "main";
-
-  let isHomePage =
-    url.pathname.endsWith("/home") || url.pathname.endsWith("/home.md");
-  let isChangelogPage =
-    url.pathname.endsWith("/changelog") ||
-    url.pathname.endsWith("/changelog.md");
-
-  let slug: string;
-  if (isChangelogPage) {
-    slug = "CHANGELOG";
-  } else if (isHomePage) {
-    slug = "docs/index";
-  } else {
-    // Build the docs path, removing refParam if present
-    let docsPath = refParam ? splat.replace(`${refParam}/`, "") : splat;
-    slug = `docs/${docsPath}`;
-  }
-
-  let ghSlug: string;
-  if (isChangelogPage || isHomePage) {
-    ghSlug = `${slug}.md`;
-  } else {
-    // TODO: Figure out if we need this part
-    ghSlug = hasMdExtension ? slug : `${slug}.md`;
-  }
-
-  let githubPath = generateGitHubRawUrl(ref, ghSlug);
-
   return {
-    ref,
-    slug,
-    githubPath,
-    shouldRedirect: hasMdExtension,
+    githubPath: `${baseUrl}/refs/tags/${fixupRefName(ref)}/${slug}.md`,
   };
 }

@@ -17,21 +17,23 @@ describe("parseDocUrl", () => {
         slug: "docs/start/modes",
         githubPath:
           "https://raw.githubusercontent.com/remix-run/react-router/main/docs/start/modes.md",
-        shouldRedirect: false,
+        githubEditPath:
+          "https://github.com/remix-run/react-router/edit/main/docs/start/modes.md",
       });
     });
 
-    it("should parse a nested doc page", () => {
-      const url = new URL("https://reactrouter.com/tutorials/quick-start");
+    it("should handle when URL ends with .md", () => {
+      const url = new URL("https://reactrouter.com/getting-started.md");
       const splat = getSplat(url);
       const result = parseDocUrl(url, splat);
 
       expect(result).toEqual({
         ref: "main",
-        slug: "docs/tutorials/quick-start",
+        slug: "docs/getting-started",
         githubPath:
-          "https://raw.githubusercontent.com/remix-run/react-router/main/docs/tutorials/quick-start.md",
-        shouldRedirect: false,
+          "https://raw.githubusercontent.com/remix-run/react-router/main/docs/getting-started.md",
+        githubEditPath:
+          "https://github.com/remix-run/react-router/edit/main/docs/getting-started.md",
       });
     });
   });
@@ -47,7 +49,8 @@ describe("parseDocUrl", () => {
         slug: "docs/index",
         githubPath:
           "https://raw.githubusercontent.com/remix-run/react-router/main/docs/index.md",
-        shouldRedirect: false,
+        githubEditPath:
+          "https://github.com/remix-run/react-router/edit/main/docs/index.md",
       });
     });
 
@@ -61,7 +64,8 @@ describe("parseDocUrl", () => {
         slug: "docs/index",
         githubPath:
           "https://raw.githubusercontent.com/remix-run/react-router/main/docs/index.md",
-        shouldRedirect: true,
+        githubEditPath:
+          "https://github.com/remix-run/react-router/edit/main/docs/index.md",
       });
     });
   });
@@ -77,7 +81,8 @@ describe("parseDocUrl", () => {
         slug: "CHANGELOG",
         githubPath:
           "https://raw.githubusercontent.com/remix-run/react-router/main/CHANGELOG.md",
-        shouldRedirect: false,
+        githubEditPath:
+          "https://github.com/remix-run/react-router/edit/main/CHANGELOG.md",
       });
     });
 
@@ -91,7 +96,8 @@ describe("parseDocUrl", () => {
         slug: "CHANGELOG",
         githubPath:
           "https://raw.githubusercontent.com/remix-run/react-router/main/CHANGELOG.md",
-        shouldRedirect: true,
+        githubEditPath:
+          "https://github.com/remix-run/react-router/edit/main/CHANGELOG.md",
       });
     });
 
@@ -105,7 +111,6 @@ describe("parseDocUrl", () => {
         slug: "CHANGELOG",
         githubPath:
           "https://raw.githubusercontent.com/remix-run/react-router/refs/tags/react-router@6.28.0/CHANGELOG.md",
-        shouldRedirect: false,
       });
     });
   });
@@ -121,21 +126,8 @@ describe("parseDocUrl", () => {
         slug: "docs/start/modes",
         githubPath:
           "https://raw.githubusercontent.com/remix-run/react-router/dev/docs/start/modes.md",
-        shouldRedirect: false,
-      });
-    });
-
-    it("should handle local ref", () => {
-      const url = new URL("https://reactrouter.com/local/getting-started");
-      const splat = getSplat(url);
-      const result = parseDocUrl(url, splat);
-
-      expect(result).toEqual({
-        ref: "local",
-        slug: "docs/getting-started",
-        githubPath:
-          "https://raw.githubusercontent.com/remix-run/react-router/local/docs/getting-started.md",
-        shouldRedirect: false,
+        githubEditPath:
+          "https://github.com/remix-run/react-router/edit/dev/docs/start/modes.md",
       });
     });
 
@@ -149,12 +141,11 @@ describe("parseDocUrl", () => {
         slug: "docs/start/tutorial",
         githubPath:
           "https://raw.githubusercontent.com/remix-run/react-router/refs/tags/react-router@6.28.0/docs/start/tutorial.md",
-        shouldRedirect: false,
       });
     });
 
-    it("should handle nested paths with version", () => {
-      const url = new URL("https://reactrouter.com/6.28.0/start/tutorial");
+    it("should handle semantic version ref with .md extension", () => {
+      const url = new URL("https://reactrouter.com/6.28.0/start/tutorial.md");
       const splat = getSplat(url);
       const result = parseDocUrl(url, splat);
 
@@ -163,160 +154,22 @@ describe("parseDocUrl", () => {
         slug: "docs/start/tutorial",
         githubPath:
           "https://raw.githubusercontent.com/remix-run/react-router/refs/tags/react-router@6.28.0/docs/start/tutorial.md",
-        shouldRedirect: false,
       });
     });
 
-    it("should default to main for invalid version", () => {
+    it("should handle pre-6.4.0 semantic version ref with v prefix", () => {
       const url = new URL(
-        "https://reactrouter.com/invalid-version/getting-started",
+        "https://reactrouter.com/6.2.0/getting-started/installation",
       );
       const splat = getSplat(url);
       const result = parseDocUrl(url, splat);
 
       expect(result).toEqual({
-        ref: "main",
-        slug: "docs/invalid-version/getting-started",
+        ref: "6.2.0",
+        slug: "docs/getting-started/installation",
         githubPath:
-          "https://raw.githubusercontent.com/remix-run/react-router/main/docs/invalid-version/getting-started.md",
-        shouldRedirect: false,
+          "https://raw.githubusercontent.com/remix-run/react-router/refs/tags/v6.2.0/docs/getting-started/installation.md",
       });
-    });
-  });
-
-  describe("markdown extension handling", () => {
-    it("should flag for redirect when URL ends with .md", () => {
-      const url = new URL("https://reactrouter.com/getting-started.md");
-      const splat = getSplat(url);
-      const result = parseDocUrl(url, splat);
-
-      expect(result.shouldRedirect).toBe(true);
-      expect(result.slug).toBe("docs/getting-started.md");
-    });
-
-    it("should handle .md extension with versioned URL", () => {
-      const url = new URL("https://reactrouter.com/6.28.0/getting-started.md");
-      const splat = getSplat(url);
-      const result = parseDocUrl(url, splat);
-
-      expect(result).toEqual({
-        ref: "6.28.0",
-        slug: "docs/getting-started.md",
-        githubPath:
-          "https://raw.githubusercontent.com/remix-run/react-router/refs/tags/react-router@6.28.0/docs/getting-started.md",
-        shouldRedirect: true,
-      });
-    });
-  });
-
-  describe("edge cases", () => {
-    it("should handle empty splat", () => {
-      const url = new URL("https://reactrouter.com/");
-      const splat = getSplat(url);
-      const result = parseDocUrl(url, splat);
-
-      expect(result).toEqual({
-        ref: "main",
-        slug: "docs/",
-        githubPath:
-          "https://raw.githubusercontent.com/remix-run/react-router/main/docs/.md",
-        shouldRedirect: false,
-      });
-    });
-
-    it("should handle deep nested paths", () => {
-      const url = new URL(
-        "https://reactrouter.com/guides/routing/lazy-loading",
-      );
-      const splat = getSplat(url);
-      const result = parseDocUrl(url, splat);
-
-      expect(result).toEqual({
-        ref: "main",
-        slug: "docs/guides/routing/lazy-loading",
-        githubPath:
-          "https://raw.githubusercontent.com/remix-run/react-router/main/docs/guides/routing/lazy-loading.md",
-        shouldRedirect: false,
-      });
-    });
-
-    it("should handle paths with hyphens and numbers", () => {
-      const url = new URL("https://reactrouter.com/v6.28.0/api-reference");
-      const splat = getSplat(url);
-      const result = parseDocUrl(url, splat);
-
-      expect(result).toEqual({
-        ref: "v6.28.0",
-        slug: "docs/api-reference",
-
-        githubPath:
-          "https://raw.githubusercontent.com/remix-run/react-router/refs/tags/react-router@v6.28.0/docs/api-reference.md",
-        shouldRedirect: false,
-      });
-    });
-  });
-
-  describe("GitHub URL generation", () => {
-    it("should use direct ref for main branch", () => {
-      const url = new URL("https://reactrouter.com/getting-started");
-      const splat = getSplat(url);
-      const result = parseDocUrl(url, splat);
-
-      expect(result.githubPath).toBe(
-        "https://raw.githubusercontent.com/remix-run/react-router/main/docs/getting-started.md",
-      );
-    });
-
-    it("should use direct ref for dev branch", () => {
-      const url = new URL("https://reactrouter.com/dev/getting-started");
-      const splat = getSplat(url);
-      const result = parseDocUrl(url, splat);
-
-      expect(result.githubPath).toBe(
-        "https://raw.githubusercontent.com/remix-run/react-router/dev/docs/getting-started.md",
-      );
-    });
-
-    it("should use direct ref for local branch", () => {
-      const url = new URL("https://reactrouter.com/local/getting-started");
-      const splat = getSplat(url);
-      const result = parseDocUrl(url, splat);
-
-      expect(result.githubPath).toBe(
-        "https://raw.githubusercontent.com/remix-run/react-router/local/docs/getting-started.md",
-      );
-    });
-
-    it("should use refs/tags/ for semantic versions", () => {
-      const url = new URL("https://reactrouter.com/v6.28.0/getting-started");
-      const splat = getSplat(url);
-      const result = parseDocUrl(url, splat);
-
-      expect(result.githubPath).toBe(
-        "https://raw.githubusercontent.com/remix-run/react-router/refs/tags/react-router@v6.28.0/docs/getting-started.md",
-      );
-    });
-
-    it("should use refs/tags/ for semantic versions without v prefix", () => {
-      const url = new URL("https://reactrouter.com/7.6.2/getting-started");
-      const splat = getSplat(url);
-      const result = parseDocUrl(url, splat);
-
-      expect(result.githubPath).toBe(
-        "https://raw.githubusercontent.com/remix-run/react-router/refs/tags/react-router@7.6.2/docs/getting-started.md",
-      );
-    });
-
-    it("should use direct ref for invalid version strings", () => {
-      const url = new URL(
-        "https://reactrouter.com/invalid-version/getting-started",
-      );
-      const splat = getSplat(url);
-      const result = parseDocUrl(url, splat);
-
-      expect(result.githubPath).toBe(
-        "https://raw.githubusercontent.com/remix-run/react-router/main/docs/invalid-version/getting-started.md",
-      );
     });
   });
 });

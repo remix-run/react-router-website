@@ -18,23 +18,24 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
   let url = new URL(request.url);
   let splat = params["*"] ?? "";
 
-  const urlInfo = parseDocUrl(url, splat);
+  const { ref, slug, githubPath, githubEditPath } = parseDocUrl(url, splat);
 
   // If the page is a markdown file, redirect to the raw GitHub file
-  if (urlInfo.shouldRedirect) {
-    return redirect(urlInfo.githubPath);
+  if (url.pathname.endsWith(".md")) {
+    return redirect(githubPath);
   }
 
   try {
-    let doc = await getRepoDoc(urlInfo.ref, urlInfo.slug);
+    let doc = await getRepoDoc(ref, slug);
     if (!doc) {
       throw new Response("Not Found", { status: 404 });
     }
-    let githubEditPath =
-      urlInfo.ref === "main" || urlInfo.ref === "dev"
-        ? `https://github.com/remix-run/react-router/edit/${urlInfo.ref}/${doc.filename}`
-        : undefined;
-    return { doc, githubPath: urlInfo.githubPath, githubEditPath };
+
+    return {
+      doc,
+      githubPath: githubPath,
+      githubEditPath: githubEditPath,
+    };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (_) {
     throw new Response("Not Found", { status: 404 });
