@@ -14,7 +14,7 @@ import type { Route } from "./+types/doc";
 
 export { ErrorBoundary } from "~/components/doc-error-boundary";
 
-export let loader = async ({ request, params }: Route.LoaderArgs) => {
+export async function loader({ request, params }: Route.LoaderArgs) {
   let url = new URL(request.url);
   let splat = params["*"] ?? "";
 
@@ -30,7 +30,6 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
     if (!doc) {
       throw new Response("Not Found", { status: 404 });
     }
-
     return {
       doc,
       githubPath: githubPath,
@@ -40,7 +39,7 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
   } catch (_) {
     throw new Response("Not Found", { status: 404 });
   }
-};
+}
 
 export function headers({ parentHeaders }: HeadersArgs) {
   parentHeaders.set("Cache-Control", CACHE_CONTROL.doc);
