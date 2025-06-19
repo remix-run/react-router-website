@@ -2,8 +2,8 @@ import { useRef } from "react";
 import { getRepoDoc } from "~/modules/gh-docs/.server";
 import { CACHE_CONTROL } from "~/http";
 import { seo } from "~/seo";
-import semver from "semver";
 import { getDocTitle, getSearchMetaTags } from "~/ui/meta";
+import { parseDocUrl } from "~/modules/gh-docs/.server/doc-url-parser";
 
 import { CopyPageDropdown } from "~/components/copy-page-dropdown";
 import { LargeOnThisPage, SmallOnThisPage } from "~/components/on-this-page";
@@ -14,48 +14,14 @@ import type { Route } from "./+types/doc";
 
 export { ErrorBoundary } from "~/components/doc-error-boundary";
 
-export let loader = async ({ request, params }: Route.LoaderArgs) => {
+export async function loader({ request, params }: Route.LoaderArgs) {
   let url = new URL(request.url);
   let splat = params["*"] ?? "";
-  let hasMdExtension = url.pathname.endsWith(".md");
-  let firstSegment = splat.split("/")[0];
-  let refParam =
-    firstSegment === "dev" ||
-    firstSegment === "local" ||
-    semver.valid(firstSegment)
-      ? firstSegment
-      : undefined;
 
-  let ref = refParam || "main";
-
-  let isHomePage =
-    url.pathname.endsWith("/home") || url.pathname.endsWith("/home.md");
-  let isChangelogPage =
-    url.pathname.endsWith("/changelog") ||
-    url.pathname.endsWith("/changelog.md");
-
-  let slug;
-  if (isChangelogPage) {
-    slug = "CHANGELOG";
-  } else if (isHomePage) {
-    slug = "docs/index";
-  } else {
-    // Build the docs path, removing refParam if present
-    let docsPath = refParam ? splat.replace(`${refParam}/`, "") : splat;
-    slug = `docs/${docsPath}`;
-  }
-
-  let ghSlug;
-  if (isChangelogPage || isHomePage) {
-    ghSlug = `${slug}.md`;
-  } else {
-    ghSlug = hasMdExtension ? slug : `${slug}.md`;
-  }
-
-  let githubPath = `https://raw.githubusercontent.com/remix-run/react-router/${ref}/${ghSlug}`;
+  const { ref, slug, githubPath, githubEditPath } = parseDocUrl(url, splat);
 
   // If the page is a markdown file, redirect to the raw GitHub file
-  if (hasMdExtension) {
+  if (url.pathname.endsWith(".md")) {
     return redirect(githubPath);
   }
 
@@ -64,16 +30,16 @@ export let loader = async ({ request, params }: Route.LoaderArgs) => {
     if (!doc) {
       throw new Response("Not Found", { status: 404 });
     }
-    let githubEditPath =
-      ref === "main" || ref === "dev"
-        ? `https://github.com/remix-run/react-router/edit/${ref}/${doc.filename}`
-        : undefined;
-    return { doc, githubPath, githubEditPath };
+    return {
+      doc,
+      githubPath: githubPath,
+      githubEditPath: githubEditPath,
+    };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (_) {
     throw new Response("Not Found", { status: 404 });
   }
-};
+}
 
 export function headers({ parentHeaders }: HeadersArgs) {
   parentHeaders.set("Cache-Control", CACHE_CONTROL.doc);
