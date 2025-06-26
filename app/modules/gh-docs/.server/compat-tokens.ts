@@ -16,13 +16,13 @@ function createCompatList(
   const html = `
     <ul class="availability-main">
       <li>
-        <a href="${baseUrl}" className="${availableItems.includes("framework") ? "yes" : "no"}" title="${availableItems.includes("framework") ? "Available with Framework" : "Not available with Framework"}"><svg><use href="/_docs/mode-icons.svg#framework"/></svg> Framework</a>
+        <a href="${baseUrl}#framework" className="${availableItems.includes("framework") ? "yes" : "no"}" title="${availableItems.includes("framework") ? "Available with Framework" : "Not available with Framework"}"><svg><use href="/_docs/mode-icons.svg#framework"/></svg> Framework</a>
       </li>
       <li>
-        <a href="${baseUrl}" className="${availableItems.includes("data") ? "yes" : "no"}" title="${availableItems.includes("data") ? "Available with Data" : "Not available with Data"}"><svg><use href="/_docs/mode-icons.svg#data"/></svg> Data</a>
+        <a href="${baseUrl}#data" className="${availableItems.includes("data") ? "yes" : "no"}" title="${availableItems.includes("data") ? "Available with Data" : "Not available with Data"}"><svg><use href="/_docs/mode-icons.svg#data"/></svg> Data</a>
       </li>
       <li>
-        <a href="${baseUrl}" className="${availableItems.includes("declarative") ? "yes" : "no"}" title="${availableItems.includes("declarative") ? "Available with Declarative" : "Not available with Declarative"}"><svg><use href="/_docs/mode-icons.svg#declarative"/></svg> Declarative</a>
+        <a href="${baseUrl}#declarative" className="${availableItems.includes("declarative") ? "yes" : "no"}" title="${availableItems.includes("declarative") ? "Available with Declarative" : "Not available with Declarative"}"><svg><use href="/_docs/mode-icons.svg#declarative"/></svg> Declarative</a>
       </li>
     </ul>
   `
@@ -41,13 +41,13 @@ function createSmallCompatList(
   const html = `
     <ul class="availability-small">
       <li>
-        <a href="${baseUrl}" className="${availableItems.includes("framework") ? "yes" : "no"}" title="${availableItems.includes("framework") ? "Available with Framework" : "Not available with Framework"}"><svg><use href="/_docs/mode-icons.svg#framework"/></svg></a>
+        <a href="${baseUrl}#framework" className="${availableItems.includes("framework") ? "yes" : "no"}" title="${availableItems.includes("framework") ? "Available with Framework" : "Not available with Framework"}"><svg><use href="/_docs/mode-icons.svg#framework"/></svg></a>
       </li>
       <li>
-        <a href="${baseUrl}" className="${availableItems.includes("data") ? "yes" : "no"}" title="${availableItems.includes("data") ? "Available with Data" : "Not available with Data"}"><svg><use href="/_docs/mode-icons.svg#data"/></svg></a>
+        <a href="${baseUrl}#data" className="${availableItems.includes("data") ? "yes" : "no"}" title="${availableItems.includes("data") ? "Available with Data" : "Not available with Data"}"><svg><use href="/_docs/mode-icons.svg#data"/></svg></a>
       </li>
       <li>
-        <a href="${baseUrl}" className="${availableItems.includes("declarative") ? "yes" : "no"}" title="${availableItems.includes("declarative") ? "Available with Declarative" : "Not available with Declarative"}"><svg><use href="/_docs/mode-icons.svg#declarative"/></svg></a>
+        <a href="${baseUrl}#declarative" className="${availableItems.includes("declarative") ? "yes" : "no"}" title="${availableItems.includes("declarative") ? "Available with Declarative" : "Not available with Declarative"}"><svg><use href="/_docs/mode-icons.svg#declarative"/></svg></a>
       </li>
     </ul>
   `
