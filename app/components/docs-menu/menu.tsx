@@ -207,7 +207,7 @@ function MenuLink({ prefix, doc }: { prefix: string; doc: MenuDoc }) {
       to={prefix + doc.slug}
       className={(isActive) =>
         classNames(
-          "relative -mx-2 flex items-center justify-between rounded-md px-4 py-1.5 lg:text-sm",
+          "relative -mx-2 flex items-center justify-between rounded-md pl-4 pr-3 py-1.5 lg:text-sm",
           isActive
             ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
             : "text-gray-400 hover:text-gray-800 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand",
