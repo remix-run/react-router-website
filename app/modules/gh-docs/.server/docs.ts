@@ -11,6 +11,7 @@ interface MenuDocAttributes {
   title: string;
   order?: number;
   new?: boolean;
+  unstable?: boolean;
   [key: string]: any;
 }
 

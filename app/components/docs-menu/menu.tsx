@@ -46,11 +46,7 @@ function MenuCategory({ category }: { category: MenuDoc }) {
   let prefix = refParam ? `/${refParam}/` : "/";
 
   if (category.children.length === 0) {
-    return (
-      <MenuLink to={prefix + category.slug!}>
-        {category.attrs.title} {category.attrs.new && "🆕"}
-      </MenuLink>
-    );
+    return <MenuLink prefix={prefix} doc={category} />;
   }
 
   return (
@@ -72,15 +68,11 @@ function MenuCategory({ category }: { category: MenuDoc }) {
               <div className="mb-2 ml-2">
                 <MenuHeading label={doc.attrs.title} />
                 {doc.children.sort(sortDocs).map((doc, index) => (
-                  <MenuLink key={index} to={prefix + doc.slug!}>
-                    {doc.attrs.title} {doc.attrs.new && "🆕"}
-                  </MenuLink>
+                  <MenuLink key={index} prefix={prefix} doc={doc} />
                 ))}
               </div>
             ) : (
-              <MenuLink key={index} to={prefix + doc.slug!}>
-                {doc.attrs.title} {doc.attrs.new && "🆕"}
-              </MenuLink>
+              <MenuLink key={index} prefix={prefix} doc={doc} />
             )}
           </React.Fragment>
         ))}
@@ -209,20 +201,22 @@ function HeaderMenuLink({
   );
 }
 
-function MenuLink({ to, children }: { to: string; children: React.ReactNode }) {
+function MenuLink({ prefix, doc }: { prefix: string; doc: MenuDoc }) {
   return (
     <LinkWithSpinner
-      to={to}
+      to={prefix + doc.slug}
       className={(isActive) =>
         classNames(
-          "relative -mx-2 flex items-center justify-between rounded-md px-4 py-1.5 lg:text-sm",
+          "relative -mx-2 flex items-center justify-between rounded-md pl-4 pr-3 py-1.5 lg:text-sm",
           isActive
             ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
             : "text-gray-400 hover:text-gray-800 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand",
         )
       }
     >
-      {children}
+      {doc.attrs.title}
+      {doc.attrs.new ? <span title="New API">🆕</span> : null}
+      {doc.attrs.unstable ? <span title="Unstable API">🧪</span> : null}
     </LinkWithSpinner>
   );
 }
