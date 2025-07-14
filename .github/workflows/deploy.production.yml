@@ -31,7 +31,7 @@ jobs:
 
           # Scale machines to ensure we have enough instances
           echo "Scaling machines..."
-          flyctl scale count 3 --config ./fly.production.toml --region iad --yes
+          flyctl scale count 3 --config ./fly.production.toml --region ams --yes
 
           # Show final status
           echo "Final deployment status:"
