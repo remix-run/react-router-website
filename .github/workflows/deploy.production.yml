@@ -36,8 +36,7 @@ jobs:
 
           # Deploy with rolling strategy
           echo "Deploying with rolling strategy..."
-          flyctl deploy --remote-only --config ./fly.production.toml --build-arg --strategy rolling
-
+          flyctl deploy --remote-only --config ./fly.production.toml --strategy rolling
 
           # Show final status
           echo "Final deployment status:"
