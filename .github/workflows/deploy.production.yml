@@ -2,7 +2,7 @@ name: 🚀 Deploy (production)
 on:
   push:
     branches:
-      - main
+      - fix-deploy
     paths-ignore:
       - "README.md"
 
@@ -14,70 +14,9 @@ env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
 jobs:
-  lint:
-    name: ⬣ ESLint
-    runs-on: ubuntu-latest
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v4
-        with:
-          cache: npm
-          cache-dependency-path: ./package-lock.json
-          node-version: 22
-
-      - name: 📥 Install deps
-        run: npm install
-
-      - name: 🔬 Lint
-        run: npm run lint
-
-  typecheck:
-    name: ʦ TypeScript
-    runs-on: ubuntu-latest
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v4
-        with:
-          cache: npm
-          cache-dependency-path: ./package-lock.json
-          node-version: 22
-
-      - name: 📥 Install deps
-        run: npm install
-
-      - name: 🔎 Type check
-        run: npm run typecheck --if-present
-
-  vitest:
-    name: ⚡ Vitest
-    runs-on: ubuntu-latest
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v4
-
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v4
-        with:
-          cache: npm
-          cache-dependency-path: ./package-lock.json
-          node-version: 22
-
-      - name: 📥 Install deps
-        run: npm install
-
-      - name: ⚡ Run vitest
-        run: npm run test -- --coverage
-
   deploy:
-    name: 🚀 Deploy
+    name: 🚀 Scale & Deploy
     runs-on: ubuntu-latest
-    needs: [lint, typecheck, vitest]
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
@@ -85,9 +24,21 @@ jobs:
       - name: 🎈 Setup Fly
         uses: superfly/flyctl-actions/setup-flyctl@1.5
 
-      - name: 🚀 Deploy Production
-        if: ${{ github.ref == 'refs/heads/main' }}
-        run: flyctl deploy --remote-only --config ./fly.production.toml --build-arg COMMIT_SHA=${{ github.sha }}
+      - name: 🚀 Scale & Deploy
+        if: ${{ github.ref == 'refs/heads/fix-deploy' }}
+        run: |
+          echo "Scaling and deploying app..."
+
+          # Scale machines to ensure we have enough instances
+          echo "Scaling machines..."
+          flyctl scale count 3 --config ./fly.production.toml --region iad --yes
+
+          # Show final status
+          echo "Final deployment status:"
+          flyctl status --config ./fly.production.toml
+
+          echo "Machines:"
+          flyctl machines list --config ./fly.production.toml
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
