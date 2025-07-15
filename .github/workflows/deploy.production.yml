@@ -31,7 +31,7 @@ jobs:
 
           # Scale machines to ensure we have enough instances
           echo "Scaling machines..."
-          flyctl scale count 4 shared-cpu-2x --config ./fly.production.toml --region iad,ams --yes
+          flyctl scale shared-cpu-2x --config ./fly.production.toml --region iad,ams --yes
 
 
           # Deploy with rolling strategy
