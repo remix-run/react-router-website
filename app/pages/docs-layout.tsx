@@ -16,12 +16,12 @@ import { useCodeBlockCopyButton } from "~/ui/utils";
 
 import {
   menuCollapseContext,
-  // menuCollapseStateMiddleware,
+  menuCollapseStateMiddleware,
 } from "~/actions/menu-collapse/server";
 
 import docsCss from "~/styles/docs.css?url";
 
-// export let unstable_middleware = [menuCollapseStateMiddleware];
+export let unstable_middleware = [menuCollapseStateMiddleware];
 
 export async function loader({ request, params, context }: Route.LoaderArgs) {
   let url = new URL(request.url);
