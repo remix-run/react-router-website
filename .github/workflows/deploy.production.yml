@@ -2,7 +2,7 @@ name: 🚀 Deploy (production)
 on:
   push:
     branches:
-      - brooks/fix-caching
+      - main
     paths-ignore:
       - "README.md"
 
@@ -14,70 +14,70 @@ env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
 jobs:
-  # lint:
-  #   name: ⬣ ESLint
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: ⬇️ Checkout repo
-  #       uses: actions/checkout@v4
+  lint:
+    name: ⬣ ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
 
-  #     - name: ⎔ Setup node
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         cache: npm
-  #         cache-dependency-path: ./package-lock.json
-  #         node-version: 22
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          cache: npm
+          cache-dependency-path: ./package-lock.json
+          node-version: 22
 
-  #     - name: 📥 Install deps
-  #       run: npm install
+      - name: 📥 Install deps
+        run: npm install
 
-  #     - name: 🔬 Lint
-  #       run: npm run lint
+      - name: 🔬 Lint
+        run: npm run lint
 
-  # typecheck:
-  #   name: ʦ TypeScript
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: ⬇️ Checkout repo
-  #       uses: actions/checkout@v4
+  typecheck:
+    name: ʦ TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
 
-  #     - name: ⎔ Setup node
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         cache: npm
-  #         cache-dependency-path: ./package-lock.json
-  #         node-version: 22
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          cache: npm
+          cache-dependency-path: ./package-lock.json
+          node-version: 22
 
-  #     - name: 📥 Install deps
-  #       run: npm install
+      - name: 📥 Install deps
+        run: npm install
 
-  #     - name: 🔎 Type check
-  #       run: npm run typecheck --if-present
+      - name: 🔎 Type check
+        run: npm run typecheck --if-present
 
-  # vitest:
-  #   name: ⚡ Vitest
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: ⬇️ Checkout repo
-  #       uses: actions/checkout@v4
+  vitest:
+    name: ⚡ Vitest
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
 
-  #     - name: ⎔ Setup node
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         cache: npm
-  #         cache-dependency-path: ./package-lock.json
-  #         node-version: 22
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v4
+        with:
+          cache: npm
+          cache-dependency-path: ./package-lock.json
+          node-version: 22
 
-  #     - name: 📥 Install deps
-  #       run: npm install
+      - name: 📥 Install deps
+        run: npm install
 
-  #     - name: ⚡ Run vitest
-  #       run: npm run test -- --coverage
+      - name: ⚡ Run vitest
+        run: npm run test -- --coverage
 
   deploy:
     name: 🚀 Deploy
     runs-on: ubuntu-latest
-    # needs: [lint, typecheck, vitest]
+    needs: [lint, typecheck, vitest]
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
@@ -86,16 +86,16 @@ jobs:
         uses: superfly/flyctl-actions/setup-flyctl@1.5
 
       - name: 🚀 Deploy Production
-        if: ${{ github.ref == 'refs/heads/brooks/fix-caching' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: flyctl deploy --remote-only --config ./fly.production.toml --build-arg COMMIT_SHA=${{ github.sha }}
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-  # purge:
-  #   name: 🧹 Purge CDN
-  #   runs-on: ubuntu-latest
-  #   needs: [deploy]
-  #   steps:
-  #     - name: 🧹 Purge All
-  #       run: |
-  #         curl -D - -X POST --location "https://api.fastly.com/service/${{ secrets.FASTLY_SERVICE_ID }}/purge_all" -H "Accept: application/json" -H "Fastly-Key: ${{ secrets.FASTLY_API_TOKEN }}" -H "fastly-soft-purge: 1"
+  purge:
+    name: 🧹 Purge CDN
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    steps:
+      - name: 🧹 Purge All
+        run: |
+          curl -D - -X POST --location "https://api.fastly.com/service/${{ secrets.FASTLY_SERVICE_ID }}/purge_all" -H "Accept: application/json" -H "Fastly-Key: ${{ secrets.FASTLY_API_TOKEN }}" -H "fastly-soft-purge: 1"
