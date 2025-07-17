@@ -43,6 +43,11 @@ const quicklinks: QuickLink[] = [
     title: "Discord",
     to: "https://rmx.as/discord",
   },
+  {
+    icon: "x-logo",
+    title: "@ReactRouter",
+    to: "https://x.com/reactrouter",
+  },
 ];
 
 type Highlight = {
@@ -130,21 +135,13 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           A user‑obsessed, standards‑focused, multi‑strategy router you can
           deploy anywhere.
         </p>
-        <div className="flex flex-col md:h-[72px] md:w-[460px] md:flex-row">
-          {quicklinks.map(({ icon, title, to }, i) => (
+        <div className="flex flex-col md:h-[72px] md:flex-row border border-gray-200 dark:border-gray-700 rounded-lg divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700">
+          {quicklinks.map(({ icon, title, to }) => (
             <Link
               key={title}
               to={to}
               prefetch="intent"
-              className={
-                "flex gap-x-2 border border-gray-200 px-9 py-6 text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:text-gray-700" +
-                (i === 0
-                  ? " rounded-t-lg border-b-0 md:rounded-l-lg md:rounded-tr-none md:border-b md:border-r-0"
-                  : "") +
-                (i === 2
-                  ? " rounded-b-lg border-t-0 md:rounded-r-lg md:rounded-bl-none md:border-l-0 md:border-t"
-                  : "")
-              }
+              className="flex gap-x-2 justify-center px-9 py-6 text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
             >
               <svg className="h-6 w-6">
                 <use href={`${iconsHref}#${icon}`} />
