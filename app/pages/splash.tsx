@@ -135,7 +135,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           A user‑obsessed, standards‑focused, multi‑strategy router you can
           deploy anywhere.
         </p>
-        <div className="flex flex-col md:h-[72px] md:flex-row border border-gray-200 dark:border-gray-700 rounded-lg divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700">
+        <div className="flex flex-col md:h-[72px] md:flex-row border border-gray-200 dark:border-gray-700 rounded-lg divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700 overflow-hidden">
           {quicklinks.map(({ icon, title, to }) => (
             <Link
               key={title}
