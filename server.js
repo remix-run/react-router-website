@@ -1,6 +1,7 @@
 import compression from "compression";
 import express from "express";
 import morgan from "morgan";
+import { rateLimit } from "express-rate-limit";
 
 // Short-circuit the type-checking of the built output.
 const BUILD_PATH = "./build/server/index.js";
@@ -8,6 +9,15 @@ const DEVELOPMENT = process.env.NODE_ENV === "development";
 const PORT = Number.parseInt(process.env.PORT || "3000");
 
 const app = express();
+
+const limiter = rateLimit({
+  windowMs: 2 * 60 * 1000, // 2 minutes
+  max: 1000,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use(limiter);
 
 app.use(compression());
 app.disable("x-powered-by");
