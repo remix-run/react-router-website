@@ -25,6 +25,7 @@
     "compression": "^1.7.5",
     "escape-goat": "^4.0.0",
     "express": "^4.21.2",
+    "express-rate-limit": "^8.0.1",
     "follow-redirects": "^1.15.9",
     "front-matter": "^4.0.2",
     "gray-matter": "^4.0.3",
