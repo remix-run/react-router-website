@@ -15,7 +15,7 @@ export const streamTimeout = 5_000;
 
 export const handleError: HandleErrorFunction = (
   error: unknown,
-  { request }
+  { request },
 ) => {
   if (request.signal.aborted) {
     // Don't log aborted requests - they're expected
@@ -39,7 +39,7 @@ export default function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   routerContext: EntryContext,
-  loadContext: AppLoadContext
+  loadContext: AppLoadContext,
   // If you have middleware enabled:
   // loadContext: unstable_RouterContextProvider
 ) {
@@ -68,7 +68,7 @@ export default function handleRequest(
             new Response(stream, {
               headers: responseHeaders,
               status: responseStatusCode,
-            })
+            }),
           );
 
           pipe(body);
@@ -85,7 +85,7 @@ export default function handleRequest(
             console.error(error);
           }
         },
-      }
+      },
     );
 
     // Abort the rendering stream after the `streamTimeout` so it has time to
