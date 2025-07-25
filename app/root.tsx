@@ -1,4 +1,5 @@
 import {
+  isRouteErrorResponse,
   Link,
   Links,
   Meta,
@@ -102,7 +103,10 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  console.error(error);
+  if (isRouteErrorResponse(error) && error.status === 500) {
+    console.error(error);
+  }
+
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center">
       <div className="font-bold">Oops</div>
