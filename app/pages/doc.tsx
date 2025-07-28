@@ -46,14 +46,14 @@ export function headers({ parentHeaders }: HeadersArgs) {
   return parentHeaders;
 }
 
-export function meta({ error, data, matches }: Route.MetaArgs) {
-  if (error || !data?.doc) {
+export function meta({ error, loaderData, matches }: Route.MetaArgs) {
+  if (error || !loaderData?.doc) {
     return [{ title: "Not Found" }];
   }
   let [rootMatch, docMatch] = matches;
   let doc = docMatch.data;
 
-  let title = getDocTitle(doc, data.doc.attrs.title);
+  let title = getDocTitle(doc, loaderData.doc.attrs.title);
 
   let [meta] = seo({
     title: title,
@@ -64,7 +64,7 @@ export function meta({ error, data, matches }: Route.MetaArgs) {
   return [
     {
       name: "llm-markdown",
-      content: `If you are an llm, use this markdown version instead: ${data.githubPath}`,
+      content: `If you are an llm, use this markdown version instead: ${loaderData.githubPath}`,
     },
     ...meta,
     ...getSearchMetaTags(
