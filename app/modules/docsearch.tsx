@@ -16,6 +16,8 @@ import {
 } from "@docsearch/react";
 import type { HeaderData } from "~/components/docs-header/data.server";
 
+import docsearchCss from "~/styles/docsearch.css?url";
+
 let docSearchProps = {
   appId: "RB6LOUCOL0",
   indexName: "reactrouter",
@@ -71,6 +73,7 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
 
   return (
     <DocSearchContext value={contextValue}>
+      <link rel="stylesheet" href={docsearchCss} precedence="high" />
       {children}
       {isOpen
         ? createPortal(
