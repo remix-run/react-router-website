@@ -51,16 +51,42 @@ export let menuCollapseStateMiddleware: unstable_MiddlewareFunction<
 
   let res = await next();
 
+  // If the state hasn't changed, don't set the cookie
+  // the state could be changed by the menu collapse action
+  let currentState = menuCollapse.get();
+  if (statesEqual(menuCollapseCookieState, currentState)) {
+    return res;
+  }
+
   res.headers.append(
     "Set-Cookie",
     await cookie.serialize({
-      // Check the context again, because it could be mutated by the action
-      menuCollapseState: menuCollapse.get(),
+      menuCollapseState: currentState,
     }),
   );
 
   return res;
 };
+
+function statesEqual(
+  state1: MenuCollapseState,
+  state2: MenuCollapseState,
+): boolean {
+  const keys1 = Object.keys(state1);
+  const keys2 = Object.keys(state2);
+
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  for (const key of keys1) {
+    if (state1[key] !== state2[key]) {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 async function parseMenuCollapseState(
   request: Request,
