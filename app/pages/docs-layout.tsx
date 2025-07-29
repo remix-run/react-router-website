@@ -1,4 +1,3 @@
-import { preload } from "react-dom";
 import { Outlet, redirect } from "react-router";
 import classNames from "classnames";
 
@@ -77,11 +76,6 @@ export async function loader({ request, params, context }: Route.LoaderArgs) {
   };
 }
 
-export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
-  preload(docsCss, { as: "style" });
-  return await serverLoader();
-}
-
 export default function DocsLayout({ loaderData }: Route.ComponentProps) {
   const { menu, header } = loaderData;
 
@@ -96,7 +90,7 @@ export default function DocsLayout({ loaderData }: Route.ComponentProps) {
 
   return (
     <>
-      <link rel="stylesheet" href={docsCss} />
+      <link rel="stylesheet" href={docsCss} precedence="high" />
       <div className="[--header-height:theme(spacing.16)] [--nav-width:theme(spacing.72)] lg:m-auto lg:max-w-[90rem]">
         <div className="sticky top-0 z-20">
           <Header />

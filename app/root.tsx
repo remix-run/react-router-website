@@ -18,9 +18,7 @@ import { isHost } from "./modules/http-utils/is-host";
 import iconsHref from "~/icons.svg";
 import { DocSearch } from "./modules/docsearch";
 
-import "~/styles/tailwind.css";
-import "@docsearch/css/dist/style.css";
-import "~/styles/docsearch.css";
+import tailwindCss from "~/styles/tailwind.css?url";
 import type { Route } from "./+types/root";
 
 import { ensureSecure } from "~/modules/http-utils/ensure-secure";
@@ -77,6 +75,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           type="image/png"
           media="(prefers-color-scheme: dark)"
         />
+        <link rel="stylesheet" href={tailwindCss} precedence="high" />
         <Meta />
         <Links />
       </head>
