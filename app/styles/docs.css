@@ -443,11 +443,11 @@
   & table {
     text-indent: 0;
     border-spacing: 0;
-    @apply my-10 w-full max-w-full border-collapse overflow-auto border-[color:inherit] text-left;
+    @apply block my-10 w-full max-w-full border-collapse overflow-auto border-[color:inherit] text-left;
   }
 
   & table th {
-    @apply sticky top-0 bg-transparent text-sm font-semibold text-gray-700 dark:text-gray-300;
+    @apply w-full sticky top-0 bg-transparent text-sm font-semibold text-gray-700 dark:text-gray-300;
     @apply border-0 border-b border-gray-200 p-0 pb-1 pr-4 dark:border-gray-800;
   }
 
@@ -456,7 +456,7 @@
   }
 
   & table td {
-    @apply whitespace-nowrap border-0 border-b border-gray-100 p-0 py-2 pr-4 text-sm text-black dark:text-white;
+    @apply w-full whitespace-nowrap border-0 border-b border-gray-100 p-0 py-2 pr-4 text-sm text-black dark:border-gray-800 dark:text-white;
   }
 
   /*****************************************************************************/
