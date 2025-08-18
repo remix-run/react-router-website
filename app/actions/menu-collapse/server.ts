@@ -16,7 +16,9 @@ type MenuCollapseState = Record<string, boolean>;
 
 let menuCollapseStateContext = unstable_createContext<MenuCollapseState>({});
 
-export function menuCollapseContext(context: unstable_RouterContextProvider) {
+export function menuCollapseContext(
+  context: Readonly<unstable_RouterContextProvider>,
+) {
   return {
     get: () => {
       return context.get(menuCollapseStateContext);
