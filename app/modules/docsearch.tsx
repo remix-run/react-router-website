@@ -113,8 +113,9 @@ function useDocSearchFacetVersion() {
   let matches = useMatches();
 
   let headerMatch = matches.find(
-    ({ data }) => data && typeof data === "object" && "header" in data,
-  )?.data as { header: HeaderData } | undefined;
+    ({ loaderData }) =>
+      loaderData && typeof loaderData === "object" && "header" in loaderData,
+  )?.loaderData as { header: HeaderData } | undefined;
 
   //  Users can cmd+k on any page, so always assume v7 if there's no further context
   let version: HeaderData["docSearchVersion"] = "v7";

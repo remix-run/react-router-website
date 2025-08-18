@@ -13,7 +13,7 @@ export function headers({ parentHeaders }: HeadersArgs) {
 
 export function meta({ matches }: Route.MetaArgs) {
   let [rootMatch, docMatch] = matches;
-  let doc = docMatch.data;
+  let doc = docMatch.loaderData;
 
   let title = getDocTitle(doc, "Docs");
 
@@ -27,16 +27,19 @@ export function meta({ matches }: Route.MetaArgs) {
 
   return [
     ...meta,
-    ...getSearchMetaTags(rootMatch.data.isProductionHost, docSearchVersion),
+    ...getSearchMetaTags(
+      rootMatch.loaderData.isProductionHost,
+      docSearchVersion,
+    ),
   ];
 }
 
 export default function Index({ matches }: Route.ComponentProps) {
-  const { data } = matches[1];
+  const { loaderData } = matches[1];
 
   return (
     <div className="px-4 pb-4 pt-8 lg:mr-4 xl:pl-0">
-      {data.header.hasAPIDocs ? <V7 /> : <V6 />}
+      {loaderData.header.hasAPIDocs ? <V7 /> : <V6 />}
     </div>
   );
 }
