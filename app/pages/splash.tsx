@@ -1,5 +1,5 @@
 import { Await, Link } from "react-router";
-import { Suspense } from "react";
+import { Suspense, use } from "react";
 
 import iconsHref from "~/icons.svg";
 import { getStats } from "~/modules/stats";
@@ -228,6 +228,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             )}
           </Await>
         </Suspense>
+
+        {/* This will work */}
+        {/* <Suspense fallback={null}>
+          <Stats stats={loaderData.stats} />
+        </Suspense> */}
       </section>
       <section className="grid h-[205px] w-full place-content-center place-items-center gap-y-6 bg-gray-50 p-12 dark:bg-black">
         <a href="https://shopify.com" target="_blank" rel="noopener noreferrer">
@@ -242,5 +247,27 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </p>
       </section>
     </main>
+  );
+}
+
+function Stats({ stats }: Pick<Route.ComponentProps["loaderData"], "stats">) {
+  const resolvedStats = use(stats);
+
+  return (
+    <dl className="grid grid-cols-1 gap-x-6 gap-y-16 md:grid-cols-2">
+      {resolvedStats.map(({ svgId, count, label }) => (
+        <div key={svgId} className="flex w-[308px] gap-2">
+          <svg className="h-8 w-8 text-gray-600 ">
+            <use href={`${iconsHref}#${svgId}`} />
+          </svg>
+          <div className="flex flex-col">
+            <dd className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
+              {count?.toLocaleString("en-US")}
+            </dd>
+            <dt className="text-gray-400">{label}</dt>
+          </div>
+        </div>
+      ))}
+    </dl>
   );
 }

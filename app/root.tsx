@@ -4,7 +4,6 @@ import {
   Links,
   Meta,
   Outlet,
-  Scripts,
   ScrollRestoration,
 } from "react-router";
 import { CACHE_CONTROL } from "./http";
@@ -25,7 +24,7 @@ import { ensureSecure } from "~/modules/http-utils/ensure-secure";
 import { handleRedirects } from "~/modules/redirects/.server";
 import { removeTrailingSlashes } from "~/modules/http-utils/remove-slashes";
 
-export const unstable_middleware: Route.unstable_MiddlewareFunction[] = [
+export const middleware: Route.MiddlewareFunction[] = [
   ensureSecure,
   removeTrailingSlashes,
   handleRedirects,
@@ -91,7 +90,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         />
         <DocSearch>{children}</DocSearch>
         <ScrollRestoration />
-        <Scripts />
       </body>
     </html>
   );

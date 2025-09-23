@@ -2,47 +2,41 @@ import compression from "compression";
 import express from "express";
 import morgan from "morgan";
 import { rateLimit } from "express-rate-limit";
+import { createRequestListener } from "@remix-run/node-fetch-server";
 
 // Short-circuit the type-checking of the built output.
-const BUILD_PATH = "./build/server/index.js";
+// const BUILD_PATH = "./build/server/index.js";
 const DEVELOPMENT = process.env.NODE_ENV === "development";
 const PORT = Number.parseInt(process.env.PORT || "3000");
 
 const app = express();
 
-const limiter = rateLimit({
-  windowMs: 2 * 60 * 1000, // 2 minutes
-  max: 1000,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-app.use(limiter);
-
-app.use(compression());
 app.disable("x-powered-by");
 
 if (DEVELOPMENT) {
   console.log("Starting development server");
-  const viteDevServer = await import("vite").then((vite) =>
-    vite.createServer({
-      server: { middlewareMode: true },
+  const viteDevServer = await import("vite").then(({ createServer }) =>
+    createServer({
+      server: {
+        middlewareMode: true,
+      },
     }),
   );
   app.use(viteDevServer.middlewares);
-  app.use(async (req, res, next) => {
-    try {
-      const source = await viteDevServer.ssrLoadModule("./server/app.ts");
-      return await source.app(req, res, next);
-    } catch (error) {
-      if (typeof error === "object" && error instanceof Error) {
-        viteDevServer.ssrFixStacktrace(error);
-      }
-      next(error);
-    }
-  });
 } else {
   console.log("Starting production server");
+
+  const limiter = rateLimit({
+    windowMs: 2 * 60 * 1000, // 2 minutes
+    max: 1000,
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
+  app.use(limiter);
+
+  app.use(compression());
+
   app.use(
     "/assets",
     express.static("build/client/assets", { immutable: true, maxAge: "1y" }),
@@ -58,7 +52,8 @@ if (DEVELOPMENT) {
       },
     }),
   );
-  app.use(await import(BUILD_PATH).then((mod) => mod.app));
+  let build = await import("./build/server/index.js");
+  app.all("*", createRequestListener(build.default));
 }
 
 app.use(morgan("tiny"));

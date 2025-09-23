@@ -1,6 +1,6 @@
-import { redirect, type unstable_MiddlewareFunction } from "react-router";
+import { redirect, type MiddlewareFunction } from "react-router";
 
-export const removeTrailingSlashes: unstable_MiddlewareFunction<
+export const removeTrailingSlashes: MiddlewareFunction<
   void | Response
 > = async ({ request }) => {
   let url = new URL(request.url);
