@@ -47,11 +47,7 @@ export async function getStats(): Promise<Stats[]> {
   let cacheKey = "ONE_STATS_KEY_TO_RULE_THEM_ALL";
   let statCounts = await statCountsCache.fetch(cacheKey);
 
-  console.log("getting stats");
-
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  console.log("got stats");
+  await new Promise((resolve) => setTimeout(resolve, 2000));
 
   return [
     {

@@ -28,7 +28,7 @@ function LogoLink() {
   let navigate = useNavigate();
   return (
     <Link
-      to="/home"
+      to="/"
       className="hidden items-center gap-1 text-gray-900 dark:text-white md:flex"
       onContextMenu={(event) => {
         event.preventDefault();

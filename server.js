@@ -5,13 +5,11 @@ import { rateLimit } from "express-rate-limit";
 import { createRequestListener } from "@remix-run/node-fetch-server";
 
 // Short-circuit the type-checking of the built output.
-// const BUILD_PATH = "./build/server/index.js";
+const BUILD_PATH = "./build/server/index.js";
 const DEVELOPMENT = process.env.NODE_ENV === "development";
 const PORT = Number.parseInt(process.env.PORT || "3000");
 
 const app = express();
-
-app.disable("x-powered-by");
 
 if (DEVELOPMENT) {
   console.log("Starting development server");
@@ -36,6 +34,7 @@ if (DEVELOPMENT) {
   app.use(limiter);
 
   app.use(compression());
+  app.disable("x-powered-by");
 
   app.use(
     "/assets",
@@ -52,7 +51,7 @@ if (DEVELOPMENT) {
       },
     }),
   );
-  let build = await import("./build/server/index.js");
+  let build = await import(BUILD_PATH);
   app.all("*", createRequestListener(build.default));
 }
 
