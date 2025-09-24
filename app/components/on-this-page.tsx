@@ -49,7 +49,7 @@ export function LargeOnThisPage({
   }, [mdRef]);
 
   return (
-    <div className="max-h-[calc(100vh-9rem)] overflow-y-auto">
+    <div className="max-h-[calc(100vh-10.625rem)] overflow-y-auto">
       <nav className="mb-3 flex items-center font-semibold">On this page</nav>
       <ul className="md-toc flex flex-col flex-wrap gap-3 leading-[1.125]">
         {doc.headings.map((heading, i) => (
