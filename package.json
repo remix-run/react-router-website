@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development node server.js",
     "build": "react-router build",
-    "analyze": "cross-env ANALYZE=true react-router build && open build/client/stats.html && open build/client/bundle-report.html",
     "format": "prettier --write . && npm run lint:fix",
     "lint": "oxlint",
     "lint:fix": "npm run lint -- --fix",
@@ -13,8 +12,7 @@
     "preview": "cross-env NODE_ENV=production dotenv node server.js",
     "test": "vitest",
     "typecheck": "react-router typegen && tsc",
-    "push:stage": "git tag -f stage && git push origin stage -f",
-    "knip": "knip"
+    "push:stage": "git tag -f stage && git push origin stage -f"
   },
   "dependencies": {
     "@docsearch/css": "^3.8.3",
@@ -83,17 +81,14 @@
     "cssnano": "^6.1.1",
     "dotenv-cli": "^10.0.0",
     "happy-dom": "^18.0.1",
-    "knip": "^5.64.1",
     "oxlint": "^1.18.0",
     "postcss": "^8.5.1",
     "postcss-import": "^16.1.0",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
-    "rollup-plugin-visualizer": "^6.0.3",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.9.2",
     "vite": "^7.1.7",
-    "vite-bundle-analyzer": "^1.2.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4"
   },
