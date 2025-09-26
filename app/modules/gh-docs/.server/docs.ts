@@ -67,7 +67,6 @@ global.menuCache ??= new LRUCache<string, MenuDoc[]>({
 export async function getMenu(
   repo: string,
   ref: string,
-  lang: string,
 ): Promise<MenuDoc[] | undefined> {
   return menuCache.fetch(`${repo}:${ref}`);
 }
