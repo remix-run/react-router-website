@@ -7,7 +7,6 @@ const routes: RouteConfig = [
   route("/color-scheme", "actions/color-scheme/route.ts"),
 
   route("", "pages/docs-layout.tsx", { id: "docs" }, [
-    route("/menu-collapse", "actions/menu-collapse/route.ts"),
     route("home.md", "pages/doc.tsx", { id: "home-md" }),
     route("home", "pages/doc.tsx", { id: "home" }),
     route("changelog.md", "pages/doc.tsx", { id: "changelog-md" }),
