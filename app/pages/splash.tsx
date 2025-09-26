@@ -135,13 +135,13 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           A user‑obsessed, standards‑focused, multi‑strategy router you can
           deploy anywhere.
         </p>
-        <div className="flex flex-col md:h-[72px] md:flex-row border border-gray-200 dark:border-gray-700 rounded-lg divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700 overflow-hidden">
+        <div className="flex flex-col divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-200 dark:divide-gray-700 dark:border-gray-700 md:h-[72px] md:flex-row md:divide-x md:divide-y-0">
           {quicklinks.map(({ icon, title, to }) => (
             <Link
               key={title}
               to={to}
               prefetch="intent"
-              className="flex gap-x-2 justify-center px-9 py-6 text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
+              className="flex justify-center gap-x-2 px-9 py-6 text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
             >
               <svg className="h-6 w-6">
                 <use href={`${iconsHref}#${icon}`} />
@@ -213,7 +213,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               <dl className="grid grid-cols-1 gap-x-6 gap-y-16 md:grid-cols-2">
                 {stats.map(({ svgId, count, label }) => (
                   <div key={svgId} className="flex w-[308px] gap-2">
-                    <svg className="h-8 w-8 text-gray-600 ">
+                    <svg className="h-8 w-8 text-gray-600">
                       <use href={`${iconsHref}#${svgId}`} />
                     </svg>
                     <div className="flex flex-col">

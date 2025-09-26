@@ -443,11 +443,11 @@
   & table {
     text-indent: 0;
     border-spacing: 0;
-    @apply block my-10 w-full max-w-full border-collapse overflow-auto border-[color:inherit] text-left;
+    @apply my-10 block w-full max-w-full border-collapse overflow-auto border-[color:inherit] text-left;
   }
 
   & table th {
-    @apply w-full sticky top-0 bg-transparent text-sm font-semibold text-gray-700 dark:text-gray-300;
+    @apply sticky top-0 w-full bg-transparent text-sm font-semibold text-gray-700 dark:text-gray-300;
     @apply border-0 border-b border-gray-200 p-0 pb-1 pr-4 dark:border-gray-800;
   }
 
@@ -577,18 +577,18 @@
 }
 
 .availability-small {
-  @apply flex items-center gap-1 list-none m-0 px-2 relative -top-10 float-right bg-gray-50 dark:bg-gray-800 rounded-full z-10 !important;
+  @apply relative -top-10 z-10 float-right m-0 flex list-none items-center gap-1 rounded-full bg-gray-50 px-2 dark:bg-gray-800 !important;
 
   li {
-    @apply flex m-0 p-0 !important;
+    @apply m-0 flex p-0 !important;
   }
 
   li a {
-    @apply no-underline shadow-none p-1 !important;
+    @apply p-1 no-underline shadow-none !important;
   }
 
   li a.yes {
-    @apply text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200;
+    @apply text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200;
   }
 
   li a.no {
@@ -601,7 +601,7 @@
 }
 
 .availability-main {
-  @apply inline-flex text-sm items-center gap-2 list-none m-0 p-1 bg-gray-50 dark:bg-gray-800 rounded-full !important;
+  @apply m-0 inline-flex list-none items-center gap-2 rounded-full bg-gray-50 p-1 text-sm dark:bg-gray-800 !important;
 
   li {
     @apply m-0 p-0 !important;
@@ -613,7 +613,7 @@
   }
 
   li a.yes {
-    @apply text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200;
+    @apply text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200;
   }
 
   li a.no {
