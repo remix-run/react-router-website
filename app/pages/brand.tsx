@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { clsx } from "clsx";
 import type { Route } from "./+types/brand";
 
 export const meta: Route.MetaFunction = () => {
@@ -140,7 +140,7 @@ function LogoBox({
   return (
     <div className="flex flex-col">
       <div
-        className={classNames(
+        className={clsx(
           `flex aspect-[16/9] items-center justify-center rounded-md`,
           background[theme],
         )}

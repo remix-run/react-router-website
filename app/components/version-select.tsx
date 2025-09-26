@@ -3,7 +3,7 @@ import { DetailsMenu } from "~/modules/details-menu";
 import { DetailsPopup } from "./details-popup";
 import { PopupLabel } from "./popup-label";
 import { Link, useParams } from "react-router";
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { useHeaderData } from "./docs-header/use-header-data";
 import { useNavigation } from "~/hooks/use-navigation";
 
@@ -26,7 +26,7 @@ export function VersionSelect() {
     <DetailsMenu className="group relative">
       <summary
         title={label}
-        className={classNames(
+        className={clsx(
           `_no-triangle relative flex h-[40px] w-24 cursor-pointer list-none items-center justify-between gap-3 overflow-hidden whitespace-nowrap rounded-full px-3`,
           className,
         )}
@@ -96,7 +96,7 @@ function RefLink({ to, children }: { to: string; children: React.ReactNode }) {
     return (
       <a
         href={to}
-        className={classNames(
+        className={clsx(
           className,
           "after:absolute after:right-4 after:top-1 after:block after:-rotate-45 after:opacity-50 after:content-['→']",
           // Same as !isActive styles on <Link> below
@@ -110,7 +110,7 @@ function RefLink({ to, children }: { to: string; children: React.ReactNode }) {
 
   return (
     <Link
-      className={classNames(
+      className={clsx(
         className,
         isActive
           ? "font-bold text-red-brand before:bg-red-brand"

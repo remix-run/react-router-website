@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { Link, useParams } from "react-router";
 
 import iconsHref from "~/icons.svg";
@@ -50,7 +50,7 @@ function PackageLink({
     "relative pl-4 group items-center flex py-1 before:mr-4 before:relative before:top-px before:block before:h-1.5 before:w-1.5 before:rounded-full before:content-['']";
   return active ? (
     <span
-      className={classNames(
+      className={clsx(
         className,
         "font-bold text-red-brand before:bg-red-brand",
       )}
@@ -61,7 +61,7 @@ function PackageLink({
     <Link
       to={`../${href}`}
       relative="path"
-      className={classNames(
+      className={clsx(
         className,
         "hover:bg-gray-50 active:text-red-brand dark:text-gray-200 dark:hover:bg-gray-700 dark:active:text-red-brand",
       )}

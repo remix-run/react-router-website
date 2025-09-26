@@ -1,5 +1,5 @@
 import { Outlet, redirect } from "react-router";
-import classNames from "classnames";
+import { clsx } from "clsx";
 
 import { Header } from "~/components/docs-header/docs-header";
 import { getHeaderData } from "~/components/docs-header/data.server";
@@ -105,7 +105,7 @@ export default function DocsLayout({ loaderData }: Route.ComponentProps) {
           </NavMenuDesktop>
           <div
             ref={docsContainer}
-            className={classNames(
+            className={clsx(
               // add scroll margin to focused elements so that they aren't
               // obscured by the sticky header
               "[&_*:focus]:scroll-mt-[8rem] lg:[&_*:focus]:scroll-mt-[5rem]",
