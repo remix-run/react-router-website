@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { clsx } from "clsx";
 import * as React from "react";
 import { Form, useLocation } from "react-router";
 import { useColorScheme } from "~/actions/color-scheme/components";
@@ -66,7 +66,7 @@ let ColorSchemeButton = React.forwardRef<
       {...props}
       ref={forwardedRef}
       disabled={colorScheme === props.value}
-      className={classNames(
+      className={clsx(
         "flex w-full items-center gap-4 px-4 py-1",
         colorScheme === props.value
           ? "text-red-brand"

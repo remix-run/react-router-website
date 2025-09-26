@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link, useSubmit } from "react-router";
-import classNames from "classnames";
+import { clsx } from "clsx";
 
 import iconsHref from "~/icons.svg";
 
@@ -104,7 +104,7 @@ function MenuCategoryDetails({
 
   return (
     <details
-      className={classNames(className, "relative flex flex-col")}
+      className={clsx(className, "relative flex flex-col")}
       open={isOpen}
       onToggle={(e) => {
         submitMenuCollapse(e.currentTarget.open);
@@ -163,7 +163,7 @@ function MenuSummary({ children }: { children: React.ReactNode }) {
 
   return (
     <summary
-      className={classNames(
+      className={clsx(
         sharedClassName,
         "_no-triangle block cursor-pointer select-none",
         "outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-red-brand dark:focus-visible:ring-gray-100",
@@ -188,7 +188,7 @@ function HeaderMenuLink({
     <LinkWithSpinner
       to={to}
       className={(isActive) =>
-        classNames(
+        clsx(
           "relative -mx-4 flex items-center justify-between rounded-md px-4 py-3 font-bold",
           isActive
             ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
@@ -206,7 +206,7 @@ function MenuLink({ prefix, doc }: { prefix: string; doc: MenuDoc }) {
     <LinkWithSpinner
       to={prefix + doc.slug}
       className={(isActive) =>
-        classNames(
+        clsx(
           "relative -mx-2 flex items-center justify-between rounded-md py-1.5 pl-4 pr-3 lg:text-sm",
           isActive
             ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router";
 import iconsHref from "~/icons.svg";
 import { ColorSchemeToggle } from "../color-scheme-toggle";
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { DocSearchButton } from "~/modules/docsearch";
 import { VersionNav } from "../version-nav";
 
@@ -85,7 +85,7 @@ function HeaderSvgLink({
   return (
     <a
       href={href}
-      className={classNames(
+      className={clsx(
         `hidden text-gray-400 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 md:block`,
         className,
       )}

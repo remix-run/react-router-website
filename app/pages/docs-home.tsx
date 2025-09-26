@@ -1,6 +1,6 @@
 import type { HeadersArgs } from "react-router";
 import { Link } from "react-router";
-import classNames from "classnames";
+import { clsx } from "clsx";
 import { CACHE_CONTROL } from "~/http";
 import { getSearchMetaTags, getDocTitle } from "~/ui/meta";
 import { seo } from "~/seo";
@@ -127,7 +127,7 @@ function V7() {
             className="group relative flex flex-col gap-1 rounded-lg border-[3px] border-gray-50 p-4 pt-6 hover:border-gray-100 dark:border-gray-800 hover:dark:border-gray-600 md:p-6"
           >
             <h2
-              className={classNames(
+              className={clsx(
                 className,
                 "text-2xl font-bold tracking-tight group-hover:underline",
               )}
@@ -264,7 +264,7 @@ function V6() {
           className="group relative flex flex-col gap-1 rounded-lg border-[3px] border-gray-50 p-4 pt-6 hover:border-gray-100 dark:border-gray-800 hover:dark:border-gray-600 md:p-6"
         >
           <h2
-            className={classNames(
+            className={clsx(
               className,
               "text-2xl font-bold tracking-tight group-hover:underline",
             )}

@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { clsx } from "clsx";
 import type { Route } from "./+types/brand";
 
 export const meta: Route.MetaFunction = () => {
@@ -38,7 +38,7 @@ export default function Brand() {
       <p>
         <a
           href="/_brand/React Router Brand Assets.zip"
-          className="underline opacity-50 hover:opacity-100"
+          className="underline hover:text-red-brand"
           download
         >
           React Router Brand Assets
@@ -140,7 +140,7 @@ function LogoBox({
   return (
     <div className="flex flex-col">
       <div
-        className={classNames(
+        className={clsx(
           `flex aspect-[16/9] items-center justify-center rounded-md`,
           background[theme],
         )}
