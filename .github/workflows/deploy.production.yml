@@ -22,11 +22,11 @@ jobs:
         uses: actions/checkout@v5
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           cache: npm
           cache-dependency-path: ./package-lock.json
-          node-version: 22
+          node-version: 24
 
       - name: 📥 Install deps
         run: npm install
@@ -42,11 +42,11 @@ jobs:
         uses: actions/checkout@v5
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           cache: npm
           cache-dependency-path: ./package-lock.json
-          node-version: 22
+          node-version: 24
 
       - name: 📥 Install deps
         run: npm install
@@ -62,11 +62,11 @@ jobs:
         uses: actions/checkout@v5
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           cache: npm
           cache-dependency-path: ./package-lock.json
-          node-version: 22
+          node-version: 24
 
       - name: 📥 Install deps
         run: npm install
