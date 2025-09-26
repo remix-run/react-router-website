@@ -39,7 +39,7 @@ export async function getHeaderData(
     ["dev", "nightly", "release-next", "local"].includes(githubRef);
 
   // TODO: make this smarter before v8
-  let apiDocsRef = githubRef === "dev" || githubRef === "local" ? "dev" : "v7";
+  let apiDocsRef = "v7";
 
   let latestV6Version = getLatestV6Version(tags);
 

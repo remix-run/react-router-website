@@ -4,6 +4,6 @@ export default {
   future: {
     unstable_optimizeDeps: true,
     unstable_splitRouteModules: "enforce",
-    unstable_middleware: true,
+    v8_middleware: true,
   },
 } satisfies Config;
