@@ -36,7 +36,7 @@ export async function processMarkdown(
   return { attributes, raw, html };
 }
 
-export async function getProcessor(options?: ProcessorOptions) {
+async function getProcessor(options?: ProcessorOptions) {
   let [
     { unified },
     { default: remarkGfm },
@@ -76,7 +76,7 @@ type InternalPlugin<
   Output,
 > = Unified.Plugin<[ProcessorOptions?], Input, Output>;
 
-export async function loadPlugins() {
+async function loadPlugins() {
   let [{ visit, SKIP }, { htmlEscape }] = await Promise.all([
     import("unist-util-visit"),
     import("escape-goat"),

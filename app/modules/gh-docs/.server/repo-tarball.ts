@@ -38,7 +38,7 @@ export async function getRepoTarballStream(
  * code in this app can continue to work the same for local dev as in
  * production.
  */
-export async function getLocalTarballStream(): Promise<NodeJS.ReadableStream> {
+async function getLocalTarballStream(): Promise<NodeJS.ReadableStream> {
   invariant(
     process.env.LOCAL_REPO_RELATIVE_PATH,
     "Expected LOCAL_REPO_RELATIVE_PATH",
