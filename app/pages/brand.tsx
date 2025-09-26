@@ -38,7 +38,7 @@ export default function Brand() {
       <p>
         <a
           href="/_brand/React Router Brand Assets.zip"
-          className="underline opacity-50 hover:opacity-100"
+          className="underline hover:text-red-brand"
           download
         >
           React Router Brand Assets
