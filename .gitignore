@@ -15,3 +15,7 @@ node_modules
 app/modules/gh-docs/.server/__fixture__/tar.tgz
 
 *.code-workspace
+
+# Bundle analysis reports
+/build/client/stats.html
+/build/client/bundle-report.html

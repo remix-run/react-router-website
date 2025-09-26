@@ -17,12 +17,6 @@ export function getColorScheme(formData: FormData): ColorScheme | null {
   return null;
 }
 
-export function validateColorScheme(formValue: any): formValue is ColorScheme {
-  return (
-    formValue === "dark" || formValue === "light" || formValue === "system"
-  );
-}
-
 export function useColorScheme(): ColorScheme {
   let rootLoaderData = useRouteLoaderData<typeof rootLoader>("root");
   if (!rootLoaderData) {

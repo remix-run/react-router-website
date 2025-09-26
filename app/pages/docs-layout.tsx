@@ -3,10 +3,10 @@ import { clsx } from "clsx";
 
 import { Header } from "~/components/docs-header/docs-header";
 import { getHeaderData } from "~/components/docs-header/data.server";
+import { getRepoDocsMenu } from "~/modules/gh-docs/.server";
 import { Footer } from "~/components/docs-footer";
 import { NavMenuDesktop } from "~/components/docs-menu/menu-desktop";
 import { NavMenuMobile } from "~/components/docs-menu/menu-mobile";
-import { loadDocsMenu } from "~/components/docs-menu/data.server";
 import { Menu } from "~/components/docs-menu/menu";
 import type { Route } from "./+types/docs-layout";
 import semver from "semver";
@@ -51,7 +51,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   let ref = refParam || "main";
 
   let [menu, header] = await Promise.all([
-    loadDocsMenu(ref),
+    getRepoDocsMenu(ref),
     getHeaderData("en", ref, refParam),
   ]);
 
