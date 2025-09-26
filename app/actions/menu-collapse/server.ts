@@ -1,8 +1,8 @@
 import {
   createCookie,
-  unstable_createContext,
-  type unstable_MiddlewareFunction,
-  type unstable_RouterContextProvider,
+  createContext,
+  type MiddlewareFunction,
+  type RouterContextProvider,
 } from "react-router";
 
 let cookie = createCookie("menu-collapse", {
@@ -14,11 +14,9 @@ let cookie = createCookie("menu-collapse", {
 // Default behavior: missing categories are treated as "open" (true)
 type MenuCollapseState = Record<string, boolean>;
 
-let menuCollapseStateContext = unstable_createContext<MenuCollapseState>({});
+let menuCollapseStateContext = createContext<MenuCollapseState>({});
 
-export function menuCollapseContext(
-  context: Readonly<unstable_RouterContextProvider>,
-) {
+export function menuCollapseContext(context: Readonly<RouterContextProvider>) {
   return {
     get: () => {
       return context.get(menuCollapseStateContext);
@@ -43,9 +41,10 @@ export function menuCollapseContext(
  *
  * This is used to persist the menu collapse state across page loads
  */
-export let menuCollapseStateMiddleware: unstable_MiddlewareFunction<
-  Response
-> = async ({ request, context }, next) => {
+export let menuCollapseStateMiddleware: MiddlewareFunction<Response> = async (
+  { request, context },
+  next,
+) => {
   // Set the context to whatever is in the cookie
   let menuCollapseCookieState = await parseMenuCollapseState(request);
   let menuCollapse = menuCollapseContext(context);

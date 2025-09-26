@@ -6,6 +6,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  type MiddlewareFunction,
 } from "react-router";
 import { CACHE_CONTROL } from "./http";
 
@@ -25,7 +26,7 @@ import { ensureSecure } from "~/modules/http-utils/ensure-secure";
 import { handleRedirects } from "~/modules/redirects/.server";
 import { removeTrailingSlashes } from "~/modules/http-utils/remove-slashes";
 
-export const unstable_middleware: Route.unstable_MiddlewareFunction[] = [
+export const middleware: MiddlewareFunction[] = [
   ensureSecure,
   removeTrailingSlashes,
   handleRedirects,
