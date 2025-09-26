@@ -46,7 +46,7 @@ global.tagsCache ??= new LRUCache<string, string[]>({
 
 // TODO: implementation details of the react router site leaked into here cause
 // I'm in a hurry now, sorry!
-export async function getAllReleases(
+async function getAllReleases(
   owner: string,
   repo: string,
   primaryPackage: string,
