@@ -81,7 +81,7 @@ export default function DocPage({ loaderData }: Route.ComponentProps) {
   useDelegatedReactRouterLinks(ref);
 
   return (
-    <div className="xl:flex xl:w-full xl:justify-between xl:gap-8 xl:flex-row-reverse">
+    <div className="xl:flex xl:w-full xl:flex-row-reverse xl:justify-between xl:gap-8">
       <div className="sticky top-28 hidden w-56 min-w-min flex-shrink-0 self-start pb-10 xl:block">
         <CopyPageDropdown
           githubPath={githubPath}

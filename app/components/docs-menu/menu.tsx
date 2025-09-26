@@ -166,7 +166,7 @@ function MenuSummary({ children }: { children: React.ReactNode }) {
       className={classNames(
         sharedClassName,
         "_no-triangle block cursor-pointer select-none",
-        "outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-red-brand  dark:focus-visible:ring-gray-100",
+        "outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-red-brand dark:focus-visible:ring-gray-100",
         "hover:bg-gray-50 active:bg-gray-100 dark:bg-gray-900 dark:hover:bg-gray-800 dark:active:bg-gray-700",
       )}
     >
@@ -207,7 +207,7 @@ function MenuLink({ prefix, doc }: { prefix: string; doc: MenuDoc }) {
       to={prefix + doc.slug}
       className={(isActive) =>
         classNames(
-          "relative -mx-2 flex items-center justify-between rounded-md pl-4 pr-3 py-1.5 lg:text-sm",
+          "relative -mx-2 flex items-center justify-between rounded-md py-1.5 pl-4 pr-3 lg:text-sm",
           isActive
             ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
             : "text-gray-400 hover:text-gray-800 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand",

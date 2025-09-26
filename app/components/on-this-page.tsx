@@ -65,7 +65,7 @@ export function LargeOnThisPage({
               className={classNames(
                 activeHeading == heading.slug &&
                   "text-gray-900 dark:text-gray-50",
-                "block py-1 text-sm text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50  dark:active:text-red-brand",
+                "block py-1 text-sm text-gray-400 hover:text-gray-900 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand",
               )}
             />
           </li>

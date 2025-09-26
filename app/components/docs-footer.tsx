@@ -35,7 +35,7 @@ function EditLink() {
 
   return (
     <a
-      className="flex xl:hidden items-center gap-1 hover:underline"
+      className="flex items-center gap-1 hover:underline xl:hidden"
       href={routeData.githubEditPath}
     >
       Edit
