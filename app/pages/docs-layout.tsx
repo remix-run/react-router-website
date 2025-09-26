@@ -13,16 +13,9 @@ import semver from "semver";
 import { useRef } from "react";
 import { useCodeBlockCopyButton } from "~/ui/utils";
 
-import {
-  menuCollapseContext,
-  // menuCollapseStateMiddleware,
-} from "~/actions/menu-collapse/server";
-
 import docsCss from "~/styles/docs.css?url";
 
-// export let unstable_middleware = [menuCollapseStateMiddleware];
-
-export async function loader({ request, params, context }: Route.LoaderArgs) {
+export async function loader({ request, params }: Route.LoaderArgs) {
   let url = new URL(request.url);
   if (!url.pathname.endsWith("/")) {
     url.pathname += "/";
@@ -62,17 +55,9 @@ export async function loader({ request, params, context }: Route.LoaderArgs) {
     getHeaderData("en", ref, refParam),
   ]);
 
-  // Only retain the menu collapse state on the main branch to avoid bleeding
-  // to other branches
-  let menuCollapseState =
-    header.currentGitHubRef === "main"
-      ? menuCollapseContext(context).get()
-      : {};
-
   return {
     menu,
     header,
-    menuCollapseState,
   };
 }
 

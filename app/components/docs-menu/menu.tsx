@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link, useSubmit } from "react-router";
+import { Link } from "react-router";
 import { clsx } from "clsx";
 
 import iconsHref from "~/icons.svg";
@@ -8,7 +8,6 @@ import type { MenuDoc } from "~/modules/gh-docs/.server/docs";
 import { useNavigation } from "~/hooks/use-navigation";
 import { useDelayedValue } from "~/hooks/use-delayed-value";
 import { useHeaderData } from "../docs-header/use-header-data";
-import { useDocsLayoutRouteLoaderData } from "~/hooks/use-docs-layout";
 
 export function Menu({
   menu,
@@ -50,7 +49,7 @@ function MenuCategory({ category }: { category: MenuDoc }) {
   }
 
   return (
-    <MenuCategoryDetails className="group" slug={category.slug}>
+    <MenuCategoryDetails className="group">
       <MenuSummary>
         {category.attrs.title}
         <svg aria-hidden className="hidden h-5 w-5 group-open:block">
@@ -91,65 +90,15 @@ function MenuHeading({ label }: { label: string }) {
 
 type MenuCategoryDetailsType = {
   className?: string;
-  slug?: string;
   children: React.ReactNode;
 };
 
-function MenuCategoryDetails({
-  className,
-  slug,
-  children,
-}: MenuCategoryDetailsType) {
-  const [isOpen, submitMenuCollapse] = useMenuCollapse(slug);
-
+function MenuCategoryDetails({ className, children }: MenuCategoryDetailsType) {
   return (
-    <details
-      className={clsx(className, "relative flex flex-col")}
-      open={isOpen}
-      onToggle={(e) => {
-        submitMenuCollapse(e.currentTarget.open);
-      }}
-    >
+    <details className={clsx(className, "relative flex flex-col")} open>
       {children}
     </details>
   );
-}
-
-function useMenuCollapse(category?: string) {
-  const menuCollapseState = useDocsLayoutRouteLoaderData()?.menuCollapseState;
-  const [isOpen, setIsOpen] = React.useState(
-    menuCollapseState?.[category ?? ""] ?? true,
-  );
-  const submit = useSubmit();
-
-  const submitMenuCollapse = React.useCallback(
-    (open: boolean) => {
-      // Fire and forget, assume that the submit will succeed and just update
-      setIsOpen(open);
-
-      if (!category) return;
-
-      return submit(
-        { category, open },
-        {
-          navigate: false,
-          method: "post",
-          action: "/menu-collapse",
-        },
-      );
-    },
-    [category, submit],
-  );
-
-  // Auto-expand when navigating to a page within this category
-  let { isActive } = useNavigation(category);
-  React.useEffect(() => {
-    if (isActive) {
-      submitMenuCollapse(true);
-    }
-  }, [isActive, submitMenuCollapse]);
-
-  return [isOpen, submitMenuCollapse] as const;
 }
 
 let sortDocs = (a: MenuDoc, b: MenuDoc) =>
