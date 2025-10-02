@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { useMatches } from "react-router";
+import { unstable_useRoute as useRoute } from "react-router";
 import type { DocSearchProps } from "@docsearch/react";
 import {
   DocSearchModal as OriginalDocSearchModal,
@@ -110,16 +110,14 @@ export function DocSearchButton() {
  * Returns the version to use for the DocSearch facet
  */
 function useDocSearchFacetVersion() {
-  let matches = useMatches();
+  let docsData = useRoute("docs");
+  let v6IndexLayoutData = useRoute("v6-index-layout");
 
-  let headerMatch = matches.find(
-    ({ loaderData }) =>
-      loaderData && typeof loaderData === "object" && "header" in loaderData,
-  )?.loaderData as { header: HeaderData } | undefined;
+  let data = docsData || v6IndexLayoutData;
 
   //  Users can cmd+k on any page, so always assume v7 if there's no further context
   let version: HeaderData["docSearchVersion"] = "v7";
-  if (headerMatch?.header && headerMatch.header.ref.startsWith("6")) {
+  if (data?.loaderData?.header.ref.startsWith("6")) {
     version = "v6";
   }
 
