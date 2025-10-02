@@ -1,6 +1,5 @@
 import { useLayoutEffect, useMemo } from "react";
-import { useNavigation, useRouteLoaderData } from "react-router";
-import type { loader as rootLoader } from "../../root";
+import { useNavigation, unstable_useRoute as useRoute } from "react-router";
 import type { ColorScheme } from "./server";
 
 export function getColorScheme(formData: FormData): ColorScheme | null {
@@ -18,7 +17,7 @@ export function getColorScheme(formData: FormData): ColorScheme | null {
 }
 
 export function useColorScheme(): ColorScheme {
-  let rootLoaderData = useRouteLoaderData<typeof rootLoader>("root");
+  let { loaderData: rootLoaderData } = useRoute("root");
   if (!rootLoaderData) {
     throw new Error("useColorScheme must be used within a root loader");
   }
