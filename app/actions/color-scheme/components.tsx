@@ -18,13 +18,11 @@ export function getColorScheme(formData: FormData): ColorScheme | null {
 
 export function useColorScheme(): ColorScheme {
   let rootRoute = useRoute("root");
-  if (!rootRoute.loaderData) {
-    throw new Error("useColorScheme must be used within a root loader");
-  }
+  let colorScheme = rootRoute.loaderData?.colorScheme ?? "system";
 
   let { formData } = useNavigation();
   let optimisticColorScheme = formData ? getColorScheme(formData) : null;
-  return optimisticColorScheme || rootRoute.loaderData.colorScheme;
+  return optimisticColorScheme || colorScheme;
 }
 
 export function ColorSchemeScript() {
