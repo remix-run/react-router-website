@@ -10,7 +10,7 @@ let cookie = createCookie("color-scheme", {
 export async function parseColorScheme(request: Request): Promise<ColorScheme> {
   const header = request.headers.get("Cookie");
   const vals = await cookie.parse(header);
-  return ["dark", "light", "system"].includes(vals.colorScheme)
+  return ["dark", "light", "system"].includes(vals?.colorScheme)
     ? vals.colorScheme
     : "system";
 }
