@@ -5,9 +5,9 @@ import { createTarFileProcessor } from "./tarball";
 describe("createTarFileProcessor", () => {
   it("extracts and processes files one-by-one", async () => {
     let fixturePath = path.join(process.cwd(), "test/fixture.tar.gz");
-    let stream = fs.createReadStream(fixturePath);
+    let data = new Uint8Array(fs.readFileSync(fixturePath));
 
-    let processFiles = createTarFileProcessor(stream);
+    let processFiles = createTarFileProcessor(data);
     let docs: string[] = [];
     await processFiles(async ({ filename }) => {
       docs.push(filename);

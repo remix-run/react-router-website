@@ -3,7 +3,7 @@ import LRUCache from "lru-cache";
 import parseYamlHeader from "gray-matter";
 import invariant from "tiny-invariant";
 import { getRepoContent } from "./repo-content";
-import { getRepoTarballStream } from "./repo-tarball";
+import { getRepoTarball } from "./repo-tarball";
 import { createTarFileProcessor } from "./tarball";
 import { load as $ } from "cheerio";
 
@@ -58,8 +58,8 @@ global.menuCache ??= new LRUCache<string, MenuDoc[]>({
   fetchMethod: async (cacheKey) => {
     console.log(`Fetching fresh menu: ${cacheKey}`);
     let [repo, ref] = cacheKey.split(":");
-    let stream = await getRepoTarballStream(repo, ref);
-    let menu = await getMenuFromStream(stream);
+    let tarball = await getRepoTarball(repo, ref);
+    let menu = await getMenuFromTarball(tarball);
     return menu;
   },
 });
@@ -144,9 +144,9 @@ export async function getDoc(
 /**
  * Exported for unit tests
  */
-export async function getMenuFromStream(stream: NodeJS.ReadableStream) {
+export async function getMenuFromTarball(tarball: Uint8Array) {
   let docs: MenuDoc[] = [];
-  let processFiles = createTarFileProcessor(stream);
+  let processFiles = createTarFileProcessor(tarball);
   await processFiles(async ({ filename, content }) => {
     let { attrs, content: md } = parseAttrs(content, filename);
     let slug = makeSlug(filename);
