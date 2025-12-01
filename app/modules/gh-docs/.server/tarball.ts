@@ -1,5 +1,5 @@
 import * as zlib from "node:zlib";
-import { parseTar, type TarEntry } from "@remix-run/tar-parser";
+import { parseTar } from "@remix-run/tar-parser";
 
 type ProcessFile = ({
   filename,
@@ -24,7 +24,7 @@ async function processFilesFromRepoTarball(
 ): Promise<void> {
   let data = await gunzip(compressedData);
 
-  await parseTar(data, async (entry: TarEntry) => {
+  await parseTar(data, async (entry) => {
     // Make sure the file matches the ones we want to process
     // In tar format, "file" represents a regular file
     let isMatch = entry.header.type === "file" && pattern.test(entry.name);
