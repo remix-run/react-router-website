@@ -2,13 +2,15 @@ import { reactRouter } from "@react-router/dev/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-export default defineConfig(({ isSsrBuild }) => ({
-  build: {
-    rollupOptions: isSsrBuild
-      ? {
+export default defineConfig(() => ({
+  environments: {
+    ssr: {
+      build: {
+        rollupOptions: {
           input: "./server/app.ts",
-        }
-      : undefined,
+        },
+      },
+    },
   },
   ssr: {
     noExternal: ["@docsearch/react"],
