@@ -1,4 +1,3 @@
-import followRedirects from "follow-redirects";
 import fs from "fs";
 import invariant from "tiny-invariant";
 import path from "path";
@@ -11,26 +10,22 @@ import tar from "tar";
  * @param ref GitHub ref (main, v6.0.0, etc.) use "local" for local repo.
  * @returns The repo tarball
  */
-export async function getRepoTarballStream(
+export async function getRepoTarball(
   repo: string,
   ref: string,
-): Promise<NodeJS.ReadableStream> {
+): Promise<Uint8Array> {
   if (ref === "local") {
-    return getLocalTarballStream();
+    return getLocalTarball();
   }
 
-  let agent = new followRedirects.https.Agent({ keepAlive: true });
   let tarballURL = `https://github.com/${repo}/archive/${ref}.tar.gz`;
-  let { hostname, pathname } = new URL(tarballURL);
-  let options = { agent: agent, hostname: hostname, path: pathname };
+  let res = await fetch(tarballURL);
 
-  let res = await get(options);
-
-  if (res.statusCode === 200) {
-    return res;
+  if (!res.ok) {
+    throw new Error(`Could not fetch ${tarballURL}`);
   }
 
-  throw new Error(`Could not fetch ${tarballURL}`);
+  return new Uint8Array(await res.arrayBuffer());
 }
 
 /**
@@ -38,7 +33,7 @@ export async function getRepoTarballStream(
  * code in this app can continue to work the same for local dev as in
  * production.
  */
-async function getLocalTarballStream(): Promise<NodeJS.ReadableStream> {
+async function getLocalTarball(): Promise<Uint8Array> {
   invariant(
     process.env.LOCAL_REPO_RELATIVE_PATH,
     "Expected LOCAL_REPO_RELATIVE_PATH",
@@ -49,12 +44,6 @@ async function getLocalTarballStream(): Promise<NodeJS.ReadableStream> {
     "docs",
   );
   await tar.c({ gzip: true, file: ".local.tgz" }, [localDocsPath]);
-  return fs.createReadStream(".local.tgz");
-}
-
-// FIXME: I don't know the types here
-function get(options: any): any {
-  return new Promise((accept, reject) => {
-    followRedirects.https.get(options, accept).on("error", reject);
-  });
+  let buffer = fs.readFileSync(".local.tgz");
+  return new Uint8Array(buffer);
 }

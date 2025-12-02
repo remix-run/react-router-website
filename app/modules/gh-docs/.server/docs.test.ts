@@ -1,12 +1,12 @@
 import path from "path";
 import fs from "fs";
 import tar from "tar";
-import { getMenuFromStream } from "./docs";
+import { getMenuFromTarball } from "./docs";
 
-describe("getMenuFromStream", () => {
+describe("getMenuFromTarball", () => {
   it("sorts the menu with children and stuff", async () => {
-    let stream = await getFixtureStream();
-    let menu = await getMenuFromStream(stream);
+    let tarball = await getFixtureTarball();
+    let menu = await getMenuFromTarball(tarball);
 
     // removes `index.md` so only 2, not 3
     expect(menu.length).toBe(2);
@@ -23,9 +23,9 @@ describe("getMenuFromStream", () => {
   });
 });
 
-async function getFixtureStream(): Promise<NodeJS.ReadableStream> {
+async function getFixtureTarball(): Promise<Uint8Array> {
   let fixturePath = path.join(__dirname, "__fixture__");
   let writePath = path.join(fixturePath, "tar.tgz");
   await tar.c({ gzip: true, file: writePath }, [fixturePath]);
-  return fs.createReadStream(writePath);
+  return new Uint8Array(fs.readFileSync(writePath));
 }
