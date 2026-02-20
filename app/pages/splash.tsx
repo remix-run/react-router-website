@@ -41,7 +41,7 @@ const quicklinks: QuickLink[] = [
   {
     icon: "discord-outline",
     title: "Discord",
-    to: "https://rmx.as/discord",
+    to: "https://discord.gg/xwx7mMzVkA",
   },
   {
     icon: "x-logo",
@@ -106,7 +106,7 @@ const adventures: Adventure[] = [
     title: "I'm stuck",
     description: "Join GitHub discussions for help",
     linkText: "Get Help",
-    linkTo: "https://rmx.as/discord",
+    linkTo: "https://discord.gg/xwx7mMzVkA",
   },
 ];
 
