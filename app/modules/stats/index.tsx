@@ -1,4 +1,4 @@
-import LRUCache from "lru-cache";
+import { LRUCache } from "lru-cache";
 import { octokit } from "../gh-docs/.server/github";
 
 export interface Stats {
@@ -46,6 +46,10 @@ global.statCountsCache ??= new LRUCache<string, StatCounts>({
 export async function getStats(): Promise<Stats[]> {
   let cacheKey = "ONE_STATS_KEY_TO_RULE_THEM_ALL";
   let statCounts = await statCountsCache.fetch(cacheKey);
+
+  if (!statCounts) {
+    throw new Error("Could not load stats");
+  }
 
   return [
     {

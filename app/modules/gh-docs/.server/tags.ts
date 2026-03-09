@@ -1,4 +1,4 @@
-import LRUCache from "lru-cache";
+import { LRUCache } from "lru-cache";
 import parseLinkHeader from "parse-link-header";
 import semver from "semver";
 import { octokit } from "./github";
@@ -37,7 +37,7 @@ global.tagsCache ??= new LRUCache<string, string[]>({
   ttl: 1000 * 60 * 5, // 5 minutes, so we can see new tags quickly
   allowStale: true,
   noDeleteOnFetchRejection: true,
-  fetchMethod: async (key) => {
+  fetchMethod: async (key: string) => {
     console.log("Fetching fresh tags (releases)");
     let [owner, repo] = key.split("/");
     return getAllReleases(owner, repo, "react-router");
