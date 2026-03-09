@@ -216,7 +216,7 @@ async function loadPlugins() {
             },
           );
 
-          let nodeValue = {
+          let nodeValue: Hast.Element = {
             type: "element",
             tagName: "pre",
             properties: {
@@ -229,12 +229,16 @@ async function loadPlugins() {
               {
                 type: "element",
                 tagName: "code",
+                properties: {},
                 children,
               },
             ],
           };
 
-          let data = node.data ?? {};
+          let data = (node.data ?? {}) as {
+            hChildren?: Hast.Element[];
+            hProperties?: Record<string, unknown>;
+          };
           (node as any).type = "element";
           (node as any).tagName = "div";
           let properties =
