@@ -33,7 +33,7 @@
     "hast-util-to-html": "^9.0.5",
     "isbot": "^5.1.31",
     "lodash.merge": "^4.6.2",
-    "lru-cache": "^7.18.3",
+    "lru-cache": "^11.2.6",
     "mdast": "^2.3.2",
     "morgan": "^1.10.1",
     "octokit": "^2.0.14",

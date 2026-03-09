@@ -1,5 +1,5 @@
 import { processMarkdown } from "~/modules/gh-docs/.server/md";
-import LRUCache from "lru-cache";
+import { LRUCache } from "lru-cache";
 import parseYamlHeader from "gray-matter";
 import invariant from "tiny-invariant";
 import { getRepoContent } from "./repo-content";
@@ -44,7 +44,7 @@ export interface Doc extends Omit<MenuDoc, "hasContent"> {
 
 declare global {
   var menuCache: LRUCache<string, MenuDoc[]>;
-  var docCache: LRUCache<string, Doc | undefined>;
+  var docCache: LRUCache<string, Doc>;
 }
 
 let NO_CACHE = process.env.NO_CACHE;
@@ -55,7 +55,7 @@ global.menuCache ??= new LRUCache<string, MenuDoc[]>({
   ttl: NO_CACHE ? 1 : 300000, // 5 minutes
   allowStale: !NO_CACHE,
   noDeleteOnFetchRejection: true,
-  fetchMethod: async (cacheKey) => {
+  fetchMethod: async (cacheKey: string) => {
     console.log(`Fetching fresh menu: ${cacheKey}`);
     let [repo, ref] = cacheKey.split(":");
     let tarball = await getRepoTarball(repo, ref);
@@ -92,7 +92,7 @@ function parseAttrs(
  * let's have simpler and faster deployments with just one origin server, but
  * still distribute the documents across the CDN.
  */
-global.docCache ??= new LRUCache<string, Doc | undefined>({
+global.docCache ??= new LRUCache<string, Doc>({
   max: 300,
   ttl: NO_CACHE ? 1 : 1000 * 60 * 5, // 5 minutes
   allowStale: !NO_CACHE,

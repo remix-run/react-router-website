@@ -7,7 +7,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   let url = new URL(request.url);
   let [, s, ...rest] = url.pathname.split("/");
 
-  let versions = await getRepoTags();
+  let versions = (await getRepoTags()) ?? [];
   let latest = semver.maxSatisfying(versions, `${s}.x`, {
     includePrerelease: false,
   });

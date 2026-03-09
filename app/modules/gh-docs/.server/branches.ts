@@ -1,4 +1,4 @@
-import LRUCache from "lru-cache";
+import { LRUCache } from "lru-cache";
 import { octokit } from "./github";
 
 /**
@@ -18,7 +18,7 @@ global.branchesCache ??= new LRUCache<string, string[]>({
   ttl: 1000 * 60 * 5, // 5 minutes, so we can see new tags quickly
   allowStale: true,
   noDeleteOnFetchRejection: true,
-  fetchMethod: async (key) => {
+  fetchMethod: async (key: string) => {
     console.log("Fetching fresh branches", key);
     let [owner, repo] = key.split("/");
     const { data } = await octokit.rest.repos.listBranches({
