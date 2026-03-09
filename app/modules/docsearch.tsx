@@ -39,6 +39,7 @@ const DocSearchContext = createContext<{
 export function DocSearch({ children }: { children: React.ReactNode }) {
   const searchButtonRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isAskAiActive, setIsAskAiActive] = useState(false);
 
   const onOpen = useCallback(() => {
     setIsOpen(true);
@@ -52,13 +53,18 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
     setIsOpen(true);
   }, [setIsOpen]);
 
+  const onAskAiToggle = useCallback((toggle: boolean) => {
+    setIsAskAiActive(toggle);
+  }, []);
+
   useDocSearchKeyboardEvents({
     isOpen,
     onOpen,
     onClose,
     onInput,
-    // @ts-expect-error docsearch types are not updated for react 19
     searchButtonRef,
+    isAskAiActive,
+    onAskAiToggle,
   });
 
   const contextValue = useMemo(
@@ -80,6 +86,8 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
             <OriginalDocSearchModal
               initialScrollY={window.scrollY}
               onClose={onClose}
+              onAskAiToggle={onAskAiToggle}
+              isAskAiActive={isAskAiActive}
               // NOTE: to use the facet for search, it has to be set in the algolia dashboard:
               // "Configuration" > "Filtering and Faceting" > "Facets"
               searchParameters={{
