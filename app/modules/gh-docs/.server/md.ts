@@ -107,7 +107,7 @@ async function loadPlugins() {
   const remarkCodeBlocksShiki: InternalPlugin<
     UnistNode.Root,
     UnistNode.Root
-  > = (options) => {
+  > = () => {
     let theme: Awaited<ReturnType<typeof toShikiTheme>>;
     let highlighter: Awaited<ReturnType<typeof getHighlighter>>;
 
