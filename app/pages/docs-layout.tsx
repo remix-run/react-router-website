@@ -15,8 +15,8 @@ import { useCodeBlockCopyButton } from "~/ui/utils";
 
 import docsCss from "~/styles/docs.css?url";
 
-export async function loader({ request, params }: Route.LoaderArgs) {
-  let url = new URL(request.url);
+export async function loader({ unstable_url, params }: Route.LoaderArgs) {
+  let url = new URL(unstable_url);
   if (!url.pathname.endsWith("/")) {
     url.pathname += "/";
   }
