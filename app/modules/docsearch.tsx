@@ -57,7 +57,6 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
     onOpen,
     onClose,
     onInput,
-    // @ts-expect-error docsearch types are not updated for react 19
     searchButtonRef,
   });
 
