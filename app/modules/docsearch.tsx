@@ -57,7 +57,9 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
     onOpen,
     onClose,
     onInput,
-    searchButtonRef,
+    // React 19 types this ref as HTMLButtonElement | null, but DocSearch's
+    // hook still expects the pre-React-19 RefObject<HTMLButtonElement>.
+    searchButtonRef: searchButtonRef as React.RefObject<HTMLButtonElement>,
   });
 
   const contextValue = useMemo(
