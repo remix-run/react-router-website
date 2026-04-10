@@ -218,17 +218,16 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               <dl className="grid grid-cols-1 gap-x-6 gap-y-16 md:grid-cols-2">
                 {stats.map(({ svgId, count, label }) => (
                   <div key={svgId} className="flex w-[308px] gap-2">
-                    <svg
-                      className="h-8 w-8 text-gray-600"
-                      aria-hidden="true"
-                    >
+                    <svg className="h-8 w-8 text-gray-600" aria-hidden="true">
                       <use href={`${iconsHref}#${svgId}`} />
                     </svg>
                     <div className="flex flex-col">
                       <dd className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
                         {count?.toLocaleString("en-US")}
                       </dd>
-                      <dt className="text-gray-500 dark:text-gray-400">{label}</dt>
+                      <dt className="text-gray-500 dark:text-gray-400">
+                        {label}
+                      </dt>
                     </div>
                   </div>
                 ))}
