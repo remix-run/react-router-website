@@ -15,8 +15,8 @@ WORKDIR /app
 RUN npm run build
 
 FROM node:24-alpine
-COPY ./package.json package-lock.json server.js /app/
-
+COPY ./package.json package-lock.json server.ts /app/
+COPY ./server /app/server
 
 ENV PORT="8080"
 ENV NODE_ENV="production"
@@ -24,7 +24,6 @@ ENV NODE_ENV="production"
 COPY --from=production-dependencies-env /app/node_modules /app/node_modules
 COPY --from=build-env /app/build /app/build
 COPY --from=build-env /app/start.sh /app/start.sh
-
 
 WORKDIR /app
 CMD ["npm", "run", "start"]
