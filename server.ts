@@ -2,6 +2,7 @@ import compression from "compression";
 import express from "express";
 import morgan from "morgan";
 import { rateLimit } from "express-rate-limit";
+import { createRequestListener } from "@remix-run/node-fetch-server";
 
 // Short-circuit the type-checking of the built output.
 const BUILD_PATH = "./build/server/index.js";
@@ -24,16 +25,33 @@ app.disable("x-powered-by");
 
 if (DEVELOPMENT) {
   console.log("Starting development server");
-  const viteDevServer = await import("vite").then((vite) =>
-    vite.createServer({
-      server: { middlewareMode: true },
-    }),
-  );
+  const vite = await import("vite");
+  const viteDevServer = await vite.createServer({
+    server: { middlewareMode: true },
+  });
   app.use(viteDevServer.middlewares);
   app.use(async (req, res, next) => {
     try {
-      const source = await viteDevServer.ssrLoadModule("./server/app.ts");
-      return await source.app(req, res, next);
+      if (!vite.isRunnableDevEnvironment(viteDevServer.environments.rsc)) {
+        throw new Error(
+          "The development server is not running in an environment.",
+        );
+      }
+      const rscConfigEntry = (
+        viteDevServer.environments.rsc.config.build.rolldownOptions
+          .input as Record<string, string>
+      ).index;
+      const entry =
+        await viteDevServer.environments.rsc.pluginContainer.resolveId(
+          rscConfigEntry,
+        );
+      if (!entry) throw new Error("Could not resolve entry point");
+      const { default: build } =
+        await viteDevServer.environments.rsc.runner.import<
+          typeof import("./app/entry.rsc")
+        >(entry.id);
+
+      return createRequestListener(build.fetch)(req, res);
     } catch (error) {
       if (typeof error === "object" && error instanceof Error) {
         viteDevServer.ssrFixStacktrace(error);
@@ -58,7 +76,8 @@ if (DEVELOPMENT) {
       },
     }),
   );
-  app.use(await import(BUILD_PATH).then((mod) => mod.app));
+  const { default: build } = await import(BUILD_PATH);
+  app.use(createRequestListener(build.fetch));
 }
 
 app.use(morgan("tiny"));

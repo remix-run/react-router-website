@@ -1,5 +1,5 @@
-import { Await, Link } from "react-router";
-import { Suspense } from "react";
+import { Link } from "react-router";
+import { Suspense, use } from "react";
 
 import iconsHref from "~/icons.svg";
 import { getStats } from "~/modules/stats";
@@ -213,7 +213,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       </section>
       <section className="grid w-full place-content-center p-12">
         <Suspense fallback={null}>
-          <Await resolve={loaderData.stats} errorElement={null}>
+          <Await resolve={loaderData.stats}>
             {(stats) => (
               <dl className="grid grid-cols-1 gap-x-6 gap-y-16 md:grid-cols-2">
                 {stats.map(({ svgId, count, label }) => (
@@ -250,4 +250,15 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       </section>
     </main>
   );
+}
+
+function Await<T>({
+  children,
+  resolve,
+}: {
+  children: (r: T) => React.ReactNode;
+  resolve: Promise<T>;
+}) {
+  const result = use(resolve);
+  return <>{children(result)}</>;
 }
