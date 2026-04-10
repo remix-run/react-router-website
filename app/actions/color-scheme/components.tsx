@@ -1,20 +1,7 @@
 import { useLayoutEffect, useMemo } from "react";
 import { useNavigation, unstable_useRoute as useRoute } from "react-router";
-import type { ColorScheme } from "./server";
-
-export function getColorScheme(formData: FormData): ColorScheme | null {
-  let colorScheme = formData.get("colorScheme");
-
-  if (
-    colorScheme === "dark" ||
-    colorScheme === "light" ||
-    colorScheme === "system"
-  ) {
-    return colorScheme;
-  }
-
-  return null;
-}
+import type { ColorScheme } from "./utils";
+import { getColorScheme } from "./utils";
 
 export function useColorScheme(): ColorScheme {
   let rootRoute = useRoute("root");

@@ -1,6 +1,5 @@
 import { createCookie } from "react-router";
-
-export type ColorScheme = "dark" | "light" | "system";
+import type { ColorScheme } from "./utils";
 
 let cookie = createCookie("color-scheme", {
   maxAge: 34560000,

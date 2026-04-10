@@ -1,14 +1,9 @@
-import { Await, Link } from "react-router";
+import { Link } from "react-router";
 import { Suspense } from "react";
 
 import iconsHref from "~/icons.svg";
 import { getStats } from "~/modules/stats";
 import type { Route } from "./+types/splash";
-
-export let loader = async () => {
-  const stats = getStats();
-  return { stats };
-};
 
 // TODO: target="_blank" for discord?
 
@@ -110,7 +105,7 @@ const adventures: Adventure[] = [
   },
 ];
 
-export default function Home({ loaderData }: Route.ComponentProps) {
+export function ServerComponent() {
   return (
     <main className="flex min-h-full w-full flex-col items-center justify-center dark:bg-gray-900">
       <section className="from-23% via-82% flex w-full flex-col items-center gap-y-12 bg-gradient-to-b from-[#CCD2DE] via-[#D9DDE6] to-white to-100% py-[96px] dark:from-[#595F6C] dark:via-[#202228] dark:via-65% dark:to-gray-900 md:py-[160px]">
@@ -212,28 +207,8 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </div>
       </section>
       <section className="grid w-full place-content-center p-12">
-        <Suspense fallback={null}>
-          <Await resolve={loaderData.stats} errorElement={null}>
-            {(stats) => (
-              <dl className="grid grid-cols-1 gap-x-6 gap-y-16 md:grid-cols-2">
-                {stats.map(({ svgId, count, label }) => (
-                  <div key={svgId} className="flex w-[308px] gap-2">
-                    <svg className="h-8 w-8 text-gray-600" aria-hidden="true">
-                      <use href={`${iconsHref}#${svgId}`} />
-                    </svg>
-                    <div className="flex flex-col">
-                      <dd className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
-                        {count?.toLocaleString("en-US")}
-                      </dd>
-                      <dt className="text-gray-500 dark:text-gray-400">
-                        {label}
-                      </dt>
-                    </div>
-                  </div>
-                ))}
-              </dl>
-            )}
-          </Await>
+        <Suspense fallback={<div>loading...</div>}>
+          <Stats />
         </Suspense>
       </section>
       <section className="grid h-[205px] w-full place-content-center place-items-center gap-y-6 bg-gray-50 p-12 dark:bg-black">
@@ -249,5 +224,27 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </p>
       </section>
     </main>
+  );
+}
+
+async function Stats() {
+  const stats = await getStats();
+
+  return (
+    <dl className="grid grid-cols-1 gap-x-6 gap-y-16 md:grid-cols-2">
+      {stats.map(({ svgId, count, label }) => (
+        <div key={svgId} className="flex w-[308px] gap-2">
+          <svg className="h-8 w-8 text-gray-600" aria-hidden="true">
+            <use href={`${iconsHref}#${svgId}`} />
+          </svg>
+          <div className="flex flex-col">
+            <dd className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
+              {count?.toLocaleString("en-US")}
+            </dd>
+            <dt className="text-gray-500 dark:text-gray-400">{label}</dt>
+          </div>
+        </div>
+      ))}
+    </dl>
   );
 }
