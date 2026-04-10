@@ -143,7 +143,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               prefetch="intent"
               className="flex justify-center gap-x-2 px-9 py-6 text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
             >
-              <svg className="h-6 w-6">
+              <svg className="h-6 w-6" aria-hidden="true">
                 <use href={`${iconsHref}#${icon}`} />
               </svg>
               {title}
@@ -155,10 +155,12 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <div className="grid gap-x-16 gap-y-6 md:grid-flow-col">
           <img
             src="/splash/v7-badge-1.svg"
+            alt="Get React Router 7.0"
             className="h-[52px] w-[140px] md:h-[72px] md:w-[194px]"
           />
           <img
             src="/splash/v7-badge-2.svg"
+            alt="React Router v7"
             className="h-[52px] w-[140px] md:h-[72px] md:w-[194px]"
           />
         </div>
@@ -169,7 +171,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           {highlights.map(({ icon, title, description }) => (
             <div key={title} className="relative flex flex-col gap-2 pl-14">
               <dt className="text-xl font-semibold text-gray-800 dark:text-gray-100">
-                <svg className="absolute left-0 top-0 h-8 w-8">
+                <svg
+                  className="absolute left-0 top-0 h-8 w-8"
+                  aria-hidden="true"
+                >
                   <use href={`${iconsHref}#${icon}`} />
                 </svg>
                 {title}
@@ -213,14 +218,17 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               <dl className="grid grid-cols-1 gap-x-6 gap-y-16 md:grid-cols-2">
                 {stats.map(({ svgId, count, label }) => (
                   <div key={svgId} className="flex w-[308px] gap-2">
-                    <svg className="h-8 w-8 text-gray-600">
+                    <svg
+                      className="h-8 w-8 text-gray-600"
+                      aria-hidden="true"
+                    >
                       <use href={`${iconsHref}#${svgId}`} />
                     </svg>
                     <div className="flex flex-col">
                       <dd className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
                         {count?.toLocaleString("en-US")}
                       </dd>
-                      <dt className="text-gray-400">{label}</dt>
+                      <dt className="text-gray-500 dark:text-gray-400">{label}</dt>
                     </div>
                   </div>
                 ))}
@@ -237,7 +245,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             className="h-[68px] w-[190px]"
           />
         </a>
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-gray-500 dark:text-gray-400">
           © {new Date().getFullYear()} Shopify, Inc.
         </p>
       </section>
