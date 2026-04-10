@@ -18,7 +18,8 @@ RUN corepack enable && pnpm run build
 
 FROM node:24-alpine
 RUN corepack enable
-COPY ./package.json pnpm-lock.yaml server.js /app/
+COPY ./package.json pnpm-lock.yaml server.ts /app/
+COPY ./server /app/server
 
 ENV PORT="8080"
 ENV NODE_ENV="production"
