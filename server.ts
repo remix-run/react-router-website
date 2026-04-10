@@ -1,4 +1,4 @@
-// import compression from "compression";
+import compression from "compression";
 import express from "express";
 import morgan from "morgan";
 import { rateLimit } from "express-rate-limit";
@@ -22,7 +22,7 @@ app.use(limiter);
 
 // could use fastly's compression
 // jk already done
-// app.use(compression());
+app.use(compression());
 app.disable("x-powered-by");
 
 // TODO: use remix fetch server and remove development
