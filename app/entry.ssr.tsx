@@ -41,9 +41,9 @@ export async function generateHTML(
         },
       );
 
-      if (isbot(userAgent)) {
-        await htmlStream.allReady;
-      }
+      // if (isbot(userAgent)) {
+      //   await htmlStream.allReady;
+      // }
 
       return htmlStream;
     },

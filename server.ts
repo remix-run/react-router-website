@@ -1,4 +1,4 @@
-import compression from "compression";
+// import compression from "compression";
 import express from "express";
 import morgan from "morgan";
 import { rateLimit } from "express-rate-limit";
@@ -20,8 +20,13 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-app.use(compression());
+// could use fastly's compression
+// jk already done
+// app.use(compression());
 app.disable("x-powered-by");
+
+// TODO: use remix fetch server and remove development
+// fetchServer.route('ANY', '*', build.fetch)
 
 if (DEVELOPMENT) {
   console.log("Starting development server");
