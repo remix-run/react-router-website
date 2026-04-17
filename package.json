@@ -7,7 +7,7 @@
     "build": "react-router build",
     "format": "prettier --write . && pnpm run lint:fix",
     "lint": "oxlint",
-    "lint:fix": "pnpm run lint -- --fix",
+    "lint:fix": "pnpm run lint --fix",
     "start": "node server.js",
     "preview": "cross-env NODE_ENV=production dotenv node server.js",
     "test": "vitest",
