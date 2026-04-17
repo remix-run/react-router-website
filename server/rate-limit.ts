@@ -1,8 +1,12 @@
 import type { Middleware } from "@remix-run/fetch-router";
 
+import { getClientAddressFromHeaders } from "./client-address.ts";
+
 export interface RateLimitOptions {
   windowMs: number;
   max: number;
+  keyGenerator?: (context: Parameters<Middleware>[0]) => string | null | undefined;
+  skip?: (context: Parameters<Middleware>[0]) => boolean;
 }
 
 type Bucket = {
@@ -14,11 +18,24 @@ const buckets = new Map<string, Bucket>();
 let requestsSinceCleanup = 0;
 
 export function rateLimit(options: RateLimitOptions): Middleware {
-  const { max, windowMs } = options;
+  const {
+    max,
+    windowMs,
+    keyGenerator = getClientKey,
+    skip,
+  } = options;
 
-  return async ({ headers }, next) => {
+  if (windowMs <= 0 || max <= 0) {
+    throw new Error("rateLimit options `windowMs` and `max` must be > 0");
+  }
+
+  return async (context, next) => {
+    if (skip?.(context)) {
+      return next();
+    }
+
     const now = Date.now();
-    const key = getClientKey(headers);
+    const key = keyGenerator(context)?.trim() || "unknown";
     const existing = buckets.get(key);
 
     let bucket: Bucket;
@@ -59,20 +76,8 @@ export function rateLimit(options: RateLimitOptions): Middleware {
   };
 }
 
-function getClientKey(headers: Headers): string {
-  return (
-    headers.get("cf-connecting-ip") ||
-    getFirstHeaderValue(headers.get("x-forwarded-for")) ||
-    headers.get("x-real-ip") ||
-    "global"
-  );
-}
-
-function getFirstHeaderValue(value: string | null): string | null {
-  if (!value) return null;
-
-  const first = value.split(",")[0]?.trim();
-  return first || null;
+function getClientKey({ headers }: Parameters<Middleware>[0]): string | null {
+  return getClientAddressFromHeaders(headers);
 }
 
 function withRateLimitHeaders(
