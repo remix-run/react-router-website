@@ -11,12 +11,7 @@ function createMockContext(
     search?: string;
   } = {},
 ) {
-  let {
-    headers = {},
-    method = "GET",
-    pathname = "/",
-    search = "",
-  } = overrides;
+  let { headers = {}, method = "GET", pathname = "/", search = "" } = overrides;
   let url = new URL(`${pathname}${search}`, "http://localhost");
   let request = new Request(url.toString(), { method, headers });
 
@@ -70,21 +65,21 @@ describe("rateLimit", () => {
 
     let first = requireResponse(
       await invokeRateLimit(
-      middleware,
-      createMockContext({
-        headers: { "x-forwarded-for": "203.0.113.10" },
-      }),
-      next,
-    ),
+        middleware,
+        createMockContext({
+          headers: { "x-forwarded-for": "203.0.113.10" },
+        }),
+        next,
+      ),
     );
     let second = requireResponse(
       await invokeRateLimit(
-      middleware,
-      createMockContext({
-        headers: { "x-forwarded-for": "203.0.113.10" },
-      }),
-      next,
-    ),
+        middleware,
+        createMockContext({
+          headers: { "x-forwarded-for": "203.0.113.10" },
+        }),
+        next,
+      ),
     );
 
     expect(first.status).toBe(200);
@@ -113,21 +108,21 @@ describe("rateLimit", () => {
     );
     let blocked = requireResponse(
       await invokeRateLimit(
-      middleware,
-      createMockContext({
-        headers: { "x-forwarded-for": "192.0.2.1" },
-      }),
-      next,
-    ),
+        middleware,
+        createMockContext({
+          headers: { "x-forwarded-for": "192.0.2.1" },
+        }),
+        next,
+      ),
     );
     let allowed = requireResponse(
       await invokeRateLimit(
-      middleware,
-      createMockContext({
-        headers: { "x-forwarded-for": "192.0.2.2" },
-      }),
-      next,
-    ),
+        middleware,
+        createMockContext({
+          headers: { "x-forwarded-for": "192.0.2.2" },
+        }),
+        next,
+      ),
     );
 
     expect(blocked.status).toBe(429);
@@ -148,21 +143,21 @@ describe("rateLimit", () => {
     );
     let blocked = requireResponse(
       await invokeRateLimit(
-      middleware,
-      createMockContext({
-        headers: { [CLIENT_ADDRESS_HEADER]: "198.51.100.20" },
-      }),
-      next,
-    ),
+        middleware,
+        createMockContext({
+          headers: { [CLIENT_ADDRESS_HEADER]: "198.51.100.20" },
+        }),
+        next,
+      ),
     );
     let allowed = requireResponse(
       await invokeRateLimit(
-      middleware,
-      createMockContext({
-        headers: { [CLIENT_ADDRESS_HEADER]: "198.51.100.21" },
-      }),
-      next,
-    ),
+        middleware,
+        createMockContext({
+          headers: { [CLIENT_ADDRESS_HEADER]: "198.51.100.21" },
+        }),
+        next,
+      ),
     );
 
     expect(blocked.status).toBe(429);
@@ -180,23 +175,23 @@ describe("rateLimit", () => {
 
     let first = requireResponse(
       await invokeRateLimit(
-      middleware,
-      createMockContext({
-        pathname: "/healthcheck",
-        headers: { [CLIENT_ADDRESS_HEADER]: "198.51.100.20" },
-      }),
-      next,
-    ),
+        middleware,
+        createMockContext({
+          pathname: "/healthcheck",
+          headers: { [CLIENT_ADDRESS_HEADER]: "198.51.100.20" },
+        }),
+        next,
+      ),
     );
     let second = requireResponse(
       await invokeRateLimit(
-      middleware,
-      createMockContext({
-        pathname: "/healthcheck",
-        headers: { [CLIENT_ADDRESS_HEADER]: "198.51.100.20" },
-      }),
-      next,
-    ),
+        middleware,
+        createMockContext({
+          pathname: "/healthcheck",
+          headers: { [CLIENT_ADDRESS_HEADER]: "198.51.100.20" },
+        }),
+        next,
+      ),
     );
 
     expect(first.status).toBe(200);

@@ -5,7 +5,9 @@ import { getClientAddressFromHeaders } from "./client-address.ts";
 export interface RateLimitOptions {
   windowMs: number;
   max: number;
-  keyGenerator?: (context: Parameters<Middleware>[0]) => string | null | undefined;
+  keyGenerator?: (
+    context: Parameters<Middleware>[0],
+  ) => string | null | undefined;
   skip?: (context: Parameters<Middleware>[0]) => boolean;
 }
 
@@ -18,12 +20,7 @@ const buckets = new Map<string, Bucket>();
 let requestsSinceCleanup = 0;
 
 export function rateLimit(options: RateLimitOptions): Middleware {
-  const {
-    max,
-    windowMs,
-    keyGenerator = getClientKey,
-    skip,
-  } = options;
+  const { max, windowMs, keyGenerator = getClientKey, skip } = options;
 
   if (windowMs <= 0 || max <= 0) {
     throw new Error("rateLimit options `windowMs` and `max` must be > 0");
