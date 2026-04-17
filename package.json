@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development node server.js",
     "build": "react-router build",
-    "format": "prettier --write . && npm run lint:fix",
+    "format": "prettier --write . && pnpm run lint:fix",
     "lint": "oxlint",
-    "lint:fix": "npm run lint -- --fix",
+    "lint:fix": "pnpm run lint -- --fix",
     "start": "node server.js",
     "preview": "cross-env NODE_ENV=production dotenv node server.js",
     "test": "vitest",
@@ -89,5 +89,6 @@
   },
   "engines": {
     "node": ">=24"
-  }
+  },
+  "packageManager": "pnpm@10.28.0"
 }

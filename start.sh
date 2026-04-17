@@ -6,4 +6,4 @@
 #!/bin/sh
 
 set -ex
-npm run start
+pnpm run start
