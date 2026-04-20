@@ -1,7 +1,7 @@
 import fs from "fs";
 import invariant from "tiny-invariant";
 import path from "path";
-import tar from "tar";
+import * as tar from "tar";
 
 /**
  * Fetches a repo tarball from GitHub or your local repo as a tarball in

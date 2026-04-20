@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import tar from "tar";
+import * as tar from "tar";
 import { getMenuFromTarball } from "./docs";
 
 describe("getMenuFromTarball", () => {
