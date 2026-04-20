@@ -37,7 +37,7 @@ export default function Brand() {
       </p>
       <p>
         <a
-          href="/_brand/React Router Brand Assets.zip"
+          href={encodeURI("/_brand/React Router Brand Assets.zip")}
           className="underline hover:text-red-brand"
           download
         >
@@ -125,6 +125,10 @@ let background = {
   dark: "bg-black bg-[linear-gradient(45deg,theme(colors.gray.800)_25%,transparent_25%,transparent_75%,theme(colors.gray.800)_75%,theme(colors.gray.800)),linear-gradient(45deg,theme(colors.gray.800)_25%,transparent_25%,transparent_75%,theme(colors.gray.800)_75%,theme(colors.gray.800))] bg-[length:24px_24px] bg-[position:0_0,12px_12px]",
 };
 
+function assetUrl(filePath: string, format = "svg") {
+  return encodeURI(`${filePath}.${format}`);
+}
+
 function LogoBox({
   filePath,
   theme,
@@ -147,7 +151,7 @@ function LogoBox({
       >
         <img
           className="max-h-[33%] max-w-[50%]"
-          src={`${filePath}.svg`}
+          src={assetUrl(filePath)}
           alt={alt}
         />
       </div>
@@ -155,7 +159,7 @@ function LogoBox({
         {["svg", "png"].map((format) => (
           <a
             className="uppercase underline opacity-50 hover:opacity-100"
-            href={`${filePath}.${format}`}
+            href={assetUrl(filePath, format)}
             download={`${downloadFilePath}.${format}`}
             key={format}
           >

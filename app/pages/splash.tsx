@@ -115,21 +115,18 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     <main className="flex min-h-full w-full flex-col items-center justify-center dark:bg-gray-900">
       <section className="from-23% via-82% flex w-full flex-col items-center gap-y-12 bg-gradient-to-b from-[#CCD2DE] via-[#D9DDE6] to-white to-100% py-[96px] dark:from-[#595F6C] dark:via-[#202228] dark:via-65% dark:to-gray-900 md:py-[160px]">
         <h1>
-          <picture className="aspect-[32/5] w-[360px] md:w-[480px] lg:w-[640px] 2xl:w-[960px]">
-            <source
-              srcSet="/splash/hero-3d-logo.webp"
-              media="(prefers-color-scheme: light)"
-            />
-            <source
-              srcSet="/splash/hero-3d-logo.dark.webp"
-              media="(prefers-color-scheme: dark)"
-            />
+          <span className="block">
             <img
               src="/splash/hero-3d-logo.webp"
               alt="React Router logo, six dots in an upward triangle (one on top, two in the middle, three on the bottom) with a path of three highlighted and connected from top to bottom, next to the text React Router"
-              className="aspect-[32/5] w-[360px] md:w-[480px] lg:w-[640px] 2xl:w-[960px]"
+              className="aspect-[32/5] w-[360px] dark:hidden md:w-[480px] lg:w-[640px] 2xl:w-[960px]"
             />
-          </picture>
+            <img
+              src="/splash/hero-3d-logo.dark.webp"
+              alt="React Router logo, six dots in an upward triangle (one on top, two in the middle, three on the bottom) with a path of three highlighted and connected from top to bottom, next to the text React Router"
+              className="hidden aspect-[32/5] w-[360px] dark:block md:w-[480px] lg:w-[640px] 2xl:w-[960px]"
+            />
+          </span>
         </h1>
         <p className="mx-12 max-w-[540px] text-center text-xl text-gray-700 dark:text-gray-200 md:mx-0">
           A user‑obsessed, standards‑focused, multi‑strategy router you can
