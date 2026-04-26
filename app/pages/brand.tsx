@@ -5,7 +5,13 @@ export const meta: Route.MetaFunction = () => {
   return [{ title: "React Router Assets and Branding Guidelines" }];
 };
 
-const BRAND_DIR = "/_brand/React Router Brand Assets";
+const BRAND_DIR = "/_brand/react-router-brand-assets";
+
+const assetDirs = {
+  Lockup: "lockup",
+  Wordmark: "wordmark",
+  Logo: "logo",
+} as const;
 
 export default function Brand() {
   return (
@@ -37,7 +43,7 @@ export default function Brand() {
       </p>
       <p>
         <a
-          href={encodeURI("/_brand/React Router Brand Assets.zip")}
+          href="/_brand/react-router-brand-assets.zip"
           className="underline hover:text-red-brand"
           download
         >
@@ -89,12 +95,12 @@ function Logos({
   subTitle?: string;
   oneColor?: boolean;
 }) {
-  let filePath = `${BRAND_DIR}/React Router ${title}`;
+  let filePath = `${BRAND_DIR}/${assetDirs[title]}`;
   if (subTitle) {
     filePath += `/${subTitle}`;
   }
   if (oneColor) {
-    filePath += `/One Color`;
+    filePath += `/one-color`;
   }
 
   let downloadFilePath = `rr_${title}`;
