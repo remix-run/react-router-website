@@ -35,8 +35,6 @@ export default function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   routerContext: EntryContext,
-  // If you have middleware enabled:
-  // loadContext: unstable_RouterContextProvider
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false;

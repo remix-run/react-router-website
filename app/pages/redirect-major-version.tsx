@@ -3,8 +3,7 @@ import { getRepoTags } from "~/modules/gh-docs/.server";
 import * as semver from "semver";
 import type { Route } from "./+types/redirect-major-version";
 
-export async function loader({ unstable_url }: Route.LoaderArgs) {
-  let url = new URL(unstable_url);
+export async function loader({ url }: Route.LoaderArgs) {
   let [, s, ...rest] = url.pathname.split("/");
 
   let versions = await getRepoTags();
