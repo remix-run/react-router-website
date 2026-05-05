@@ -14,8 +14,7 @@ import type { Route } from "./+types/doc";
 
 export { ErrorBoundary } from "~/components/doc-error-boundary";
 
-export async function loader({ unstable_url, params }: Route.LoaderArgs) {
-  let url = new URL(unstable_url);
+export async function loader({ url, params }: Route.LoaderArgs) {
   let splat = params["*"] ?? "";
 
   const { ref, slug, githubPath, githubEditPath } = parseDocUrl(url, splat);

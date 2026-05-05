@@ -13,10 +13,10 @@ import { getRedirects } from "./get-redirects";
  * /docs/*  /api/*
  * ```
  *
- * @param unstable_url Normalized location URL (see `future.unstable_passThroughRequests`)
+ * @param url Normalized location URL (see `future.v8_passThroughRequests`)
  */
-export const handleRedirects: MiddlewareFunction = async ({ unstable_url }) => {
+export const handleRedirects: MiddlewareFunction = async ({ url }) => {
   let redirects = await getRedirects();
-  let response = await checkUrl(unstable_url.pathname, redirects);
+  let response = await checkUrl(url.pathname, redirects);
   if (response) throw response;
 };
