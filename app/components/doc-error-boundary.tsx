@@ -1,8 +1,12 @@
-import { isRouteErrorResponse, useParams, useRouteError } from "react-router";
+import {
+  isRouteErrorResponse,
+  unstable_useRouterState as useRouterState,
+  useRouteError,
+} from "react-router";
 
 export function ErrorBoundary() {
   let error = useRouteError();
-  let params = useParams();
+  let { params } = useRouterState().active;
 
   if (isRouteErrorResponse(error)) {
     return (

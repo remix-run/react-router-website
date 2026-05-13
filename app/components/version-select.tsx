@@ -2,7 +2,7 @@ import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { DetailsPopup } from "./details-popup";
 import { PopupLabel } from "./popup-label";
-import { Link, useParams } from "react-router";
+import { Link, unstable_useRouterState as useRouterState } from "react-router";
 import { clsx } from "clsx";
 import { useHeaderData } from "./docs-header/use-header-data";
 import { useNavigation } from "~/hooks/use-navigation";
@@ -10,7 +10,7 @@ import { useNavigation } from "~/hooks/use-navigation";
 export function VersionSelect() {
   let { versions, latestVersion, releaseBranch, branches, currentGitHubRef } =
     useHeaderData();
-  let { "*": splat } = useParams();
+  let { "*": splat } = useRouterState().active.params;
 
   let slug = "";
   if (splat && !currentGitHubRef.startsWith("6")) {

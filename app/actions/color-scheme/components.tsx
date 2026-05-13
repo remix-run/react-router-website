@@ -1,5 +1,8 @@
 import { useLayoutEffect, useMemo } from "react";
-import { useNavigation, unstable_useRoute as useRoute } from "react-router";
+import {
+  unstable_useRoute as useRoute,
+  unstable_useRouterState as useRouterState,
+} from "react-router";
 import type { ColorScheme } from "./server";
 
 export function getColorScheme(formData: FormData): ColorScheme | null {
@@ -20,7 +23,7 @@ export function useColorScheme(): ColorScheme {
   let rootRoute = useRoute("root");
   let colorScheme = rootRoute.loaderData?.colorScheme ?? "system";
 
-  let { formData } = useNavigation();
+  let formData = useRouterState().pending?.formData;
   let optimisticColorScheme = formData ? getColorScheme(formData) : null;
   return optimisticColorScheme || colorScheme;
 }

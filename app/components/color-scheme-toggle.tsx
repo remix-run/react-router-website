@@ -1,13 +1,13 @@
 import { clsx } from "clsx";
 import * as React from "react";
-import { Form, useLocation } from "react-router";
+import { Form, unstable_useRouterState as useRouterState } from "react-router";
 import { useColorScheme } from "~/actions/color-scheme/components";
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { DetailsPopup } from "./details-popup";
 
 export function ColorSchemeToggle() {
-  let location = useLocation();
+  let { location } = useRouterState().active;
 
   // This is the same default, hover, focus style as the VersionSelect
   const className =
