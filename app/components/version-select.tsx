@@ -5,7 +5,7 @@ import { PopupLabel } from "./popup-label";
 import { Link, unstable_useRouterState as useRouterState } from "react-router";
 import { clsx } from "clsx";
 import { useHeaderData } from "./docs-header/use-header-data";
-import { useNavigation } from "~/hooks/use-navigation";
+import { useNavState } from "~/hooks/use-nav-state";
 
 export function VersionSelect() {
   let { versions, latestVersion, releaseBranch, branches, currentGitHubRef } =
@@ -88,7 +88,7 @@ function VersionLink({ version }: { version: string }) {
 
 function RefLink({ to, children }: { to: string; children: React.ReactNode }) {
   let isExternal = to.startsWith("http");
-  let { isActive } = useNavigation(to);
+  let { isActive } = useNavState(to);
   let className =
     "relative pl-4 group items-center flex py-1 before:mr-4 before:relative before:top-px before:block before:h-1.5 before:w-1.5 before:rounded-full before:content-['']";
 

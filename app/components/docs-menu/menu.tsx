@@ -5,7 +5,7 @@ import { clsx } from "clsx";
 import iconsHref from "~/icons.svg";
 
 import type { MenuDoc } from "~/modules/gh-docs/.server/docs";
-import { useNavigation } from "~/hooks/use-navigation";
+import { useNavState } from "~/hooks/use-nav-state";
 import { useDelayedValue } from "~/hooks/use-delayed-value";
 import { useHeaderData } from "../docs-header/use-header-data";
 
@@ -179,7 +179,7 @@ function LinkWithSpinner({
   children: React.ReactNode;
   className: (isActive: boolean) => string;
 }) {
-  let { isActive, isPending } = useNavigation(to);
+  let { isActive, isPending } = useNavState(to);
   let slowNav = useDelayedValue(isPending);
 
   return (
