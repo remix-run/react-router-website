@@ -13,7 +13,7 @@ export function VersionWarning() {
     <div className="hidden text-center lg:block">
       <div className="animate-[bounce_500ms_2.5] bg-red-brand p-2 text-xs text-white">
         {warning}.{" "}
-        <Link to="/" className="underline">
+        <Link to="/home" className="underline">
           View latest
         </Link>
       </div>

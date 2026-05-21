@@ -19,14 +19,8 @@ export function VersionSelect() {
   let { "*": splat } = useRouterState().active.params;
 
   // Strip the URL ref segment (e.g. "main", "7.15.1") off the splat so we can
-  // re-prefix it with a different ref when the user picks one. v6 paths use
-  // /:ref and don't have the ref baked into the splat.
-  let slug = "";
-  if (splat && refParam && !currentGitHubRef.startsWith("6")) {
-    slug = splat.replace(new RegExp(`^${refParam}/`), "");
-  } else if (splat) {
-    slug = splat;
-  }
+  // re-prefix it with a different ref when the user picks one.
+  let slug = splat ? stripLeadingRef(splat, refParam) : "";
 
   // This is the same default, hover, focus style as the ColorScheme trigger
   const className =
@@ -77,6 +71,14 @@ export function VersionSelect() {
       </DetailsPopup>
     </DetailsMenu>
   );
+}
+
+function stripLeadingRef(splat: string, refParam: string | undefined) {
+  if (!refParam) return splat;
+  if (splat === refParam) return "";
+
+  let prefix = `${refParam}/`;
+  return splat.startsWith(prefix) ? splat.slice(prefix.length) : splat;
 }
 
 function RefLink({ to, children }: { to: string; children: React.ReactNode }) {

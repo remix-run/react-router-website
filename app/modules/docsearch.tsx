@@ -7,18 +7,13 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import {
-  unstable_useRoute,
-  useMatches,
-  useRouteLoaderData,
-} from "react-router";
+import { unstable_useRoute as useRoute } from "react-router";
 import type { DocSearchProps } from "@docsearch/react";
 import {
   DocSearchModal as OriginalDocSearchModal,
   DocSearchButton as OriginalDocSearchButton,
   useDocSearchKeyboardEvents,
 } from "@docsearch/react";
-import type { HeaderData } from "~/components/docs-header/data.server";
 
 import docsearchCss from "~/styles/docsearch.css?url";
 
@@ -74,9 +69,13 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
     [onOpen, searchButtonRef],
   );
 
-  //  Users can cmd+k on any page, so always assume v7 if there's no further context
-  const route = unstable_useRoute("docs");
-  const version = route?.loaderData?.header.ref.startsWith("6") ? "v6" : "v7";
+  let docsRoute = useRoute("docs");
+  let v6IndexRoute = useRoute("v6-index-layout");
+  let header =
+    docsRoute?.loaderData?.header ?? v6IndexRoute?.loaderData?.header;
+
+  // Users can cmd+k on any page, so always assume v7 if there's no docs context.
+  const version = header?.ref.startsWith("6") ? "v6" : "v7";
 
   return (
     <DocSearchContext value={contextValue}>
