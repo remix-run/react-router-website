@@ -5,15 +5,14 @@ export async function loader() {
   return {
     menu: fakeMenu,
     header: {
-      branches: ["main", "dev", "local"],
+      branches: ["main", "local"],
       currentGitHubRef: "main",
       isLatest: true,
       latestVersion: "7.0.1",
-      releaseBranch: "main",
       versions: ["6.26.1", "7.0.0"],
       lang: "en",
       hasAPIDocs: true,
-      apiDocsRef: "dev",
+      apiDocsRef: "v7",
     },
   };
 }

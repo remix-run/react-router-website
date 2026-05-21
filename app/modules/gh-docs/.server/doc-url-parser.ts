@@ -1,20 +1,50 @@
 import semver from "semver";
 
-export function parseDocUrl(url: URL, splat: string) {
-  // Remove the .md extension if there is one
+/**
+ * URL segment ↔ GitHub ref mapping:
+ * - "main"  → main branch — unreleased docs
+ * - "local" → "local" branch (dev only)
+ * - semver  → tagged release
+ * - no segment → `defaultRef` (typically the latest released tag)
+ */
+export interface ResolvedRef {
+  /** GitHub ref to fetch from (e.g. "main", "7.15.1", "local") */
+  ref: string;
+  /**
+   * URL-facing segment (e.g. "main", "7.15.1", "local"). Undefined when the
+   * URL has no ref segment and the default tag is used.
+   */
+  refParam?: string;
+}
+
+/**
+ * Resolves the GitHub ref + URL-facing segment from a splat / `:ref` param.
+ *
+ * Pass `routeRefParam` when the route uses `/:ref` (the v6 layout). Otherwise
+ * the first segment of the splat is inspected.
+ */
+export function resolveRef(
+  splat: string | undefined,
+  defaultRef: string,
+  routeRefParam?: string,
+): ResolvedRef {
+  let segment = routeRefParam ?? splat?.split("/")[0] ?? "";
+
+  if (segment === "main") return { ref: "main", refParam: "main" };
+  if (segment === "local") return { ref: "local", refParam: "local" };
+  if (semver.valid(segment)) return { ref: segment, refParam: segment };
+
+  return { ref: defaultRef };
+}
+
+export function buildDocPaths(
+  pathname: string,
+  splat: string,
+  ref: string,
+  refParam: string | undefined,
+) {
   splat = splat.replace(/\.md$/, "");
-  let pathname = url.pathname.replace(/\.md$/, "");
-
-  let firstSegment = splat.split("/")[0];
-
-  let ref = "main";
-  if (
-    firstSegment === "dev" ||
-    firstSegment === "local" ||
-    semver.valid(firstSegment)
-  ) {
-    ref = firstSegment;
-  }
+  pathname = pathname.replace(/\.md$/, "");
 
   let slug: string;
   if (pathname.endsWith("/changelog")) {
@@ -22,13 +52,11 @@ export function parseDocUrl(url: URL, splat: string) {
   } else if (pathname.endsWith("/home")) {
     slug = "docs/index";
   } else {
-    // Build the docs path, removing refParam if present
-    let docsPath = splat.replace(`${ref}/`, "");
+    let docsPath = refParam ? splat.replace(`${refParam}/`, "") : splat;
     slug = `docs/${docsPath}`;
   }
 
   return {
-    ref,
     slug,
     ...generateGitHubPaths(ref, slug),
   };
@@ -36,7 +64,7 @@ export function parseDocUrl(url: URL, splat: string) {
 
 /**
  * Fixes up ref names to match the actual GitHub ref structure
- * - Branches (dev, main, release-next, local) are used as-is
+ * - Branches (main, local) are used as-is
  * - Pre-changeset versions (< 6.4.0) get "v" prefix
  * - Post-changeset versions get "react-router@" prefix
  */
@@ -55,18 +83,17 @@ export function fixupRefName(ref: string): string {
 }
 
 function isRefBranch(ref: string): boolean {
-  return ["dev", "main", "release-next", "local"].includes(ref);
+  return ["main", "local"].includes(ref);
 }
 
 /**
  * Generates the correct GitHub raw URL based on the ref type
- * - For main/dev/local: uses the ref directly
+ * - For main/local: uses the ref directly
  * - For semantic versions: uses refs/tags/{version}
  */
 function generateGitHubPaths(ref: string, slug: string) {
   let baseUrl = "https://raw.githubusercontent.com/remix-run/react-router";
 
-  // For main, dev, local, or any non-semver ref, use directly
   if (isRefBranch(ref)) {
     return {
       githubPath: `${baseUrl}/${ref}/${slug}.md`,
@@ -74,7 +101,6 @@ function generateGitHubPaths(ref: string, slug: string) {
     };
   }
 
-  // For semantic versions, use refs/tags/ structure
   return {
     githubPath: `${baseUrl}/refs/tags/${fixupRefName(ref)}/${slug}.md`,
   };

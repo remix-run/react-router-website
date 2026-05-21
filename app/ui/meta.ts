@@ -4,16 +4,15 @@ import type { loader as docsLoader } from "~/pages/docs-layout";
 type DocsData = Awaited<ReturnType<typeof docsLoader>>;
 
 export function getDocTitle(api: DocsData, title: string) {
-  let { releaseBranch, branches, currentGitHubRef } = api.header;
+  let { isLatest, branches, currentGitHubRef } = api.header;
 
-  let titleRef =
-    currentGitHubRef === releaseBranch
-      ? ""
-      : branches.includes(currentGitHubRef)
-        ? `(${currentGitHubRef} branch)`
-        : currentGitHubRef.startsWith("v")
-          ? currentGitHubRef
-          : `v${currentGitHubRef}`;
+  let titleRef = isLatest
+    ? ""
+    : branches.includes(currentGitHubRef)
+      ? `(${currentGitHubRef} branch)`
+      : currentGitHubRef.startsWith("v")
+        ? currentGitHubRef
+        : `v${currentGitHubRef}`;
 
   return `${title} ${titleRef}`;
 }
