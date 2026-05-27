@@ -41,12 +41,12 @@ export function VersionSelect() {
           <use href={`${iconsHref}#dropdown-arrows`} />
         </svg>
       </summary>
-      <DetailsPopup className="w-40">
+      <DetailsPopup className="w-[12rem]">
         <PopupLabel label="Current" />
         <RefLink to={slug ? `/${slug}` : "/home"}>
           latest ({latestVersion})
         </RefLink>
-        <RefLink to={`/main/${slug || "home"}`}>main</RefLink>
+        <RefLink to={`/main/${slug || "home"}`}>main (unreleased)</RefLink>
         {branches.includes("local") ? (
           <RefLink to={`/local/${slug || "home"}`}>local</RefLink>
         ) : null}
