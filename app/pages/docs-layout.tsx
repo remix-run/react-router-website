@@ -3,8 +3,11 @@ import { clsx } from "clsx";
 
 import { Header } from "~/components/docs-header/docs-header";
 import { getHeaderData } from "~/components/docs-header/data.server";
-import { getRepoDocsMenu } from "~/modules/gh-docs/.server";
+import { getRepoDocsMenu, getRepoTags } from "~/modules/gh-docs/.server";
+import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
+import { resolveRef } from "~/modules/gh-docs/.server/doc-url-parser";
 import { Footer } from "~/components/docs-footer";
+import { VersionWarning } from "~/components/version-warning";
 import { NavMenuDesktop } from "~/components/docs-menu/menu-desktop";
 import { NavMenuMobile } from "~/components/docs-menu/menu-mobile";
 import { Menu } from "~/components/docs-menu/menu";
@@ -16,39 +19,27 @@ import { useCodeBlockCopyButton } from "~/ui/utils";
 import docsCss from "~/styles/docs.css?url";
 
 export async function loader({ url, params }: Route.LoaderArgs) {
-  url = new URL(url);
-  if (!url.pathname.endsWith("/")) {
-    url.pathname += "/";
+  let pathname = url.pathname;
+  if (!pathname.endsWith("/")) {
+    pathname += "/";
   }
 
-  // the /:ref param should only be used for v6 docs
+  // The /:ref param is only valid for v6 docs (semver) or "local". Anything
+  // else 404s; non-v6 refs redirect to /:ref/home.
   if (params.ref) {
-    // if the ref is not a valid semver, this is 404
-    if (
-      params.ref !== "local" &&
-      params.ref !== "dev" &&
-      !semver.valid(params.ref)
-    ) {
+    if (params.ref !== "local" && !semver.valid(params.ref)) {
       throw new Response("Not Found", { status: 404 });
     }
-
-    // if ref is not a v6 ref, redirect to the /home of that ref
-    if (!url.pathname.match(/^\/?(6)/)) {
-      throw redirect(url.pathname + "home");
+    if (!pathname.match(/^\/?(6)/)) {
+      throw redirect(pathname + "home");
     }
   }
 
-  let splat = params["*"];
-  let firstSegment = splat?.split("/")[0];
-  let refParam = params.ref
-    ? params.ref
-    : firstSegment === "dev" ||
-        firstSegment === "local" ||
-        semver.valid(firstSegment)
-      ? firstSegment
-      : undefined;
+  let tags = await getRepoTags();
+  if (!tags) throw new Response("Cannot reach GitHub", { status: 503 });
+  let latestVersion = getLatestVersion(tags);
 
-  let ref = refParam || "main";
+  let { ref, refParam } = resolveRef(params["*"], latestVersion, params.ref);
 
   let [menu, header] = await Promise.all([
     getRepoDocsMenu(ref),
@@ -79,6 +70,7 @@ export default function DocsLayout({ loaderData }: Route.ComponentProps) {
       <div className="[--header-height:theme(spacing.16)] [--nav-width:theme(spacing.72)] lg:m-auto lg:max-w-[90rem]">
         <div className="sticky top-0 z-20">
           <Header />
+          <VersionWarning />
           <NavMenuMobile>
             <Menu menu={menu} changelogHref={changelogHref} />
           </NavMenuMobile>

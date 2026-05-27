@@ -1,5 +1,4 @@
 import { getDoc, getMenu } from "./docs";
-import { getBranches } from "./branches";
 import { getTags } from "./tags";
 import { fixupRefName } from "./doc-url-parser";
 
@@ -10,10 +9,6 @@ if (!REPO) throw new Error("Missing process.env.SOURCE_REPO");
 
 export function getRepoTags() {
   return getTags(REPO);
-}
-
-export function getRepoBranches() {
-  return getBranches(REPO);
 }
 
 export function getRepoDocsMenu(ref: string) {

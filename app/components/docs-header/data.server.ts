@@ -1,4 +1,4 @@
-import { getRepoBranches, getRepoTags } from "~/modules/gh-docs/.server";
+import { getRepoTags } from "~/modules/gh-docs/.server";
 import {
   getLatestV6Version,
   getLatestVersion,
@@ -12,31 +12,22 @@ export async function getHeaderData(
   refParam?: string,
 ) {
   let githubRef = ref;
-  let branchesInMenu = ["main", "dev"];
-  let [tags, branches] = await Promise.all([getRepoTags(), getRepoBranches()]);
-  if (!tags || !branches)
-    throw new Response("Cannot reach GitHub", { status: 503 });
+  let tags = await getRepoTags();
+  if (!tags) throw new Response("Cannot reach GitHub", { status: 503 });
 
-  if (process.env.NODE_ENV === "development") {
-    branches.push("local");
-    branchesInMenu.push("local");
-  }
+  let branchesInMenu = [
+    "main",
+    ...(process.env.NODE_ENV === "development" ? ["local"] : []),
+  ];
 
-  // TODO: we're not really using `releaseBranch` consistently, so maybe just
-  // ditch it, we know "main" is the release branch, don't need it force
-  // plumbing this value through everywhere it's needed
-  let releaseBranch = "main";
   let latestVersion = getLatestVersion(tags);
-  let isLatest = githubRef === releaseBranch || githubRef === latestVersion;
+  let isLatest = githubRef === latestVersion;
 
   let hasAPIDocs =
-    // We've shipped v7 and they're on the main branch (which doesn't show in
-    // the URL anymore)
-    (githubRef === "main" && latestVersion.startsWith("7.")) ||
-    // they're looking at a v7 tag
-    githubRef.startsWith("7.") ||
-    // they're looking at the next release
-    ["dev", "nightly", "release-next", "local"].includes(githubRef);
+    // they're on main (the unreleased docs at /main/*) or "local"
+    branchesInMenu.includes(githubRef) ||
+    // they're looking at a v7 tag (or the default latest tag, if v7)
+    githubRef.startsWith("7.");
 
   // TODO: make this smarter before v8
   let apiDocsRef = "v7";
@@ -48,7 +39,7 @@ export async function getHeaderData(
   // This value is also used for determining whether the docs should have
   // robots="index,follow"
   let docSearchVersion: "v7" | "v6" | null = null;
-  if (githubRef === "main" && latestVersion.startsWith("7.")) {
+  if (githubRef === "main" || githubRef.startsWith("7.")) {
     docSearchVersion = "v7";
   } else if (refParam === latestV6Version) {
     docSearchVersion = "v6";
@@ -57,7 +48,6 @@ export async function getHeaderData(
   return {
     versions: [latestVersion, latestV6Version],
     latestVersion,
-    releaseBranch,
     branches: branchesInMenu,
     currentGitHubRef: githubRef,
     lang,

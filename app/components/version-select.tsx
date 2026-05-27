@@ -8,20 +8,25 @@ import { useHeaderData } from "./docs-header/use-header-data";
 import { useNavState } from "~/hooks/use-nav-state";
 
 export function VersionSelect() {
-  let { versions, latestVersion, releaseBranch, branches, currentGitHubRef } =
-    useHeaderData();
+  let {
+    versions,
+    latestVersion,
+    branches,
+    currentGitHubRef,
+    isLatest,
+    refParam,
+  } = useHeaderData();
   let { "*": splat } = useRouterState().active.params;
 
-  let slug = "";
-  if (splat && !currentGitHubRef.startsWith("6")) {
-    slug = splat?.replace(new RegExp(`^${currentGitHubRef}/`), "");
-  }
+  // Strip the URL ref segment (e.g. "main", "7.15.1") off the splat so we can
+  // re-prefix it with a different ref when the user picks one.
+  let slug = splat ? stripLeadingRef(splat, refParam) : "";
 
   // This is the same default, hover, focus style as the ColorScheme trigger
   const className =
     "border border-transparent bg-gray-100 hover:bg-gray-200 focus:border focus:border-gray-100 focus:bg-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:border-gray-400 dark:focus:bg-gray-700";
 
-  let label = currentGitHubRef === releaseBranch ? "latest" : currentGitHubRef;
+  let label = isLatest ? "latest" : currentGitHubRef;
   return (
     <DetailsMenu className="group relative">
       <summary
@@ -36,17 +41,24 @@ export function VersionSelect() {
           <use href={`${iconsHref}#dropdown-arrows`} />
         </svg>
       </summary>
-      <DetailsPopup className="w-40">
-        <PopupLabel label="Branches" />
-        <MainLink latestVersion={latestVersion} slug={slug} />
-        <DevLink slug={slug} />
-        {branches.includes("local") && <LocalLink slug={slug} />}
-
+      <DetailsPopup className="w-[12rem]">
+        <PopupLabel label="Current" />
+        <RefLink to={slug ? `/${slug}` : "/home"}>
+          latest ({latestVersion})
+        </RefLink>
+        <RefLink to={`/main/${slug || "home"}`}>main (unreleased)</RefLink>
+        {branches.includes("local") ? (
+          <RefLink to={`/local/${slug || "home"}`}>local</RefLink>
+        ) : null}
         <PopupLabel label="Versions" />
         {versions.map((version) => (
-          <VersionLink key={version} version={version} />
+          <RefLink
+            key={version}
+            to={version.startsWith("7") ? `/${version}/home` : `/${version}`}
+          >
+            {version}
+          </RefLink>
         ))}
-
         <RefLink key={"4/5.x"} to="https://v5.reactrouter.com/">
           v4/5.x
         </RefLink>
@@ -61,29 +73,12 @@ export function VersionSelect() {
   );
 }
 
-function MainLink({
-  latestVersion,
-  slug,
-}: {
-  latestVersion: string;
-  slug: string;
-}) {
-  let to = slug || "/home";
-  return <RefLink to={to}>latest ({latestVersion})</RefLink>;
-}
+function stripLeadingRef(splat: string, refParam: string | undefined) {
+  if (!refParam) return splat;
+  if (splat === refParam) return "";
 
-function DevLink({ slug }: { slug: string }) {
-  return <RefLink to={`/dev/${slug}`}>dev</RefLink>;
-}
-
-function LocalLink({ slug }: { slug: string }) {
-  return <RefLink to={`/local/${slug}`}>local</RefLink>;
-}
-
-function VersionLink({ version }: { version: string }) {
-  let isV7 = version.startsWith("7");
-  let to = isV7 ? `/${version}/home` : `/${version}`;
-  return <RefLink to={to}>{version}</RefLink>;
+  let prefix = `${refParam}/`;
+  return splat.startsWith(prefix) ? splat.slice(prefix.length) : splat;
 }
 
 function RefLink({ to, children }: { to: string; children: React.ReactNode }) {

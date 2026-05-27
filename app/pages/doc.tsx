@@ -1,9 +1,13 @@
 import { useRef } from "react";
-import { getRepoDoc } from "~/modules/gh-docs/.server";
+import { getRepoDoc, getRepoTags } from "~/modules/gh-docs/.server";
 import { CACHE_CONTROL } from "~/http";
 import { seo } from "~/seo";
 import { getDocTitle, getSearchMetaTags } from "~/ui/meta";
-import { parseDocUrl } from "~/modules/gh-docs/.server/doc-url-parser";
+import {
+  buildDocPaths,
+  resolveRef,
+} from "~/modules/gh-docs/.server/doc-url-parser";
+import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
 
 import { CopyPageDropdown } from "~/components/copy-page-dropdown";
 import { LargeOnThisPage, SmallOnThisPage } from "~/components/on-this-page";
@@ -16,8 +20,16 @@ export { ErrorBoundary } from "~/components/doc-error-boundary";
 
 export async function loader({ url, params }: Route.LoaderArgs) {
   let splat = params["*"] ?? "";
+  let tags = await getRepoTags();
+  if (!tags) throw new Response("Cannot reach GitHub", { status: 503 });
+  let { ref, refParam } = resolveRef(splat, getLatestVersion(tags));
 
-  const { ref, slug, githubPath, githubEditPath } = parseDocUrl(url, splat);
+  const { slug, githubPath, githubEditPath } = buildDocPaths(
+    url.pathname,
+    splat,
+    ref,
+    refParam,
+  );
 
   // If the page is a markdown file, redirect to the raw GitHub file
   if (url.pathname.endsWith(".md")) {
