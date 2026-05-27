@@ -128,9 +128,7 @@ describe("buildDocPaths", () => {
     });
 
     it("detects /main/home", () => {
-      expect(
-        buildDocPaths("/main/home", "main/home", "main", "main"),
-      ).toEqual({
+      expect(buildDocPaths("/main/home", "main/home", "main", "main")).toEqual({
         slug: "docs/index",
         githubPath:
           "https://raw.githubusercontent.com/remix-run/react-router/main/docs/index.md",
