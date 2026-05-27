@@ -1,4 +1,10 @@
+saveExact: true
 minimumReleaseAge: 10800
 minimumReleaseAgeExclude:
   - react-router
   - "@react-router/*"
+  - "@remix-run/*"
+onlyBuiltDependencies:
+  - esbuild
+allowBuilds:
+  esbuild: true
