@@ -43,7 +43,7 @@ export async function loader({ url, params }: Route.LoaderArgs) {
 
   let [menu, header] = await Promise.all([
     getRepoDocsMenu(ref),
-    getHeaderData("en", ref, refParam),
+    getHeaderData("en", ref, tags, refParam),
   ]);
 
   return {

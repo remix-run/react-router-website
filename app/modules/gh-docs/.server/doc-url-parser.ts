@@ -42,6 +42,7 @@ export function buildDocPaths(
   splat: string,
   ref: string,
   refParam: string | undefined,
+  options: { editRef?: string } = {},
 ) {
   splat = splat.replace(/\.md$/, "");
   pathname = pathname.replace(/\.md$/, "");
@@ -58,7 +59,7 @@ export function buildDocPaths(
 
   return {
     slug,
-    ...generateGitHubPaths(ref, slug),
+    ...generateGitHubPaths(ref, slug, options.editRef),
   };
 }
 
@@ -89,19 +90,30 @@ function isRefBranch(ref: string): boolean {
 /**
  * Generates the correct GitHub raw URL based on the ref type
  * - For main/local: uses the ref directly
+ * - For main: exposes an edit URL
  * - For semantic versions: uses refs/tags/{version}
+ * - For refs with a GitHub edit ref: exposes an edit URL against that ref
  */
-function generateGitHubPaths(ref: string, slug: string) {
+function generateGitHubPaths(ref: string, slug: string, editRef?: string) {
   let baseUrl = "https://raw.githubusercontent.com/remix-run/react-router";
+  let editBaseUrl = "https://github.com/remix-run/react-router/edit";
 
   if (isRefBranch(ref)) {
     return {
       githubPath: `${baseUrl}/${ref}/${slug}.md`,
-      githubEditPath: `https://github.com/remix-run/react-router/edit/${ref}/${slug}.md`,
+      ...(ref === "main" && {
+        githubEditPath: `${editBaseUrl}/${ref}/${slug}.md`,
+      }),
     };
   }
 
-  return {
+  let paths: { githubPath: string; githubEditPath?: string } = {
     githubPath: `${baseUrl}/refs/tags/${fixupRefName(ref)}/${slug}.md`,
   };
+
+  if (editRef) {
+    paths.githubEditPath = `${editBaseUrl}/${editRef}/${slug}.md`;
+  }
+
+  return paths;
 }

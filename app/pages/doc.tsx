@@ -22,13 +22,16 @@ export async function loader({ url, params }: Route.LoaderArgs) {
   let splat = params["*"] ?? "";
   let tags = await getRepoTags();
   if (!tags) throw new Response("Cannot reach GitHub", { status: 503 });
-  let { ref, refParam } = resolveRef(splat, getLatestVersion(tags));
+  let latestVersion = getLatestVersion(tags);
+  let { ref, refParam } = resolveRef(splat, latestVersion);
+  let editRef = ref === latestVersion ? "main" : undefined;
 
   const { slug, githubPath, githubEditPath } = buildDocPaths(
     url.pathname,
     splat,
     ref,
     refParam,
+    { editRef },
   );
 
   // If the page is a markdown file, redirect to the raw GitHub file
