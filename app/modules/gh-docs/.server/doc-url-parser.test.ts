@@ -60,10 +60,14 @@ describe("buildDocPaths", () => {
   describe("default ref (latest tag)", () => {
     it("builds a basic doc page", () => {
       expect(
-        buildDocPaths("/start/modes", "start/modes", LATEST, undefined),
+        buildDocPaths("/start/modes", "start/modes", LATEST, undefined, {
+          editRef: "main",
+        }),
       ).toEqual({
         slug: "docs/start/modes",
         githubPath: `https://raw.githubusercontent.com/remix-run/react-router/refs/tags/react-router@${LATEST}/docs/start/modes.md`,
+        githubEditPath:
+          "https://github.com/remix-run/react-router/edit/main/docs/start/modes.md",
       });
     });
 
@@ -74,42 +78,65 @@ describe("buildDocPaths", () => {
           "getting-started.md",
           LATEST,
           undefined,
+          { editRef: "main" },
         ),
       ).toEqual({
         slug: "docs/getting-started",
         githubPath: `https://raw.githubusercontent.com/remix-run/react-router/refs/tags/react-router@${LATEST}/docs/getting-started.md`,
+        githubEditPath:
+          "https://github.com/remix-run/react-router/edit/main/docs/getting-started.md",
       });
     });
 
     it("detects /home", () => {
-      expect(buildDocPaths("/home", "home", LATEST, undefined)).toEqual({
+      expect(
+        buildDocPaths("/home", "home", LATEST, undefined, {
+          editRef: "main",
+        }),
+      ).toEqual({
         slug: "docs/index",
         githubPath: `https://raw.githubusercontent.com/remix-run/react-router/refs/tags/react-router@${LATEST}/docs/index.md`,
+        githubEditPath:
+          "https://github.com/remix-run/react-router/edit/main/docs/index.md",
       });
     });
 
     it("detects /home.md", () => {
-      expect(buildDocPaths("/home.md", "home.md", LATEST, undefined)).toEqual({
+      expect(
+        buildDocPaths("/home.md", "home.md", LATEST, undefined, {
+          editRef: "main",
+        }),
+      ).toEqual({
         slug: "docs/index",
         githubPath: `https://raw.githubusercontent.com/remix-run/react-router/refs/tags/react-router@${LATEST}/docs/index.md`,
+        githubEditPath:
+          "https://github.com/remix-run/react-router/edit/main/docs/index.md",
       });
     });
 
     it("detects /changelog", () => {
       expect(
-        buildDocPaths("/changelog", "changelog", LATEST, undefined),
+        buildDocPaths("/changelog", "changelog", LATEST, undefined, {
+          editRef: "main",
+        }),
       ).toEqual({
         slug: "CHANGELOG",
         githubPath: `https://raw.githubusercontent.com/remix-run/react-router/refs/tags/react-router@${LATEST}/CHANGELOG.md`,
+        githubEditPath:
+          "https://github.com/remix-run/react-router/edit/main/CHANGELOG.md",
       });
     });
 
     it("detects /changelog.md", () => {
       expect(
-        buildDocPaths("/changelog.md", "changelog.md", LATEST, undefined),
+        buildDocPaths("/changelog.md", "changelog.md", LATEST, undefined, {
+          editRef: "main",
+        }),
       ).toEqual({
         slug: "CHANGELOG",
         githubPath: `https://raw.githubusercontent.com/remix-run/react-router/refs/tags/react-router@${LATEST}/CHANGELOG.md`,
+        githubEditPath:
+          "https://github.com/remix-run/react-router/edit/main/CHANGELOG.md",
       });
     });
   });
@@ -151,6 +178,23 @@ describe("buildDocPaths", () => {
   });
 
   describe("semver tags", () => {
+    it("includes an edit path when the semver ref is the latest version", () => {
+      expect(
+        buildDocPaths(
+          `/${LATEST}/start/modes`,
+          `${LATEST}/start/modes`,
+          LATEST,
+          LATEST,
+          { editRef: "main" },
+        ),
+      ).toEqual({
+        slug: "docs/start/modes",
+        githubPath: `https://raw.githubusercontent.com/remix-run/react-router/refs/tags/react-router@${LATEST}/docs/start/modes.md`,
+        githubEditPath:
+          "https://github.com/remix-run/react-router/edit/main/docs/start/modes.md",
+      });
+    });
+
     it("uses refs/tags/react-router@X.Y.Z for post-changeset versions", () => {
       expect(
         buildDocPaths(

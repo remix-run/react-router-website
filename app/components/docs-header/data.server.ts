@@ -1,4 +1,3 @@
-import { getRepoTags } from "~/modules/gh-docs/.server";
 import {
   getLatestV6Version,
   getLatestVersion,
@@ -6,14 +5,13 @@ import {
 
 export type HeaderData = Awaited<ReturnType<typeof getHeaderData>>;
 
-export async function getHeaderData(
+export function getHeaderData(
   lang: string,
   ref: string,
+  tags: string[],
   refParam?: string,
 ) {
   let githubRef = ref;
-  let tags = await getRepoTags();
-  if (!tags) throw new Response("Cannot reach GitHub", { status: 503 });
 
   let branchesInMenu = [
     "main",
@@ -21,6 +19,7 @@ export async function getHeaderData(
   ];
 
   let latestVersion = getLatestVersion(tags);
+  let latestV6Version = getLatestV6Version(tags);
   let isLatest = githubRef === latestVersion;
 
   let hasAPIDocs =
@@ -31,8 +30,6 @@ export async function getHeaderData(
 
   // TODO: make this smarter before v8
   let apiDocsRef = "v7";
-
-  let latestV6Version = getLatestV6Version(tags);
 
   // Set the version for docsearch to use as a facet filter so that the search
   // results are context aware
