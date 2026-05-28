@@ -17,10 +17,11 @@ export function withClientAddress(
     return request;
   }
 
-  let headers = new Headers(request.headers);
+  let nextRequest = request.clone();
+  let headers = new Headers(nextRequest.headers);
   headers.set(CLIENT_ADDRESS_HEADER, normalizedAddress);
 
-  return new Request(request, { headers });
+  return new Request(nextRequest, { headers });
 }
 
 export function getClientAddressFromHeaders(headers: Headers): string | null {
