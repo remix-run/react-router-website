@@ -17,8 +17,7 @@ WORKDIR /app
 RUN corepack enable && pnpm run build
 
 FROM node:24-alpine
-RUN corepack enable
-COPY ./package.json pnpm-lock.yaml server.ts /app/
+COPY ./package.json server.ts /app/
 COPY ./server /app/server
 
 ENV PORT="8080"
@@ -29,4 +28,4 @@ COPY --from=build-env /app/build /app/build
 COPY --from=build-env /app/start.sh /app/start.sh
 
 WORKDIR /app
-CMD ["pnpm", "run", "start"]
+CMD ["node", "server.ts"]

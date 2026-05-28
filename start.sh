@@ -6,4 +6,4 @@
 #!/bin/sh
 
 set -ex
-pnpm run start
+node server.ts
