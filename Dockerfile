@@ -1,12 +1,12 @@
 FROM node:24-alpine AS development-dependencies-env
 RUN corepack enable
-COPY ./package.json pnpm-lock.yaml .npmrc /app/
+COPY ./package.json pnpm-lock.yaml pnpm-workspace.yaml /app/
 WORKDIR /app
 RUN pnpm install --frozen-lockfile
 
 FROM node:24-alpine AS production-dependencies-env
 RUN corepack enable
-COPY ./package.json pnpm-lock.yaml .npmrc /app/
+COPY ./package.json pnpm-lock.yaml pnpm-workspace.yaml /app/
 WORKDIR /app
 RUN pnpm install --frozen-lockfile --prod
 
