@@ -47,7 +47,9 @@ describe("prefersMarkdown", () => {
 
   it("uses the best q-value for duplicate media ranges", () => {
     expect(
-      prefersMarkdown("text/markdown;q=0.3,text/html;q=0.8,text/markdown;q=0.9"),
+      prefersMarkdown(
+        "text/markdown;q=0.3,text/html;q=0.8,text/markdown;q=0.9",
+      ),
     ).toBe(true);
   });
 
