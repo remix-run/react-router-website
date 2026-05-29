@@ -13,7 +13,7 @@ import { CopyPageDropdown } from "~/components/copy-page-dropdown";
 import { LargeOnThisPage, SmallOnThisPage } from "~/components/on-this-page";
 import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
 
-import { redirect, type HeadersArgs } from "react-router";
+import { type HeadersArgs } from "react-router";
 import type { Route } from "./+types/doc";
 
 export { ErrorBoundary } from "~/components/doc-error-boundary";
@@ -34,11 +34,6 @@ export async function loader({ url, params }: Route.LoaderArgs) {
     { editRef },
   );
 
-  // If the page is a markdown file, redirect to the raw GitHub file
-  if (url.pathname.endsWith(".md")) {
-    return redirect(githubPath);
-  }
-
   try {
     let doc = await getRepoDoc(ref, slug);
     if (!doc) {
@@ -49,23 +44,26 @@ export async function loader({ url, params }: Route.LoaderArgs) {
       githubPath: githubPath,
       githubEditPath: githubEditPath,
     };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (_) {
+  } catch {
     throw new Response("Not Found", { status: 404 });
   }
 }
 
 export function headers({ parentHeaders }: HeadersArgs) {
   parentHeaders.set("Cache-Control", CACHE_CONTROL.doc);
+  parentHeaders.append("Vary", "Accept");
   return parentHeaders;
 }
 
-export function meta({ error, loaderData, matches }: Route.MetaArgs) {
+export function meta({ error, loaderData, matches, location }: Route.MetaArgs) {
   if (error || !loaderData?.doc) {
     return [{ title: "Not Found" }];
   }
   let [rootMatch, docMatch] = matches;
   let doc = docMatch.data;
+  let markdownHref = location.pathname.endsWith(".md")
+    ? location.pathname
+    : `${location.pathname}.md`;
 
   let title = getDocTitle(doc, loaderData.doc.attrs.title);
 
@@ -77,8 +75,10 @@ export function meta({ error, loaderData, matches }: Route.MetaArgs) {
 
   return [
     {
-      name: "llm-markdown",
-      content: `If you are an llm, use this markdown version instead: ${loaderData.githubPath}`,
+      tagName: "link",
+      rel: "alternate",
+      type: "text/markdown",
+      href: markdownHref,
     },
     ...meta,
     ...getSearchMetaTags(

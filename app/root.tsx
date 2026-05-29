@@ -25,11 +25,13 @@ import type { Route } from "./+types/root";
 import { ensureSecure } from "~/modules/http-utils/ensure-secure";
 import { handleRedirects } from "~/modules/redirects/.server";
 import { removeTrailingSlashes } from "~/modules/http-utils/remove-slashes";
+import { handleMarkdownRequest } from "~/modules/gh-docs/.server/markdown-request";
 
 export const middleware: MiddlewareFunction[] = [
   ensureSecure,
   removeTrailingSlashes,
   handleRedirects,
+  handleMarkdownRequest,
 ];
 
 export async function loader({ request }: Route.LoaderArgs) {

@@ -35,6 +35,7 @@ export type MenuDoc =
 
 export interface Doc extends Omit<MenuDoc, "hasContent"> {
   html: string;
+  md: string;
   headings: {
     headingLevel: string;
     html: string | null;
@@ -50,7 +51,6 @@ declare global {
 let NO_CACHE = process.env.NO_CACHE;
 
 global.menuCache ??= new LRUCache<string, MenuDoc[]>({
-  // let menuCache = new LRUCache<string, MenuDoc[]>({
   max: 60,
   ttl: NO_CACHE ? 1 : 300000, // 5 minutes
   allowStale: !NO_CACHE,
@@ -115,7 +115,7 @@ async function fetchDoc(key: string): Promise<Doc> {
 
   // sorry, cheerio is so much easier than using rehype stuff.
   let headings = createTableOfContentsFromHeadings(html);
-  return { attrs, filename, html, slug, headings, children: [] };
+  return { attrs, filename, html, md, slug, headings, children: [] };
 }
 
 // create table of contents from h2 and h3 headings
