@@ -13,7 +13,7 @@ export let loader = async () => {
 // TODO: target="_blank" for discord?
 
 export const meta: Route.MetaFunction = ({ matches }) => {
-  let { isProductionHost } = matches[0].data;
+  let { isProductionHost } = matches[0].loaderData;
   let robots = isProductionHost ? "index,follow" : "noindex, nofollow";
   return [
     { title: "React Router Official Documentation" },

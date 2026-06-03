@@ -60,7 +60,7 @@ export function meta({ error, loaderData, matches, location }: Route.MetaArgs) {
     return [{ title: "Not Found" }];
   }
   let [rootMatch, docMatch] = matches;
-  let doc = docMatch.data;
+  let doc = docMatch.loaderData;
   let markdownHref = location.pathname.endsWith(".md")
     ? location.pathname
     : `${location.pathname}.md`;
@@ -82,7 +82,7 @@ export function meta({ error, loaderData, matches, location }: Route.MetaArgs) {
     },
     ...meta,
     ...getSearchMetaTags(
-      rootMatch.data.isProductionHost,
+      rootMatch.loaderData.isProductionHost,
       doc.header.docSearchVersion,
     ),
   ];
