@@ -4,7 +4,7 @@ import { clsx } from "clsx";
 import { Header } from "~/components/docs-header/docs-header";
 import { getHeaderData } from "~/components/docs-header/data.server";
 import { getRepoDocsMenu, getRepoTags } from "~/modules/gh-docs/.server";
-import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
+import { getLatestMajorVersions } from "~/modules/gh-docs/.server/tags";
 import { resolveRef } from "~/modules/gh-docs/.server/doc-url-parser";
 import { Footer } from "~/components/docs-footer";
 import { VersionWarning } from "~/components/version-warning";
@@ -37,7 +37,7 @@ export async function loader({ url, params }: Route.LoaderArgs) {
 
   let tags = await getRepoTags();
   if (!tags) throw new Response("Cannot reach GitHub", { status: 503 });
-  let latestVersion = getLatestVersion(tags);
+  let latestVersion = getLatestMajorVersions(tags)[0];
 
   let { ref, refParam } = resolveRef(params["*"], latestVersion, params.ref);
 

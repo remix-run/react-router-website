@@ -76,6 +76,28 @@ const highlights: Highlight[] = [
   },
 ];
 
+// v8
+// const highlights: Highlight[] = [
+//   {
+//     icon: "chain",
+//     title: "Non-breaking",
+//     description:
+//       "Upgrading from v7 to v8 is a non-breaking upgrade. Keep using React Router the same way you already do.",
+//   },
+//   {
+//     icon: "box",
+//     title: "Modern Baseline",
+//     description:
+//       "Node 22+, Vite 7+, React 19+, ESM-only. Upgrading the baselines allows us to embrace all the latest these tools have to offer.",
+//   },
+//   {
+//     icon: "cd",
+//     title: "Community Driven",
+//     description:
+//       "With our new Open Governance model launched during v7, we're focused on shipping what the community is asking for. Go participate in open Proposals or open one of your own!",
+//   },
+// ];
+
 type Adventure = {
   title: string;
   description: string;
@@ -89,12 +111,20 @@ const adventures: Adventure[] = [
     linkText: "Start Here",
     linkTo: "home",
   },
+  // v7
   {
     title: "I'm on v7",
     description: "Upgrade to v8 in just a few steps",
     linkText: "Upgrade Now",
     linkTo: "upgrading/v7",
   },
+  // v8
+  // {
+  //   title: "I'm on v7",
+  //   description: "Upgrade to v8 in just a few steps",
+  //   linkText: "Upgrade Now",
+  //   linkTo: "upgrading/v7",
+  // },
   {
     title: "I want to adopt framework features",
     description:

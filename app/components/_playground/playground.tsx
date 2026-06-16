@@ -13,6 +13,8 @@ export async function loader() {
       lang: "en",
       hasAPIDocs: true,
       apiDocsRef: "v7",
+      docSearchVersion: "v7",
+      shouldIndexDocPage: true,
     },
   };
 }

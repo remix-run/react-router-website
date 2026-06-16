@@ -23,13 +23,14 @@ export function meta({ matches }: Route.MetaArgs) {
     openGraph: { title },
   });
 
-  let { docSearchVersion } = doc.header;
+  let { docSearchVersion, shouldIndexDocPage } = doc.header;
 
   return [
     ...meta,
     ...getSearchMetaTags(
       rootMatch.loaderData.isProductionHost,
       docSearchVersion,
+      shouldIndexDocPage,
     ),
   ];
 }

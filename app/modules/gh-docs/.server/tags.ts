@@ -10,12 +10,25 @@ export async function getTags(repo: string) {
   return tagsCache.fetch(repo);
 }
 
-export function getLatestVersion(tags: string[]) {
+export function getLatestMajorVersions(tags: string[]) {
   let sortedTags = [...tags].sort(semver.rcompare);
+  let versionsByMajor = new Map<number, string>();
 
-  return sortedTags.filter((tag) =>
-    semver.satisfies(tag, "*", { includePrerelease: false }),
-  )[0];
+  for (let tag of sortedTags) {
+    let version = semver.parse(tag);
+    if (
+      !version ||
+      version.major < 6 ||
+      version.prerelease.length > 0 ||
+      versionsByMajor.has(version.major)
+    ) {
+      continue;
+    }
+
+    versionsByMajor.set(version.major, tag);
+  }
+
+  return [...versionsByMajor.values()];
 }
 
 export function getLatestV6Version(tags: string[]) {
