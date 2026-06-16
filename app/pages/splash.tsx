@@ -60,19 +60,19 @@ const highlights: Highlight[] = [
     icon: "chain",
     title: "Non-breaking",
     description:
-      "Upgrading from v6 to v7 is a non-breaking upgrade. Keep using React Router the same way you already do.",
+      "Upgrading from v7 to v8 is a non-breaking upgrade. Keep using React Router the same way you already do.",
   },
   {
     icon: "box",
-    title: "Bridge to React 19",
+    title: "Modern Baseline",
     description:
-      "All new bundling, server rendering, pre-rendering, and streaming features allow you bridge the gap from React 18 to 19 incrementally.",
+      "Node 22+, Vite 7+, React 19+, ESM-only. Upgrading the baselines allows us to embrace all the latest these tools have to offer.",
   },
   {
     icon: "cd",
-    title: "Type Safety",
+    title: "Community Driven",
     description:
-      "New typegen provides first class types for route params, loader data, actions, and more.",
+      "With our new Open Governance model launched during v7, we're focused on shipping what the community is asking for. Go participate in open Proposals or open one of your own!",
   },
 ];
 
@@ -90,10 +90,10 @@ const adventures: Adventure[] = [
     linkTo: "home",
   },
   {
-    title: "I'm on v6",
-    description: "Upgrade to v7 in just a few steps",
+    title: "I'm on v7",
+    description: "Upgrade to v8 in just a few steps",
     linkText: "Upgrade Now",
-    linkTo: "upgrading/v6",
+    linkTo: "upgrading/v7",
   },
   {
     title: "I want to adopt framework features",
