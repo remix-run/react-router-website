@@ -14,7 +14,7 @@ export async function loader() {
       hasAPIDocs: true,
       apiDocsRef: "v7",
       docSearchVersion: "v7",
-      shouldIndexDocPage: true,
+      shouldIndexDocPage: false,
     },
   };
 }
