@@ -255,7 +255,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <h2 className="mx-[-10px] text-center text-3xl font-semibold text-gray-800 dark:text-gray-100">
           Choose Your Adventure:
         </h2>
-        <div className="grid max-w-[1200px] gap-6 md:grid-cols-2 2xl:grid-cols-4">
+        <div className="grid max-w-[1320px] gap-6 md:grid-cols-2 2xl:grid-cols-4">
           {adventures.map(({ title, description, linkText, linkTo }) => (
             <Link
               key={title}
@@ -271,7 +271,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                   {description}
                 </p>
               </div>
-              <p className="flex h-10 place-content-center place-items-center rounded-lg bg-gray-900 text-gray-50 dark:bg-white dark:text-gray-900">
+              <p className="flex min-h-10 place-content-center place-items-center rounded-lg bg-gray-900 px-4 py-2 text-center text-gray-50 dark:bg-white dark:text-gray-900 md:whitespace-nowrap">
                 {linkText}
               </p>
             </Link>
