@@ -4,9 +4,6 @@ minimumReleaseAgeExclude:
   - react-router
   - "@react-router/*"
   - "@remix-run/*"
-  - '@react-router/dev@8.0.0'
-  - '@react-router/node@8.0.0'
-  - react-router@8.0.0
 onlyBuiltDependencies:
   - esbuild
 allowBuilds:
