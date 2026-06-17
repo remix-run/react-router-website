@@ -88,13 +88,13 @@ const highlights: Highlight[] = [
 //     icon: "box",
 //     title: "Modern Baseline",
 //     description:
-//       "Node 22+, Vite 7+, React 19+, ESM-only. Upgrading the baselines allows us to embrace all the latest these tools have to offer.",
+//       "Node 22+, Vite 7+, React 19+, ESM-only. Upgrading the baselines allows us to embrace the latest these tools have to offer and keep the core of React Router simple.",
 //   },
 //   {
 //     icon: "cd",
 //     title: "Community Driven",
 //     description:
-//       "With our new Open Governance model launched during v7, we're focused on shipping what the community is asking for. Go participate in open Proposals or open one of your own!",
+//       "React Router is developed via an Open Governance model. We're focused on shipping what the community is asking for. Go participate in open Proposals or open one of your own!"
 //   },
 // ];
 
