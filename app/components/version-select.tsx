@@ -2,25 +2,14 @@ import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { DetailsPopup } from "./details-popup";
 import { PopupLabel } from "./popup-label";
-import { Link, unstable_useRouterState as useRouterState } from "react-router";
+import { Link } from "react-router";
 import { clsx } from "clsx";
 import { useHeaderData } from "./docs-header/use-header-data";
 import { useNavState } from "~/hooks/use-nav-state";
 
 export function VersionSelect() {
-  let {
-    versions,
-    latestVersion,
-    branches,
-    currentGitHubRef,
-    isLatest,
-    refParam,
-  } = useHeaderData();
-  let { "*": splat } = useRouterState().active.params;
-
-  // Strip the URL ref segment (e.g. "main", "7.15.1") off the splat so we can
-  // re-prefix it with a different ref when the user picks one.
-  let slug = splat ? stripLeadingRef(splat, refParam) : "";
+  let { versions, latestVersion, branches, currentGitHubRef, isLatest } =
+    useHeaderData();
 
   // This is the same default, hover, focus style as the ColorScheme trigger
   const className =
@@ -43,12 +32,10 @@ export function VersionSelect() {
       </summary>
       <DetailsPopup className="w-[12rem]">
         <PopupLabel label="Current" />
-        <RefLink to={slug ? `/${slug}` : "/home"}>
-          latest ({latestVersion})
-        </RefLink>
-        <RefLink to={`/main/${slug || "home"}`}>main (unreleased)</RefLink>
+        <RefLink to="/home">latest ({latestVersion})</RefLink>
+        <RefLink to="/main/home">main (unreleased)</RefLink>
         {branches.includes("local") ? (
-          <RefLink to={`/local/${slug || "home"}`}>local</RefLink>
+          <RefLink to="/local/home">local</RefLink>
         ) : null}
         <PopupLabel label="Versions" />
         {versions.map((version) => (
@@ -68,14 +55,6 @@ export function VersionSelect() {
       </DetailsPopup>
     </DetailsMenu>
   );
-}
-
-function stripLeadingRef(splat: string, refParam: string | undefined) {
-  if (!refParam) return splat;
-  if (splat === refParam) return "";
-
-  let prefix = `${refParam}/`;
-  return splat.startsWith(prefix) ? splat.slice(prefix.length) : splat;
 }
 
 function RefLink({ to, children }: { to: string; children: React.ReactNode }) {
