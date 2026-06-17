@@ -1,16 +1,12 @@
 import { Await, Link } from "react-router";
 import { Suspense } from "react";
+import semver from "semver";
 
 import iconsHref from "~/icons.svg";
 import { getStats } from "~/modules/stats";
+import { getRepoTags } from "~/modules/gh-docs/.server";
+import { getLatestMajorVersions } from "~/modules/gh-docs/.server/tags";
 import type { Route } from "./+types/splash";
-
-export let loader = async () => {
-  const stats = getStats();
-  return { stats };
-};
-
-// TODO: target="_blank" for discord?
 
 export const meta: Route.MetaFunction = ({ matches }) => {
   let { isProductionHost } = matches[0].loaderData;
@@ -26,7 +22,9 @@ type QuickLink = {
   icon: string;
   title: string;
   to: string;
+  attrs?: React.AnchorHTMLAttributes<HTMLAnchorElement>;
 };
+
 const quicklinks: QuickLink[] = [
   {
     icon: "atom",
@@ -42,6 +40,10 @@ const quicklinks: QuickLink[] = [
     icon: "discord-outline",
     title: "Discord",
     to: "https://discord.gg/xwx7mMzVkA",
+    attrs: {
+      target: "_blank",
+      rel: "noopener noreferrer",
+    },
   },
   {
     icon: "x-logo",
@@ -55,7 +57,8 @@ type Highlight = {
   title: string;
   description: string;
 };
-const highlights: Highlight[] = [
+
+const v7Highlights: Highlight[] = [
   {
     icon: "chain",
     title: "Non-breaking",
@@ -76,27 +79,26 @@ const highlights: Highlight[] = [
   },
 ];
 
-// v8
-// const highlights: Highlight[] = [
-//   {
-//     icon: "chain",
-//     title: "Non-breaking",
-//     description:
-//       "Upgrading from v7 to v8 is a non-breaking upgrade. Keep using React Router the same way you already do.",
-//   },
-//   {
-//     icon: "box",
-//     title: "Modern Baseline",
-//     description:
-//       "Node 22+, Vite 7+, React 19+, ESM-only. Upgrading the baselines allows us to embrace the latest these tools have to offer and keep the core of React Router simple.",
-//   },
-//   {
-//     icon: "cd",
-//     title: "Community Driven",
-//     description:
-//       "React Router is developed via an Open Governance model. We're focused on shipping what the community is asking for. Go participate in open Proposals or open one of your own!"
-//   },
-// ];
+const v8Highlights: Highlight[] = [
+  {
+    icon: "chain",
+    title: "Non-breaking",
+    description:
+      "Upgrading from v7 to v8 is a non-breaking upgrade. Keep using React Router the same way you already do.",
+  },
+  {
+    icon: "box",
+    title: "Modern Baseline",
+    description:
+      "Node 22+, Vite 7+, React 19+, ESM-only. Upgrading the baselines allows us to embrace the latest these tools have to offer and keep the core of React Router simple.",
+  },
+  {
+    icon: "cd",
+    title: "Community Driven",
+    description:
+      "React Router is developed via an Open Governance model. We're focused on shipping what the community is asking for. Go participate in open Proposals or open one of your own!",
+  },
+];
 
 type Adventure = {
   title: string;
@@ -104,27 +106,20 @@ type Adventure = {
   linkText: string;
   linkTo: string;
 };
-const adventures: Adventure[] = [
+
+const v7Adventures: Adventure[] = [
   {
     title: "I'm new!",
     description: "Learn how to get the most out of React Router",
     linkText: "Start Here",
     linkTo: "home",
   },
-  // v7
   {
     title: "I'm on v6",
     description: "Upgrade to v7 in just a few steps",
     linkText: "Upgrade Now",
     linkTo: "upgrading/v6",
   },
-  // v8
-  // {
-  //   title: "I'm on v7",
-  //   description: "Upgrade to v8 in just a few steps",
-  //   linkText: "Upgrade Now",
-  //   linkTo: "upgrading/v7",
-  // },
   {
     title: "I want to adopt framework features",
     description:
@@ -140,7 +135,51 @@ const adventures: Adventure[] = [
   },
 ];
 
+const v8Adventures: Adventure[] = [
+  {
+    title: "I'm new!",
+    description: "Learn how to get the most out of React Router",
+    linkText: "Start Here",
+    linkTo: "home",
+  },
+  {
+    title: "I'm on v7",
+    description: "Upgrade to v8 in just a few steps",
+    linkText: "Upgrade Now",
+    linkTo: "upgrading/v7",
+  },
+  {
+    title: "I want to adopt framework features",
+    description:
+      "Learn how to adopt the new framework features in your existing React Router app",
+    linkText: "Adopt Framework Features",
+    linkTo: "upgrading/component-routes",
+  },
+  {
+    title: "I'm stuck",
+    description: "Join GitHub discussions for help",
+    linkText: "Get Help",
+    linkTo: "https://discord.gg/xwx7mMzVkA",
+  },
+];
+
+export let loader = async () => {
+  let stats = getStats();
+  let tags = await getRepoTags();
+  let latestMajorVersion = getLatestMajorVersions(tags)[0];
+  let latestMajor = semver.parse(latestMajorVersion)?.major ?? 7;
+
+  return {
+    stats,
+    highlights: latestMajor >= 8 ? v8Highlights : v7Highlights,
+    adventures: latestMajor >= 8 ? v8Adventures : v7Adventures,
+    latestMajor,
+  };
+};
+
 export default function Home({ loaderData }: Route.ComponentProps) {
+  let { highlights, adventures, latestMajor } = loaderData;
+
   return (
     <main className="flex min-h-full w-full flex-col items-center justify-center dark:bg-gray-900">
       <section className="from-23% via-82% flex w-full flex-col items-center gap-y-12 bg-gradient-to-b from-[#CCD2DE] via-[#D9DDE6] to-white to-100% py-[96px] dark:from-[#595F6C] dark:via-[#202228] dark:via-65% dark:to-gray-900 md:py-[160px]">
@@ -163,12 +202,13 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           deploy anywhere.
         </p>
         <div className="flex flex-col divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-200 dark:divide-gray-700 dark:border-gray-700 md:h-[72px] md:flex-row md:divide-x md:divide-y-0">
-          {quicklinks.map(({ icon, title, to }) => (
+          {quicklinks.map(({ icon, title, to, attrs }) => (
             <Link
               key={title}
               to={to}
               prefetch="intent"
               className="flex justify-center gap-x-2 px-9 py-6 text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
+              {...attrs}
             >
               <svg className="h-6 w-6" aria-hidden="true">
                 <use href={`${iconsHref}#${icon}`} />
@@ -181,13 +221,13 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <section className="flex w-full flex-col items-center gap-y-24 px-12 pb-12 dark:bg-gray-900 md:gap-y-16 lg:gap-y-12">
         <div className="grid gap-x-16 gap-y-6 md:grid-flow-col">
           <img
-            src="/splash/v7-badge-1.svg"
-            alt="Get React Router 7.0"
+            src={`/splash/v${latestMajor}-badge-1.svg`}
+            alt={`Get React Router ${latestMajor}.0`}
             className="h-[52px] w-[140px] md:h-[72px] md:w-[194px]"
           />
           <img
-            src="/splash/v7-badge-2.svg"
-            alt="React Router v7"
+            src={`/splash/v${latestMajor}-badge-2.svg`}
+            alt={`React Router v${latestMajor}`}
             className="h-[52px] w-[140px] md:h-[72px] md:w-[194px]"
           />
         </div>
