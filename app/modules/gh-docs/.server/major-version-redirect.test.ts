@@ -23,6 +23,7 @@ describe("handleMajorVersionRedirects", () => {
 
   it("redirects major version index URLs", async () => {
     await expectRedirect("/v7", "/7.9.6");
+    await expectRedirect("/v7/", "/7.9.6/");
   });
 
   it("ignores prereleases", async () => {

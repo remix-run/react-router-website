@@ -5,10 +5,10 @@ import { getRepoTags } from "./index";
 export const handleMajorVersionRedirects: MiddlewareFunction = async ({
   url,
 }) => {
-  let match = url.pathname.match(/^\/v(\d+)(?:\/(.*))?$/);
-  if (!match) return undefined;
+  let [, firstSegment, ...rest] = url.pathname.split("/");
+  let major = firstSegment?.match(/^v(\d+)$/)?.[1];
+  if (!major) return undefined;
 
-  let [, major, rest = ""] = match;
   let tags = await getRepoTags();
   let latest = semver.maxSatisfying(tags, `${major}.x`, {
     includePrerelease: false,
@@ -17,6 +17,6 @@ export const handleMajorVersionRedirects: MiddlewareFunction = async ({
   if (!latest) return undefined;
 
   url = new URL(url);
-  url.pathname = `/${latest}${rest ? `/${rest}` : ""}`;
+  url.pathname = `/${[latest, ...rest].join("/")}`;
   throw redirect(url.toString());
 };
