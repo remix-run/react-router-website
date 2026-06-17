@@ -15,8 +15,10 @@ const routes: RouteConfig = [
   ]),
 
   // short version URLs for changelogs and stuff
+  // TODO: Eventually this should move to maybe a middleware that detects anything matching /^\/v\d{1,2}/
   route("/v6/*", "pages/redirect-major-version.tsx", { id: "v6-redirect" }),
   route("/v7/*", "pages/redirect-major-version.tsx", { id: "v7-redirect" }),
+  route("/v8/*", "pages/redirect-major-version.tsx", { id: "v8-redirect" }),
 
   // This route primarily exists to support the old v6 index page and to
   // redirect to the new docs at /home
