@@ -4,7 +4,7 @@ import { clsx } from "clsx";
 import { CACHE_CONTROL } from "~/http";
 import { getSearchMetaTags, getDocTitle } from "~/ui/meta";
 import { seo } from "~/seo";
-import type { Route } from "./+types/docs-home";
+import type { Route } from "./+types/docs-v6-index";
 
 export function headers({ parentHeaders }: HeadersArgs) {
   parentHeaders.set("Cache-Control", CACHE_CONTROL.doc);
@@ -35,116 +35,7 @@ export function meta({ matches }: Route.MetaArgs) {
   ];
 }
 
-export default function Index({ matches }: Route.ComponentProps) {
-  const { loaderData } = matches[1];
-
-  return (
-    <div className="px-4 pb-4 pt-8 lg:mr-4 xl:pl-0">
-      {loaderData.header.hasAPIDocs ? <V7 /> : <V6 />}
-    </div>
-  );
-}
-
-function V7() {
-  let mainLinks = [
-    {
-      title: "I'm New!",
-      description: (
-        <div>
-          We recommend you use React Router as your framework. Check out the{" "}
-          <span className="underline">Getting Started</span> docs where you'll
-          get familiar with installation, routes, data handling, pending UI and
-          more.
-        </div>
-      ),
-      slug: "start/installation",
-      className: "text-red-brand",
-      svg: undefined,
-    },
-    {
-      title: "Upgrade from React Router v6",
-      description: (
-        <div>
-          v7 is a non-breaking upgrade if you are caught up on all future flags.
-          While v7 includes new framework features, you can continue to use it
-          as you currently do. Head over to the{" "}
-          <span className="underline">Upgrade Guide</span> to get up to date
-          quickly.
-        </div>
-      ),
-      slug: "upgrading/v6",
-      className: "text-green-brand",
-      svg: undefined,
-    },
-    {
-      title: "Framework or Library?",
-      description: (
-        <div>
-          React Router can be used maximally as a framework or minimally as a
-          set of declarative routing components just like previous versions. To
-          figure out how you'd like to use it, check out the{" "}
-          <span className="underline">Routing Strategies</span> guide.
-        </div>
-      ),
-
-      slug: "explanation/strategies",
-      className: "text-pink-brand",
-      svg: undefined,
-    },
-    {
-      title: "Upgrade from Remix v2",
-      description: (
-        <div>
-          Follow our checklist to quickly update your Remix application to React
-          Router and start taking advantage of new features like static
-          pre-rendering, typesafe routing and more.
-        </div>
-      ),
-      slug: "upgrading/remix",
-      className: "text-yellow-600 dark:text-yellow-brand",
-      svg: undefined,
-    },
-  ];
-  return (
-    <>
-      <div className="max-w-[40rem]">
-        <h1 className="text-xl font-bold">React Router v7 Pre-release</h1>
-        <p className="mb-2">
-          Welcome to the v7 pre-release docs. Please note a lot of information
-          here is incomplete and potentially inaccurate as we've been working
-          primarily on the code.
-        </p>
-        <p>
-          During this time we'll be updating these docs rapidly to get ready for
-          the final release. Thanks for your patience!
-        </p>
-      </div>
-
-      <div className="my-4 grid max-w-[60ch] gap-y-10 md:max-w-none md:grid-cols-2 md:grid-rows-2 md:gap-x-8 md:gap-y-12">
-        {mainLinks.map(({ title, description, slug, className, svg }) => (
-          <Link
-            key={slug}
-            to={slug}
-            className="group relative flex flex-col gap-1 rounded-lg border-[3px] border-gray-50 p-4 pt-6 hover:border-gray-100 dark:border-gray-800 hover:dark:border-gray-600 md:p-6"
-          >
-            <h2
-              className={clsx(
-                className,
-                "text-2xl font-bold tracking-tight group-hover:underline",
-              )}
-            >
-              {title}
-            </h2>
-            {description}
-            {svg}
-          </Link>
-        ))}
-      </div>
-    </>
-  );
-}
-
-function V6() {
+export default function V6() {
   let mainLinks = [
     {
       title: "What's New in 6.4?",
@@ -257,25 +148,27 @@ function V6() {
     },
   ];
   return (
-    <div className="my-4 grid max-w-[60ch] gap-y-10 md:max-w-none md:grid-cols-2 md:grid-rows-2 md:gap-x-8 md:gap-y-12">
-      {mainLinks.map(({ title, description, slug, className, svg }) => (
-        <Link
-          key={slug}
-          to={slug}
-          className="group relative flex flex-col gap-1 rounded-lg border-[3px] border-gray-50 p-4 pt-6 hover:border-gray-100 dark:border-gray-800 hover:dark:border-gray-600 md:p-6"
-        >
-          <h2
-            className={clsx(
-              className,
-              "text-2xl font-bold tracking-tight group-hover:underline",
-            )}
+    <div className="px-4 pb-4 pt-8 lg:mr-4 xl:pl-0">
+      <div className="my-4 grid max-w-[60ch] gap-y-10 md:max-w-none md:grid-cols-2 md:grid-rows-2 md:gap-x-8 md:gap-y-12">
+        {mainLinks.map(({ title, description, slug, className, svg }) => (
+          <Link
+            key={slug}
+            to={slug}
+            className="group relative flex flex-col gap-1 rounded-lg border-[3px] border-gray-50 p-4 pt-6 hover:border-gray-100 dark:border-gray-800 hover:dark:border-gray-600 md:p-6"
           >
-            {title}
-          </h2>
-          <p>{description}</p>
-          {svg}
-        </Link>
-      ))}
+            <h2
+              className={clsx(
+                className,
+                "text-2xl font-bold tracking-tight group-hover:underline",
+              )}
+            >
+              {title}
+            </h2>
+            <p>{description}</p>
+            {svg}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

@@ -31,14 +31,6 @@ export function getLatestMajorVersions(tags: string[]) {
   return [...versionsByMajor.values()];
 }
 
-export function getLatestV6Version(tags: string[]) {
-  return (
-    tags.filter((tag) =>
-      semver.satisfies(tag, "6.x", { includePrerelease: false }),
-    )[0] ?? "v6"
-  );
-}
-
 declare global {
   var tagsCache: LRUCache<string, string[]>;
 }
