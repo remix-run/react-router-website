@@ -10,20 +10,25 @@ export async function getTags(repo: string) {
   return tagsCache.fetch(repo);
 }
 
-export function getLatestVersion(tags: string[]) {
+export function getLatestMajorVersions(tags: string[]) {
   let sortedTags = [...tags].sort(semver.rcompare);
+  let versionsByMajor = new Map<number, string>();
 
-  return sortedTags.filter((tag) =>
-    semver.satisfies(tag, "*", { includePrerelease: false }),
-  )[0];
-}
+  for (let tag of sortedTags) {
+    let version = semver.parse(tag);
+    if (
+      !version ||
+      version.major < 6 ||
+      version.prerelease.length > 0 ||
+      versionsByMajor.has(version.major)
+    ) {
+      continue;
+    }
 
-export function getLatestV6Version(tags: string[]) {
-  return (
-    tags.filter((tag) =>
-      semver.satisfies(tag, "6.x", { includePrerelease: false }),
-    )[0] ?? "v6"
-  );
+    versionsByMajor.set(version.major, tag);
+  }
+
+  return [...versionsByMajor.values()];
 }
 
 declare global {

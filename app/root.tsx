@@ -26,10 +26,12 @@ import { ensureSecure } from "~/modules/http-utils/ensure-secure";
 import { handleRedirects } from "~/modules/redirects/.server";
 import { removeTrailingSlashes } from "~/modules/http-utils/remove-slashes";
 import { handleMarkdownRequest } from "~/modules/gh-docs/.server/markdown-request";
+import { handleMajorVersionRedirects } from "~/modules/gh-docs/.server/major-version-redirect";
 
 export const middleware: MiddlewareFunction[] = [
   ensureSecure,
   removeTrailingSlashes,
+  handleMajorVersionRedirects,
   handleRedirects,
   handleMarkdownRequest,
 ];

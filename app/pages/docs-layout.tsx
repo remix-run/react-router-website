@@ -1,10 +1,10 @@
-import { Outlet, redirect } from "react-router";
+import { Outlet, redirect, type MiddlewareFunction } from "react-router";
 import { clsx } from "clsx";
 
 import { Header } from "~/components/docs-header/docs-header";
 import { getHeaderData } from "~/components/docs-header/data.server";
 import { getRepoDocsMenu, getRepoTags } from "~/modules/gh-docs/.server";
-import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
+import { getLatestMajorVersions } from "~/modules/gh-docs/.server/tags";
 import { resolveRef } from "~/modules/gh-docs/.server/doc-url-parser";
 import { Footer } from "~/components/docs-footer";
 import { VersionWarning } from "~/components/version-warning";
@@ -18,26 +18,33 @@ import { useCodeBlockCopyButton } from "~/ui/utils";
 
 import docsCss from "~/styles/docs.css?url";
 
-export async function loader({ url, params }: Route.LoaderArgs) {
-  let pathname = url.pathname;
-  if (!pathname.endsWith("/")) {
-    pathname += "/";
-  }
+export const middleware: MiddlewareFunction[] = [
+  // We only get here with a ref param for the v6-index route.
+  // This middleware 404's on an invalid v6 ref, and redirects to any
+  // /v{major} shorthand URLs to /v{major}/home.
+  async ({ url, params }) => {
+    if (!params.ref) return;
 
-  // The /:ref param is only valid for v6 docs (semver) or "local". Anything
-  // else 404s; non-v6 refs redirect to /:ref/home.
-  if (params.ref) {
-    if (params.ref !== "local" && !semver.valid(params.ref)) {
+    let refVersion = semver.parse(params.ref);
+    if (params.ref !== "local" && !refVersion) {
       throw new Response("Not Found", { status: 404 });
     }
-    if (!pathname.match(/^\/?(6)/)) {
+
+    if (params.ref === "local" || (refVersion && refVersion.major >= 7)) {
+      let pathname = url.pathname;
+      if (!pathname.endsWith("/")) {
+        pathname += "/";
+      }
+
       throw redirect(pathname + "home");
     }
-  }
+  },
+];
 
+export async function loader({ params }: Route.LoaderArgs) {
   let tags = await getRepoTags();
   if (!tags) throw new Response("Cannot reach GitHub", { status: 503 });
-  let latestVersion = getLatestVersion(tags);
+  let latestVersion = getLatestMajorVersions(tags)[0];
 
   let { ref, refParam } = resolveRef(params["*"], latestVersion, params.ref);
 

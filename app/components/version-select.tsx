@@ -52,10 +52,7 @@ export function VersionSelect() {
         ) : null}
         <PopupLabel label="Versions" />
         {versions.map((version) => (
-          <RefLink
-            key={version}
-            to={version.startsWith("7") ? `/${version}/home` : `/${version}`}
-          >
+          <RefLink key={version} to={`/${version}`}>
             {version}
           </RefLink>
         ))}

@@ -14,14 +14,10 @@ const routes: RouteConfig = [
     route("*", "pages/doc.tsx"),
   ]),
 
-  // short version URLs for changelogs and stuff
-  route("/v6/*", "pages/redirect-major-version.tsx", { id: "v6-redirect" }),
-  route("/v7/*", "pages/redirect-major-version.tsx", { id: "v7-redirect" }),
-
   // This route primarily exists to support the old v6 index page and to
   // redirect to the new docs at /home
   route("/:ref", "pages/docs-layout.tsx", { id: "v6-index-layout" }, [
-    index("pages/docs-home.tsx", {
+    index("pages/docs-v6-index.tsx", {
       id: "v6-index",
     }),
   ]),

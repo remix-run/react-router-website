@@ -20,9 +20,10 @@ export function getDocTitle(api: DocsData, title: string) {
 export function getSearchMetaTags(
   isProductionHost: boolean,
   docSearchVersion: HeaderData["docSearchVersion"],
+  shouldIndexDocPage: HeaderData["shouldIndexDocPage"],
 ) {
   let robots = "noindex,nofollow";
-  if (isProductionHost && docSearchVersion !== null) {
+  if (isProductionHost && shouldIndexDocPage) {
     robots = "index,follow";
   }
 

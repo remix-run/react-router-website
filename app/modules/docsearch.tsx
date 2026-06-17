@@ -74,8 +74,7 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
   let header =
     docsRoute?.loaderData?.header ?? v6IndexRoute?.loaderData?.header;
 
-  // Users can cmd+k on any page, so always assume v7 if there's no docs context.
-  const version = header?.ref.startsWith("6") ? "v6" : "v7";
+  let version = header?.docSearchVersion;
 
   return (
     <DocSearchContext value={contextValue}>
@@ -89,7 +88,7 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
               // NOTE: to use the facet for search, it has to be set in the algolia dashboard:
               // "Configuration" > "Filtering and Faceting" > "Facets"
               searchParameters={{
-                facetFilters: [`version:${version}`],
+                ...(version ? { facetFilters: [`version:${version}`] } : {}),
               }}
               {...docSearchProps}
             />,

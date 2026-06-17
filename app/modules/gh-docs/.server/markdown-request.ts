@@ -2,7 +2,7 @@ import { type MiddlewareFunction } from "react-router";
 
 import { CACHE_CONTROL } from "~/http";
 import { getRepoDoc, getRepoTags } from "./index";
-import { getLatestVersion } from "./tags";
+import { getLatestMajorVersions } from "./tags";
 import { buildDocPaths, resolveRef } from "./doc-url-parser";
 import { estimateTokens, prefersMarkdown } from "./markdown-negotiation";
 
@@ -20,7 +20,7 @@ export const handleMarkdownRequest: MiddlewareFunction = async ({
   let tags = await getRepoTags().catch(() => undefined);
   if (!tags) return;
 
-  let latestVersion = getLatestVersion(tags);
+  let latestVersion = getLatestMajorVersions(tags)[0];
   let splat = url.pathname.replace(/^\//, "");
   let { ref, refParam } = resolveRef(splat, latestVersion);
   let { slug } = buildDocPaths(url.pathname, splat, ref, refParam);

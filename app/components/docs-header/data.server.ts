@@ -1,7 +1,5 @@
-import {
-  getLatestV6Version,
-  getLatestVersion,
-} from "~/modules/gh-docs/.server/tags";
+import { getLatestMajorVersions } from "~/modules/gh-docs/.server/tags";
+import semver from "semver";
 
 export type HeaderData = Awaited<ReturnType<typeof getHeaderData>>;
 
@@ -18,32 +16,42 @@ export function getHeaderData(
     ...(process.env.NODE_ENV === "development" ? ["local"] : []),
   ];
 
-  let latestVersion = getLatestVersion(tags);
-  let latestV6Version = getLatestV6Version(tags);
+  let versions = getLatestMajorVersions(tags);
+  let latestVersion = versions[0];
+  let latestMajor = semver.parse(latestVersion)?.major;
+
+  if (!latestMajor) {
+    throw new Error(
+      `Latest version ${latestVersion} is not a valid semver version`,
+    );
+  }
+
+  let githubRefMajor = semver.parse(githubRef)?.major;
   let isLatest = githubRef === latestVersion;
 
   let hasAPIDocs =
     // they're on main (the unreleased docs at /main/*) or "local"
     branchesInMenu.includes(githubRef) ||
-    // they're looking at a v7 tag (or the default latest tag, if v7)
-    githubRef.startsWith("7.");
+    // they're looking at a stable version with API docs
+    (githubRefMajor !== undefined && githubRefMajor >= 7);
 
-  // TODO: make this smarter before v8
-  let apiDocsRef = "v7";
+  let apiDocsRef =
+    githubRefMajor !== undefined && githubRefMajor >= 7
+      ? `v${githubRefMajor}`
+      : branchesInMenu.includes(githubRef)
+        ? `v${latestMajor}`
+        : null;
+
+  // Search engines should only crawl root URLs, not versioned URLs.
+  let shouldIndexDocPage = refParam === undefined;
 
   // Set the version for docsearch to use as a facet filter so that the search
-  // results are context aware
-  // This value is also used for determining whether the docs should have
-  // robots="index,follow"
-  let docSearchVersion: "v7" | "v6" | null = null;
-  if (githubRef === "main" || githubRef.startsWith("7.")) {
-    docSearchVersion = "v7";
-  } else if (refParam === latestV6Version) {
-    docSearchVersion = "v6";
-  }
+  // results are context aware.
+  let docSearchVersion =
+    githubRefMajor !== undefined ? `v${githubRefMajor}` : `v${latestMajor}`;
 
   return {
-    versions: [latestVersion, latestV6Version],
+    versions,
     latestVersion,
     branches: branchesInMenu,
     currentGitHubRef: githubRef,
@@ -54,5 +62,6 @@ export function getHeaderData(
     ref,
     apiDocsRef,
     docSearchVersion,
+    shouldIndexDocPage,
   } as const;
 }

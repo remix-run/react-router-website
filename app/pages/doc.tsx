@@ -7,7 +7,7 @@ import {
   buildDocPaths,
   resolveRef,
 } from "~/modules/gh-docs/.server/doc-url-parser";
-import { getLatestVersion } from "~/modules/gh-docs/.server/tags";
+import { getLatestMajorVersions } from "~/modules/gh-docs/.server/tags";
 
 import { CopyPageDropdown } from "~/components/copy-page-dropdown";
 import { LargeOnThisPage, SmallOnThisPage } from "~/components/on-this-page";
@@ -22,7 +22,7 @@ export async function loader({ url, params }: Route.LoaderArgs) {
   let splat = params["*"] ?? "";
   let tags = await getRepoTags();
   if (!tags) throw new Response("Cannot reach GitHub", { status: 503 });
-  let latestVersion = getLatestVersion(tags);
+  let latestVersion = getLatestMajorVersions(tags)[0];
   let { ref, refParam } = resolveRef(splat, latestVersion);
   let editRef = ref === latestVersion ? "main" : undefined;
 
@@ -84,6 +84,7 @@ export function meta({ error, loaderData, matches, location }: Route.MetaArgs) {
     ...getSearchMetaTags(
       rootMatch.loaderData.isProductionHost,
       doc.header.docSearchVersion,
+      doc.header.shouldIndexDocPage,
     ),
   ];
 }
