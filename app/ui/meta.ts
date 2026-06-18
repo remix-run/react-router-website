@@ -23,9 +23,7 @@ export function getSearchMetaTags(
   shouldIndexDocPage: HeaderData["shouldIndexDocPage"],
   shouldFollowDocPageLinks: HeaderData["shouldFollowDocPageLinks"],
 ) {
-  let robots = shouldFollowDocPageLinks
-    ? "noindex,follow"
-    : "noindex,nofollow";
+  let robots = shouldFollowDocPageLinks ? "noindex,follow" : "noindex,nofollow";
   if (isProductionHost && shouldIndexDocPage) {
     robots = "index,follow";
   }
