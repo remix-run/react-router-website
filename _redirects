@@ -9,13 +9,6 @@
 
 /start/library/*                             /start/declarative/*
 
-# v7 release redirects from v6 urls
-/en/main                                     /
-/en/main/start/*                             /6.28.0/start/*
-/en/main/upgrading/*                         /6.28.0/upgrading/*
-/en/main/guides/*                            /6.28.0/guides/*
-/en/main/routers/picking-a-router            /start/modes
-
 /en/main/routers/create-browser-router       https://api.reactrouter.com/v7/functions/react_router.createBrowserRouter.html
 /en/main/routers/create-hash-router          https://api.reactrouter.com/v7/functions/react_router.createHashRouter.html
 /en/main/routers/create-memory-router        https://api.reactrouter.com/v7/functions/react_router.createMemoryRouter.html
@@ -102,5 +95,14 @@
 /web/* https://v5.reactrouter.com/web/*
 /native/* https://v5.reactrouter.com/native/*
 
-# v7 future flag warnings
-/upgrading/future-flags /7.16.0/upgrading/future
+# v6 release redirects
+/en/main                                     /
+/en/main/start/*                             /6.28.0/start/*
+/en/main/upgrading/*                         /6.28.0/upgrading/*
+/en/main/guides/*                            /6.28.0/guides/*
+/en/main/routers/picking-a-router            /start/modes
+
+
+# v7 Redirects
+/upgrading/future-flags                      /v7/upgrading/future
+/upgrading/remix                            /v7/upgrading/remix
