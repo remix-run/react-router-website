@@ -23,7 +23,8 @@ export function meta({ matches }: Route.MetaArgs) {
     openGraph: { title },
   });
 
-  let { docSearchVersion, shouldIndexDocPage } = doc.header;
+  let { docSearchVersion, shouldIndexDocPage, shouldFollowDocPageLinks } =
+    doc.header;
 
   return [
     ...meta,
@@ -31,6 +32,7 @@ export function meta({ matches }: Route.MetaArgs) {
       rootMatch.loaderData.isProductionHost,
       docSearchVersion,
       shouldIndexDocPage,
+      shouldFollowDocPageLinks,
     ),
   ];
 }

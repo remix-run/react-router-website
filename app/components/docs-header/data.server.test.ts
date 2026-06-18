@@ -12,6 +12,7 @@ describe("getHeaderData", () => {
       apiDocsRef: "v7",
       docSearchVersion: "v7",
       shouldIndexDocPage: true,
+      shouldFollowDocPageLinks: true,
     });
   });
 
@@ -31,17 +32,41 @@ describe("getHeaderData", () => {
       apiDocsRef: "v8",
       docSearchVersion: "v8",
       shouldIndexDocPage: true,
+      shouldFollowDocPageLinks: true,
     });
   });
 
-  it("keeps previous v7 docs searchable without indexing them as current", () => {
+  it("follows latest previous-major docs without indexing them", () => {
     expect(
-      getHeaderData("en", "7.9.6", ["8.0.0", "7.9.6", "6.30.1"], "7.9.6"),
+      getHeaderData(
+        "en",
+        "7.18.0",
+        ["8.0.0", "7.18.0", "7.17.0", "6.30.1"],
+        "7.18.0",
+      ),
     ).toMatchObject({
       hasAPIDocs: true,
       apiDocsRef: "v7",
       docSearchVersion: "v7",
       shouldIndexDocPage: false,
+      shouldFollowDocPageLinks: true,
+    });
+  });
+
+  it("keeps older previous-major docs nofollow", () => {
+    expect(
+      getHeaderData(
+        "en",
+        "7.17.0",
+        ["8.0.0", "7.18.0", "7.17.0", "6.30.1"],
+        "7.17.0",
+      ),
+    ).toMatchObject({
+      hasAPIDocs: true,
+      apiDocsRef: "v7",
+      docSearchVersion: "v7",
+      shouldIndexDocPage: false,
+      shouldFollowDocPageLinks: false,
     });
   });
 
@@ -53,10 +78,23 @@ describe("getHeaderData", () => {
       apiDocsRef: "v8",
       docSearchVersion: "v8",
       shouldIndexDocPage: false,
+      shouldFollowDocPageLinks: false,
     });
   });
 
-  it("keeps v6 releases searchable as legacy docs", () => {
+  it("follows latest v6 releases for DocSearch discovery", () => {
+    expect(
+      getHeaderData("en", "6.30.1", ["8.0.0", "7.9.6", "6.30.1"], "6.30.1"),
+    ).toMatchObject({
+      hasAPIDocs: false,
+      apiDocsRef: null,
+      docSearchVersion: "v6",
+      shouldIndexDocPage: false,
+      shouldFollowDocPageLinks: true,
+    });
+  });
+
+  it("keeps older v6 releases nofollow", () => {
     expect(
       getHeaderData("en", "6.28.0", ["8.0.0", "7.9.6", "6.30.1"], "6.28.0"),
     ).toMatchObject({
@@ -64,6 +102,7 @@ describe("getHeaderData", () => {
       apiDocsRef: null,
       docSearchVersion: "v6",
       shouldIndexDocPage: false,
+      shouldFollowDocPageLinks: false,
     });
   });
 });

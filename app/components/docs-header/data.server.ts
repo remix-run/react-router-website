@@ -42,8 +42,15 @@ export function getHeaderData(
         ? `v${latestMajor}`
         : null;
 
-  // Search engines should only crawl root URLs, not versioned URLs.
+  // Search engines should only index root URLs. Versioned URLs for the latest
+  // release of each previous major should be followable for DocSearch discovery.
   let shouldIndexDocPage = refParam === undefined;
+  let shouldFollowDocPageLinks =
+    shouldIndexDocPage ||
+    (refParam !== undefined &&
+      !isLatest &&
+      githubRefMajor !== undefined &&
+      versions.some((version) => semver.eq(version, githubRef)));
 
   // Set the version for docsearch to use as a facet filter so that the search
   // results are context aware.
@@ -63,5 +70,6 @@ export function getHeaderData(
     apiDocsRef,
     docSearchVersion,
     shouldIndexDocPage,
+    shouldFollowDocPageLinks,
   } as const;
 }

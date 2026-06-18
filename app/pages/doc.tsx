@@ -85,6 +85,7 @@ export function meta({ error, loaderData, matches, location }: Route.MetaArgs) {
       rootMatch.loaderData.isProductionHost,
       doc.header.docSearchVersion,
       doc.header.shouldIndexDocPage,
+      doc.header.shouldFollowDocPageLinks,
     ),
   ];
 }
