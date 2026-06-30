@@ -153,6 +153,7 @@ async function loadPlugins() {
           nodeProperties,
           removedLines,
           startingLineNumber,
+          usesDiffMarkers,
           usesLineNumbers,
         } = getCodeBlockMeta();
 
@@ -160,6 +161,28 @@ async function loadPlugins() {
         return SKIP;
 
         async function highlightNodes() {
+          let diffLineMarkers: Array<"add" | "remove" | undefined> = [];
+
+          if (usesDiffMarkers) {
+            code = code
+              .split(/\r?\n/)
+              .map((line) => {
+                if (line[0] === "+") {
+                  diffLineMarkers.push("add");
+                  return `${line[1] === " " ? " " : ""}${line.slice(1)}`;
+                }
+
+                if (line[0] === "-") {
+                  diffLineMarkers.push("remove");
+                  return `${line[1] === " " ? " " : ""}${line.slice(1)}`;
+                }
+
+                diffLineMarkers.push(undefined);
+                return line;
+              })
+              .join("\n");
+          }
+
           let tokens = getThemedTokens({ code, language });
           let children = tokens.map(
             (lineTokens, zeroBasedLineNumber): Hast.Element => {
@@ -190,12 +213,19 @@ async function loadPlugins() {
                 value: "\n",
               });
 
-              let isDiff = addedLines.length > 0 || removedLines.length > 0;
+              let isDiff =
+                usesDiffMarkers ||
+                addedLines.length > 0 ||
+                removedLines.length > 0;
               let diffLineNumber = startingLineNumber - 1;
               let lineNumber = zeroBasedLineNumber + startingLineNumber;
               let highlightLine = highlightLines?.includes(lineNumber);
-              let removeLine = removedLines.includes(lineNumber);
-              let addLine = addedLines.includes(lineNumber);
+              let addLine =
+                addedLines.includes(lineNumber) ||
+                diffLineMarkers[zeroBasedLineNumber] === "add";
+              let removeLine =
+                removedLines.includes(lineNumber) ||
+                diffLineMarkers[zeroBasedLineNumber] === "remove";
               if (!removeLine) {
                 diffLineNumber++;
               }
@@ -269,6 +299,7 @@ async function loadPlugins() {
           let addedLines = parseLineHighlights(metaParams.get("add"));
           let removedLines = parseLineHighlights(metaParams.get("remove"));
           let highlightLines = parseLineHighlights(metaParams.get("lines"));
+          let usesDiffMarkers = metaParams.has("diff") && language !== "diff";
           let startValNum = metaParams.has("start")
             ? Number(metaParams.get("start"))
             : 1;
@@ -289,6 +320,7 @@ async function loadPlugins() {
             nodeProperties,
             removedLines,
             startingLineNumber,
+            usesDiffMarkers,
             usesLineNumbers,
           };
         }

@@ -312,6 +312,40 @@
     @apply relative block pr-4;
   }
 
+  & .codeblock-line[data-add] {
+    color: var(--base0B);
+    background-color: color-mix(
+      in oklab,
+      theme("colors.green.400") 20%,
+      transparent
+    );
+
+    &:where(.dark) {
+      background-color: color-mix(
+        in oklab,
+        theme("colors.green.400") 40%,
+        transparent
+      );
+    }
+  }
+
+  & .codeblock-line[data-remove] {
+    color: var(--base08);
+    background-color: color-mix(
+      in oklab,
+      theme("colors.red.400") 20%,
+      transparent
+    );
+
+    &:where(.dark) {
+      background-color: color-mix(
+        in oklab,
+        theme("colors.red.400") 40%,
+        transparent
+      );
+    }
+  }
+
   & :not(pre) > code {
     @apply rounded bg-gray-100/50 px-1.5 pb-0.5 pt-px text-sm text-gray-700 dark:bg-gray-800/50;
   }
@@ -374,6 +408,23 @@
     [data-line-number]::before {
     content: attr(data-line-number);
     @apply mr-6 inline-block w-8 pl-0 text-right text-gray-300 dark:text-gray-600;
+  }
+
+  &
+    pre[data-diff][data-line-numbers="true"]:not(
+      [data-lang="bash"],
+      [data-lang="sh"]
+    ) {
+    & .codeblock-line::before {
+      content: attr(data-line-number) "  ";
+      @apply mr-4 w-10;
+    }
+    & .codeblock-line[data-remove]::before {
+      content: attr(data-line-number) " -";
+    }
+    & .codeblock-line[data-add]::before {
+      content: attr(data-line-number) " +";
+    }
   }
 
   & pre[data-good] {
