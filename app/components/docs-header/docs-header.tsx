@@ -55,7 +55,7 @@ function ExternalLinks() {
         svgSize="24x24"
       />
       <HeaderSvgLink
-        href="https://discord.gg/xwx7mMzVkA"
+        href="https://remix.run/discord"
         svgId="discord"
         svgLabel="Discord logo in a circle"
         title="Chat on Discord"

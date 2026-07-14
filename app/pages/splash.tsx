@@ -39,7 +39,7 @@ const quicklinks: QuickLink[] = [
   {
     icon: "discord-outline",
     title: "Discord",
-    to: "https://discord.gg/xwx7mMzVkA",
+    to: "https://remix.run/discord",
     attrs: {
       target: "_blank",
       rel: "noopener noreferrer",
@@ -131,7 +131,7 @@ const v7Adventures: Adventure[] = [
     title: "I'm stuck",
     description: "Join GitHub discussions for help",
     linkText: "Get Help",
-    linkTo: "https://discord.gg/xwx7mMzVkA",
+    linkTo: "https://remix.run/discord",
   },
 ];
 
@@ -159,7 +159,7 @@ const v8Adventures: Adventure[] = [
     title: "I'm stuck",
     description: "Join GitHub discussions for help",
     linkText: "Get Help",
-    linkTo: "https://discord.gg/xwx7mMzVkA",
+    linkTo: "https://remix.run/discord",
   },
 ];
 
