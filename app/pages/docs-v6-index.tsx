@@ -37,7 +37,7 @@ export function meta({ matches }: Route.MetaArgs) {
   ];
 }
 
-export default function V6() {
+export function ServerComponent() {
   let mainLinks = [
     {
       title: "What's New in 6.4?",

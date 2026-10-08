@@ -2,19 +2,16 @@ import { checkUrl } from "./check-url";
 import { getRedirects } from "./get-redirects";
 import type { Redirect } from "./get-redirects";
 
+vi.mock(
+  "../../../../_redirects?raw",
+  async () => await import("./__fixtures__/_redirects?raw"),
+);
+
 describe("handleRedirects", () => {
   let redirects: Redirect[];
 
   beforeAll(async () => {
-    vi.mock(
-      "../../../../_redirects?raw",
-      async () => await import("./__fixtures__/_redirects?raw"),
-    );
     redirects = await getRedirects();
-  });
-
-  afterAll(() => {
-    vi.restoreAllMocks();
   });
 
   it("redirects static string", async () => {
