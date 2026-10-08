@@ -1,4 +1,4 @@
-import type { Middleware, RequestContext } from "@remix-run/fetch-router";
+import type { Middleware } from "@remix-run/fetch-router";
 
 // Data URLs (`.data`, and `.rsc` in RSC mode) are never content-negotiated, so
 // ignore `Accept` and drop it from `Vary`. Otherwise a `<link rel="prefetch">`,
@@ -6,48 +6,33 @@ import type { Middleware, RequestContext } from "@remix-run/fetch-router";
 // which sends `*/*`, and every prefetched page downloads twice.
 export function ignoreAcceptOnDataRequests(): Middleware {
   return async (context, next) => {
-    if (!isDataRequest(context)) {
+    let { pathname } = context.url;
+    let isDataRequest =
+      (context.method === "GET" || context.method === "HEAD") &&
+      (pathname.endsWith(".data") || pathname.endsWith(".rsc"));
+
+    if (!isDataRequest) {
       return next();
     }
 
     context.headers.delete("Accept");
-    return withoutVary(await next(), "Accept");
+    let response = await next();
+
+    let headers = new Headers(response.headers);
+    let vary = (headers.get("Vary") ?? "")
+      .split(",")
+      .map((value) => value.trim())
+      .filter((value) => value && value.toLowerCase() !== "accept");
+    if (vary.length > 0) {
+      headers.set("Vary", vary.join(", "));
+    } else {
+      headers.delete("Vary");
+    }
+
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
   };
-}
-
-function isDataRequest(context: RequestContext): boolean {
-  if (context.method !== "GET" && context.method !== "HEAD") {
-    return false;
-  }
-
-  let { pathname } = context.url;
-  return pathname.endsWith(".data") || pathname.endsWith(".rsc");
-}
-
-function withoutVary(response: Response, headerName: string): Response {
-  let vary = response.headers.get("Vary");
-  if (!vary) {
-    return response;
-  }
-
-  let values = vary.split(",").map((value) => value.trim());
-  let remaining = values.filter(
-    (value) => value && value.toLowerCase() !== headerName.toLowerCase(),
-  );
-  if (remaining.length === values.length) {
-    return response;
-  }
-
-  let headers = new Headers(response.headers);
-  if (remaining.length > 0) {
-    headers.set("Vary", remaining.join(", "));
-  } else {
-    headers.delete("Vary");
-  }
-
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers,
-  });
 }
