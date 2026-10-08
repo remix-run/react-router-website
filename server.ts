@@ -10,6 +10,7 @@ import { compression } from "@remix-run/compression-middleware";
 import { createRequestHandler } from "react-router";
 
 import { withClientAddress } from "./server/client-address.ts";
+import { ignoreAcceptOnDataRequests } from "./server/data-request.ts";
 import { rateLimit } from "./server/rate-limit.ts";
 
 const PORT = Number.parseInt(process.env.PORT || "3000", 10);
@@ -19,9 +20,8 @@ const CLIENT_BUILD_DIR = fileURLToPath(
 );
 const SERVER_BUILD_PATH = "./build/server/index.js";
 
-const handleAppRequest = createRequestHandler(
-  () => import(SERVER_BUILD_PATH),
-  MODE,
+const handleAppRequest = ignoreAcceptOnDataRequests(
+  createRequestHandler(() => import(SERVER_BUILD_PATH), MODE),
 );
 
 function isStreamingHtmlResponse(response: Response) {
