@@ -1,3 +1,5 @@
+"use client";
+
 import iconsHref from "~/icons.svg";
 import { useDocRouteLoaderData } from "~/hooks/use-doc";
 import { DetailsMenu } from "~/modules/details-menu";
