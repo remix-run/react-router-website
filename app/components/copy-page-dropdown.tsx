@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { DetailsMenu } from "~/modules/details-menu";
 import iconsHref from "~/icons.svg";

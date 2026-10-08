@@ -1,8 +1,8 @@
 import { Link } from "react-router";
-import { useHeaderData } from "./docs-header/use-header-data";
+import type { HeaderData } from "./docs-header/data.server";
 
-export function VersionWarning() {
-  let { isLatest, branches, currentGitHubRef } = useHeaderData();
+export function VersionWarning({ header }: { header: HeaderData }) {
+  let { isLatest, branches, currentGitHubRef } = header;
   if (isLatest) return null;
 
   let warning = branches.includes(currentGitHubRef)
