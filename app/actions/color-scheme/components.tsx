@@ -1,5 +1,3 @@
-"use client";
-
 import { useLayoutEffect, useMemo } from "react";
 import {
   unstable_useRoute as useRoute,

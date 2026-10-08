@@ -1,5 +1,5 @@
-import { Await, Link } from "react-router";
-import { Suspense } from "react";
+import { Link } from "react-router";
+import { Suspense, use } from "react";
 import semver from "semver";
 
 import iconsHref from "~/icons.svg";
@@ -164,7 +164,7 @@ const v8Adventures: Adventure[] = [
 ];
 
 export let loader = async () => {
-  let stats = getStats();
+  let stats = getStats().catch(() => null);
   let tags = await getRepoTags();
   let latestMajorVersion = getLatestMajorVersions(tags)[0];
   let latestMajor = semver.parse(latestMajorVersion)?.major ?? 7;
@@ -281,27 +281,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       </section>
       <section className="grid w-full place-content-center p-12">
         <Suspense fallback={null}>
-          <Await resolve={loaderData.stats} errorElement={null}>
-            {(stats) => (
-              <dl className="grid grid-cols-1 gap-x-6 gap-y-16 md:grid-cols-2">
-                {stats.map(({ svgId, count, label }) => (
-                  <div key={svgId} className="flex w-[308px] gap-2">
-                    <svg className="h-8 w-8 text-gray-600" aria-hidden="true">
-                      <use href={`${iconsHref}#${svgId}`} />
-                    </svg>
-                    <div className="flex flex-col">
-                      <dd className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
-                        {count?.toLocaleString("en-US")}
-                      </dd>
-                      <dt className="text-gray-500 dark:text-gray-400">
-                        {label}
-                      </dt>
-                    </div>
-                  </div>
-                ))}
-              </dl>
-            )}
-          </Await>
+          <StatsList stats={loaderData.stats} />
         </Suspense>
       </section>
       <section className="grid h-[205px] w-full place-content-center place-items-center gap-y-6 bg-gray-50 p-12 dark:bg-black">
@@ -317,5 +297,34 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </p>
       </section>
     </main>
+  );
+}
+
+// `<Await>` doesn't support RSC promises yet (it throws `undefined` on the
+// first render), so read the promise with `use` instead.
+function StatsList({
+  stats: statsPromise,
+}: {
+  stats: Route.ComponentProps["loaderData"]["stats"];
+}) {
+  let stats = use(statsPromise);
+  if (!stats) return null;
+
+  return (
+    <dl className="grid grid-cols-1 gap-x-6 gap-y-16 md:grid-cols-2">
+      {stats.map(({ svgId, count, label }) => (
+        <div key={svgId} className="flex w-[308px] gap-2">
+          <svg className="h-8 w-8 text-gray-600" aria-hidden="true">
+            <use href={`${iconsHref}#${svgId}`} />
+          </svg>
+          <div className="flex flex-col">
+            <dd className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
+              {count?.toLocaleString("en-US")}
+            </dd>
+            <dt className="text-gray-500 dark:text-gray-400">{label}</dt>
+          </div>
+        </div>
+      ))}
+    </dl>
   );
 }
