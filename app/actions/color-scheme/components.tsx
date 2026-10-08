@@ -1,23 +1,11 @@
+"use client";
+
 import { useLayoutEffect, useMemo } from "react";
 import {
   unstable_useRoute as useRoute,
   unstable_useRouterState as useRouterState,
 } from "react-router";
-import type { ColorScheme } from "./server";
-
-export function getColorScheme(formData: FormData): ColorScheme | null {
-  let colorScheme = formData.get("colorScheme");
-
-  if (
-    colorScheme === "dark" ||
-    colorScheme === "light" ||
-    colorScheme === "system"
-  ) {
-    return colorScheme;
-  }
-
-  return null;
-}
+import { getColorScheme, type ColorScheme } from "./utils";
 
 export function useColorScheme(): ColorScheme {
   let rootRoute = useRoute("root");
