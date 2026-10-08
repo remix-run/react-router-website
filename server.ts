@@ -10,6 +10,7 @@ import { compression } from "@remix-run/compression-middleware";
 import { createRequestHandler } from "react-router";
 
 import { withClientAddress } from "./server/client-address.ts";
+import { ignoreAcceptOnDataRequests } from "./server/data-request.ts";
 import { rateLimit } from "./server/rate-limit.ts";
 
 const PORT = Number.parseInt(process.env.PORT || "3000", 10);
@@ -76,9 +77,11 @@ middleware.push(
     cacheControl: "public, max-age=3600, s-maxage=31536000",
   }),
 );
+middleware.push(ignoreAcceptOnDataRequests());
 
 const router = createRouter({
-  defaultHandler: ({ request }) => handleAppRequest(request),
+  defaultHandler: ({ request, headers }) =>
+    handleAppRequest(new Request(request, { headers })),
   middleware,
 });
 
