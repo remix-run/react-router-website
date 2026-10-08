@@ -4,7 +4,6 @@ import {
   Links,
   Meta,
   Outlet,
-  Scripts,
   ScrollRestoration,
   type MiddlewareFunction,
 } from "react-router";
@@ -96,7 +95,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         />
         <DocSearch>{children}</DocSearch>
         <ScrollRestoration />
-        <Scripts />
       </body>
     </html>
   );

@@ -8,7 +8,12 @@
   ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "types": ["node", "vite/client"],
+    "types": [
+      "node",
+      "vite/client",
+      "@vitejs/plugin-rsc/types",
+      "@react-router/dev/rsc-types"
+    ],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",

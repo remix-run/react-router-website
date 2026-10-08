@@ -7,23 +7,18 @@ import { createRouter } from "@remix-run/fetch-router";
 import { staticFiles } from "@remix-run/static-middleware";
 import { logger } from "@remix-run/logger-middleware";
 import { compression } from "@remix-run/compression-middleware";
-import { createRequestHandler } from "react-router";
 
 import { withClientAddress } from "./server/client-address.ts";
 import { ignoreAcceptOnDataRequests } from "./server/data-request.ts";
 import { rateLimit } from "./server/rate-limit.ts";
 
 const PORT = Number.parseInt(process.env.PORT || "3000", 10);
-const MODE = process.env.NODE_ENV === "test" ? "test" : "production";
 const CLIENT_BUILD_DIR = fileURLToPath(
   new URL("./build/client/", import.meta.url),
 );
 const SERVER_BUILD_PATH = "./build/server/index.js";
 
-const handleAppRequest = createRequestHandler(
-  () => import(SERVER_BUILD_PATH),
-  MODE,
-);
+const { default: app } = await import(SERVER_BUILD_PATH);
 
 function isStreamingHtmlResponse(response: Response) {
   const contentType = response.headers.get("Content-Type");
@@ -81,7 +76,7 @@ middleware.push(ignoreAcceptOnDataRequests());
 
 const router = createRouter({
   defaultHandler: ({ request, headers }) =>
-    handleAppRequest(new Request(request, { headers })),
+    app.fetch(new Request(request, { headers })),
   middleware,
 });
 
