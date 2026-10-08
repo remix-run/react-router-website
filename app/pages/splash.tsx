@@ -1,9 +1,13 @@
 import { Link } from "react-router";
-import { Suspense, use } from "react";
+import { Suspense } from "react";
 import semver from "semver";
 
 import iconsHref from "~/icons.svg";
-import { getStats } from "~/modules/stats";
+import {
+  getStats,
+  getStatsPlaceholder,
+  type Stats as StatData,
+} from "~/modules/stats";
 import { getRepoTags } from "~/modules/gh-docs/.server";
 import { getLatestMajorVersions } from "~/modules/gh-docs/.server/tags";
 import type { Route } from "./+types/splash";
@@ -164,13 +168,21 @@ const v8Adventures: Adventure[] = [
 ];
 
 export let loader = async () => {
+  // Start supplementary work before awaiting the version lookup, and handle
+  // rejection immediately even if it finishes before the loader does.
   let stats = getStats().catch(() => null);
   let tags = await getRepoTags();
   let latestMajorVersion = getLatestMajorVersions(tags)[0];
   let latestMajor = semver.parse(latestMajorVersion)?.major ?? 7;
 
   return {
-    stats,
+    // The boundary must also cover serialization of this loader element,
+    // otherwise the initial RSC payload waits for Stats before it can stream.
+    stats: (
+      <Suspense fallback={<StatsList stats={getStatsPlaceholder()} loading />}>
+        <Stats stats={stats} />
+      </Suspense>
+    ),
     highlights: latestMajor >= 8 ? v8Highlights : v7Highlights,
     adventures: latestMajor >= 8 ? v8Adventures : v7Adventures,
     latestMajor,
@@ -178,7 +190,7 @@ export let loader = async () => {
   };
 };
 
-export default function Home({ loaderData }: Route.ComponentProps) {
+export function ServerComponent({ loaderData }: Route.ServerComponentProps) {
   let { highlights, adventures, latestMajor } = loaderData;
 
   return (
@@ -280,9 +292,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </div>
       </section>
       <section className="grid w-full place-content-center p-12">
-        <Suspense fallback={null}>
-          <StatsList stats={loaderData.stats} />
-        </Suspense>
+        {loaderData.stats}
       </section>
       <section className="grid h-[205px] w-full place-content-center place-items-center gap-y-6 bg-gray-50 p-12 dark:bg-black">
         <a href="https://shopify.com" target="_blank" rel="noopener noreferrer">
@@ -300,26 +310,44 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   );
 }
 
-// `<Await>` doesn't support RSC promises yet (it throws `undefined` on the
-// first render), so read the promise with `use` instead.
-function StatsList({
-  stats: statsPromise,
+async function Stats({
+  stats: pendingStats,
 }: {
-  stats: Route.ComponentProps["loaderData"]["stats"];
+  stats: Promise<Awaited<ReturnType<typeof getStats>> | null>;
 }) {
-  let stats = use(statsPromise);
+  let stats = await pendingStats;
   if (!stats) return null;
 
+  return <StatsList stats={stats} />;
+}
+
+function StatsList({
+  stats,
+  loading = false,
+}: {
+  stats: (Omit<StatData, "count"> & { count: number | string })[];
+  loading?: boolean;
+}) {
   return (
-    <dl className="grid grid-cols-1 gap-x-6 gap-y-16 md:grid-cols-2">
+    <dl
+      className="grid grid-cols-1 gap-x-6 gap-y-16 md:grid-cols-2"
+      aria-busy={loading}
+      aria-label={loading ? "Loading stats" : undefined}
+      role={loading ? "status" : undefined}
+    >
       {stats.map(({ svgId, count, label }) => (
         <div key={svgId} className="flex w-[308px] gap-2">
           <svg className="h-8 w-8 text-gray-600" aria-hidden="true">
             <use href={`${iconsHref}#${svgId}`} />
           </svg>
           <div className="flex flex-col">
-            <dd className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
-              {count?.toLocaleString("en-US")}
+            <dd
+              className="text-2xl font-semibold tabular-nums text-gray-700 dark:text-gray-200"
+              aria-hidden={loading || undefined}
+            >
+              {typeof count === "number"
+                ? count.toLocaleString("en-US")
+                : count}
             </dd>
             <dt className="text-gray-500 dark:text-gray-400">{label}</dt>
           </div>

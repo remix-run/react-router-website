@@ -13,7 +13,7 @@ const assetDirs = {
   Logo: "logo",
 } as const;
 
-export default function Brand() {
+export function ServerComponent() {
   return (
     <div className="prose container my-8 flex max-w-full flex-col gap-8 text-base sm:text-lg lg:my-24 lg:max-w-4xl">
       <h1 className="text-2xl font-extrabold dark:text-gray-200 md:text-5xl">

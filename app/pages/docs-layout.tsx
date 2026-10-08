@@ -10,11 +10,9 @@ import { Footer } from "~/components/docs-footer";
 import { VersionWarning } from "~/components/version-warning";
 import { NavMenuDesktop } from "~/components/docs-menu/menu-desktop";
 import { NavMenuMobile } from "~/components/docs-menu/menu-mobile";
-import { Menu } from "~/components/docs-menu/menu";
+import { renderMenu } from "~/components/docs-menu/menu";
 import type { Route } from "./+types/docs-layout";
 import semver from "semver";
-import { useRef } from "react";
-import { useCodeBlockCopyButton } from "~/ui/utils";
 
 import docsCss from "~/styles/docs.css?url";
 
@@ -54,23 +52,22 @@ export async function loader({ params }: Route.LoaderArgs) {
   ]);
 
   return {
-    menu,
+    navigation: renderMenu({
+      menu,
+      prefix: header.refParam ? `/${header.refParam}/` : "/",
+      changelogHref: header.hasAPIDocs
+        ? header.refParam
+          ? `/${header.refParam}/changelog`
+          : "/changelog"
+        : undefined,
+    }),
     header,
     docSearchVersion: header.docSearchVersion,
   };
 }
 
-export default function DocsLayout({ loaderData }: Route.ComponentProps) {
-  const { menu, header } = loaderData;
-
-  let docsContainer = useRef<HTMLDivElement>(null);
-  useCodeBlockCopyButton(docsContainer);
-
-  const changelogHref = header.hasAPIDocs
-    ? header.refParam
-      ? `/${header.refParam}/changelog`
-      : "/changelog"
-    : undefined;
+export function ServerComponent({ loaderData }: Route.ServerComponentProps) {
+  const { navigation, header } = loaderData;
 
   return (
     <>
@@ -78,18 +75,13 @@ export default function DocsLayout({ loaderData }: Route.ComponentProps) {
       <div className="[--header-height:theme(spacing.16)] [--nav-width:theme(spacing.72)] lg:m-auto lg:max-w-[90rem]">
         <div className="sticky top-0 z-20">
           <Header />
-          <VersionWarning />
-          <NavMenuMobile>
-            <Menu menu={menu} changelogHref={changelogHref} />
-          </NavMenuMobile>
+          <VersionWarning header={header} />
+          <NavMenuMobile>{navigation}</NavMenuMobile>
         </div>
 
         <div className="block lg:flex">
-          <NavMenuDesktop>
-            <Menu menu={menu} changelogHref={changelogHref} />
-          </NavMenuDesktop>
+          <NavMenuDesktop>{navigation}</NavMenuDesktop>
           <div
-            ref={docsContainer}
             className={clsx(
               // add scroll margin to focused elements so that they aren't
               // obscured by the sticky header

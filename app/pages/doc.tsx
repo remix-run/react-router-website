@@ -1,5 +1,4 @@
-import { useRef } from "react";
-import { getRepoDoc, getRepoTags } from "~/modules/gh-docs/.server";
+import { getRepoDoc, getRepoTags, type Doc } from "~/modules/gh-docs/.server";
 import { CACHE_CONTROL } from "~/http";
 import { seo } from "~/seo";
 import { getDocTitle, getSearchMetaTags } from "~/ui/meta";
@@ -11,7 +10,10 @@ import { getLatestMajorVersions } from "~/modules/gh-docs/.server/tags";
 
 import { CopyPageDropdown } from "~/components/copy-page-dropdown";
 import { LargeOnThisPage, SmallOnThisPage } from "~/components/on-this-page";
-import { useDelegatedReactRouterLinks } from "~/ui/delegate-markdown-links";
+import {
+  DocInteractions,
+  MarkdownContent,
+} from "~/components/doc-interactions";
 
 import { type HeadersArgs } from "react-router";
 import type { Route } from "./+types/doc";
@@ -40,9 +42,11 @@ export async function loader({ url, params }: Route.LoaderArgs) {
       throw new Response("Not Found", { status: 404 });
     }
     return {
-      doc,
+      // Only metadata needed by client hooks/meta crosses the RSC boundary.
+      doc: { attrs: { title: doc.attrs.title } },
       githubPath: githubPath,
       githubEditPath: githubEditPath,
+      content: renderDocArticle({ doc, githubPath, githubEditPath }),
     };
   } catch {
     throw new Response("Not Found", { status: 404 });
@@ -90,35 +94,48 @@ export function meta({ error, loaderData, matches, location }: Route.MetaArgs) {
   ];
 }
 
-export default function DocPage({ loaderData }: Route.ComponentProps) {
-  let ref = useRef<HTMLDivElement>(null);
-  const { doc, githubPath, githubEditPath } = loaderData;
+export function ServerComponent({ loaderData }: Route.ServerComponentProps) {
+  return loaderData.content;
+}
 
-  useDelegatedReactRouterLinks(ref);
-
+// Build the element once so loader data and the route can share its Flight
+// reference, rather than rendering the same server component twice.
+function renderDocArticle({
+  doc,
+  githubPath,
+  githubEditPath,
+}: {
+  doc: Doc;
+  githubPath: string;
+  githubEditPath?: string;
+}) {
   return (
-    <div className="xl:flex xl:w-full xl:flex-row-reverse xl:justify-between xl:gap-8">
-      <div className="sticky top-28 hidden w-56 min-w-min flex-shrink-0 self-start pb-10 xl:block">
-        <CopyPageDropdown
-          githubPath={githubPath}
-          githubEditPath={githubEditPath}
-        />
-        {doc.headings.length > 3 ? (
-          <>
-            <div className="h-5" />
-            <LargeOnThisPage doc={doc} mdRef={ref} />
-          </>
-        ) : null}
-      </div>
-      {doc.headings.length > 3 ? <SmallOnThisPage doc={doc} /> : null}
-      <div className="min-w-0 px-4 pt-8 xl:mr-4 xl:flex-grow xl:pl-0">
-        <div ref={ref} className="markdown w-full max-w-3xl pb-[33vh]">
-          <div
-            className="md-prose"
-            dangerouslySetInnerHTML={{ __html: doc.html }}
+    <DocInteractions>
+      <div className="xl:flex xl:w-full xl:flex-row-reverse xl:justify-between xl:gap-8">
+        <div className="sticky top-28 hidden w-56 min-w-min flex-shrink-0 self-start pb-10 xl:block">
+          <CopyPageDropdown
+            githubPath={githubPath}
+            githubEditPath={githubEditPath}
           />
+          {doc.headings.length > 3 ? (
+            <>
+              <div className="h-5" />
+              <LargeOnThisPage headings={doc.headings} />
+            </>
+          ) : null}
+        </div>
+        {doc.headings.length > 3 ? (
+          <SmallOnThisPage headings={doc.headings} />
+        ) : null}
+        <div className="min-w-0 px-4 pt-8 xl:mr-4 xl:flex-grow xl:pl-0">
+          <MarkdownContent>
+            <div
+              className="md-prose"
+              dangerouslySetInnerHTML={{ __html: doc.html }}
+            />
+          </MarkdownContent>
         </div>
       </div>
-    </div>
+    </DocInteractions>
   );
 }

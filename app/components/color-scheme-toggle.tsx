@@ -1,3 +1,5 @@
+"use client";
+
 import { clsx } from "clsx";
 import * as React from "react";
 import { Form, useLocation } from "react-router";

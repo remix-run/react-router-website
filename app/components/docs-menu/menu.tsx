@@ -1,20 +1,19 @@
 import * as React from "react";
-import { Link } from "react-router";
 import { clsx } from "clsx";
 
 import iconsHref from "~/icons.svg";
 
 import type { MenuDoc } from "~/modules/gh-docs/.server/docs";
-import { useNavState } from "~/hooks/use-nav-state";
-import { useDelayedValue } from "~/hooks/use-delayed-value";
-import { useHeaderData } from "../docs-header/use-header-data";
+import { LinkWithSpinner } from "./link-with-spinner";
 
-export function Menu({
+export function renderMenu({
   menu,
   changelogHref,
+  prefix,
 }: {
   menu?: MenuDoc[];
   changelogHref?: string;
+  prefix: string;
 }) {
   // github might be down but the menu but the doc could be cached in memory, so
   // prevent the whole page from blowing up and still render the doc
@@ -33,17 +32,20 @@ export function Menu({
       ) : null}
       {menu.map((category) => (
         <div key={category.attrs.title}>
-          <MenuCategory category={category} />
+          <MenuCategory category={category} prefix={prefix} />
         </div>
       ))}
     </nav>
   );
 }
 
-function MenuCategory({ category }: { category: MenuDoc }) {
-  let { refParam } = useHeaderData();
-  let prefix = refParam ? `/${refParam}/` : "/";
-
+function MenuCategory({
+  category,
+  prefix,
+}: {
+  category: MenuDoc;
+  prefix: string;
+}) {
   if (category.children.length === 0) {
     return <MenuLink prefix={prefix} doc={category} />;
   }
@@ -61,12 +63,12 @@ function MenuCategory({ category }: { category: MenuDoc }) {
       </MenuSummary>
 
       <div className="mb-2">
-        {category.children.sort(sortDocs).map((doc, index) => (
+        {[...category.children].sort(sortDocs).map((doc, index) => (
           <React.Fragment key={index}>
             {doc.children.length > 0 ? (
               <div className="mb-2 ml-2">
                 <MenuHeading label={doc.attrs.title} />
-                {doc.children.sort(sortDocs).map((doc, index) => (
+                {[...doc.children].sort(sortDocs).map((doc, index) => (
                   <MenuLink key={index} prefix={prefix} doc={doc} />
                 ))}
               </div>
@@ -134,17 +136,7 @@ function HeaderMenuLink({
   children: React.ReactNode;
 }) {
   return (
-    <LinkWithSpinner
-      to={to}
-      className={(isActive) =>
-        clsx(
-          "relative -mx-4 flex items-center justify-between rounded-md px-4 py-3 font-bold",
-          isActive
-            ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
-            : "hover:bg-gray-50 active:text-red-brand dark:hover:bg-gray-800 dark:active:text-red-brand",
-        )
-      }
-    >
+    <LinkWithSpinner to={to} header>
       {children}
     </LinkWithSpinner>
   );
@@ -152,47 +144,10 @@ function HeaderMenuLink({
 
 function MenuLink({ prefix, doc }: { prefix: string; doc: MenuDoc }) {
   return (
-    <LinkWithSpinner
-      to={prefix + doc.slug}
-      className={(isActive) =>
-        clsx(
-          "relative -mx-2 flex items-center justify-between rounded-md py-1.5 pl-4 pr-3 lg:text-sm",
-          isActive
-            ? "bg-gray-50 font-semibold text-red-brand dark:bg-gray-800"
-            : "text-gray-400 hover:text-gray-800 active:text-red-brand dark:text-gray-400 dark:hover:text-gray-50 dark:active:text-red-brand",
-        )
-      }
-    >
+    <LinkWithSpinner to={prefix + doc.slug}>
       {doc.attrs.title}
       {doc.attrs.new ? <span title="New API">🆕</span> : null}
       {doc.attrs.unstable ? <span title="Unstable API">🧪</span> : null}
     </LinkWithSpinner>
-  );
-}
-
-function LinkWithSpinner({
-  to,
-  children,
-  className,
-}: {
-  to: string;
-  children: React.ReactNode;
-  className: (isActive: boolean) => string;
-}) {
-  let { isActive, isPending } = useNavState(to);
-  let slowNav = useDelayedValue(isPending);
-
-  return (
-    <Link prefetch="intent" to={to} className={className(isActive)}>
-      {children}
-      {slowNav && !isActive && (
-        <svg
-          aria-hidden
-          className="absolute -left-1 h-4 w-4 animate-spin lg:-left-2"
-        >
-          <use href={`${iconsHref}#arrow-path`} />
-        </svg>
-      )}
-    </Link>
   );
 }
