@@ -20,8 +20,9 @@ const CLIENT_BUILD_DIR = fileURLToPath(
 );
 const SERVER_BUILD_PATH = "./build/server/index.js";
 
-const handleAppRequest = ignoreAcceptOnDataRequests(
-  createRequestHandler(() => import(SERVER_BUILD_PATH), MODE),
+const handleAppRequest = createRequestHandler(
+  () => import(SERVER_BUILD_PATH),
+  MODE,
 );
 
 function isStreamingHtmlResponse(response: Response) {
@@ -76,9 +77,11 @@ middleware.push(
     cacheControl: "public, max-age=3600, s-maxage=31536000",
   }),
 );
+middleware.push(ignoreAcceptOnDataRequests());
 
 const router = createRouter({
-  defaultHandler: ({ request }) => handleAppRequest(request),
+  defaultHandler: ({ request, headers }) =>
+    handleAppRequest(new Request(request, { headers })),
   middleware,
 });
 

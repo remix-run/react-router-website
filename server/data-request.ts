@@ -1,31 +1,26 @@
-type RequestHandler = (request: Request) => Promise<Response>;
+import type { Middleware, RequestContext } from "@remix-run/fetch-router";
 
 // Data URLs (`.data`, and `.rsc` in RSC mode) are never content-negotiated, so
 // ignore `Accept` and drop it from `Vary`. Otherwise a `<link rel="prefetch">`,
 // which sends a browser `Accept`, can't be reused by the router's `fetch()`,
 // which sends `*/*`, and every prefetched page downloads twice.
-export function ignoreAcceptOnDataRequests(
-  handler: RequestHandler,
-): RequestHandler {
-  return async (request) => {
-    if (!isDataRequest(request)) {
-      return handler(request);
+export function ignoreAcceptOnDataRequests(): Middleware {
+  return async (context, next) => {
+    if (!isDataRequest(context)) {
+      return next();
     }
 
-    let headers = new Headers(request.headers);
-    headers.delete("Accept");
-
-    let response = await handler(new Request(request, { headers }));
-    return withoutVary(response, "Accept");
+    context.headers.delete("Accept");
+    return withoutVary(await next(), "Accept");
   };
 }
 
-function isDataRequest(request: Request): boolean {
-  if (request.method !== "GET" && request.method !== "HEAD") {
+function isDataRequest(context: RequestContext): boolean {
+  if (context.method !== "GET" && context.method !== "HEAD") {
     return false;
   }
 
-  let { pathname } = new URL(request.url);
+  let { pathname } = context.url;
   return pathname.endsWith(".data") || pathname.endsWith(".rsc");
 }
 
