@@ -7,6 +7,8 @@
 
 /new/* https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default
 
+/store https://react-router-978be997011001ebb803.o2.myshopify.dev/
+
 /start/library/*                             /start/declarative/*
 
 /en/main/routers/create-browser-router       https://api.reactrouter.com/v7/functions/react_router.createBrowserRouter.html
