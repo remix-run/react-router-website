@@ -1,3 +1,5 @@
+"use client";
+
 import {
   createContext,
   use,
@@ -5,23 +7,19 @@ import {
   useMemo,
   useRef,
   useState,
+  useEffect,
+  lazy,
+  Suspense,
 } from "react";
 import { createPortal } from "react-dom";
 import { useMatches } from "react-router";
-import type { DocSearchProps } from "@docsearch/react";
-import {
-  DocSearchModal as OriginalDocSearchModal,
-  DocSearchButton as OriginalDocSearchButton,
-  useDocSearchKeyboardEvents,
-} from "@docsearch/react";
+import { useDocSearchKeyboardEvents } from "~/hooks/use-docsearch-keyboard-events";
 
 import docsearchCss from "~/styles/docsearch.css?url";
 
-let docSearchProps = {
-  appId: "RB6LOUCOL0",
-  indexName: "reactrouter",
-  apiKey: "b50c5d7d9f4610c9785fa945fdc97476",
-} satisfies DocSearchProps;
+// Keep all Algolia runtime imports behind this dynamic boundary. Importing even
+// its button/hooks from the package barrel would eagerly load the modal chunk.
+const SearchModal = lazy(() => import("./docsearch-modal"));
 
 const DocSearchContext = createContext<{
   onOpen: () => void;
@@ -47,17 +45,7 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
     setIsOpen(false);
   }, [setIsOpen]);
 
-  const onInput = useCallback(() => {
-    setIsOpen(true);
-  }, [setIsOpen]);
-
-  useDocSearchKeyboardEvents({
-    isOpen,
-    onOpen,
-    onClose,
-    onInput,
-    searchButtonRef,
-  });
+  useDocSearchKeyboardEvents({ isOpen, onOpen, onClose, searchButtonRef });
 
   const contextValue = useMemo(
     () => ({
@@ -83,18 +71,13 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
       {children}
       {isOpen
         ? createPortal(
-            <OriginalDocSearchModal
-              initialScrollY={window.scrollY}
-              onClose={onClose}
-              // NOTE: to use the facet for search, it has to be set in the algolia dashboard:
-              // "Configuration" > "Filtering and Faceting" > "Facets"
-              searchParameters={
-                docSearchVersion
-                  ? { facetFilters: [`version:${docSearchVersion}`] }
-                  : undefined
-              }
-              {...docSearchProps}
-            />,
+            <Suspense fallback={null}>
+              <SearchModal
+                initialScrollY={window.scrollY}
+                onClose={onClose}
+                docSearchVersion={docSearchVersion}
+              />
+            </Suspense>,
             document.body,
           )
         : null}
@@ -103,6 +86,12 @@ export function DocSearch({ children }: { children: React.ReactNode }) {
 }
 
 export function DocSearchButton() {
+  const [modifier, setModifier] = useState<"Command" | "Ctrl" | null>(null);
+  useEffect(() => {
+    setModifier(
+      /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) ? "Command" : "Ctrl",
+    );
+  }, []);
   const docSearchContext = use(DocSearchContext);
 
   if (!docSearchContext) {
@@ -111,5 +100,43 @@ export function DocSearchButton() {
 
   const { onOpen, searchButtonRef } = docSearchContext;
 
-  return <OriginalDocSearchButton ref={searchButtonRef} onClick={onOpen} />;
+  return (
+    <button
+      type="button"
+      className="DocSearch DocSearch-Button"
+      aria-label={`Search (${modifier ?? "Command"}+K)`}
+      ref={searchButtonRef}
+      onClick={onOpen}
+    >
+      <span className="DocSearch-Button-Container">
+        <svg
+          className="DocSearch-Search-Icon"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          aria-hidden="true"
+        >
+          <path
+            d="M14.386 14.386l4.0877 4.0877-4.0877-4.0877c-2.9418 2.9419-7.7115 2.9419-10.6533 0-2.9419-2.9418-2.9419-7.7115 0-10.6533 2.9418-2.9419 7.7115-2.9419 10.6533 0 2.9419 2.9418 2.9419 7.7115 0 10.6533z"
+            stroke="currentColor"
+            fill="none"
+            fillRule="evenodd"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        <span className="DocSearch-Button-Placeholder">Search</span>
+      </span>
+      <span className="DocSearch-Button-Keys" aria-hidden="true">
+        {modifier && (
+          <>
+            <kbd className="DocSearch-Button-Key">
+              {modifier === "Command" ? "⌘" : "Ctrl"}
+            </kbd>
+            <kbd className="DocSearch-Button-Key">K</kbd>
+          </>
+        )}
+      </span>
+    </button>
+  );
 }
