@@ -652,7 +652,7 @@
 }
 
 .availability-main {
-  @apply m-0 inline-flex list-none items-center gap-2 rounded-full bg-gray-50 p-1 text-sm dark:bg-gray-800 !important;
+  @apply mx-0 mb-4 mt-0 flex w-fit list-none items-center gap-2 rounded-full bg-gray-50 p-1 text-sm dark:bg-gray-800 !important;
 
   li {
     @apply m-0 p-0 !important;
