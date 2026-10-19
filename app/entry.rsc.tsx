@@ -42,7 +42,6 @@ export function fetchServer(
       console.error(error);
     },
     generateResponse(match, options) {
-      match.headers.set("Content-Type", "text/x-component");
       return new Response(renderToReadableStream(match.payload, options), {
         status: match.statusCode,
         headers: match.headers,

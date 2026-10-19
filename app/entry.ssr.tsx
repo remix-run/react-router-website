@@ -13,14 +13,6 @@ export async function generateHTML(
   request: Request,
   serverResponse: Response,
 ): Promise<Response> {
-  // Middleware can short-circuit rendering, e.g. to serve raw Markdown.
-  // These responses are not Flight streams and must not be decoded as RSC.
-  if (
-    !serverResponse.headers.get("Content-Type")?.startsWith("text/x-component")
-  ) {
-    return serverResponse;
-  }
-
   return routeRSCServerRequest({
     request,
     serverResponse,
