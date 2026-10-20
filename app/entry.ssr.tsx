@@ -1,3 +1,7 @@
+// Differs from React Router's default SSR entry by:
+// - waiting for all content for bots, so crawlers get streamed content (like
+//   the homepage stats) instead of Suspense fallbacks
+// - aborting streams that run past `streamTimeout`
 import { createFromReadableStream } from "@vitejs/plugin-rsc/ssr";
 import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server.edge";

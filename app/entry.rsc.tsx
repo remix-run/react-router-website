@@ -1,3 +1,8 @@
+// Differs from React Router's default RSC entry by passing `onError`, so server
+// errors are logged without the noise of aborted requests and 404s. The default
+// passes no `onError`, so these errors aren't logged at all.
+// https://github.com/remix-run/react-router/pull/15598 adds default logging,
+// but it logs 404s.
 import {
   createTemporaryReferenceSet,
   decodeAction,
