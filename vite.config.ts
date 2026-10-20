@@ -1,5 +1,8 @@
-import { reactRouter } from "@react-router/dev/vite";
+import { unstable_reactRouterRSC as reactRouterRSC } from "@react-router/dev/vite";
+import react from "@vitejs/plugin-react";
+import rsc from "@vitejs/plugin-rsc";
 import { defineConfig } from "vite";
+import { denyImports } from "vite-env-only";
 
 export default defineConfig(() => ({
   resolve: {
@@ -8,5 +11,12 @@ export default defineConfig(() => ({
   ssr: {
     noExternal: ["@docsearch/react"],
   },
-  plugins: [reactRouter()],
+  plugins: [
+    denyImports({
+      client: { files: ["**/.server/**", "**/*.server.*"] },
+    }),
+    reactRouterRSC(),
+    react(),
+    rsc(),
+  ],
 }));
