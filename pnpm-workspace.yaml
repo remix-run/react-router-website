@@ -4,6 +4,16 @@ minimumReleaseAgeExclude:
   - react-router
   - "@react-router/*"
   - "@remix-run/*"
+  # Security fixes for GHSA-xqc2-xf4c-x3h3 and GHSA-h3gv-c5rc-p453
+  - react@19.3.1
+  - react-dom@19.3.1
+  - react-server-dom-webpack@19.3.1
+packageExtensions:
+  # Only the RSC runtime is used (via @vitejs/plugin-rsc), not the webpack plugin
+  react-server-dom-webpack:
+    peerDependenciesMeta:
+      webpack:
+        optional: true
 onlyBuiltDependencies:
   - esbuild
 allowBuilds:
