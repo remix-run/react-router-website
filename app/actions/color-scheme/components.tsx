@@ -1,17 +1,10 @@
 import { useLayoutEffect, useMemo } from "react";
-import {
-  unstable_useRoute as useRoute,
-  unstable_useRouterState as useRouterState,
-} from "react-router";
-import { getColorScheme, type ColorScheme } from "./utils";
+import { unstable_useRoute as useRoute } from "react-router";
+import type { ColorScheme } from "./utils";
 
 export function useColorScheme(): ColorScheme {
   let rootRoute = useRoute("root");
-  let colorScheme = rootRoute.loaderData?.colorScheme ?? "system";
-
-  let formData = useRouterState().pending?.formData;
-  let optimisticColorScheme = formData ? getColorScheme(formData) : null;
-  return optimisticColorScheme || colorScheme;
+  return rootRoute.loaderData?.colorScheme ?? "system";
 }
 
 export function ColorSchemeScript() {
@@ -32,29 +25,23 @@ export function ColorSchemeScript() {
   if (typeof document !== "undefined") {
     // eslint-disable-next-line
     useLayoutEffect(() => {
-      if (colorScheme === "light") {
-        document.documentElement.classList.remove("dark");
-      } else if (colorScheme === "dark") {
-        document.documentElement.classList.add("dark");
-      } else if (colorScheme === "system") {
-        function check(media: MediaQueryList | MediaQueryListEvent) {
-          if (media.matches) {
-            document.documentElement.classList.add("dark");
-          } else {
-            document.documentElement.classList.remove("dark");
-          }
-        }
+      applyColorScheme(colorScheme);
+      if (colorScheme !== "system") return;
 
-        let media = window.matchMedia("(prefers-color-scheme: dark)");
-        check(media);
-
-        media.addEventListener("change", check);
-        return () => media.removeEventListener("change", check);
-      } else {
-        console.error("Impossible color scheme state:", colorScheme);
-      }
+      let media = window.matchMedia("(prefers-color-scheme: dark)");
+      let check = () => applyColorScheme("system");
+      media.addEventListener("change", check);
+      return () => media.removeEventListener("change", check);
     }, [colorScheme]);
   }
 
   return <script dangerouslySetInnerHTML={{ __html: script }} />;
+}
+
+export function applyColorScheme(colorScheme: ColorScheme) {
+  let isDark =
+    colorScheme === "dark" ||
+    (colorScheme === "system" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.classList.toggle("dark", isDark);
 }
