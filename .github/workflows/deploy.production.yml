@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: ⎔ Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v6
@@ -42,10 +42,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: ⎔ Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v6
@@ -65,10 +65,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: ⎔ Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v6
@@ -89,10 +89,10 @@ jobs:
     needs: [lint, typecheck, vitest]
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: 🎈 Setup Fly
-        uses: superfly/flyctl-actions/setup-flyctl@1.5
+        uses: superfly/flyctl-actions/setup-flyctl@1.6
 
       - name: 🚀 Deploy Production
         if: ${{ github.ref == 'refs/heads/main' }}
