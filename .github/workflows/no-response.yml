@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🥺 Handle Ghosting
-        uses: actions/stale@v10
+        uses: actions/stale@v11
         with:
           close-issue-message: >
             This issue has been automatically closed because we haven't received a
