@@ -41,6 +41,8 @@ export function ColorSchemeToggle() {
             );
             let colorScheme = getColorScheme(formData);
             if (colorScheme) applyColorScheme(colorScheme);
+            let details = event.currentTarget.closest("details");
+            if (details) details.open = false;
           }}
         >
           <ColorSchemeButton
