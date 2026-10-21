@@ -9,7 +9,10 @@ import {
 } from "react-router";
 import { CACHE_CONTROL } from "./http";
 
-import { parseColorScheme } from "./actions/color-scheme/server";
+import {
+  colorSchemeMiddleware,
+  parseColorScheme,
+} from "./actions/color-scheme/server";
 import {
   ColorSchemeScript,
   useColorScheme,
@@ -33,6 +36,7 @@ export const middleware: MiddlewareFunction[] = [
   handleMajorVersionRedirects,
   handleRedirects,
   handleMarkdownRequest,
+  colorSchemeMiddleware,
 ];
 
 export async function loader({ request }: Route.LoaderArgs) {

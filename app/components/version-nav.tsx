@@ -1,3 +1,5 @@
+"use client";
+
 import { Link } from "react-router";
 import { VersionSelect } from "./version-select";
 import { useHeaderData } from "./docs-header/use-header-data";

@@ -4,7 +4,6 @@ const routes: RouteConfig = [
   index("pages/splash.tsx"),
   route("/brand", "pages/brand.tsx"),
   route("/healthcheck", "pages/healthcheck.tsx"),
-  route("/color-scheme", "actions/color-scheme/route.ts"),
 
   route("", "pages/docs-layout.tsx", { id: "docs" }, [
     route("home.md", "pages/doc.tsx", { id: "home-md" }),
