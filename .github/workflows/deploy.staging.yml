@@ -97,6 +97,6 @@ jobs:
         uses: superfly/flyctl-actions/setup-flyctl@1.6
 
       - name: 🚀 Deploy Staging
-        run: flyctl deploy --remote-only --config ./fly.staging.toml --build-arg COMMIT_SHA=${{ github.sha }} --strategy bluegreen
+        run: flyctl deploy --remote-only --no-cache --config ./fly.staging.toml --build-arg COMMIT_SHA=${{ github.sha }} --strategy bluegreen
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

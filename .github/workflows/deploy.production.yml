@@ -96,7 +96,7 @@ jobs:
 
       - name: 🚀 Deploy Production
         if: ${{ github.ref == 'refs/heads/main' }}
-        run: flyctl deploy --remote-only --config ./fly.production.toml --build-arg COMMIT_SHA=${{ github.sha }}
+        run: flyctl deploy --remote-only --no-cache --config ./fly.production.toml --build-arg COMMIT_SHA=${{ github.sha }}
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
