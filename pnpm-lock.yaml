@@ -82,8 +82,8 @@ importers:
         specifier: 19.3.1
         version: 19.3.1(react@19.3.1)
       react-router:
-        specifier: 8.5.0
-        version: 8.5.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: 8.5.1
+        version: 8.5.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react-server-dom-webpack:
         specifier: 19.3.1
         version: 19.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -125,8 +125,8 @@ importers:
         version: 5.1.0
     devDependencies:
       "@react-router/dev":
-        specifier: 8.5.0
-        version: 8.5.0(@vitejs/plugin-rsc@0.5.35(react-dom@19.3.1(react@19.3.1))(react-server-dom-webpack@19.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)(vite@8.0.8(@types/node@24.12.2)(jiti@1.21.7)))(react-router@8.5.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-server-dom-webpack@19.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(typescript@6.0.3)(vite@8.0.8(@types/node@24.12.2)(jiti@1.21.7))
+        specifier: 8.5.1
+        version: 8.5.1(@vitejs/plugin-rsc@0.5.35(react-dom@19.3.1(react@19.3.1))(react-server-dom-webpack@19.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)(vite@8.0.8(@types/node@24.12.2)(jiti@1.21.7)))(react-router@8.5.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-server-dom-webpack@19.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(typescript@6.0.3)(vite@8.0.8(@types/node@24.12.2)(jiti@1.21.7))
       "@testing-library/jest-dom":
         specifier: 6.9.1
         version: 6.9.1
@@ -984,17 +984,17 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  "@react-router/dev@8.5.0":
+  "@react-router/dev@8.5.1":
     resolution:
       {
-        integrity: sha512-SXmL0ym9Wp8Hi0LdXLG6yPaN8V1rUW4PuavvBS9eqpr0hM3PFjiCUT44pRzCj4G9lKEQBeNcj4beOtpN7IxuCg==,
+        integrity: sha512-1NQ/lP8m7Kd9G4cGKPoEMZe0qcWOnRkf8QxpAcnX/3V5wJp+/mDvM9QUqwUxI+RywytNNGtc4uuDFhwt0xMLbg==,
       }
     engines: { node: ">=22.22.0" }
     hasBin: true
     peerDependencies:
-      "@react-router/serve": ^8.5.0
+      "@react-router/serve": ^8.5.1
       "@vitejs/plugin-rsc": ~0.5.26
-      react-router: ^8.5.0
+      react-router: ^8.5.1
       react-server-dom-webpack: ^19.2.7
       typescript: ^5.1.0 || ^6.0.0 || ^7.0.0
       vite: ^7.0.0 || ^8.0.0
@@ -1011,14 +1011,14 @@ packages:
       wrangler:
         optional: true
 
-  "@react-router/node@8.5.0":
+  "@react-router/node@8.5.1":
     resolution:
       {
-        integrity: sha512-9a3a37TW5GAo/J336Uk1tca/X1OxjpseETz/zCHcojtL7oRlFrlFoDt6wSdCtFRCiwlLyHcWY+qwZ+xnb05kSg==,
+        integrity: sha512-hEr3YFQaSoQL8T85+DqNOpdDLfuD2mKEeGdQAEvfix2bQdCtcpatE0uzB3zYidIUex0iEJG/eOZdAjLrzlJrjA==,
       }
     engines: { node: ">=22.22.0" }
     peerDependencies:
-      react-router: 8.5.0
+      react-router: 8.5.1
       typescript: ^5.1.0 || ^6.0.0 || ^7.0.0
     peerDependenciesMeta:
       typescript:
@@ -2053,12 +2053,6 @@ packages:
     resolution:
       {
         integrity: sha512-5POEcUuZybH7IdmGsD8wlf0AI55wMecM9rVBTI/qEAy2c1kTOm3DjFYjrBdI2K3BaJjJYfYFeRtM0t9ssnRuxw==,
-      }
-
-  es-module-lexer@2.1.0:
-    resolution:
-      {
-        integrity: sha512-n27zTYMjYu1aj4MjCWzSP7G9r75utsaoc8m61weK+W8JMBGGQybd43GstCXZ3WNmSFtGT9wi59qQTW6mhTR5LQ==,
       }
 
   es-module-lexer@2.3.2:
@@ -3588,10 +3582,10 @@ packages:
       }
     engines: { node: ">=0.10.0" }
 
-  react-router@8.5.0:
+  react-router@8.5.1:
     resolution:
       {
-        integrity: sha512-9nEd/deifcTJIIcUaNIyQGkyXD0D6QVB9XD2O5GgHpP3xu3U5RXm87YQ8++Wn8JQWgMBM/5+PjWPM/7n7O7WHA==,
+        integrity: sha512-5u1eQ46QjuXjNfEnLwzrnou1Bm5dquO3xjVYkkMYCudtkicD2AQHtx+fvXzPATtPJx8TW6DR1x1TDRqsfHyZBw==,
       }
     engines: { node: ">=22.22.0" }
     peerDependencies:
@@ -4855,19 +4849,19 @@ snapshots:
   "@oxlint/binding-win32-x64-msvc@1.60.0":
     optional: true
 
-  "@react-router/dev@8.5.0(@vitejs/plugin-rsc@0.5.35(react-dom@19.3.1(react@19.3.1))(react-server-dom-webpack@19.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)(vite@8.0.8(@types/node@24.12.2)(jiti@1.21.7)))(react-router@8.5.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-server-dom-webpack@19.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(typescript@6.0.3)(vite@8.0.8(@types/node@24.12.2)(jiti@1.21.7))":
+  "@react-router/dev@8.5.1(@vitejs/plugin-rsc@0.5.35(react-dom@19.3.1(react@19.3.1))(react-server-dom-webpack@19.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)(vite@8.0.8(@types/node@24.12.2)(jiti@1.21.7)))(react-router@8.5.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-server-dom-webpack@19.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(typescript@6.0.3)(vite@8.0.8(@types/node@24.12.2)(jiti@1.21.7))":
     dependencies:
       "@babel/core": 7.29.7
       "@babel/generator": 7.29.7
       "@babel/parser": 7.29.7
       "@babel/traverse": 7.29.7
       "@babel/types": 7.29.7
-      "@react-router/node": 8.5.0(react-router@8.5.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(typescript@6.0.3)
+      "@react-router/node": 8.5.1(react-router@8.5.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(typescript@6.0.3)
       "@remix-run/node-fetch-server": 0.14.1
       babel-dead-code-elimination: 1.0.12
       chokidar: 5.0.0
       dedent: 1.7.2
-      es-module-lexer: 2.1.0
+      es-module-lexer: 2.3.2
       exit-hook: 5.1.0
       isbot: 5.1.40
       jsesc: 3.1.0
@@ -4877,7 +4871,7 @@ snapshots:
       picocolors: 1.1.1
       pkg-types: 2.3.1
       react-refresh: 0.18.0
-      react-router: 8.5.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react-router: 8.5.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       semver: 7.8.1
       tinyglobby: 0.2.16
       valibot: 1.4.1(typescript@6.0.3)
@@ -4890,10 +4884,10 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  "@react-router/node@8.5.0(react-router@8.5.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(typescript@6.0.3)":
+  "@react-router/node@8.5.1(react-router@8.5.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(typescript@6.0.3)":
     dependencies:
       "@remix-run/node-fetch-server": 0.14.1
-      react-router: 8.5.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react-router: 8.5.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
     optionalDependencies:
       typescript: 6.0.3
 
@@ -5488,8 +5482,6 @@ snapshots:
   es-errors@1.3.0: {}
 
   es-module-lexer@2.0.0: {}
-
-  es-module-lexer@2.1.0: {}
 
   es-module-lexer@2.3.2: {}
 
@@ -6456,7 +6448,7 @@ snapshots:
 
   react-refresh@0.18.0: {}
 
-  react-router@8.5.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
+  react-router@8.5.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
       "@remix-run/route-pattern": 0.22.1
       cookie-es: 3.1.1

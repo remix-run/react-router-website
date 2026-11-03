@@ -13,7 +13,7 @@ import {
 } from "@vitejs/plugin-rsc/rsc";
 import {
   isRouteErrorResponse,
-  type RouterContextProvider,
+  RouterContextProvider,
   unstable_matchRSCServerRequest as matchRSCServerRequest,
 } from "react-router";
 import routes from "virtual:react-router/unstable_rsc/routes";
@@ -57,6 +57,10 @@ export function fetchServer(
 
 export default {
   async fetch(request: Request, requestContext?: RouterContextProvider) {
+    if (requestContext && !(requestContext instanceof RouterContextProvider)) {
+      requestContext = undefined;
+    }
+
     const ssr = await import.meta.viteRsc.loadModule<
       typeof import("./entry.ssr.tsx")
     >("ssr", "index");
