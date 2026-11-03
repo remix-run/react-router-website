@@ -1,14 +1,19 @@
+"use client";
+
 import { clsx } from "clsx";
 import * as React from "react";
-import { Form, useLocation } from "react-router";
-import { useColorScheme } from "~/actions/color-scheme/components";
+import { useFormStatus } from "react-dom";
+import { setColorScheme } from "~/actions/color-scheme/actions";
+import {
+  applyColorScheme,
+  useColorScheme,
+} from "~/actions/color-scheme/components";
+import { getColorScheme } from "~/actions/color-scheme/utils";
 import iconsHref from "~/icons.svg";
 import { DetailsMenu } from "~/modules/details-menu";
 import { DetailsPopup } from "./details-popup";
 
 export function ColorSchemeToggle() {
-  let location = useLocation();
-
   // This is the same default, hover, focus style as the VersionSelect
   const className =
     "border border-transparent bg-gray-100 hover:bg-gray-200 focus:border focus:border-gray-100 focus:bg-white dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:border-gray-400 dark:focus:bg-gray-700";
@@ -26,12 +31,20 @@ export function ColorSchemeToggle() {
         </svg>
       </summary>
       <DetailsPopup className="right-0 w-40">
-        <Form replace action="/color-scheme" method="post" preventScrollReset>
-          <input
-            type="hidden"
-            name="returnTo"
-            value={location.pathname + location.search}
-          />
+        <form
+          action={setColorScheme}
+          onSubmit={(event) => {
+            // Switch themes immediately rather than waiting for the server
+            let formData = new FormData(
+              event.currentTarget,
+              event.nativeEvent.submitter,
+            );
+            let colorScheme = getColorScheme(formData);
+            if (colorScheme) applyColorScheme(colorScheme);
+            let details = event.currentTarget.closest("details");
+            if (details) details.open = false;
+          }}
+        >
           <ColorSchemeButton
             svgId="sun"
             label="Light"
@@ -50,7 +63,7 @@ export function ColorSchemeToggle() {
             value="system"
             name="colorScheme"
           />
-        </Form>
+        </form>
       </DetailsPopup>
     </DetailsMenu>
   );
@@ -60,7 +73,9 @@ let ColorSchemeButton = React.forwardRef<
   HTMLButtonElement,
   React.ComponentPropsWithRef<"button"> & { svgId: string; label: string }
 >(({ svgId, label, ...props }, forwardedRef) => {
-  let colorScheme = useColorScheme();
+  let { data } = useFormStatus();
+  let savedColorScheme = useColorScheme();
+  let colorScheme = (data && getColorScheme(data)) || savedColorScheme;
   return (
     <button
       {...props}
