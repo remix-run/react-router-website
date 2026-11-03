@@ -16,6 +16,6 @@ export async function setColorScheme(formData: FormData) {
   let request = getRequest();
   if (!request.headers.has("rsc-action-id")) {
     let url = new URL(request.url);
-    replace(url.pathname + url.search);
+    throw replace(url.pathname + url.search);
   }
 }
