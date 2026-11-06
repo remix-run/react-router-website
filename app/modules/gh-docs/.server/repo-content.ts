@@ -19,7 +19,11 @@ export async function getRepoContent(
   let pathname = `/${owner}/${repo}/${ref}/${filepath}`;
   let response = await fetch(
     new URL(pathname, "https://raw.githubusercontent.com/").href,
-    { headers: { "User-Agent": `docs:${owner}/${repo}` } },
+    {
+      headers: { "User-Agent": `docs:${owner}/${repo}` },
+      // Don't let a slow GitHub hold requests open forever
+      signal: AbortSignal.timeout(15_000),
+    },
   );
   if (!response.ok) return null;
   return response.text();

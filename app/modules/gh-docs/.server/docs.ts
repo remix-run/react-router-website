@@ -55,14 +55,42 @@ global.menuCache ??= new LRUCache<string, MenuDoc[]>({
   ttl: NO_CACHE ? 1 : 300000, // 5 minutes
   allowStale: !NO_CACHE,
   noDeleteOnFetchRejection: true,
-  fetchMethod: async (cacheKey) => {
-    console.log(`Fetching fresh menu: ${cacheKey}`);
-    let [repo, ref] = cacheKey.split(":");
-    let tarball = await getRepoTarball(repo, ref);
-    let menu = await getMenuFromTarball(tarball);
-    return menu;
-  },
+  fetchMethod: (cacheKey) =>
+    withMenuBuildSlot(async () => {
+      console.log(`Fetching fresh menu: ${cacheKey}`);
+      let [repo, ref] = cacheKey.split(":");
+      let tarball = await getRepoTarball(repo, ref);
+      let menu = await getMenuFromTarball(tarball);
+      return menu;
+    }),
 });
+
+/**
+ * Every menu build downloads and extracts a repo tarball. When crawlers hit
+ * docs for many different versions at once (especially while GitHub is slow
+ * to respond), unbounded builds pile up in memory and crash the server. Cap
+ * how many run at a time; the rest wait their turn.
+ */
+const MAX_CONCURRENT_MENU_BUILDS = 4;
+let activeMenuBuilds = 0;
+let menuBuildQueue: Array<() => void> = [];
+
+async function withMenuBuildSlot<T>(fn: () => Promise<T>): Promise<T> {
+  if (activeMenuBuilds < MAX_CONCURRENT_MENU_BUILDS) {
+    activeMenuBuilds++;
+  } else {
+    // the slot is handed to us directly by the finishing build
+    await new Promise<void>((resolve) => menuBuildQueue.push(resolve));
+  }
+
+  try {
+    return await fn();
+  } finally {
+    let next = menuBuildQueue.shift();
+    if (next) next();
+    else activeMenuBuilds--;
+  }
+}
 
 export async function getMenu(
   repo: string,
