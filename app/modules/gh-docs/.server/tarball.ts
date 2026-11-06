@@ -1,3 +1,4 @@
+import { Readable } from "node:stream";
 import * as zlib from "node:zlib";
 import { parseTar } from "@remix-run/tar-parser";
 
@@ -22,7 +23,13 @@ async function processFilesFromRepoTarball(
   pattern: RegExp = /docs\/(.+)\.md$/,
   processFile: ProcessFile,
 ): Promise<void> {
-  let data = await gunzip(compressedData);
+  // Stream the decompression rather than inflating the entire archive into a
+  // single buffer. The archive includes the whole repo (source, tests, etc.)
+  // but we only care about a handful of markdown files, and buffering it all
+  // made concurrent menu builds use a lot of memory.
+  let data: AsyncIterable<Uint8Array> = Readable.from([compressedData]).pipe(
+    zlib.createGunzip(),
+  );
 
   await parseTar(data, async (entry) => {
     // Make sure the file matches the ones we want to process
@@ -36,18 +43,6 @@ async function processFilesFromRepoTarball(
       let content = await entry.text();
       await processFile({ filename, content });
     }
-  });
-}
-
-/**
- * Decompress gzip data using node:zlib.
- */
-function gunzip(data: Uint8Array): Promise<Uint8Array> {
-  return new Promise((resolve, reject) => {
-    zlib.gunzip(data, (err, result) => {
-      if (err) reject(err);
-      else resolve(new Uint8Array(result));
-    });
   });
 }
 

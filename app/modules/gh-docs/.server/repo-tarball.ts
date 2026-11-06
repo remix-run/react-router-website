@@ -19,7 +19,8 @@ export async function getRepoTarball(
   }
 
   let tarballURL = `https://github.com/${repo}/archive/${ref}.tar.gz`;
-  let res = await fetch(tarballURL);
+  // Don't let a slow GitHub hold requests (and their buffers) open forever
+  let res = await fetch(tarballURL, { signal: AbortSignal.timeout(30_000) });
 
   if (!res.ok) {
     throw new Error(`Could not fetch ${tarballURL}`);
