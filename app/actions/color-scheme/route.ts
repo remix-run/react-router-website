@@ -1,7 +1,7 @@
 import { redirect } from "react-router";
 import { serializeColorScheme } from "./server";
 import type { Route } from "./+types/route";
-import { getColorScheme } from "./components";
+import { getColorScheme } from "./utils";
 
 export async function action({ request }: Route.ActionArgs) {
   let formData = await request.formData();

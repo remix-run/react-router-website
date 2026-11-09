@@ -4,6 +4,20 @@ minimumReleaseAgeExclude:
   - react-router
   - "@react-router/*"
   - "@remix-run/*"
+  # Security fixes for GHSA-xqc2-xf4c-x3h3 and GHSA-h3gv-c5rc-p453.
+  # react-server-dom-webpack is installed directly because @vitejs/plugin-rsc
+  # stays on 0.5.35 (0.5.36+ breaks React Router 8.5.1 builds) and prefers an
+  # installed copy over its bundled, unpatched one. Drop it and upgrade
+  # plugin-rsc once React Router ships remix-run/react-router#15672.
+  - react@19.3.1
+  - react-dom@19.3.1
+  - react-server-dom-webpack@19.3.1
+packageExtensions:
+  # Only the RSC runtime is used (via @vitejs/plugin-rsc), not the webpack plugin
+  react-server-dom-webpack:
+    peerDependenciesMeta:
+      webpack:
+        optional: true
 onlyBuiltDependencies:
   - esbuild
 allowBuilds:
