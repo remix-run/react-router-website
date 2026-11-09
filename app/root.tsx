@@ -8,7 +8,7 @@ import {
   ScrollRestoration,
   type MiddlewareFunction,
 } from "react-router";
-import { CACHE_CONTROL } from "./http";
+import { setDocCacheControl } from "./http";
 
 import { parseColorScheme } from "./actions/color-scheme/server";
 import {
@@ -43,12 +43,9 @@ export async function loader({ request }: Route.LoaderArgs) {
   return { colorScheme, isProductionHost };
 }
 
-export function headers() {
-  return {
-    // default all caching to deployments
-    "Cache-Control": CACHE_CONTROL.doc,
-    Vary: "Cookie",
-  };
+export function headers({ errorHeaders }: Route.HeadersArgs) {
+  // default all caching to deployments
+  return setDocCacheControl(new Headers({ Vary: "Cookie" }), errorHeaders);
 }
 
 export function meta({ error }: Route.MetaArgs) {

@@ -2,6 +2,7 @@ import fs from "fs";
 import invariant from "tiny-invariant";
 import path from "path";
 import * as tar from "tar";
+import { DocNotFoundError } from "./errors";
 
 /**
  * Fetches a repo tarball from GitHub or your local repo as a tarball in
@@ -22,8 +23,12 @@ export async function getRepoTarball(
   // Don't let a slow GitHub hold requests (and their buffers) open forever
   let res = await fetch(tarballURL, { signal: AbortSignal.timeout(30_000) });
 
+  if (res.status === 404) {
+    throw new DocNotFoundError(`Could not find ${tarballURL}`);
+  }
+
   if (!res.ok) {
-    throw new Error(`Could not fetch ${tarballURL}`);
+    throw new Error(`Could not fetch ${tarballURL}: ${res.status}`);
   }
 
   return new Uint8Array(await res.arrayBuffer());

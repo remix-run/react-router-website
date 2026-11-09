@@ -25,7 +25,11 @@ export async function getRepoContent(
       signal: AbortSignal.timeout(15_000),
     },
   );
-  if (!response.ok) return null;
+  // only a 404 means the file doesn't exist, other failures shouldn't look it
+  if (response.status === 404) return null;
+  if (!response.ok) {
+    throw new Error(`Could not fetch ${pathname}: ${response.status}`);
+  }
   return response.text();
 }
 

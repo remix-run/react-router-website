@@ -6,6 +6,7 @@ import { getRepoContent } from "./repo-content";
 import { getRepoTarball } from "./repo-tarball";
 import { createTarFileProcessor } from "./tarball";
 import { load as $ } from "cheerio";
+import { DocNotFoundError } from "./errors";
 
 interface MenuDocAttributes {
   title: string;
@@ -133,7 +134,7 @@ async function fetchDoc(key: string): Promise<Doc> {
   let filename = `${slug}.md`;
   let md = await getRepoContent(repo, ref, filename);
   if (md === null) {
-    throw Error(`Could not find ${filename} in ${repo}@${ref}`);
+    throw new DocNotFoundError(`Could not find ${filename} in ${repo}@${ref}`);
   }
   let { html, attributes } = await processMarkdown(md);
   let attrs: MenuDocAttributes = { title: filename };

@@ -1,4 +1,9 @@
-import { Outlet, redirect, type MiddlewareFunction } from "react-router";
+import {
+  Outlet,
+  redirect,
+  type HeadersArgs,
+  type MiddlewareFunction,
+} from "react-router";
 import { clsx } from "clsx";
 
 import { Header } from "~/components/docs-header/docs-header";
@@ -6,6 +11,8 @@ import { getHeaderData } from "~/components/docs-header/data.server";
 import { getRepoDocsMenu, getRepoTags } from "~/modules/gh-docs/.server";
 import { getLatestMajorVersions } from "~/modules/gh-docs/.server/tags";
 import { resolveRef } from "~/modules/gh-docs/.server/doc-url-parser";
+import { CACHE_CONTROL, setDocCacheControl } from "~/http";
+import { toDocErrorResponse } from "~/modules/gh-docs/.server/errors";
 import { Footer } from "~/components/docs-footer";
 import { VersionWarning } from "~/components/version-warning";
 import { NavMenuDesktop } from "~/components/docs-menu/menu-desktop";
@@ -27,7 +34,10 @@ export const middleware: MiddlewareFunction[] = [
 
     let refVersion = semver.parse(params.ref);
     if (params.ref !== "local" && !refVersion) {
-      throw new Response("Not Found", { status: 404 });
+      throw new Response("Not Found", {
+        status: 404,
+        headers: { "Cache-Control": CACHE_CONTROL.none },
+      });
     }
 
     if (params.ref === "local" || (refVersion && refVersion.major >= 7)) {
@@ -41,9 +51,15 @@ export const middleware: MiddlewareFunction[] = [
   },
 ];
 
+export function headers({ parentHeaders, errorHeaders }: HeadersArgs) {
+  return setDocCacheControl(parentHeaders, errorHeaders);
+}
+
 export async function loader({ params }: Route.LoaderArgs) {
-  let tags = await getRepoTags();
-  if (!tags) throw new Response("Cannot reach GitHub", { status: 503 });
+  let tags = await getRepoTags().catch((error) => {
+    throw toDocErrorResponse(error);
+  });
+  if (!tags) throw toDocErrorResponse(new Error("No tags"));
   let latestVersion = getLatestMajorVersions(tags)[0];
 
   let { ref, refParam } = resolveRef(params["*"], latestVersion, params.ref);
@@ -51,7 +67,9 @@ export async function loader({ params }: Route.LoaderArgs) {
   let [menu, header] = await Promise.all([
     getRepoDocsMenu(ref),
     getHeaderData("en", ref, tags, refParam),
-  ]);
+  ]).catch((error) => {
+    throw toDocErrorResponse(error);
+  });
 
   return {
     menu,

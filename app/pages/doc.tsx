@@ -1,6 +1,10 @@
 import { useRef } from "react";
 import { getRepoDoc, getRepoTags } from "~/modules/gh-docs/.server";
-import { CACHE_CONTROL } from "~/http";
+import { setDocCacheControl } from "~/http";
+import {
+  DocNotFoundError,
+  toDocErrorResponse,
+} from "~/modules/gh-docs/.server/errors";
 import { seo } from "~/seo";
 import { getDocTitle, getSearchMetaTags } from "~/ui/meta";
 import {
@@ -20,8 +24,10 @@ export { ErrorBoundary } from "~/components/doc-error-boundary";
 
 export async function loader({ url, params }: Route.LoaderArgs) {
   let splat = params["*"] ?? "";
-  let tags = await getRepoTags();
-  if (!tags) throw new Response("Cannot reach GitHub", { status: 503 });
+  let tags = await getRepoTags().catch((error) => {
+    throw toDocErrorResponse(error);
+  });
+  if (!tags) throw toDocErrorResponse(new Error("No tags"));
   let latestVersion = getLatestMajorVersions(tags)[0];
   let { ref, refParam } = resolveRef(splat, latestVersion);
   let editRef = ref === latestVersion ? "main" : undefined;
@@ -34,25 +40,22 @@ export async function loader({ url, params }: Route.LoaderArgs) {
     { editRef },
   );
 
-  try {
-    let doc = await getRepoDoc(ref, slug);
-    if (!doc) {
-      throw new Response("Not Found", { status: 404 });
-    }
-    return {
-      doc,
-      githubPath: githubPath,
-      githubEditPath: githubEditPath,
-    };
-  } catch {
-    throw new Response("Not Found", { status: 404 });
-  }
+  let doc = await getRepoDoc(ref, slug).catch((error) => {
+    throw toDocErrorResponse(error);
+  });
+  if (!doc) throw toDocErrorResponse(new DocNotFoundError());
+
+  return {
+    doc,
+    githubPath: githubPath,
+    githubEditPath: githubEditPath,
+  };
 }
 
-export function headers({ parentHeaders }: HeadersArgs) {
-  parentHeaders.set("Cache-Control", CACHE_CONTROL.doc);
-  parentHeaders.append("Vary", "Accept");
-  return parentHeaders;
+export function headers({ parentHeaders, errorHeaders }: HeadersArgs) {
+  let headers = setDocCacheControl(parentHeaders, errorHeaders);
+  headers.append("Vary", "Accept");
+  return headers;
 }
 
 export function meta({ error, loaderData, matches, location }: Route.MetaArgs) {

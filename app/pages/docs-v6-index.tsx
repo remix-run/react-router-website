@@ -1,14 +1,13 @@
 import type { HeadersArgs } from "react-router";
 import { Link } from "react-router";
 import { clsx } from "clsx";
-import { CACHE_CONTROL } from "~/http";
+import { setDocCacheControl } from "~/http";
 import { getSearchMetaTags, getDocTitle } from "~/ui/meta";
 import { seo } from "~/seo";
 import type { Route } from "./+types/docs-v6-index";
 
-export function headers({ parentHeaders }: HeadersArgs) {
-  parentHeaders.set("Cache-Control", CACHE_CONTROL.doc);
-  return parentHeaders;
+export function headers({ parentHeaders, errorHeaders }: HeadersArgs) {
+  return setDocCacheControl(parentHeaders, errorHeaders);
 }
 
 export function meta({ matches }: Route.MetaArgs) {
