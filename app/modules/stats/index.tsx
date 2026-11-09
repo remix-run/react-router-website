@@ -14,6 +14,40 @@ interface StatCounts {
   githubDependents: number;
 }
 
+const STATS_CACHE_KEY = "ONE_STATS_KEY_TO_RULE_THEM_ALL";
+
+const statDefinitions = [
+  {
+    key: "npmDownloads",
+    label: "Downloads on npm",
+    svgId: "stat-download",
+    placeholderDigits: 10,
+  },
+  {
+    key: "githubContributors",
+    label: "Contributors on GitHub",
+    svgId: "stat-users",
+    placeholderDigits: 4,
+  },
+  {
+    key: "githubStars",
+    label: "Stars on GitHub",
+    svgId: "stat-star",
+    placeholderDigits: 5,
+  },
+  {
+    key: "githubDependents",
+    label: "Dependents on GitHub",
+    svgId: "stat-box",
+    placeholderDigits: 7,
+  },
+] satisfies {
+  key: keyof StatCounts;
+  label: string;
+  svgId: string;
+  placeholderDigits: number;
+}[];
+
 declare global {
   var statCountsCache: LRUCache<string, StatCounts>;
 }
@@ -44,31 +78,31 @@ global.statCountsCache ??= new LRUCache<string, StatCounts>({
 });
 
 export async function getStats(): Promise<Stats[]> {
-  let cacheKey = "ONE_STATS_KEY_TO_RULE_THEM_ALL";
-  let statCounts = await statCountsCache.fetch(cacheKey);
+  let statCounts = await statCountsCache.fetch(STATS_CACHE_KEY);
 
-  return [
-    {
-      count: statCounts.npmDownloads,
-      label: "Downloads on npm",
-      svgId: "stat-download",
-    },
-    {
-      count: statCounts.githubContributors,
-      label: "Contributors on GitHub",
-      svgId: "stat-users",
-    },
-    {
-      count: statCounts.githubStars,
-      label: "Stars on GitHub",
-      svgId: "stat-star",
-    },
-    {
-      count: statCounts.githubDependents,
-      label: "Dependents on GitHub",
-      svgId: "stat-box",
-    },
-  ];
+  return statDefinitions.map(({ key, label, svgId }) => ({
+    count: statCounts[key],
+    label,
+    svgId,
+  }));
+}
+
+export function getStatsPlaceholder(): (Omit<Stats, "count"> & {
+  count: string;
+})[] {
+  const cachedCounts = statCountsCache.peek(STATS_CACHE_KEY, {
+    allowStale: true,
+  });
+
+  // Never wait for the fetch to size the skeleton. On a cold cache, use the
+  // current digit lengths; otherwise match the last known counts exactly.
+  return statDefinitions.map(({ key, label, svgId, placeholderDigits }) => ({
+    count: (cachedCounts?.[key] ?? 10 ** (placeholderDigits - 1))
+      .toLocaleString("en-US")
+      .replace(/\d/g, "-"),
+    label,
+    svgId,
+  }));
 }
 
 /**
